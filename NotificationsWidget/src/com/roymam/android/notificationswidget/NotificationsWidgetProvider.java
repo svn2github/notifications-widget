@@ -53,21 +53,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     @Override
     public void onEnabled(Context context) 
     {
-    	RemoteViews remoteViews = new RemoteViews( context.getPackageName(), R.layout.widget_layout);
-    	ComponentName watchWidget = new ComponentName( context, NotificationsWidgetProvider.class );
-        AppWidgetManager.getInstance(context).updateAppWidget( watchWidget, remoteViews);
-        
-        Intent svcIntent=new Intent(context, NotificationsWidgetService.class);
-//        svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-        svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));   
-        remoteViews.setRemoteAdapter(R.id.notificationsListView, svcIntent);
-
-        Intent clickIntent=new Intent(context, NotificationActivity.class);
-        PendingIntent clickPI=PendingIntent.getActivity(context, 0,
-                                                  		clickIntent,
-                                                  		PendingIntent.FLAG_UPDATE_CURRENT);
-            
-        remoteViews.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
     }
 
     @Override
@@ -89,17 +74,39 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
         	System.out.println("Notification Receieved to Widget:"+s);
         	
         	RemoteViews remoteViews = new RemoteViews( ctx.getPackageName(), R.layout.widget_layout);
-        	ComponentName watchWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
+        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
             //remoteViews.setTextViewText( R.id.center_text, s);
-            AppWidgetManager.getInstance(ctx).updateAppWidget( watchWidget, remoteViews);            
+            AppWidgetManager.getInstance(ctx).updateAppWidget( notifiationsWidget, remoteViews);            
         }
 
         super.onReceive(ctx, intent);
     }
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
+    public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
     {
-    	super.onUpdate(context, appWidgetManager, appWidgetIds);
+    	for (int i=0; i<appWidgetIds.length; i++) {
+    	      Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
+    	      
+    	      svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+    	      svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+    	      
+    	      RemoteViews widget=new RemoteViews(ctxt.getPackageName(),
+    	                                          R.layout.widget_layout);
+    	      
+    	      widget.setRemoteAdapter(appWidgetIds[i], R.id.notificationsListView,
+    	                              svcIntent);
+
+    	      Intent clickIntent=new Intent(ctxt, NotificationActivity.class);
+    	      PendingIntent clickPI=PendingIntent
+    	                              .getActivity(ctxt, 0,
+    	                                            clickIntent,
+    	                                            PendingIntent.FLAG_UPDATE_CURRENT);
+    	      
+    	      widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
+
+    	      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);
+    	    }
+    		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);
     }
 }

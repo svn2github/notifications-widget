@@ -17,8 +17,10 @@
     android:id="@+id/widget_item"
     android:layout_width="match_parent"
     android:layout_height="46dp"
-    android:paddingLeft="25dp"
-    android:gravity="center_vertical"
     android:background="@drawable/item_bg_dark"
+    android:gravity="center_vertical"
+    android:paddingLeft="25dp"
+    android:text=""
     android:textColor="#e5e5e1"
     android:textSize="24sp" />
+

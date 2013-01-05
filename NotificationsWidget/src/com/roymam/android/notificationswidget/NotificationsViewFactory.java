@@ -1,32 +1,25 @@
 package com.roymam.android.notificationswidget;
 
+import java.util.List;
+
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-
+import android.view.accessibility.AccessibilityEvent;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
-	private static final String[] items={"lorem", "ipsum", "dolor",
-        "sit", "amet", "consectetuer",
-        "adipiscing", "elit", "morbi",
-        "vel", "ligula", "vitae",
-        "arcu", "aliquet", "mollis",
-        "etiam", "vel", "erat",
-        "placerat", "ante",
-        "porttitor", "sodales",
-        "pellentesque", "augue",
-        "purus"};
 	private Context ctxt=null;
 	private int appWidgetId;
 	
-	public NotificationsViewFactory(Context ctxt, Intent intent) {
-	this.ctxt=ctxt;
-	appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-	      AppWidgetManager.INVALID_APPWIDGET_ID);
+	public NotificationsViewFactory(Context ctxt, Intent intent) 
+	{
+		this.ctxt=ctxt;
+		appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+					AppWidgetManager.INVALID_APPWIDGET_ID);
 	}
 	
 	@Override
@@ -40,25 +33,54 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	}
 	
 	@Override
-	public int getCount() {
-	return(items.length);
+	public int getCount() 
+	{
+		List<AccessibilityEvent> events = null;
+		NotificationsService s = NotificationsService.getSharedInstance();
+		if (s != null) 
+		{
+		        // The service is running and connected.
+		        events = s.getEvents();
+		        if (events.size() > 0)
+		        {
+		        	System.out.println("Total Events:" + events.size());
+		        	return(events.size());
+		        }
+		        else
+		        {
+		        	System.out.println("No Events");	        
+		        	return 1;
+		        }
+		}
+		else
+		{
+			System.out.println("No Events");	        
+			return(1);
+		}
 	}
 	
 	@Override
-	public RemoteViews getViewAt(int position) {
-	RemoteViews row=new RemoteViews(ctxt.getPackageName(),
-	     R.layout.light_widget_item);
+	public RemoteViews getViewAt(int position) 
+	{
+		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.dark_widget_item);	
+		NotificationsService s = NotificationsService.getSharedInstance();
+		String eventString = "No Notifications";
+		if (s != null) 
+		{
+		    List<AccessibilityEvent> events = s.getEvents();
+		    if (events.size()>0)
+		    	eventString = events.get(position).getText().toString();
+		}
+		row.setTextViewText(R.id.widget_item, eventString);
 	
-	row.setTextViewText(android.R.id.text1, items[position]);
+		Intent i=new Intent();
+		Bundle extras=new Bundle();
 	
-	Intent i=new Intent();
-	Bundle extras=new Bundle();
+		extras.putString(NotificationsWidgetProvider.EXTRA_APP_ID, eventString);
+		i.putExtras(extras);
+		row.setOnClickFillInIntent(R.id.widget_item, i);
 	
-	extras.putString(NotificationsWidgetProvider.EXTRA_APP_ID, items[position]);
-	i.putExtras(extras);
-	row.setOnClickFillInIntent(android.R.id.text1, i);
-	
-	return(row);
+		return(row);
 	}
 	
 	@Override
