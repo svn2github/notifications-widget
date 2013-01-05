@@ -11,5 +11,6 @@ public class NotificationsWidgetService extends RemoteViewsService
 	  public RemoteViewsFactory onGetViewFactory(Intent intent) 
 	  {  
 		  return(new NotificationsViewFactory(this.getApplicationContext(), intent));
-	  }	  
+	  }
+	  
 }
