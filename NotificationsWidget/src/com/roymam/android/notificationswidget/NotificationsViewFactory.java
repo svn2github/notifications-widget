@@ -2,6 +2,7 @@ package com.roymam.android.notificationswidget;
 
 import java.util.List;
 
+import android.app.Notification;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -35,12 +36,12 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	@Override
 	public int getCount() 
 	{
-		List<AccessibilityEvent> events = null;
+		List<Notification> events = null;
 		NotificationsService s = NotificationsService.getSharedInstance();
 		if (s != null) 
 		{
 		        // The service is running and connected.
-		        events = s.getEvents();
+		        events = s.getNotifications();
 		        if (events.size() > 0)
 		        {
 		        	System.out.println("Total Events:" + events.size());
@@ -67,9 +68,9 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		String eventString = "No Notifications";
 		if (s != null) 
 		{
-		    List<AccessibilityEvent> events = s.getEvents();
-		    if (events.size()>0)
-		    	eventString = events.get(position).getText().toString();
+		    List<Notification> notifications = s.getNotifications();
+		    if (notifications.size()>0)
+		    	eventString = notifications.get(position).tickerText.toString();
 		}
 		row.setTextViewText(R.id.widget_item, eventString);
 	

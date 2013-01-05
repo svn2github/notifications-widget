@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.Notification;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,7 +16,7 @@ import android.view.accessibility.AccessibilityEvent;
 public class NotificationsService extends AccessibilityService {
 
 	private static NotificationsService sSharedInstance;
-	private List<AccessibilityEvent> events;
+	private List<Notification> notifications;
 
 	public boolean onUnbind(Intent intent) 
 	{
@@ -39,16 +40,19 @@ public class NotificationsService extends AccessibilityService {
 	    info.feedbackType = AccessibilityEvent.TYPES_ALL_MASK;
 	    setServiceInfo(info);
 	    sSharedInstance = this;
-	    events = new ArrayList<AccessibilityEvent>();
+	    notifications = new ArrayList<Notification>();
 	}
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);
 		intent.putExtra("NotificationString", event.getText().toString());
-		getApplicationContext().sendBroadcast(intent);
-		events.add(event);
-		System.out.println("Event Sent");
+		if (!event.getText().toString().equals("[]"))
+		{
+			getApplicationContext().sendBroadcast(intent);
+			notifications.add((Notification)event.getParcelableData());
+			System.out.println("Event Sent");
+		}
 	}
 
 	@Override
@@ -56,8 +60,8 @@ public class NotificationsService extends AccessibilityService {
 		// TODO Auto-generated method stub		
 	}
 	
-	public List<AccessibilityEvent> getEvents()
+	public List<Notification> getNotifications()
 	{
-		return events;
+		return notifications;
 	}
 }
