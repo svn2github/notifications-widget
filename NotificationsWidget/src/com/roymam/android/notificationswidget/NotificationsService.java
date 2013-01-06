@@ -45,13 +45,17 @@ public class NotificationsService extends AccessibilityService {
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
-		Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);
-		intent.putExtra("NotificationString", event.getText().toString());
-		if (!event.getText().toString().equals("[]"))
+		if (!event.getPackageName().equals("com.jim2"))
 		{
-			getApplicationContext().sendBroadcast(intent);
-			notifications.add((Notification)event.getParcelableData());
-			System.out.println("Event Sent");
+			Notification n = (Notification)event.getParcelableData();
+			
+			if (n.tickerText != null)
+			{
+				notifications.add(0,n);
+				Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);
+				intent.putExtra("PackageName", event.getPackageName());			
+				getApplicationContext().sendBroadcast(intent);
+			}
 		}
 	}
 

@@ -70,9 +70,13 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		{
 		    List<Notification> notifications = s.getNotifications();
 		    if (notifications.size()>0)
-		    	eventString = notifications.get(position).tickerText.toString();
+		    {
+		    	Notification n = notifications.get(position);
+		    	eventString = n.tickerText.toString();
+		    	row.setImageViewBitmap(R.id.notificationIcon, n.largeIcon);
+		    }
 		}
-		row.setTextViewText(R.id.widget_item, eventString);
+		row.setTextViewText(R.id.widget_item, eventString);		
 	
 		Intent i=new Intent();
 		Bundle extras=new Bundle();
