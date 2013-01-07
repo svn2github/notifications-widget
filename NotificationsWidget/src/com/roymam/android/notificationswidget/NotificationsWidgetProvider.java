@@ -71,20 +71,23 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
         else if (action.equals(NOTIFICATION_CREATED_ACTION )) 
         {
         	String s = intent.getStringExtra("NotificationString");
-        	System.out.println("Notification Receieved to Widget:"+s);
-        	
-        	RemoteViews remoteViews = new RemoteViews( ctx.getPackageName(), R.layout.widget_layout);
-        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
-            //remoteViews.setTextViewText( R.id.center_text, s);
-        	
-            AppWidgetManager.getInstance(ctx).updateAppWidget( notifiationsWidget, remoteViews);            
-
-            // update all widgets
-            int[] appWidgetIds = AppWidgetManager.getInstance(ctx).getAppWidgetIds(notifiationsWidget);
-            for (int i=0; i<appWidgetIds.length; i++) 
-            {
-            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.notificationsListView);
-            }
+        	if (s!=null)
+        	{	        	
+	        	System.out.println("Notification Receieved to Widget:"+s);
+	        	
+	        	RemoteViews remoteViews = new RemoteViews( ctx.getPackageName(), R.layout.widget_layout);
+	        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
+	            //remoteViews.setTextViewText( R.id.center_text, s);
+	        	
+	            AppWidgetManager.getInstance(ctx).updateAppWidget( notifiationsWidget, remoteViews);            
+	
+	            // update all widgets
+	            int[] appWidgetIds = AppWidgetManager.getInstance(ctx).getAppWidgetIds(notifiationsWidget);
+	            for (int i=0; i<appWidgetIds.length; i++) 
+	            {
+	            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.notificationsListView);
+	            }
+        	}
         }
 
         super.onReceive(ctx, intent);

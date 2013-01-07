@@ -49,12 +49,15 @@ public class NotificationsService extends AccessibilityService {
 		{
 			Notification n = (Notification)event.getParcelableData();
 			
-			if (n.tickerText != null)
+			if (n != null)
 			{
-				notifications.add(0,n);
-				Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);
-				intent.putExtra("PackageName", event.getPackageName());			
-				getApplicationContext().sendBroadcast(intent);
+				if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR))
+				{
+					notifications.add(0,n);
+					Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);
+					intent.putExtra("PackageName", event.getPackageName());			
+					getApplicationContext().sendBroadcast(intent);
+				}
 			}
 		}
 	}
