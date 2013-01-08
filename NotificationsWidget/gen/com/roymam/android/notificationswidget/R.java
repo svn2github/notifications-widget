@@ -25,8 +25,7 @@ public final class R {
         public static final int item_bg_light=0x7f020005;
         public static final int preview=0x7f020006;
         public static final int refresh=0x7f020007;
-        public static final int refresh_button=0x7f020008;
-        public static final int refresh_pressed=0x7f020009;
+        public static final int refresh_pressed=0x7f020008;
     }
     public static final class id {
         public static final int Container=0x7f070002;

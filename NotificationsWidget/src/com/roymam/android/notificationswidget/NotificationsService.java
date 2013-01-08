@@ -1,6 +1,9 @@
 package com.roymam.android.notificationswidget;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.accessibilityservice.AccessibilityService;
@@ -16,7 +19,7 @@ import android.view.accessibility.AccessibilityEvent;
 public class NotificationsService extends AccessibilityService {
 
 	private static NotificationsService sSharedInstance;
-	private List<Notification> notifications;
+	private List<NotificationData> notifications;
 
 	public boolean onUnbind(Intent intent) 
 	{
@@ -40,7 +43,7 @@ public class NotificationsService extends AccessibilityService {
 	    info.feedbackType = AccessibilityEvent.TYPES_ALL_MASK;
 	    setServiceInfo(info);
 	    sSharedInstance = this;
-	    notifications = new ArrayList<Notification>();
+	    notifications = new ArrayList<NotificationData>();
 	}
 
 	@Override
@@ -53,7 +56,12 @@ public class NotificationsService extends AccessibilityService {
 			{
 				if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR))
 				{
-					notifications.add(0,n);
+					NotificationData nd = new NotificationData();
+					nd.icon = n.largeIcon;
+					nd.text = n.tickerText.toString();
+					nd.received = Calendar.getInstance().getTime();
+					
+					notifications.add(0,nd);					
 					Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);
 					intent.putExtra("PackageName", event.getPackageName());			
 					getApplicationContext().sendBroadcast(intent);
@@ -67,7 +75,7 @@ public class NotificationsService extends AccessibilityService {
 		// TODO Auto-generated method stub		
 	}
 	
-	public List<Notification> getNotifications()
+	public List<NotificationData> getNotifications()
 	{
 		return notifications;
 	}

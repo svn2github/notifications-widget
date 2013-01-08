@@ -24,19 +24,21 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	}
 	
 	@Override
-	public void onCreate() {
+	public void onCreate() 
+	{
 	// no-op
 	}
 	
 	@Override
-	public void onDestroy() {
+	public void onDestroy() 
+	{
 	// no-op
 	}
 	
 	@Override
 	public int getCount() 
 	{
-		List<Notification> events = null;
+		List<NotificationData> events = null;
 		NotificationsService s = NotificationsService.getSharedInstance();
 		if (s != null) 
 		{
@@ -68,23 +70,33 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		String eventString = "No Notifications";
 		if (s != null) 
 		{
-		    List<Notification> notifications = s.getNotifications();
+		    List<NotificationData> notifications = s.getNotifications();
 		    if (notifications.size()>0)
 		    {
-		    	Notification n = notifications.get(position);
-		    	eventString = n.tickerText.toString();
-		    	row.setImageViewBitmap(R.id.notificationIcon, n.largeIcon);
+		    	NotificationData n = notifications.get(position);
+		    	eventString = n.text;
+		    	if (n.icon != null)
+		    	{
+		    		row.setImageViewBitmap(R.id.notificationIcon, n.icon);
+		    	}
+		    	else
+		    	{
+		    		// TODO find icon by n.packageName
+		    	}
+		    	
+				Intent i=new Intent();
+				Bundle extras=new Bundle();			
+				extras.putString(NotificationsWidgetProvider.EXTRA_APP_ID,n.packageName);
+				i.putExtras(extras);
+				row.setOnClickFillInIntent(R.id.widget_item, i);
 		    }
 		}
+		else
+		{
+			eventString = "Service inactive";
+		}
+
 		row.setTextViewText(R.id.widget_item, eventString);		
-	
-		Intent i=new Intent();
-		Bundle extras=new Bundle();
-	
-		extras.putString(NotificationsWidgetProvider.EXTRA_APP_ID, eventString);
-		i.putExtras(extras);
-		row.setOnClickFillInIntent(R.id.widget_item, i);
-	
 		return(row);
 	}
 	
