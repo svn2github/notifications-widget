@@ -25,6 +25,7 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -45,21 +46,42 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static String CLICK_ACTION = "com.roymam.android.notificationswidget.click";
     public static String NOTIFICATION_CREATED_ACTION = "com.roymam.android.notificationswidget.NOTIFICATION_CREATED";
     public static String EXTRA_APP_ID = "com.roymam.android.notificationswidget.extraappid";
-
+    
     public NotificationsWidgetProvider() 
     {
     }
-
+    
     @Override
     public void onEnabled(Context context) 
-    {
+    {    	
     }
 
     @Override
     public void onReceive(Context ctx, Intent intent) 
-    {
+    {    	
         final String action = intent.getAction();
-        if (action.equals(CLICK_ACTION)) 
+        if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) 
+        {
+        	// update all widgets
+        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
+            int[] appWidgetIds = AppWidgetManager.getInstance(ctx).getAppWidgetIds(notifiationsWidget);
+            for (int i=0; i<appWidgetIds.length; i++) 
+            {
+            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.notificationsListView);
+            }
+        }
+        else if (action.equals("android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") ||
+        		 action.equals("android.appwidget.action.APPWIDGET_UPDATE"))
+        {
+        	// update all widgets
+        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
+            int[] appWidgetIds = AppWidgetManager.getInstance(ctx).getAppWidgetIds(notifiationsWidget);
+            for (int i=0; i<appWidgetIds.length; i++) 
+            {
+            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.notificationsListView);
+            }
+        }
+        else if (action.equals(CLICK_ACTION)) 
         {
             // TODO - Open the app that was clicked
             final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
