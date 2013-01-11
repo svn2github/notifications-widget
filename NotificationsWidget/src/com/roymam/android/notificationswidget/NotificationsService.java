@@ -58,7 +58,10 @@ public class NotificationsService extends AccessibilityService {
 			
 			if (n != null)
 			{
-				if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR))
+				if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
+					!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
+					! n.tickerText.toString().equals("")
+							)
 				{					
 					//PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 					//PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "Notification");
