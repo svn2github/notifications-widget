@@ -1,7 +1,6 @@
 package com.roymam.android.notificationswidget;
-import java.util.Date;
-
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 public class NotificationData 
 {

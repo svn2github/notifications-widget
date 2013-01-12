@@ -15,7 +15,11 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -62,7 +66,7 @@ public class NotificationsService extends AccessibilityService {
 			{
 				if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
 					!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
-					! n.tickerText.toString().equals("")
+					 n.tickerText != null
 							)
 				{	
 					Context ctx = getApplicationContext();
@@ -72,7 +76,22 @@ public class NotificationsService extends AccessibilityService {
 					wl.acquire();
 
 					NotificationData nd = new NotificationData();
-					nd.icon = n.largeIcon;
+					if (n.largeIcon != null)
+					{
+						nd.icon = n.largeIcon;
+					}
+					else
+					{
+						Resources res;
+						try {
+							res = ctx.getPackageManager().getResourcesForApplication(event.getPackageName().toString());
+							PackageInfo info = ctx.getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
+							nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+						} catch (NameNotFoundException e) 
+						{
+							nd.icon = null;
+						}
+					}
 					nd.text = n.tickerText.toString();
 					nd.received = n.when;
 					
