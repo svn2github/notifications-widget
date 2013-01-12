@@ -60,18 +60,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public void onReceive(Context ctx, Intent intent) 
     {    	
         final String action = intent.getAction();
-        if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) 
-        {
-        	// update all widgets
-        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
-            int[] appWidgetIds = AppWidgetManager.getInstance(ctx).getAppWidgetIds(notifiationsWidget);
-            for (int i=0; i<appWidgetIds.length; i++) 
-            {
-            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.notificationsListView);
-            }
-        }
-        else if (action.equals("android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") ||
-        		 action.equals("android.appwidget.action.APPWIDGET_UPDATE"))
+        if (action.equals("android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") ||
+        	action.equals("android.appwidget.action.APPWIDGET_UPDATE"))
         {
         	// update all widgets
         	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );

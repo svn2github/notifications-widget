@@ -12,7 +12,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.roymam.android.notificationswidget.NOTIFICATION_CREATED" />
-                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="com.roymam.android.notificationswidget.click" />
             </intent-filter>
             <!-- This specifies the widget provider info -->
             <meta-data android:name="android.appwidget.provider"

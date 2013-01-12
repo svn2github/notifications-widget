@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.Activity;
 import android.app.Notification;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -49,6 +50,7 @@ public class NotificationsService extends AccessibilityService {
 	    sSharedInstance = this;
 	    notifications = new ArrayList<NotificationData>();
 	}
+	
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -62,10 +64,12 @@ public class NotificationsService extends AccessibilityService {
 					!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
 					! n.tickerText.toString().equals("")
 							)
-				{					
-					//PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-					//PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "Notification");
-					//wl.acquire();
+				{	
+					Context ctx = getApplicationContext();
+					
+					PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+					PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+					wl.acquire();
 
 					NotificationData nd = new NotificationData();
 					nd.icon = n.largeIcon;
@@ -74,19 +78,18 @@ public class NotificationsService extends AccessibilityService {
 					
 					notifications.add(0,nd);					
 					Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);							
-					getApplicationContext().sendBroadcast(intent);
+					ctx.sendBroadcast(intent);
 					
-					//AppWidgetManager widgetManager = AppWidgetManager.getInstance(getApplicationContext());
-					//ComponentName widgetComponent = new ComponentName(getApplicationContext(), NotificationsWidgetProvider.class);
-					//int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-					//Intent update = new Intent();
-					//update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
-					//update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, getPackageName());
-					//update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-					//getApplicationContext().sendBroadcast(update);
+					AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
+					ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
+					int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
 					
+					for (int i=0; i<widgetIds.length; i++) 
+		            {
+		            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+		            }
 					//Do whatever you need right here
-					//wl.release();
+					wl.release();
 				}
 			}
 		}
