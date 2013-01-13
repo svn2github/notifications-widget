@@ -94,7 +94,7 @@ public class NotificationsService extends AccessibilityService {
 					}
 					nd.text = n.tickerText.toString();
 					nd.received = n.when;
-					
+					nd.action = n.contentIntent;
 					notifications.add(0,nd);					
 					Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);							
 					ctx.sendBroadcast(intent);

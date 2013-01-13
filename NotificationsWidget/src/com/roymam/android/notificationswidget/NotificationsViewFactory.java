@@ -75,18 +75,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    {
 		    	NotificationData n = notifications.get(position);
 		    	eventString = n.text;
-		    	if (n.icon != null)
-		    	{
-		    		row.setImageViewBitmap(R.id.notificationIcon, n.icon);
-		    	}
-		    	else
-		    	{
-		    		// TODO find icon by n.packageName
-		    	}
+		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
 		    	
 				Intent i=new Intent();
 				Bundle extras=new Bundle();			
-				extras.putString(NotificationsWidgetProvider.EXTRA_APP_ID,n.packageName);
+				extras.putInt(NotificationsWidgetProvider.EXTRA_APP_ID,position);
 				i.putExtras(extras);
 				row.setOnClickFillInIntent(R.id.widget_item, i);
 		    }

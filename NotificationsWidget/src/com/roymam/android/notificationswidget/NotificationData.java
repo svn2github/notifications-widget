@@ -1,6 +1,6 @@
 package com.roymam.android.notificationswidget;
+import android.app.PendingIntent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
 public class NotificationData 
 {
@@ -8,4 +8,5 @@ public class NotificationData
 	Bitmap 	icon;
 	long	received;
 	String	packageName;
+	PendingIntent action;
 }

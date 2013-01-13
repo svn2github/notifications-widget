@@ -59,7 +59,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     @Override
     public void onReceive(Context ctx, Intent intent) 
     {    	
-        final String action = intent.getAction();
+        /*final String action = intent.getAction();
         if (action.equals("android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") ||
         	action.equals("android.appwidget.action.APPWIDGET_UPDATE"))
         {
@@ -101,7 +101,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	            }
         	}
         }
-
+*/
         super.onReceive(ctx, intent);
     }
 
