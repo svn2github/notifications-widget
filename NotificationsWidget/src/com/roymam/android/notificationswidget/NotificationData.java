@@ -10,4 +10,5 @@ public class NotificationData
 	long	received;
 	String	packageName;
 	PendingIntent action;
+	int 	count;
 }

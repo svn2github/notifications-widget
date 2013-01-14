@@ -78,7 +78,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    	eventString = n.text;
 		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
 		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);
-		    	row.setTextViewText(R.id.notificationCount, "1");
+		    	if (n.count > 1)
+		    		row.setTextViewText(R.id.notificationCount, Integer.toString(n.count));
+		    	else
+		    		row.setTextViewText(R.id.notificationCount, null);
 		    	Time t = new Time();
 		    	t.set(n.received);
 		    	row.setTextViewText(R.id.notificationTime, t.format("%H:%M"));
