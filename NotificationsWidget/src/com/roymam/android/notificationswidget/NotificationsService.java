@@ -76,22 +76,27 @@ public class NotificationsService extends AccessibilityService {
 					wl.acquire();
 
 					NotificationData nd = new NotificationData();
+					
+					// extract app icon
+					Resources res;
+					try {
+						res = ctx.getPackageManager().getResourcesForApplication(event.getPackageName().toString());
+						PackageInfo info = ctx.getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
+						nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+					} catch (NameNotFoundException e) 
+					{
+						nd.appicon = null;
+					}
+					
 					if (n.largeIcon != null)
 					{
 						nd.icon = n.largeIcon;
 					}
 					else
 					{
-						Resources res;
-						try {
-							res = ctx.getPackageManager().getResourcesForApplication(event.getPackageName().toString());
-							PackageInfo info = ctx.getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
-							nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
-						} catch (NameNotFoundException e) 
-						{
-							nd.icon = null;
-						}
+						nd.icon = nd.appicon;
 					}
+					
 					nd.text = n.tickerText.toString();
 					nd.received = n.when;
 					nd.action = n.contentIntent;

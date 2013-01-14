@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.text.format.Time;
 import android.view.accessibility.AccessibilityEvent;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
@@ -76,7 +77,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    	NotificationData n = notifications.get(position);
 		    	eventString = n.text;
 		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
-		    	
+		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);
+		    	row.setTextViewText(R.id.notificationCount, "1");
+		    	Time t = new Time();
+		    	t.set(n.received);
+		    	row.setTextViewText(R.id.notificationTime, t.format("%H:%M"));
 				Intent i=new Intent();
 				Bundle extras=new Bundle();			
 				extras.putInt(NotificationsWidgetProvider.EXTRA_APP_ID,position);

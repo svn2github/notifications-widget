@@ -28,9 +28,12 @@ public final class R {
         public static final int refresh_pressed=0x7f020008;
     }
     public static final class id {
-        public static final int Container=0x7f070002;
+        public static final int Container=0x7f070005;
+        public static final int appIcon=0x7f070003;
+        public static final int notificationCount=0x7f070004;
         public static final int notificationIcon=0x7f070000;
-        public static final int notificationsListView=0x7f070003;
+        public static final int notificationTime=0x7f070002;
+        public static final int notificationsListView=0x7f070006;
         public static final int widget_item=0x7f070001;
     }
     public static final class layout {

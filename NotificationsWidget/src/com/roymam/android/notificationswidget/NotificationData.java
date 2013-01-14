@@ -6,6 +6,7 @@ public class NotificationData
 {
 	String 	text;
 	Bitmap 	icon;
+	Bitmap 	appicon;
 	long	received;
 	String	packageName;
 	PendingIntent action;

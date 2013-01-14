@@ -22,19 +22,58 @@
             android:id="@+id/notificationIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="#ff1d3741" />
+            android:background="#801d3741" />
 
         <TextView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/widget_item"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:background="#ff141414"
-            android:gravity="center_vertical"
+            android:layout_weight="0.46"
+            android:background="#80141414"
+            android:gravity="top"
             android:paddingLeft="25dp"
             android:text="@string/empty_view_text"
             android:textColor="#e5e5e1"
             android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_weight="0.00"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/notificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#80141414"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/appIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="#80141414"
+                    />
+
+                <TextView
+                    android:id="@+id/notificationCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:background="#80141414"
+                    android:text=""
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
