@@ -53,8 +53,7 @@ public class NotificationsService extends AccessibilityService {
 	    setServiceInfo(info);
 	    sSharedInstance = this;
 	    notifications = new ArrayList<NotificationData>();
-	}
-	
+	}	
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -82,7 +81,11 @@ public class NotificationsService extends AccessibilityService {
 					try {
 						res = ctx.getPackageManager().getResourcesForApplication(event.getPackageName().toString());
 						PackageInfo info = ctx.getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
-						nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+						nd.appicon = BitmapFactory.decodeResource(res, n.icon);
+						if (nd.appicon == null)
+						{
+							nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+						}
 					} catch (NameNotFoundException e) 
 					{
 						nd.appicon = null;
@@ -94,7 +97,14 @@ public class NotificationsService extends AccessibilityService {
 					}
 					else
 					{
-						nd.icon = nd.appicon;
+						try {
+							res = ctx.getPackageManager().getResourcesForApplication(event.getPackageName().toString());
+							PackageInfo info = ctx.getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
+							nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+						} catch (NameNotFoundException e) 
+						{
+							nd.icon = null;
+						}
 					}
 					
 					nd.text = n.tickerText.toString();

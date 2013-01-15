@@ -16,7 +16,9 @@
 -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="36dp"
+        android:background="#bf141414"
+            >
 
         <ImageView
             android:id="@+id/notificationIcon"
@@ -31,9 +33,9 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_weight="0.46"
-            android:background="#80141414"
             android:gravity="top"
             android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:scrollHorizontally="false"
             android:text="@string/empty_view_text"
             android:textColor="#e5e5e1"
@@ -49,7 +51,7 @@
                 android:id="@+id/notificationTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#80141414"
+                android:textColor="#ff32b6e6"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="14sp" />
 
@@ -61,7 +63,6 @@
                     android:id="@+id/appIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:background="#80141414"
                     />
 
                 <TextView
@@ -69,7 +70,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center_horizontal"
-                    android:background="#80141414"
                     android:text=""
                     android:textSize="12sp" />
 

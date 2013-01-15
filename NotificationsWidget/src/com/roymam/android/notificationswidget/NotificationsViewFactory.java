@@ -2,15 +2,18 @@ package com.roymam.android.notificationswidget;
 
 import java.util.List;
 
-import android.app.Notification;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.text.format.Time;
-import android.view.accessibility.AccessibilityEvent;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
@@ -62,6 +65,19 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 			return(1);
 		}
 	}
+
+	private Bitmap ConvertToBlackAndWhite(Bitmap sampleBitmap)
+	{
+		ColorMatrix bwMatrix =new ColorMatrix();
+		bwMatrix.setSaturation(0);
+		final ColorMatrixColorFilter colorFilter= new ColorMatrixColorFilter(bwMatrix);
+		Bitmap rBitmap = sampleBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		Paint paint=new Paint();
+		paint.setColorFilter(colorFilter);
+		Canvas myCanvas =new Canvas(rBitmap);
+		myCanvas.drawBitmap(rBitmap, 0, 0, paint);
+		return rBitmap;
+	}
 	
 	@Override
 	public RemoteViews getViewAt(int position) 
@@ -69,6 +85,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.dark_widget_item);	
 		NotificationsService s = NotificationsService.getSharedInstance();
 		String eventString = "No Notifications";
+		row.setTextViewText(R.id.notificationCount, "");
+    	row.setTextViewText(R.id.notificationTime, "");
 		if (s != null) 
 		{
 		    List<NotificationData> notifications = s.getNotifications();
@@ -77,7 +95,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    	NotificationData n = notifications.get(position);
 		    	eventString = n.text;
 		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
-		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);
+		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);		    	
 		    	if (n.count > 1)
 		    		row.setTextViewText(R.id.notificationCount, Integer.toString(n.count));
 		    	else
