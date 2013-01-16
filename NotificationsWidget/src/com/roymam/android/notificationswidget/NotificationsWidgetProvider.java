@@ -31,6 +31,8 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.widget.ArrayAdapter;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -46,7 +48,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static String CLICK_ACTION = "com.roymam.android.notificationswidget.click";
     public static String NOTIFICATION_CREATED_ACTION = "com.roymam.android.notificationswidget.NOTIFICATION_CREATED";
     public static String EXTRA_APP_ID = "com.roymam.android.notificationswidget.extraappid";
-    
+    public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public NotificationsWidgetProvider() 
     {
     }
@@ -58,50 +60,23 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
     @Override
     public void onReceive(Context ctx, Intent intent) 
-    {    	
-        /*final String action = intent.getAction();
-        if (action.equals("android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") ||
-        	action.equals("android.appwidget.action.APPWIDGET_UPDATE"))
-        {
-        	// update all widgets
-        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
-            int[] appWidgetIds = AppWidgetManager.getInstance(ctx).getAppWidgetIds(notifiationsWidget);
-            for (int i=0; i<appWidgetIds.length; i++) 
-            {
-            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.notificationsListView);
-            }
-        }
-        else if (action.equals(CLICK_ACTION)) 
-        {
-            // TODO - Open the app that was clicked
-            final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-            final String appId = intent.getStringExtra(EXTRA_APP_ID);
-            final String formatStr = ctx.getResources().getString(R.string.toast_format_string);
-            Toast.makeText(ctx, String.format(formatStr, appId), Toast.LENGTH_SHORT).show();
-        } 
-        else if (action.equals(NOTIFICATION_CREATED_ACTION )) 
-        {
-        	String s = intent.getStringExtra("NotificationString");
-        	if (s!=null)
-        	{	        	
-	        	System.out.println("Notification Receieved to Widget:"+s);
-	        	
-	        	RemoteViews remoteViews = new RemoteViews( ctx.getPackageName(), R.layout.widget_layout);
-	        	ComponentName notifiationsWidget = new ComponentName( ctx, NotificationsWidgetProvider.class );
-	            //remoteViews.setTextViewText( R.id.center_text, s);
-	        	
-	            AppWidgetManager.getInstance(ctx).updateAppWidget( notifiationsWidget, remoteViews);            
-	
-	            // update all widgets
-	            int[] appWidgetIds = AppWidgetManager.getInstance(ctx).getAppWidgetIds(notifiationsWidget);
-	            for (int i=0; i<appWidgetIds.length; i++) 
+    {    
+    	if (intent.getAction().equals(CLEAR_ALL))
+    	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
+    	    if (ns != null)
+    	    {
+    	    	ns.getNotifications().clear();
+    	    	AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
+				ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
+				int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+				
+				for (int i=0; i<widgetIds.length; i++) 
 	            {
-	            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.notificationsListView);
+	            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
 	            }
-        	}
-        }
-*/
+    	    }
+    	}
         super.onReceive(ctx, intent);
     }
 
@@ -125,10 +100,24 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	                              .getActivity(ctxt, 0,
     	                                            clickIntent,
     	                                            PendingIntent.FLAG_UPDATE_CURRENT);
-    	      
-    	      widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
+    	      // set up clock
+    	      Time t = new Time();
+    	      t.setToNow();
+    	      widget.setTextViewText(R.id.timeHour, t.format("%H"));
+    	      widget.setTextViewText(R.id.timeMinute, t.format(":%M"));
+    	      String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
+		      widget.setTextViewText(R.id.dateFull, datestr.toUpperCase());
+		      widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
 
+		      // set up click events
+		      Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
+		      clearIntent.setAction(NotificationsWidgetProvider.CLEAR_ALL);
+		      
+		      widget.setOnClickPendingIntent(R.id.clearButton, 
+		    		  PendingIntent.getBroadcast(ctxt, 0, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
     	      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);
+    	      
+    	      
     	    }
     		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);
     }

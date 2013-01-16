@@ -4,13 +4,53 @@
     android:id="@+id/Container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="22dp" >
+
+        <TextView
+            android:id="@+id/timeHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-4dp"
+            android:text="00"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/timeMinute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-4dp"
+            android:paddingRight="5dp"
+            android:text=":00"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/dateFull"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-4dp"
+            android:layout_weight="0.97"
+            android:text="Loading, Please Wait..."
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <ImageButton
+            android:id="@+id/clearButton"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="#00000000"
+            android:scaleType="fitCenter"
+            android:src="@drawable/clear" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/notificationsListView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
         tools:listitem="@layout/light_widget_item" />
 
 </LinearLayout>

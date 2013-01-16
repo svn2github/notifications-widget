@@ -18,22 +18,27 @@ public final class R {
     }
     public static final class drawable {
         public static final int body=0x7f020000;
-        public static final int footer=0x7f020001;
-        public static final int header=0x7f020002;
-        public static final int icon=0x7f020003;
-        public static final int item_bg_dark=0x7f020004;
-        public static final int item_bg_light=0x7f020005;
-        public static final int preview=0x7f020006;
-        public static final int refresh=0x7f020007;
-        public static final int refresh_pressed=0x7f020008;
+        public static final int clear=0x7f020001;
+        public static final int footer=0x7f020002;
+        public static final int header=0x7f020003;
+        public static final int icon=0x7f020004;
+        public static final int item_bg_dark=0x7f020005;
+        public static final int item_bg_light=0x7f020006;
+        public static final int preview=0x7f020007;
+        public static final int refresh=0x7f020008;
+        public static final int refresh_pressed=0x7f020009;
     }
     public static final class id {
         public static final int Container=0x7f070005;
         public static final int appIcon=0x7f070003;
+        public static final int clearButton=0x7f070009;
+        public static final int dateFull=0x7f070008;
         public static final int notificationCount=0x7f070004;
         public static final int notificationIcon=0x7f070000;
         public static final int notificationTime=0x7f070002;
-        public static final int notificationsListView=0x7f070006;
+        public static final int notificationsListView=0x7f07000a;
+        public static final int timeHour=0x7f070006;
+        public static final int timeMinute=0x7f070007;
         public static final int widget_item=0x7f070001;
     }
     public static final class layout {

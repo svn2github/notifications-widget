@@ -9,17 +9,22 @@ public class NotificationActivity extends Activity {
   @Override
   public void onCreate(Bundle state) {
     super.onCreate(state);
-    
-    int pos=getIntent().getIntExtra(NotificationsWidgetProvider.EXTRA_APP_ID,-1);
-    
-    if (pos != -1)
-	try 
+    NotificationsService ns = NotificationsService.getSharedInstance();
+    if (ns != null)
     {
-		NotificationsService.getSharedInstance().getNotifications().get(pos).action.send();
-    } catch (CanceledException e) 
-	{
-	}
-    
+	    int pos=getIntent().getIntExtra(NotificationsWidgetProvider.EXTRA_APP_ID,-1);
+	    
+	    if (pos != -1)
+	    {
+			try 
+		    {
+				ns.getNotifications().get(pos).action.send();
+				ns.getNotifications().remove(pos);
+		    } catch (CanceledException e) 
+			{
+			}
+	    }
+    }
     finish();
   }
 }

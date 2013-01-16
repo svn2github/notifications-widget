@@ -48,21 +48,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		{
 		        // The service is running and connected.
 		        events = s.getNotifications();
-		        if (events.size() > 0)
-		        {
-		        	System.out.println("Total Events:" + events.size());
-		        	return(events.size());
-		        }
-		        else
-		        {
-		        	System.out.println("No Events");	        
-		        	return 1;
-		        }
+		        return(events.size());		        
 		}
 		else
 		{
-			System.out.println("No Events");	        
-			return(1);
+			return(0);
 		}
 	}
 
@@ -84,18 +74,15 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	{
 		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.dark_widget_item);	
 		NotificationsService s = NotificationsService.getSharedInstance();
-		String eventString = "No Notifications";
-		row.setTextViewText(R.id.notificationCount, "");
-    	row.setTextViewText(R.id.notificationTime, "");
 		if (s != null) 
 		{
 		    List<NotificationData> notifications = s.getNotifications();
 		    if (notifications.size()>0)
 		    {
 		    	NotificationData n = notifications.get(position);
-		    	eventString = n.text;
 		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
-		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);		    	
+		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);
+		    	row.setTextViewText(R.id.widget_item, n.text);		
 		    	if (n.count > 1)
 		    		row.setTextViewText(R.id.notificationCount, Integer.toString(n.count));
 		    	else
@@ -109,13 +96,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				i.putExtras(extras);
 				row.setOnClickFillInIntent(R.id.widget_item, i);
 		    }
-		}
-		else
-		{
-			eventString = "Service inactive";
-		}
-
-		row.setTextViewText(R.id.widget_item, eventString);		
+		}	
 		return(row);
 	}
 	
