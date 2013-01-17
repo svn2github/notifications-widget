@@ -15,6 +15,7 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -23,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.view.accessibility.AccessibilityEvent;
 
 public class NotificationsService extends AccessibilityService {
@@ -59,6 +61,7 @@ public class NotificationsService extends AccessibilityService {
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		if (event != null)
 		{
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 			Notification n = (Notification)event.getParcelableData();
 			
 			if (n != null)
@@ -69,11 +72,16 @@ public class NotificationsService extends AccessibilityService {
 							)
 				{	
 					Context ctx = getApplicationContext();
+										
+					Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
+					if (turnScreenOn)
+					{
+						PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+						PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+						wl.acquire();
+						wl.release();
+					}
 					
-					PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-					PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-					wl.acquire();
-
 					NotificationData nd = new NotificationData();
 					
 					// extract app icon
@@ -141,9 +149,7 @@ public class NotificationsService extends AccessibilityService {
 					for (int i=0; i<widgetIds.length; i++) 
 		            {
 		            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-		            }
-					//Do whatever you need right here
-					wl.release();
+		            }													
 				}
 			}
 		}

@@ -4,6 +4,6 @@
     android:accessibilityFlags="flagDefault"
     android:accessibilityFeedbackType="feedbackSpoken"
     android:notificationTimeout="100"
-    android:canRetrieveWindowContent="true"
-    android:settingsActivity="com.example.android.accessibility.ServiceSettingsActivity"
+    android:settingsActivity="com.roymam.android.notificationswidget.SettingsActivity"
+    android:canRetrieveWindowContent="true"    
 />

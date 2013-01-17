@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="empty_view_text">No notifications</string>
-    <string name="title">Notifications</string>
+    <string name="title">Notifications Widget</string>
+    <string name="settingstitle">Notifications Widget Settings</string>   
     <string name="accessibility_service_description">Enable to allow NotificationsWidget receive all incoming notifications. The disclaimer displayed when enabling the accessibility service is  standard Android message. The app DOES NOT collect any data beside the needed data to display on widget. Please note that the app DOES NOT have Internet Access permission so it actually cannot send the data anywhere.</string>
     <string name="notifications_service">NotificationsWidget</string>
     <string name="toast_format_string">%1$s says Hi!</string>
     <string name="item_format_string">%1$d\u00B0 in %2$s</string>
+    <string name="turnscreenon_enabled_summary">The device will wake up and the screen will turn on when new notification arrives</string>
+    <string name="turnscreenoff_enabled_summary">The device won\'t wake and the screen stays off when new notification arrives</string>
+    <string name="turnscreenon">Auto screen on</string>
+    <string name="turnscreenon_summary">Wake device and turn screen on when new notification arrives (cancels led light)</string>
 </resources>

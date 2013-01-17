@@ -47,15 +47,21 @@ public final class R {
         public static final int widget_layout=0x7f030002;
     }
     public static final class string {
-        public static final int accessibility_service_description=0x7f060002;
+        public static final int accessibility_service_description=0x7f060003;
         public static final int empty_view_text=0x7f060000;
-        public static final int item_format_string=0x7f060005;
-        public static final int notifications_service=0x7f060003;
+        public static final int item_format_string=0x7f060006;
+        public static final int notifications_service=0x7f060004;
+        public static final int settingstitle=0x7f060002;
         public static final int title=0x7f060001;
-        public static final int toast_format_string=0x7f060004;
+        public static final int toast_format_string=0x7f060005;
+        public static final int turnscreenoff_enabled_summary=0x7f060008;
+        public static final int turnscreenon=0x7f060009;
+        public static final int turnscreenon_enabled_summary=0x7f060007;
+        public static final int turnscreenon_summary=0x7f06000a;
     }
     public static final class xml {
         public static final int notifications_service_config=0x7f040000;
-        public static final int widgetinfo=0x7f040001;
+        public static final int preferences=0x7f040001;
+        public static final int widgetinfo=0x7f040002;
     }
 }

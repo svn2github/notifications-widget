@@ -10,10 +10,10 @@
         <activity android:label="@string/title"
               android:name="NotificationActivity"
               android:theme="@android:style/Theme.NoDisplay">
-              <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      	</intent-filter>
+    	</activity>
+    	<activity android:label="@string/settingstitle"
+              android:name="SettingsActivity"
+              android:theme="@android:style/Theme.Holo">              
     	</activity>
     
         <!-- The widget provider -->
@@ -31,7 +31,8 @@
                     
         <service android:name="NotificationsService"
             	 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-      			 android:label="@string/notifications_service">
+      			 android:label="@string/notifications_service"
+      			 >
 	    	<intent-filter>
 	      		<action android:name="android.accessibilityservice.AccessibilityService" />
 	    	</intent-filter>
