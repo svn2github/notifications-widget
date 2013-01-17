@@ -131,9 +131,9 @@ public class NotificationsService extends AccessibilityService {
 					}
 					notifications.add(0,nd);
 					
-					Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);							
-					ctx.sendBroadcast(intent);
-					
+//					Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);							
+//					ctx.sendBroadcast(intent);
+//					
 					AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
 					ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
 					int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);

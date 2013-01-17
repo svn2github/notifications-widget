@@ -9,12 +9,11 @@ public class NotificationActivity extends Activity {
   @Override
   public void onCreate(Bundle state) {
     super.onCreate(state);
+    int pos=getIntent().getIntExtra(NotificationsWidgetProvider.EXTRA_APP_ID,-1);
     NotificationsService ns = NotificationsService.getSharedInstance();
-    if (ns != null)
+    if (pos != -1)
     {
-	    int pos=getIntent().getIntExtra(NotificationsWidgetProvider.EXTRA_APP_ID,-1);
-	    
-	    if (pos != -1)
+	    if (ns != null)
 	    {
 			try 
 		    {
@@ -24,7 +23,7 @@ public class NotificationActivity extends Activity {
 			{
 			}
 	    }
-    }
+  	}
     finish();
   }
 }

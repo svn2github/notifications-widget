@@ -16,6 +16,7 @@
 
 package com.roymam.android.notificationswidget;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -39,26 +40,43 @@ import android.widget.RemoteViewsService;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 import com.roymam.android.notificationswidget.R;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
-    public static String CLICK_ACTION = "com.roymam.android.notificationswidget.click";
-    public static String NOTIFICATION_CREATED_ACTION = "com.roymam.android.notificationswidget.NOTIFICATION_CREATED";
     public static String EXTRA_APP_ID = "com.roymam.android.notificationswidget.extraappid";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
+    public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.UPDATE_CLOCK";
+    
     public NotificationsWidgetProvider() 
     {
     }
     
+    private PendingIntent clockPendingIntent = null;
+    
     @Override
     public void onEnabled(Context context) 
-    {    	
+    {    
     }
-
+    
     @Override
+	public void onDeleted(Context context, int[] appWidgetIds) 
+    {
+		super.onDeleted(context, appWidgetIds);
+	}
+
+	@Override
+	public void onDisabled(Context context) 
+	{
+		AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(clockPendingIntent);
+		super.onDisabled(context);
+	}
+
+	@Override
     public void onReceive(Context ctx, Intent intent) 
     {    
     	if (intent.getAction().equals(CLEAR_ALL))
@@ -77,12 +95,44 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	            }
     	    }
     	}
-        super.onReceive(ctx, intent);
+    	else if (intent.getAction().equals(UPDATE_CLOCK))
+    	{
+    		AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
+			ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
+			int[] appWidgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+			
+			RemoteViews widget=new RemoteViews(ctx.getPackageName(),
+                    R.layout.widget_layout);
+
+	  	      // set up clock
+	  	      Time t = new Time();
+	  	      t.setToNow();
+	  	      widget.setTextViewText(R.id.timeHour, t.format("%H"));
+	  	      widget.setTextViewText(R.id.timeMinute, t.format(":%M"));
+	  	      String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
+		      widget.setTextViewText(R.id.dateFull, datestr.toUpperCase());
+	
+		      AppWidgetManager.getInstance(ctx).updateAppWidget(appWidgetIds, widget);   
+    	}
+    	super.onReceive(ctx, intent);
     }
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
     {
+    	if (clockPendingIntent == null)
+    	{
+    		// create alarm for clock updates
+    		//prepare Alarm Service to trigger Widget
+    	   Intent intent = new Intent(UPDATE_CLOCK);
+    	   clockPendingIntent = PendingIntent.getBroadcast(ctxt, 0, intent, 0);
+    	   AlarmManager alarmManager = (AlarmManager)ctxt.getSystemService(Context.ALARM_SERVICE);
+    	   Calendar calendar = Calendar.getInstance();
+    	   calendar.setTimeInMillis(System.currentTimeMillis());
+    	   calendar.add(Calendar.SECOND, 10);
+    	   alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
+    	}
+    	
     	for (int i=0; i<appWidgetIds.length; i++) {
     	      Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
     	      
@@ -120,5 +170,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	      
     	    }
     		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);
+    		
     }
 }
