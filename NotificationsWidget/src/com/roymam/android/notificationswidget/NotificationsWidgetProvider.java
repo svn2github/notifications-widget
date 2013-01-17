@@ -101,18 +101,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 			ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
 			int[] appWidgetIds = widgetManager.getAppWidgetIds(widgetComponent);
 			
-			RemoteViews widget=new RemoteViews(ctx.getPackageName(),
-                    R.layout.widget_layout);
-
-	  	      // set up clock
-	  	      Time t = new Time();
-	  	      t.setToNow();
-	  	      widget.setTextViewText(R.id.timeHour, t.format("%H"));
-	  	      widget.setTextViewText(R.id.timeMinute, t.format(":%M"));
-	  	      String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
-		      widget.setTextViewText(R.id.dateFull, datestr.toUpperCase());
-	
-		      AppWidgetManager.getInstance(ctx).updateAppWidget(appWidgetIds, widget);   
+			onUpdate(ctx, widgetManager, appWidgetIds);
+			
     	}
     	super.onReceive(ctx, intent);
     }
@@ -132,7 +122,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	   calendar.add(Calendar.SECOND, 10);
     	   alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
     	}
-    	
     	for (int i=0; i<appWidgetIds.length; i++) {
     	      Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
     	      
