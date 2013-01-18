@@ -120,7 +120,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	   Calendar calendar = Calendar.getInstance();
     	   calendar.setTimeInMillis(System.currentTimeMillis());
     	   calendar.add(Calendar.SECOND, 10);
-    	   alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
+    	   alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
     	}
     	for (int i=0; i<appWidgetIds.length; i++) {
     	      Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
