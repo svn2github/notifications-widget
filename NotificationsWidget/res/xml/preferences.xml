@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference android:title="@string/turnscreenon" android:key="turnscreenon" android:enabled="true" android:summaryOn="@string/turnscreenon_enabled_summary" android:defaultValue="true" android:summaryOff="@string/turnscreenoff_enabled_summary" android:summary="@string/turnscreenon_summary"/>
+    
+
+</PreferenceScreen>
