@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <CheckBoxPreference android:title="@string/turnscreenon" android:key="turnscreenon" android:enabled="true" android:summaryOn="@string/turnscreenon_enabled_summary" android:defaultValue="true" android:summaryOff="@string/turnscreenoff_enabled_summary" android:summary="@string/turnscreenon_summary"/>
-    
-
+    <PreferenceCategory android:key="behaviour" android:title="@string/behaviour">
+            <CheckBoxPreference 
+                android:title="@string/turnscreenon" 
+                android:key="turnscreenon" 
+                android:enabled="true" 
+                android:defaultValue="true" 
+                android:summary="@string/turnscreenon_summary"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:key="appearance" android:title="@string/appearance">
+        <CheckBoxPreference 
+            android:summary="@string/showclock_summary" 
+            android:key="showclock"
+            android:defaultValue="true"  
+            android:title="@string/showclock"/>
+    	<CheckBoxPreference 
+    	    android:summary="@string/showclearbutton_summary" 
+    	    android:key="showclearbutton" 
+    	    android:title="@string/showclearbutton" 
+    	    android:defaultValue="true" 
+    	    android:dependency="showclock"/>        
+    </PreferenceCategory>
 </PreferenceScreen>

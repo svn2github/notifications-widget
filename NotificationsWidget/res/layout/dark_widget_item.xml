@@ -37,7 +37,6 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:scrollHorizontally="false"
-            android:text="@string/empty_view_text"
             android:textColor="#e5e5e1"
             android:textSize="14sp" />
 

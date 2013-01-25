@@ -138,10 +138,8 @@ public class NotificationsService extends AccessibilityService {
 						nd.count = dup.count+1;						
 					}
 					notifications.add(0,nd);
-					
-//					Intent intent = new Intent(NotificationsWidgetProvider.NOTIFICATION_CREATED_ACTION);							
-//					ctx.sendBroadcast(intent);
-//					
+
+					// update widgets
 					AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
 					ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
 					int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);

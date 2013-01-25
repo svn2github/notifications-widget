@@ -32,8 +32,10 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -122,6 +124,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	   calendar.add(Calendar.SECOND, 10);
     	   alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
     	}
+    	
     	for (int i=0; i<appWidgetIds.length; i++) {
     	      Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
     	      
@@ -154,9 +157,15 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		      
 		      widget.setOnClickPendingIntent(R.id.clearButton, 
 		    		  PendingIntent.getBroadcast(ctxt, 0, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-    	      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);
     	      
+    	      // hide clock if required
+    	      Boolean showClock = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLOCK, true);					
+    	      Boolean showClearButton = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLEAR_BUTTON, true);					
     	      
+    	      widget.setViewVisibility(R.id.clockbar, showClock.booleanValue()?View.VISIBLE:View.GONE);
+    	      widget.setViewVisibility(R.id.clearButton, showClearButton.booleanValue()?View.VISIBLE:View.GONE); 
+
+		      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);    	      
     	    }
     		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);
     		
