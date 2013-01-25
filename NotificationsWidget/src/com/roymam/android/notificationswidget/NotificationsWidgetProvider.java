@@ -171,6 +171,14 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	          NotificationsService.getSharedInstance().getNotifications().size() == 0)
     	    	  {
     	    	  	widget.setViewVisibility(R.id.clearButton, View.GONE);   
+    	    	  	if (NotificationsService.getSharedInstance()==null )
+    	    	  	{
+    	    	  		widget.setViewVisibility(R.id.serviceInactiveButton, View.VISIBLE);   
+    	    	  	}
+    	    	  	else
+    	    	  	{
+    	    	  		widget.setViewVisibility(R.id.serviceInactiveButton, View.GONE);   
+    	    	  	}
     	    	  }
     	
 		      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);    	      
