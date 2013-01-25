@@ -7,12 +7,15 @@
     <string name="notifications_service">Notifications Widget</string>
     
     <!--  Settings Page -->
+    <string name="behaviour">Behaviour</string>
+    <string name="appearance">Appearance</string>
+
     <string name="turnscreenon">Auto screen on</string>
     <string name="turnscreenon_summary">Wake device and turn screen on when new a notification arrives</string>
     <string name="showclock">Show clock bar</string>
     <string name="showclock_summary">Show a bar time, date and &quot;clear all notifications&quot; button</string>
     <string name="showclearbutton">Show Clear button</string>
     <string name="showclearbutton_summary">Show &quot;clear all notifications&quot; button in the clock bar</string>
-    <string name="behaviour">Behaviour</string>
-    <string name="appearance">Appearance</string>
+    <string name="notification_bg_opacity">Notification background opacity</string>
+    <string name="notification_bg_opacity_summary">Set the opacity of the notification background</string>
 </resources>

@@ -67,6 +67,6 @@
         android:id="@+id/notificationsListView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        tools:listitem="@layout/light_widget_item" />
+        tools:listitem="@layout/dark_widget_item" />
 
 </LinearLayout>

@@ -19,6 +19,13 @@
     	    android:key="showclearbutton" 
     	    android:title="@string/showclearbutton" 
     	    android:defaultValue="true" 
-    	    android:dependency="showclock"/>        
+    	    android:dependency="showclock"/>  
+    	<com.hlidskialf.android.preference.SeekBarPreference android:key="notification_bg_opacity"
+	        android:title="@string/notification_bg_opacity"
+	        android:summary="@string/notification_bg_opacity_summary"
+	        android:dialogMessage=""
+	        android:defaultValue="75"
+	        android:text="%"
+	        android:max="100"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.text.format.Time;
@@ -95,6 +97,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				extras.putInt(NotificationsWidgetProvider.EXTRA_APP_ID,position);
 				i.putExtras(extras);
 				row.setOnClickFillInIntent(R.id.widget_item, i);
+				
+				// set opacity by preference
+				int opacity = PreferenceManager.getDefaultSharedPreferences(ctxt).getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);
+				row.setInt(R.id.notificationContainer, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
 		    }
 		}	
 		return(row);

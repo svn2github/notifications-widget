@@ -9,7 +9,8 @@
     <application android:label="Notifications Widget" android:allowBackup="true">
         <activity android:label="@string/title"
               android:name="NotificationActivity"
-              android:theme="@android:style/Theme.NoDisplay">
+              android:theme="@android:style/Theme.NoDisplay"
+              android:excludeFromRecents="true">
     	</activity>
     	<activity android:label="@string/settingstitle"
               android:name="SettingsActivity"

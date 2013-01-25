@@ -95,6 +95,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	            {
 	            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
 	            }
+				onUpdate(ctx, widgetManager, widgetIds);
     	    }
     	}
     	else if (intent.getAction().equals(UPDATE_CLOCK))
@@ -165,6 +166,13 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	      widget.setViewVisibility(R.id.clockbar, showClock.booleanValue()?View.VISIBLE:View.GONE);
     	      widget.setViewVisibility(R.id.clearButton, showClearButton.booleanValue()?View.VISIBLE:View.GONE); 
 
+    	      // hide clear button if no notifications are displayed
+    	      if (NotificationsService.getSharedInstance()==null ||
+    	          NotificationsService.getSharedInstance().getNotifications().size() == 0)
+    	    	  {
+    	    	  	widget.setViewVisibility(R.id.clearButton, View.GONE);   
+    	    	  }
+    	
 		      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);    	      
     	    }
     		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);
