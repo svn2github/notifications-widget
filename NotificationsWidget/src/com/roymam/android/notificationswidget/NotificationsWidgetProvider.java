@@ -30,6 +30,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.preference.PreferenceManager;
@@ -51,7 +52,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 {
     public static String EXTRA_APP_ID = "com.roymam.android.notificationswidget.extraappid";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
-    public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.UPDATE_CLOCK";
+    public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
+    public static String ACTIVATE_SERVICE = "com.roymam.android.notificationswidget.activate_service";
     
     public NotificationsWidgetProvider() 
     {
@@ -107,6 +109,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 			onUpdate(ctx, widgetManager, appWidgetIds);
 			
     	}
+    	else if (intent.getAction().equals(ACTIVATE_SERVICE))
+    	{
+    		Intent settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+    		settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    		ctx.startActivity(settingsIntent);
+    	}
     	super.onReceive(ctx, intent);
     }
 
@@ -126,60 +134,68 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	   alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
     	}
     	
-    	for (int i=0; i<appWidgetIds.length; i++) {
-    	      Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
-    	      
-    	      svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-    	      svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
-    	      
-    	      RemoteViews widget=new RemoteViews(ctxt.getPackageName(),
-    	                                          R.layout.widget_layout);
-    	      
-    	      widget.setRemoteAdapter(appWidgetIds[i], R.id.notificationsListView,
-    	                              svcIntent);
+    	for (int i=0; i<appWidgetIds.length; i++) 
+    	{
+    		RemoteViews widget=new RemoteViews(ctxt.getPackageName(), R.layout.widget_layout);
+    	    
+    		// hide loading spinner
+    		widget.setViewVisibility(R.id.loadingSpinner, View.GONE);
+    		
+    		// set up notifications list
+    		Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
+    	    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+    	    svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+    	    widget.setRemoteAdapter(appWidgetIds[i], R.id.notificationsListView, svcIntent);
 
-    	      Intent clickIntent=new Intent(ctxt, NotificationActivity.class);
-    	      PendingIntent clickPI=PendingIntent
-    	                              .getActivity(ctxt, 0,
-    	                                            clickIntent,
-    	                                            PendingIntent.FLAG_UPDATE_CURRENT);
-    	      // set up clock
-    	      Time t = new Time();
-    	      t.setToNow();
-    	      widget.setTextViewText(R.id.timeHour, t.format("%H"));
-    	      widget.setTextViewText(R.id.timeMinute, t.format(":%M"));
-    	      String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
-		      widget.setTextViewText(R.id.dateFull, datestr.toUpperCase());
-		      widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
+    	    // register click event on list
+    	    Intent clickIntent=new Intent(ctxt, NotificationActivity.class);
+    	    PendingIntent clickPI=PendingIntent.getActivity(ctxt, 0,
+	                                            			clickIntent,
+	                                            			PendingIntent.FLAG_UPDATE_CURRENT);
+    	    // set up clock
+    	    Time t = new Time();
+    	    t.setToNow();
+		    widget.setTextViewText(R.id.timeHour, t.format("%H"));
+		    widget.setTextViewText(R.id.timeMinute, t.format(":%M"));
+		    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
+		    widget.setTextViewText(R.id.dateFull, datestr.toUpperCase());
+		    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
 
-		      // set up click events
-		      Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
-		      clearIntent.setAction(NotificationsWidgetProvider.CLEAR_ALL);
-		      
-		      widget.setOnClickPendingIntent(R.id.clearButton, 
+		    // set up buttons
+		    Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
+		    clearIntent.setAction(NotificationsWidgetProvider.CLEAR_ALL);
+		    widget.setOnClickPendingIntent(R.id.clearButton, 
 		    		  PendingIntent.getBroadcast(ctxt, 0, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+    	          	      
+		    Intent settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+	    	widget.setOnClickPendingIntent(R.id.serviceInactiveButton, 
+	    			  PendingIntent.getActivity(ctxt, 0, settingsIntent, Intent.FLAG_ACTIVITY_NEW_TASK));
+		      
+    	    // hide clock if required
+    	    Boolean showClock = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLOCK, true);					
+    	    Boolean showClearButton = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLEAR_BUTTON, true);					
     	      
-    	      // hide clock if required
-    	      Boolean showClock = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLOCK, true);					
-    	      Boolean showClearButton = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLEAR_BUTTON, true);					
-    	      
-    	      widget.setViewVisibility(R.id.clockbar, showClock.booleanValue()?View.VISIBLE:View.GONE);
-    	      widget.setViewVisibility(R.id.clearButton, showClearButton.booleanValue()?View.VISIBLE:View.GONE); 
+    	    widget.setViewVisibility(R.id.clockbar, showClock.booleanValue()?View.VISIBLE:View.GONE);
+    	    widget.setViewVisibility(R.id.clearButton, showClearButton.booleanValue()?View.VISIBLE:View.GONE); 
 
-    	      // hide clear button if no notifications are displayed
-    	      if (NotificationsService.getSharedInstance()==null ||
-    	          NotificationsService.getSharedInstance().getNotifications().size() == 0)
-    	    	  {
-    	    	  	widget.setViewVisibility(R.id.clearButton, View.GONE);   
-    	    	  	if (NotificationsService.getSharedInstance()==null )
-    	    	  	{
-    	    	  		widget.setViewVisibility(R.id.serviceInactiveButton, View.VISIBLE);   
-    	    	  	}
-    	    	  	else
-    	    	  	{
-    	    	  		widget.setViewVisibility(R.id.serviceInactiveButton, View.GONE);   
-    	    	  	}
-    	    	  }
+    	    // hide clear button if no notifications are displayed
+    	    if (NotificationsService.getSharedInstance()==null ||
+    	    	NotificationsService.getSharedInstance().getNotifications().size() == 0)
+				{
+				  	widget.setViewVisibility(R.id.clearButton, View.GONE);   
+				  	if (NotificationsService.getSharedInstance()==null )
+				  	{
+				  		widget.setViewVisibility(R.id.serviceInactiveButton, View.VISIBLE);
+				  		widget.setViewVisibility(R.id.serviceInactiveView, View.VISIBLE);
+				  		widget.setViewVisibility(R.id.notificationsListView, View.GONE);
+				  	}
+				  	else
+				  	{
+				  		widget.setViewVisibility(R.id.serviceInactiveButton, View.GONE);   
+				  		widget.setViewVisibility(R.id.serviceInactiveView, View.GONE);
+				  		widget.setViewVisibility(R.id.notificationsListView, View.VISIBLE);
+				  	}
+				}
     	
 		      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);    	      
     	    }

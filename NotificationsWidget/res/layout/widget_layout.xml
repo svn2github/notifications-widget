@@ -6,32 +6,21 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!--  <ViewFlipper
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateFirstView="true"
-        android:autoStart="true"
-        android:inAnimation="@android:anim/slide_in_left"
-        android:outAnimation="@android:anim/slide_out_right" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="24dp" >
-        </LinearLayout>
--->
-
         <LinearLayout
             android:id="@+id/clockbar"
             android:layout_width="match_parent"
             android:layout_height="24dp" >
+
+            <ProgressBar
+                android:id="@+id/loadingSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/timeHour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-6dp"
-                android:text="00"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold" />
 
@@ -41,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-6dp"
                 android:paddingRight="5dp"
-                android:text=":00"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
@@ -72,12 +60,24 @@
                 android:visibility="gone" />
 
         </LinearLayout>
-   <!--   </ViewFlipper>-->
-
-    <ListView
-        android:id="@+id/notificationsListView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        tools:listitem="@layout/dark_widget_item" />
-
+	    <FrameLayout
+        	android:id="@+id/serviceInactiveView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone" >
+            <TextView
+                   android:id="@+id/textView1"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center|center_horizontal"
+                   android:gravity="center"
+                   android:text="@string/service_inactive_text"
+                   android:textAppearance="?android:attr/textAppearanceSmall" />
+           </FrameLayout>
+           <ListView
+               android:id="@+id/notificationsListView"
+               android:layout_width="fill_parent"
+               android:layout_height="fill_parent"
+               tools:listitem="@layout/dark_widget_item" >
+           </ListView>
 </LinearLayout>

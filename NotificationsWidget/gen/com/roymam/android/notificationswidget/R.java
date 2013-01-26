@@ -26,17 +26,20 @@ public final class R {
     }
     public static final class id {
         public static final int appIcon=0x7f080004;
-        public static final int clearButton=0x7f08000c;
+        public static final int clearButton=0x7f08000d;
         public static final int clockbar=0x7f080007;
-        public static final int dateFull=0x7f08000a;
+        public static final int dateFull=0x7f08000b;
+        public static final int loadingSpinner=0x7f080008;
         public static final int notificationContainer=0x7f080000;
         public static final int notificationCount=0x7f080005;
         public static final int notificationIcon=0x7f080001;
         public static final int notificationTime=0x7f080003;
-        public static final int notificationsListView=0x7f08000d;
-        public static final int serviceInactiveButton=0x7f08000b;
-        public static final int timeHour=0x7f080008;
-        public static final int timeMinute=0x7f080009;
+        public static final int notificationsListView=0x7f080010;
+        public static final int serviceInactiveButton=0x7f08000c;
+        public static final int serviceInactiveView=0x7f08000e;
+        public static final int textView1=0x7f08000f;
+        public static final int timeHour=0x7f080009;
+        public static final int timeMinute=0x7f08000a;
         public static final int widetcontainer=0x7f080006;
         public static final int widget_item=0x7f080002;
     }
@@ -53,6 +56,7 @@ public final class R {
         public static final int notification_bg_opacity=0x7f07000c;
         public static final int notification_bg_opacity_summary=0x7f07000d;
         public static final int notifications_service=0x7f070003;
+        public static final int service_inactive_text=0x7f07000e;
         public static final int settingstitle=0x7f070001;
         public static final int showclearbutton=0x7f07000a;
         public static final int showclearbutton_summary=0x7f07000b;

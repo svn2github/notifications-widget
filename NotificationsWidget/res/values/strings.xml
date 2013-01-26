@@ -18,4 +18,5 @@
     <string name="showclearbutton_summary">Show &quot;clear all notifications&quot; button in the clock bar</string>
     <string name="notification_bg_opacity">Notification background opacity</string>
     <string name="notification_bg_opacity_summary">Set the opacity of the notification background</string>
+    <string name="service_inactive_text">Service is inactive. please enable \"Notifications Widget\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>
 </resources>

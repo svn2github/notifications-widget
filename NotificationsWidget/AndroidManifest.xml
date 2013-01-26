@@ -21,8 +21,9 @@
         <receiver android:name="NotificationsWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.roymam.android.notificationswidget.UPDATE_CLOCK" />
-            </intent-filter>
+                <action android:name="com.roymam.android.notificationswidget.update_clock" />
+                <action android:name="com.roymam.android.notificationswidget.activate_service" />
+                </intent-filter>
             <!-- This specifies the widget provider info -->
             <meta-data android:name="android.appwidget.provider"
                     	android:resource="@xml/widgetinfo" />
