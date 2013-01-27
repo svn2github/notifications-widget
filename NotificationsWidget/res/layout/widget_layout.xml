@@ -29,15 +29,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-6dp"
-                android:paddingRight="5dp"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-
+			
+			<TextView
+			    android:id="@+id/timeAMPM"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="-6dp"
+			    android:paddingRight="5dp"
+			    android:textAppearance="?android:attr/textAppearanceSmall" />
+            
             <TextView
                 android:id="@+id/dateFull"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-6dp"
                 android:layout_weight="0.97"
+                android:paddingLeft="5dp"
                 android:text="Loading, Please Wait..."
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 

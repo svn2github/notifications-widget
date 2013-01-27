@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.text.format.DateFormat;
 import android.text.format.Time;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
@@ -91,7 +92,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    		row.setTextViewText(R.id.notificationCount, null);
 		    	Time t = new Time();
 		    	t.set(n.received);
-		    	row.setTextViewText(R.id.notificationTime, t.format("%H:%M"));
+		    	String timeFormat = "%H:%M";
+		    	if (!DateFormat.is24HourFormat(ctxt))
+		    		timeFormat = "%l:%M%P";
+		    	row.setTextViewText(R.id.notificationTime, t.format(timeFormat));
 				Intent i=new Intent();
 				Bundle extras=new Bundle();			
 				extras.putInt(NotificationsWidgetProvider.EXTRA_APP_ID,position);

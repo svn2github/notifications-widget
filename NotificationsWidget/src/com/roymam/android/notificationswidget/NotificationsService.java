@@ -10,6 +10,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -72,7 +73,7 @@ public class NotificationsService extends AccessibilityService {
 							)
 				{	
 					Context ctx = getApplicationContext();
-										
+		    	    
 					Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
 					if (turnScreenOn)
 					{

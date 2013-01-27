@@ -155,8 +155,18 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    // set up clock
     	    Time t = new Time();
     	    t.setToNow();
-		    widget.setTextViewText(R.id.timeHour, t.format("%H"));
-		    widget.setTextViewText(R.id.timeMinute, t.format(":%M"));
+    	    String hourFormat = "%H";
+    	    String minuteFormat = ":%M";
+    	    String ampmstr = "";
+	    	if (!DateFormat.is24HourFormat(ctxt))
+	    	{
+	    		hourFormat = "%l";
+	    		minuteFormat = ":%M";
+	    		ampmstr = t.format("%p");
+	    	}
+		    widget.setTextViewText(R.id.timeHour, t.format(hourFormat));
+		    widget.setTextViewText(R.id.timeMinute, t.format(minuteFormat));
+		    widget.setTextViewText(R.id.timeAMPM, ampmstr);		    
 		    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
 		    widget.setTextViewText(R.id.dateFull, datestr.toUpperCase());
 		    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
