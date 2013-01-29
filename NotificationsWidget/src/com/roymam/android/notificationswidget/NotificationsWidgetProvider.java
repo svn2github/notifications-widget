@@ -23,29 +23,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ComponentName;
-import android.content.ContentValues;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.IntentFilter;
-import android.database.Cursor;
-import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Random;
-
 import com.roymam.android.notificationswidget.R;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
@@ -54,6 +38,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
     public static String ACTIVATE_SERVICE = "com.roymam.android.notificationswidget.activate_service";
+    public static boolean widgetActive = false;
     
     public NotificationsWidgetProvider() 
     {
@@ -64,6 +49,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     @Override
     public void onEnabled(Context context) 
     {    
+    	// onEnabled doesn't work, need to check why
     }
     
     @Override
@@ -77,6 +63,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	{
 		AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(clockPendingIntent);
+		widgetActive = false;
 		super.onDisabled(context);
 	}
 
@@ -95,7 +82,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 				
 				for (int i=0; i<widgetIds.length; i++) 
 	            {
-	            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+					AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
 	            }
 				onUpdate(ctx, widgetManager, widgetIds);
     	    }
@@ -120,7 +107,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
-    {
+    {    	
     	if (clockPendingIntent == null)
     	{
     		// create alarm for clock updates
@@ -132,6 +119,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	   calendar.setTimeInMillis(System.currentTimeMillis());
     	   calendar.add(Calendar.SECOND, 10);
     	   alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
+    	   widgetActive = true;
     	}
     	
     	for (int i=0; i<appWidgetIds.length; i++) 
@@ -209,7 +197,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	
 		      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);    	      
     	    }
-    		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);
-    		
+    		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);    		
     }
 }

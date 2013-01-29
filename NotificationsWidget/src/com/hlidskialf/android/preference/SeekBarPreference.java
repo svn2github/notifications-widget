@@ -9,7 +9,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.preference.DialogPreference;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -90,7 +89,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     mValueText.setText(mSuffix == null ? t : t.concat(mSuffix));
     if (shouldPersist())
       persistInt(value);
-    callChangeListener(new Integer(value));
+    callChangeListener(Integer.valueOf(value));
   }
   public void onStartTrackingTouch(SeekBar seek) {}
   public void onStopTrackingTouch(SeekBar seek) {}

@@ -3,7 +3,6 @@ package com.roymam.android.notificationswidget;
 import android.app.Activity;
 import android.app.PendingIntent.CanceledException;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class NotificationActivity extends Activity {
   @Override

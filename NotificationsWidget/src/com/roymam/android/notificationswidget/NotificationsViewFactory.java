@@ -21,12 +21,10 @@ import android.text.format.Time;
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
 	private Context ctxt=null;
-	private int appWidgetId;
-	
 	public NotificationsViewFactory(Context ctxt, Intent intent) 
 	{
 		this.ctxt=ctxt;
-		appWidgetId=intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+		intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
 					AppWidgetManager.INVALID_APPWIDGET_ID);
 	}
 	
@@ -59,6 +57,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private Bitmap ConvertToBlackAndWhite(Bitmap sampleBitmap)
 	{
 		ColorMatrix bwMatrix =new ColorMatrix();
