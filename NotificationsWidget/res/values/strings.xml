@@ -23,11 +23,14 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Notifications Widget</string>
     <string name="tutorial_help_1">When Accessibility Settings opens, select \"Notifications Widget\" and switch it from \"Off\" to \"On\".  Touch \"OK\" in the warning dialog</string>
-    <string name="tutorial_help_2">After locking the screen, swipe the screen right and touch the + icon, choose \"Notifications Widget\" from the widget list, when the widget appears, swipe down to extend it touch it for few seconds and drag it to the right to replace the main clock widget</string>
+    <string name="tutorial_help_2">After locking the screen, swipe the screen right and touch the + icon, choose \"Notifications Widget\" from the widget list, when the widget appears, swipe down to extend it, then touch it for few seconds and drag it to the right to replace the main clock widget</string>
     <string name="tutorial_help_3">That\'s all. if you have any questions or issues - don\'t hesitate to contact us at admin@roymam.com</string>
-    <string name="tutorial_step_1">Step 1: Enable \"Notifications Widget\" service on Accessibility Settings</string>
-    <string name="tutorial_step_2">Step 2: Lock the screen and add \"Notifications Widget\" widget</string>
-    <string name="tutorial_step_3">Step 3: Customize \"Notifications Widget\" in \"Settings\" page</string>
+    <string name="tutorial_step_1">Enable \"Notifications Widget\" service on Accessibility Settings</string>
+    <string name="tutorial_step_2">Lock the screen and add \"Notifications Widget\" widget</string>
+    <string name="tutorial_step_3">Customize \"Notifications Widget\" in \"Settings\" page</string>
     <string name="welcome_text">Welcome to Notifications Widget, Let\'s get started.</string>
+    <string name="tutorial_step_1_title">Enable Service</string>
+    <string name="tutorial_step_2_title">Add Widget</string>
+    <string name="tutorial_step_3_title">Customize</string>
 
 </resources>

@@ -2,8 +2,13 @@ package com.roymam.android.notificationswidget;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -12,14 +17,45 @@ public class MainActivity extends Activity {
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		View button1 = findViewById(R.id.button1);
+		View button3 = findViewById(R.id.button3);
+		button1.setClickable(true);
+		button1.setOnClickListener(new OnClickListener() 
+		{			
+			@Override
+			public void onClick(View v) 
+			{
+				Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+			    startActivity(intent);
+			}
+		});
+		button3.setClickable(true);
+		button3.setOnClickListener(new OnClickListener() 
+		{			
+			@Override
+			public void onClick(View v) 
+			{
+				Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+			    startActivity(intent);
+			}
+		});
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
+		final MenuInflater inflater = getMenuInflater();
+	    final Intent[] menuIntents = new Intent[] {
+	    		new Intent(this, SettingsActivity.class) };
+	    
+	    inflater.inflate(R.menu.activity_main, menu);
+	    final int ms = menu.size();
+	    for (int i=0; i < ms; i++) {
+	        menu.getItem(i).setIntent(menuIntents[i]);
+	    }
+	    
+	    return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -41,10 +77,10 @@ public class MainActivity extends Activity {
 					currentStep = 3;
 			}
 
-			final Button button1 = (Button) findViewById(R.id.button1);
-			final Button button2 = (Button) findViewById(R.id.button2);
-			final Button button3 = (Button) findViewById(R.id.button3);
-			
+			final View button1 = findViewById(R.id.button1);
+			final View button2 = findViewById(R.id.button2);
+			final View button3 = findViewById(R.id.button3);
+			final TextView desc = (TextView)findViewById(R.id.TutorialDescription);
 			switch (currentStep)
 			{
 				case 1:
@@ -54,6 +90,7 @@ public class MainActivity extends Activity {
 					button2.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
 					button3.setEnabled(false);
 					button3.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+					desc.setText(R.string.tutorial_help_1);
 					break;
 				case 2:
 					button1.setEnabled(false);
@@ -62,6 +99,7 @@ public class MainActivity extends Activity {
 					button2.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
 					button3.setEnabled(false);
 					button3.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+					desc.setText(R.string.tutorial_help_2);
 					break;
 				case 3:
 					button1.setEnabled(false);
@@ -69,7 +107,8 @@ public class MainActivity extends Activity {
 					button2.setEnabled(false);
 					button2.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
 					button3.setEnabled(true);
-					button3.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));					
+					button3.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+					desc.setText(R.string.tutorial_help_3);
 					break;
 			}
 		}
