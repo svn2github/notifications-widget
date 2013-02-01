@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory android:key="behaviour" android:title="@string/behaviour">
+    <PreferenceCategory android:key="behavior" android:title="@string/behavior">
             <CheckBoxPreference 
                 android:title="@string/turnscreenon" 
                 android:key="turnscreenon" 
@@ -27,5 +27,7 @@
 	        android:defaultValue="75"
 	        android:text="%"
 	        android:max="100"/>
+    	<ListPreference android:dialogTitle="@string/notification_text_color" android:entries="@array/settings_colors_entries" android:entryValues="@array/settings_colors_values" android:title="@string/notification_text_color" android:key="notification_text_color" android:defaultValue="17170443"/>
+    	<ListPreference android:title="@string/notification_time_color" android:dialogTitle="@string/notification_time_color" android:entries="@array/settings_colors_entries" android:key="notification_time_color" android:entryValues="@array/settings_colors_values" android:defaultValue="17170451"/>	
     </PreferenceCategory>
 </PreferenceScreen>

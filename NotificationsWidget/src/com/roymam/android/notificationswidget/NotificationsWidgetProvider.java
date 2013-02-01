@@ -104,6 +104,27 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	}
     	super.onReceive(ctx, intent);
     }
+	
+	private void populateTime(Context ctxt, RemoteViews widget, int hourId, int minuteId, int ampmId, int dateId)
+	{
+	    // set up clock
+	    Time t = new Time();
+	    t.setToNow();
+	    String hourFormat = "%H";
+	    String minuteFormat = ":%M";
+	    String ampmstr = "";
+    	if (!DateFormat.is24HourFormat(ctxt))
+    	{
+    		hourFormat = "%l";
+    		minuteFormat = ":%M";
+    		ampmstr = t.format("%p");
+    	}
+	    widget.setTextViewText(hourId, t.format(hourFormat));
+	    widget.setTextViewText(minuteId, t.format(minuteFormat));
+	    widget.setTextViewText(ampmId, ampmstr);		    
+	    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
+	    widget.setTextViewText(dateId, datestr.toUpperCase());		
+	}
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
@@ -133,32 +154,18 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
     	    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
     	    svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
-    	    widget.setRemoteAdapter(appWidgetIds[i], R.id.notificationsListView, svcIntent);
+    	    widget.setRemoteAdapter(R.id.notificationsListView, svcIntent);
 
     	    // register click event on list
     	    Intent clickIntent=new Intent(ctxt, NotificationActivity.class);
     	    PendingIntent clickPI=PendingIntent.getActivity(ctxt, 0,
 	                                            			clickIntent,
 	                                            			PendingIntent.FLAG_UPDATE_CURRENT);
-    	    // set up clock
-    	    Time t = new Time();
-    	    t.setToNow();
-    	    String hourFormat = "%H";
-    	    String minuteFormat = ":%M";
-    	    String ampmstr = "";
-	    	if (!DateFormat.is24HourFormat(ctxt))
-	    	{
-	    		hourFormat = "%l";
-	    		minuteFormat = ":%M";
-	    		ampmstr = t.format("%p");
-	    	}
-		    widget.setTextViewText(R.id.timeHour, t.format(hourFormat));
-		    widget.setTextViewText(R.id.timeMinute, t.format(minuteFormat));
-		    widget.setTextViewText(R.id.timeAMPM, ampmstr);		    
-		    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
-		    widget.setTextViewText(R.id.dateFull, datestr.toUpperCase());
-		    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
+    	    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
 
+    	    // set up clock
+    	    populateTime(ctxt, widget, R.id.timeHour, R.id.timeMinute, R.id.timeAMPM, R.id.dateFull);
+    	    
 		    // set up buttons
 		    Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
 		    clearIntent.setAction(NotificationsWidgetProvider.CLEAR_ALL);

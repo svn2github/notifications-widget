@@ -8,6 +8,10 @@
 package com.roymam.android.notificationswidget;
 
 public final class R {
+    public static final class array {
+        public static final int settings_colors_entries=0x7f070000;
+        public static final int settings_colors_values=0x7f070001;
+    }
     public static final class attr {
     }
     public static final class dimen {
@@ -22,30 +26,30 @@ public final class R {
         public static final int preview=0x7f020002;
     }
     public static final class id {
-        public static final int TutorialDescription=0x7f080004;
-        public static final int appIcon=0x7f080009;
-        public static final int button1=0x7f080001;
-        public static final int button2=0x7f080002;
-        public static final int button3=0x7f080003;
-        public static final int clearButton=0x7f080013;
-        public static final int clockbar=0x7f08000c;
-        public static final int dateFull=0x7f080011;
-        public static final int loadingSpinner=0x7f08000d;
-        public static final int menu_settings=0x7f080017;
-        public static final int notificationContainer=0x7f080005;
-        public static final int notificationCount=0x7f08000a;
-        public static final int notificationIcon=0x7f080006;
-        public static final int notificationTime=0x7f080008;
-        public static final int notificationsListView=0x7f080016;
-        public static final int serviceInactiveButton=0x7f080012;
-        public static final int serviceInactiveView=0x7f080014;
-        public static final int textView1=0x7f080015;
-        public static final int textView2=0x7f080000;
-        public static final int timeAMPM=0x7f080010;
-        public static final int timeHour=0x7f08000e;
-        public static final int timeMinute=0x7f08000f;
-        public static final int widetcontainer=0x7f08000b;
-        public static final int widget_item=0x7f080007;
+        public static final int TutorialDescription=0x7f090004;
+        public static final int appIcon=0x7f090009;
+        public static final int button1=0x7f090001;
+        public static final int button2=0x7f090002;
+        public static final int button3=0x7f090003;
+        public static final int clearButton=0x7f090013;
+        public static final int clockbar=0x7f09000c;
+        public static final int dateFull=0x7f090011;
+        public static final int loadingSpinner=0x7f09000d;
+        public static final int menu_settings=0x7f090017;
+        public static final int notificationContainer=0x7f090005;
+        public static final int notificationCount=0x7f09000a;
+        public static final int notificationIcon=0x7f090006;
+        public static final int notificationTime=0x7f090008;
+        public static final int notificationsListView=0x7f090016;
+        public static final int serviceInactiveButton=0x7f090012;
+        public static final int serviceInactiveView=0x7f090014;
+        public static final int textView1=0x7f090015;
+        public static final int textView2=0x7f090000;
+        public static final int timeAMPM=0x7f090010;
+        public static final int timeHour=0x7f09000e;
+        public static final int timeMinute=0x7f09000f;
+        public static final int widetcontainer=0x7f09000b;
+        public static final int widget_item=0x7f090007;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -53,20 +57,23 @@ public final class R {
         public static final int widget_layout=0x7f030002;
     }
     public static final class menu {
-        public static final int activity_main=0x7f070000;
+        public static final int activity_main=0x7f080000;
     }
     public static final class string {
         public static final int accessibility_service_description=0x7f060002;
         public static final int appearance=0x7f060005;
         /**  Settings Page 
          */
-        public static final int behaviour=0x7f060004;
-        public static final int hello_world=0x7f06000f;
-        public static final int menu_settings=0x7f060010;
+        public static final int behavior=0x7f060004;
+        /**   Wizard Strings 
+         */
+        public static final int menu_settings=0x7f060011;
         public static final int notification_bg_opacity=0x7f06000c;
         public static final int notification_bg_opacity_summary=0x7f06000d;
+        public static final int notification_text_color=0x7f06000e;
+        public static final int notification_time_color=0x7f06000f;
         public static final int notifications_service=0x7f060003;
-        public static final int service_inactive_text=0x7f06000e;
+        public static final int service_inactive_text=0x7f060010;
         public static final int settingstitle=0x7f060001;
         public static final int showclearbutton=0x7f06000a;
         public static final int showclearbutton_summary=0x7f06000b;
@@ -75,21 +82,21 @@ public final class R {
         /**  General Strings 
          */
         public static final int title=0x7f060000;
-        public static final int title_activity_main=0x7f060011;
+        public static final int title_activity_main=0x7f060012;
         public static final int turnscreenon=0x7f060006;
         public static final int turnscreenon_summary=0x7f060007;
-        public static final int tutorial_help_1=0x7f060012;
-        public static final int tutorial_help_2=0x7f060013;
-        public static final int tutorial_help_3=0x7f060014;
-        public static final int tutorial_step_1=0x7f060015;
-        public static final int tutorial_step_1_title=0x7f06001b;
-        public static final int tutorial_step_2=0x7f060016;
-        public static final int tutorial_step_2_title=0x7f06001c;
-        public static final int tutorial_step_3=0x7f060017;
-        public static final int tutorial_step_3_title=0x7f06001d;
-        public static final int tutorial_toast_1=0x7f060018;
-        public static final int tutorial_toast_2=0x7f060019;
-        public static final int welcome_text=0x7f06001a;
+        public static final int tutorial_help_1=0x7f060013;
+        public static final int tutorial_help_2=0x7f060014;
+        public static final int tutorial_help_3=0x7f060015;
+        public static final int tutorial_step_1=0x7f060016;
+        public static final int tutorial_step_1_title=0x7f06001c;
+        public static final int tutorial_step_2=0x7f060017;
+        public static final int tutorial_step_2_title=0x7f06001d;
+        public static final int tutorial_step_3=0x7f060018;
+        public static final int tutorial_step_3_title=0x7f06001e;
+        public static final int tutorial_toast_1=0x7f060019;
+        public static final int tutorial_toast_2=0x7f06001a;
+        public static final int welcome_text=0x7f06001b;
     }
     public static final class xml {
         public static final int notifications_service_config=0x7f040000;

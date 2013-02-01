@@ -2,9 +2,12 @@ package com.roymam.android.notificationswidget;
 
 import java.util.List;
 
+import android.R.anim;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -76,6 +79,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	{
 		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.dark_widget_item);	
 		NotificationsService s = NotificationsService.getSharedInstance();
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		if (s != null) 
 		{
 		    List<NotificationData> notifications = s.getNotifications();
@@ -102,8 +106,13 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.setOnClickFillInIntent(R.id.widget_item, i);
 				
 				// set opacity by preference
-				int opacity = PreferenceManager.getDefaultSharedPreferences(ctxt).getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);
-				row.setInt(R.id.notificationContainer, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
+				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);
+
+				// set colors by preferences
+				int textColor = Integer.parseInt(preferences.getString("notification_text_color", String.valueOf(android.R.color.white)));
+				int timeColor = Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark)));
+				row.setTextColor(R.id.widget_item, Resources.getSystem().getColor(textColor));
+				row.setTextColor(R.id.notificationTime, Resources.getSystem().getColor(timeColor));
 		    }
 		}	
 		return(row);
