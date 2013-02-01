@@ -82,12 +82,14 @@ public final class R {
         public static final int tutorial_help_2=0x7f060013;
         public static final int tutorial_help_3=0x7f060014;
         public static final int tutorial_step_1=0x7f060015;
-        public static final int tutorial_step_1_title=0x7f060019;
+        public static final int tutorial_step_1_title=0x7f06001b;
         public static final int tutorial_step_2=0x7f060016;
-        public static final int tutorial_step_2_title=0x7f06001a;
+        public static final int tutorial_step_2_title=0x7f06001c;
         public static final int tutorial_step_3=0x7f060017;
-        public static final int tutorial_step_3_title=0x7f06001b;
-        public static final int welcome_text=0x7f060018;
+        public static final int tutorial_step_3_title=0x7f06001d;
+        public static final int tutorial_toast_1=0x7f060018;
+        public static final int tutorial_toast_2=0x7f060019;
+        public static final int welcome_text=0x7f06001a;
     }
     public static final class xml {
         public static final int notifications_service_config=0x7f040000;

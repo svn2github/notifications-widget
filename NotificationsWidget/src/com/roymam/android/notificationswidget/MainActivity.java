@@ -3,12 +3,14 @@ package com.roymam.android.notificationswidget;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -18,6 +20,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		View button1 = findViewById(R.id.button1);
+		View button2 = findViewById(R.id.button2);
 		View button3 = findViewById(R.id.button3);
 		button1.setClickable(true);
 		button1.setOnClickListener(new OnClickListener() 
@@ -25,6 +28,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) 
 			{
+				Toast.makeText(MainActivity.this, getResources().getText(R.string.tutorial_toast_1), Toast.LENGTH_LONG).show();
 				Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
 			    startActivity(intent);
 			}
@@ -37,6 +41,15 @@ public class MainActivity extends Activity {
 			{
 				Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
 			    startActivity(intent);
+			}
+		});
+		button2.setClickable(true);
+		button2.setOnClickListener(new OnClickListener() 
+		{			
+			@Override
+			public void onClick(View v) 
+			{
+				Toast.makeText(MainActivity.this, getResources().getText(R.string.tutorial_toast_2), Toast.LENGTH_LONG).show();
 			}
 		});
 	}

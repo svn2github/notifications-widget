@@ -4,7 +4,7 @@
     <!-- General Strings -->
     <string name="title">Notifications Widget</string>
     <string name="settingstitle">Notifications Widget Settings</string>
-    <string name="accessibility_service_description">Enable to allow NotificationsWidget receive all incoming notifications. The disclaimer displayed when enabling the accessibility service is  standard Android message. The app DOES NOT collect any data beside the needed data to display on widget. Please note that the app DOES NOT have Internet Access permission so it actually cannot send the data anywhere.</string>
+    <string name="accessibility_service_description">Enable to allow NotificationsWidget receive all incoming notifications. The disclaimer displayed when enabling the accessibility service is a standard Android message. This app DOES NOT collect any of your data. Please note that this app doesn\'t have internet access permission so it actually cannot send the data anywhere.</string>
     <string name="notifications_service">Notifications Widget</string>
 
     <!-- Settings Page -->
@@ -28,6 +28,8 @@
     <string name="tutorial_step_1">Enable \"Notifications Widget\" service on Accessibility Settings</string>
     <string name="tutorial_step_2">Lock the screen and add \"Notifications Widget\" widget</string>
     <string name="tutorial_step_3">Customize \"Notifications Widget\" in \"Settings\" page</string>
+    <string name="tutorial_toast_1">Enable \"Notifications Widget\" service and hit back to return to the wizard</string>
+    <string name="tutorial_toast_2">You should lock the screen manually and then add the widget</string>
     <string name="welcome_text">Welcome to Notifications Widget, Let\'s get started.</string>
     <string name="tutorial_step_1_title">Enable Service</string>
     <string name="tutorial_step_2_title">Add Widget</string>
