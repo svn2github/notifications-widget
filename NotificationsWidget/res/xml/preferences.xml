@@ -13,6 +13,18 @@
                 android:enabled="true" 
                 android:defaultValue="false" 
                 android:summary="@string/clearonunlock_summary"/>
+            <!-- <CheckBoxPreference 
+                android:title="@string/collectonunlock" 
+                android:key="collectonunlock" 
+                android:enabled="true" 
+                android:defaultValue="true" 
+                android:summary="@string/collectonunlock_summary"/> -->
+            <CheckBoxPreference 
+                android:title="@string/clearonclear" 
+                android:key="clearonclear" 
+                android:enabled="true" 
+                android:defaultValue="false" 
+                android:summary="@string/clearonclear_summary"/>
             </PreferenceCategory>
     <PreferenceCategory android:key="appearance" android:title="@string/appearance">
         <CheckBoxPreference 

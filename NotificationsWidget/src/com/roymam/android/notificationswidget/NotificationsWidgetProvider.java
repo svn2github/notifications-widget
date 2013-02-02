@@ -29,6 +29,8 @@ import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
+
 import java.util.Calendar;
 import com.roymam.android.notificationswidget.R;
 
@@ -96,13 +98,30 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 			onUpdate(ctx, widgetManager, appWidgetIds);
 			
     	}
-    	else if (intent.getAction().equals("android.intent.action.USER_PRESENT"))
+    	else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT))
     	{
-    		if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false)
-    			&& NotificationsService.getSharedInstance() != null)
+    		if (NotificationsService.getSharedInstance() != null)
     		{
-    			NotificationsService.getSharedInstance().clearAllNotifications();
+    			if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false))
+	    		{
+	    			NotificationsService.getSharedInstance().clearAllNotifications();
+	    		}
+    			if (!PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
+	    		{
+	    			//NotificationsService.getSharedInstance().stopCollecting();
+	    		}
     		}
+    	}
+    	else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
+    	{
+    		if (NotificationsService.getSharedInstance() != null)
+    		{
+    			NotificationsService.getSharedInstance().resumeCollecting();
+    		}
+    	}
+    	else if (intent.getAction().equals("com.roymam.android.notificationswidget.test"))
+    	{
+    		Toast.makeText(ctx, "Test", Toast.LENGTH_LONG).show();
     	}
     	super.onReceive(ctx, intent);
     }

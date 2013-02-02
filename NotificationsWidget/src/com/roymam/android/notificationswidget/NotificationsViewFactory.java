@@ -3,6 +3,7 @@ package com.roymam.android.notificationswidget;
 import java.util.List;
 
 import android.R.anim;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -88,7 +89,13 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    {
 		    	NotificationData n = notifications.get(position);
 		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
-		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);
+		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);	
+		    			    
+		    	row.setOnClickPendingIntent(R.id.appIcon, 
+		    			PendingIntent.getActivity(ctxt, 0, 
+		    					new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS), 
+		    					PendingIntent.FLAG_UPDATE_CURRENT)
+		    			);
 		    	row.setTextViewText(R.id.widget_item, n.text);		
 		    	if (n.count > 1)
 		    		row.setTextViewText(R.id.notificationCount, Integer.toString(n.count));
