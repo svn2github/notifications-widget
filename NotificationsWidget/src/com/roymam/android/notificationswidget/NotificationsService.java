@@ -112,6 +112,7 @@ public class NotificationsService extends AccessibilityService {
 					nd.action = n.contentIntent;
 					nd.count = 1;
 					nd.packageName = event.getPackageName().toString();
+					nd.notificationContent = n.contentView;
 					
 					// check for duplicated notification
 					int duplicated = -1;

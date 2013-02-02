@@ -161,7 +161,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    PendingIntent clickPI=PendingIntent.getActivity(ctxt, 0,
 	                                            			clickIntent,
 	                                            			PendingIntent.FLAG_UPDATE_CURRENT);
-    	    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);
+    	    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);    	   
 
     	    // set up clock
     	    populateTime(ctxt, widget, R.id.timeHour, R.id.timeMinute, R.id.timeAMPM, R.id.dateFull);

@@ -15,12 +15,14 @@
     <string name="showclock">Show clock bar</string>
     <string name="showclock_summary">Show a bar with time, date and \"clear all notifications\" button</string>
     <string name="showclearbutton">Show Clear button</string>
-    <string name="showclearbutton_summary">Show \"clear all notifications\" button in the clock bar</string>
+    <string name="showclearbutton_summary">Show \"clear all notifications" button in the clock bar</string>
     <string name="notification_bg_opacity">Notification background opacity</string>
     <string name="notification_bg_opacity_summary">Set the opacity of the notification background</string>
     <string name="notification_text_color">Notification text color</string>
     <string name="notification_time_color">Notification time color</string>
-   
+    <string name="show_full_notification">Show full notification content</string>
+    <string name="show_full_notification_summary">Show full notification content as it appears on notifications bar</string>
+    
     <string-array name="settings_colors_entries">
 	    <item>White</item>
 	    <item>Gray</item>
@@ -36,7 +38,7 @@
 	    <item>17170453</item>
 	    <item>17170455</item>
 	</string-array>
-        
+    
     <string name="service_inactive_text">Service is inactive. please enable \"Notifications Widget\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>
     
     <!--  Wizard Strings -->

@@ -15,66 +15,78 @@
      limitations under the License.
 -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="36dp"
-        android:background="#bf141414"
         android:id="@+id/notificationContainer"
-            >
-
-        <ImageView
-            android:id="@+id/notificationIcon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="#801d3741" />
-
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/widget_item"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_weight="0.46"
-            android:gravity="top"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:scrollHorizontally="false"
-            android:textColor="#e5e5e1"
-            android:textSize="14sp" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#bf141414"
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_weight="0.00"
-            android:orientation="vertical" >
+            android:id="@+id/largeNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/smallNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible" >
+
+            <ImageView
+                android:id="@+id/notificationIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="#801d3741" />
 
             <TextView
-                android:id="@+id/notificationTime"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/widget_item"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ff32b6e6"
-                android:gravity="center_vertical|center_horizontal"
+                android:layout_height="36dp"
+                android:layout_weight="0.46"
+                android:gravity="top"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:scrollHorizontally="false"
+                android:textColor="#e5e5e1"
                 android:textSize="14sp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/appIcon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    />
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_weight="0.00"
+                android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/notificationCount"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/notificationTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text=""
-                    android:textSize="12sp" />
+                    android:textColor="#ff32b6e6"
+                    android:textSize="14sp" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/appIcon"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp" />
+
+                    <TextView
+                        android:id="@+id/notificationCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 
     </LinearLayout>

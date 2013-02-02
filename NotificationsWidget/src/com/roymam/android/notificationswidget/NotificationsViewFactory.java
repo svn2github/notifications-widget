@@ -16,6 +16,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.text.format.DateFormat;
@@ -103,7 +104,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				Bundle extras=new Bundle();			
 				extras.putInt(NotificationsWidgetProvider.EXTRA_APP_ID,position);
 				i.putExtras(extras);
-				row.setOnClickFillInIntent(R.id.widget_item, i);
+				row.setOnClickFillInIntent(R.id.notificationContainer, i);
 				
 				// set opacity by preference
 				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);
@@ -113,6 +114,20 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				int timeColor = Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark)));
 				row.setTextColor(R.id.widget_item, Resources.getSystem().getColor(textColor));
 				row.setTextColor(R.id.notificationTime, Resources.getSystem().getColor(timeColor));
+				
+				row.removeAllViews(R.id.largeNotification);
+				row.addView(R.id.largeNotification, n.notificationContent);
+				
+				if (preferences.getBoolean("showfullnotification", false))
+				{
+					row.setViewVisibility(R.id.largeNotification, View.VISIBLE);
+					row.setViewVisibility(R.id.smallNotification, View.GONE);
+				}
+				else
+				{
+					row.setViewVisibility(R.id.largeNotification, View.GONE);
+					row.setViewVisibility(R.id.smallNotification, View.VISIBLE);
+				}
 		    }
 		}	
 		return(row);
