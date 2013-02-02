@@ -9,6 +9,7 @@ public class SettingsActivity extends PreferenceActivity
 	public static String SHOW_CLOCK = "showclock";
 	public static String SHOW_CLEAR_BUTTON= "showclearbutton";
 	public static String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
+	public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) 

@@ -37,7 +37,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static String EXTRA_APP_ID = "com.roymam.android.notificationswidget.extraappid";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
-    public static String ACTIVATE_SERVICE = "com.roymam.android.notificationswidget.activate_service";
+    
     public static boolean widgetActive = false;
     
     public NotificationsWidgetProvider() 
@@ -96,11 +96,13 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 			onUpdate(ctx, widgetManager, appWidgetIds);
 			
     	}
-    	else if (intent.getAction().equals(ACTIVATE_SERVICE))
+    	else if (intent.getAction().equals("android.intent.action.USER_PRESENT"))
     	{
-    		Intent settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-    		settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    		ctx.startActivity(settingsIntent);
+    		if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false)
+    			&& NotificationsService.getSharedInstance() != null)
+    		{
+    			NotificationsService.getSharedInstance().clearAllNotifications();
+    		}
     	}
     	super.onReceive(ctx, intent);
     }
@@ -174,7 +176,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	          	      
 		    Intent settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
 	    	widget.setOnClickPendingIntent(R.id.serviceInactiveButton, 
-	    			  PendingIntent.getActivity(ctxt, 0, settingsIntent, Intent.FLAG_ACTIVITY_NEW_TASK));
+	    			  PendingIntent.getActivity(ctxt, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 		      
     	    // hide clock if required
     	    Boolean showClock = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLOCK, true);					

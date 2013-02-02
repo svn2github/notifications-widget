@@ -146,6 +146,20 @@ public class NotificationsService extends AccessibilityService {
 		}
 	}
 
+	public void clearAllNotifications()
+	{
+		notifications.clear();
+		
+		Context ctx = getApplicationContext();
+		AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
+		ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
+		int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+		
+		for (int i=0; i<widgetIds.length; i++) 
+        {
+        	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+        }	
+	}
 	@Override
 	public void onInterrupt() {
 		// TODO Auto-generated method stub		

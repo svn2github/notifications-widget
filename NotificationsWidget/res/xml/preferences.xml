@@ -7,7 +7,13 @@
                 android:enabled="true" 
                 android:defaultValue="true" 
                 android:summary="@string/turnscreenon_summary"/>
-    </PreferenceCategory>
+            <CheckBoxPreference 
+                android:title="@string/clearonunlock" 
+                android:key="clearonunlock" 
+                android:enabled="true" 
+                android:defaultValue="false" 
+                android:summary="@string/clearonunlock_summary"/>
+            </PreferenceCategory>
     <PreferenceCategory android:key="appearance" android:title="@string/appearance">
         <CheckBoxPreference 
             android:summary="@string/showclock_summary" 

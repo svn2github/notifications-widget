@@ -12,6 +12,8 @@
     <string name="appearance">Appearance</string>
     <string name="turnscreenon">Auto screen on</string>
     <string name="turnscreenon_summary">Wake device and turn screen on when new a notification arrives</string>
+    <string name="clearonunlock">Clear notifications when unlocked</string>
+    <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
     <string name="showclock">Show clock bar</string>
     <string name="showclock_summary">Show a bar with time, date and \"clear all notifications\" button</string>
     <string name="showclearbutton">Show Clear button</string>

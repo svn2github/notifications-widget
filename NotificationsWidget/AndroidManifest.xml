@@ -40,8 +40,8 @@
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />      
+                <action android:name="android.intent.action.USER_PRESENT"/>
                 <action android:name="com.roymam.android.notificationswidget.update_clock" />
-                <action android:name="com.roymam.android.notificationswidget.activate_service" />
             </intent-filter>
             <!-- This specifies the widget provider info -->
             <meta-data
