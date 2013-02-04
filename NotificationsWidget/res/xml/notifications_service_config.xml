@@ -2,7 +2,7 @@
     android:description="@string/accessibility_service_description"
     android:accessibilityEventTypes="typeViewClicked|typeNotificationStateChanged"
     android:accessibilityFlags="flagDefault"
-    android:accessibilityFeedbackType="feedbackSpoken"
+    android:accessibilityFeedbackType="feedbackVisual"
     android:notificationTimeout="100"
     android:settingsActivity="com.roymam.android.notificationswidget.SettingsActivity"
     android:canRetrieveWindowContent="true"    

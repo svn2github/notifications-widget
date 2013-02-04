@@ -18,6 +18,7 @@ import android.graphics.BitmapFactory;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 
 public class NotificationsService extends AccessibilityService {
 
@@ -36,6 +37,8 @@ public class NotificationsService extends AccessibilityService {
 	    return sSharedInstance;
 	}
 	
+	private String clearButtonName = "Clear all notifications.";
+	
 	@Override
 	protected void onServiceConnected() 
 	{
@@ -49,15 +52,31 @@ public class NotificationsService extends AccessibilityService {
 	    setServiceInfo(info);
 	    sSharedInstance = this;
 	    notifications = new ArrayList<NotificationData>();
+	    
+	    Resources res;
+		try 
+		{
+			res = getPackageManager().getResourcesForApplication("com.android.systemui");
+			int i = res.getIdentifier("accessibility_clear_all", "string", "com.android.systemui");
+			if (i!=0)
+			{
+				clearButtonName = res.getString(i);
+			}
+		}
+		catch (Exception exp)
+		{
+			
+		}
 	}	
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		if (event != null && collect)
 		{
-			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 			if (event.getClassName().equals(android.app.Notification.class.getName()))
 			{
+				Context ctx = getApplicationContext();
+				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 				Notification n = (Notification)event.getParcelableData();
 			
 				if (n != null)
@@ -67,7 +86,7 @@ public class NotificationsService extends AccessibilityService {
 						 n.tickerText != null
 								)
 					{	
-						Context ctx = getApplicationContext();
+						
 			    	    
 						Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
 						if (turnScreenOn)
@@ -150,9 +169,11 @@ public class NotificationsService extends AccessibilityService {
 			}
 			else if (event.getClassName().equals(android.widget.ImageView.class.getName()) &&
 					 event.getPackageName().equals("com.android.systemui") &&
-					 event.getContentDescription().equals("Clear all notifications."))
+					 event.getContentDescription().equals(clearButtonName))
 			{
 				// clear notifications button clicked
+				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
 				if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
 				{
 					clearAllNotifications();
