@@ -115,7 +115,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				
 				// set opacity by preference
 				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);
-
+				row.setInt(R.id.smallNotification, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
+				
 				// set colors by preferences
 				int textColor = Integer.parseInt(preferences.getString("notification_text_color", String.valueOf(android.R.color.white)));
 				int timeColor = Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark)));
