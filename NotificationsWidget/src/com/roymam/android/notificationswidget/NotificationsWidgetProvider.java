@@ -23,6 +23,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ComponentName;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
@@ -126,7 +129,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	super.onReceive(ctx, intent);
     }
 	
-	private void populateTime(Context ctxt, RemoteViews widget, int hourId, int minuteId, int ampmId, int dateId)
+	private void populateTime(Context ctxt, RemoteViews widget, int containerId, int hourId, int minuteId, int ampmId, int dateId)
 	{
 	    // set up clock
 	    Time t = new Time();
@@ -144,7 +147,40 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    widget.setTextViewText(minuteId, t.format(minuteFormat));
 	    widget.setTextViewText(ampmId, ampmstr);		    
 	    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
-	    widget.setTextViewText(dateId, datestr.toUpperCase());		
+	    widget.setTextViewText(dateId, datestr.toUpperCase());
+	    
+	    // add alarm clock intent
+	    PackageManager packageManager = ctxt.getPackageManager();
+	    Intent alarmClockIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
+
+	    // Verify clock implementation
+	    String clockImpls[][] = {
+	            {"HTC Alarm Clock", "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl" },
+	            {"Standar Alarm Clock", "com.android.deskclock", "com.android.deskclock.AlarmClock"},
+	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"},
+	            {"Moto Blur Alarm Clock", "com.motorola.blur.alarmclock",  "com.motorola.blur.alarmclock.AlarmClock"},
+	            {"Samsung Galaxy Clock", "com.sec.android.app.clockpackage","com.sec.android.app.clockpackage.ClockPackage"}
+	    };
+
+	    boolean foundClockImpl = false;
+
+	    for(int i=0; i<clockImpls.length; i++) {
+	        String vendor = clockImpls[i][0];
+	        String packageName = clockImpls[i][1];
+	        String className = clockImpls[i][2];
+	        try {
+	            ComponentName cn = new ComponentName(packageName, className);
+	            ActivityInfo aInfo = packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
+	            alarmClockIntent.setComponent(cn);
+	            foundClockImpl = true;
+	        } catch (NameNotFoundException e) {	            
+	        }
+	    }
+
+	    if (foundClockImpl) {
+	        PendingIntent pendingIntent = PendingIntent.getActivity(ctxt, 0, alarmClockIntent, 0);
+	        widget.setOnClickPendingIntent(containerId, pendingIntent);	       
+	    }
 	}
 
     @Override
@@ -185,8 +221,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);    	   
 
     	    // set up clock
-    	    populateTime(ctxt, widget, R.id.timeHour, R.id.timeMinute, R.id.timeAMPM, R.id.dateFull);
-    	    populateTime(ctxt, widget, R.id.bigHours, R.id.bigminutes, R.id.timeAMPM, R.id.bigDate);
+    	    populateTime(ctxt, widget, R.id.smallClock, R.id.timeHour, R.id.timeMinute, R.id.timeAMPM, R.id.dateFull);
+    	    populateTime(ctxt, widget, R.id.bigClock, R.id.bigHours, R.id.bigminutes, R.id.timeAMPM, R.id.bigDate);
     	        	    
 		    // set up buttons
 		    Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
@@ -203,16 +239,20 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    Boolean showClearButton = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLEAR_BUTTON, true);					
     	   
     	    int notificationsCount = 0;
+    	    boolean bignotifications = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean("showfullnotification", false);
+    	    
     	    if (NotificationsService.getSharedInstance()!=null)
     	    	notificationsCount = NotificationsService.getSharedInstance().getNotifications().size();
     			
     	    if (clockstyle.equals(SettingsActivity.CLOCK_SMALL) ||
-    	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && notificationsCount > 1 )
+    	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
+    	    		(bignotifications && notificationsCount > 0 || notificationsCount > 1))
     	    {
         	    widget.setViewVisibility(R.id.smallClock, View.VISIBLE);
         	    widget.setViewVisibility(R.id.bigClock, View.GONE);
     	    } else if (clockstyle.equals(SettingsActivity.CLOCK_LARGE) ||
-        	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && notificationsCount <= 1 )
+        	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
+        	    	(bignotifications && notificationsCount == 0 || notificationsCount <= 1 ))
     	    {
         	    widget.setViewVisibility(R.id.smallClock, View.GONE);
         	    widget.setViewVisibility(R.id.bigClock, View.VISIBLE);
