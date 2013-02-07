@@ -27,17 +27,19 @@
                 android:summary="@string/clearonclear_summary"/>
             </PreferenceCategory>
     <PreferenceCategory android:key="appearance" android:title="@string/appearance">
-        <CheckBoxPreference 
-            android:summary="@string/showclock_summary" 
-            android:key="showclock"
-            android:defaultValue="true"  
-            android:title="@string/showclock"/>
+        <ListPreference 
+            android:dialogTitle="@string/clockstyle" 
+    	    android:entries="@array/settings_clock_entries"
+    	    android:entryValues="@array/settings_clock_values" 
+            android:summary="@string/clockstyle_summary" 
+            android:key="clockstyle"
+            android:defaultValue="auto"  
+            android:title="@string/clockstyle"/>
     	<CheckBoxPreference 
     	    android:summary="@string/showclearbutton_summary" 
     	    android:key="showclearbutton" 
     	    android:title="@string/showclearbutton" 
-    	    android:defaultValue="true" 
-    	    android:dependency="showclock"/>  
+    	    android:defaultValue="true"/>  
     	<CheckBoxPreference android:disableDependentsState="true" android:summary="@string/show_full_notification_summary" android:key="showfullnotification" android:title="@string/show_full_notification" /><com.hlidskialf.android.preference.SeekBarPreference android:key="notification_bg_opacity"
 	        android:title="@string/notification_bg_opacity"
 	        android:summary="@string/notification_bg_opacity_summary"

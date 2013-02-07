@@ -18,8 +18,8 @@
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
     <string name="clearonclear">Synchronize \"Clear All\"</string>
     <string name="clearonclear_summary">Experimental - Clear notifications when clear button is clicked on android notifications bar</string>
-    <string name="showclock">Show clock bar</string>
-    <string name="showclock_summary">Show a bar with time, date and \"clear all notifications\" button</string>
+    <string name="clockstyle">Clock style</string>
+    <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>
     <string name="showclearbutton_summary">Show \"clear all notifications\" button in the clock bar</string>
     <string name="notification_bg_opacity">Notification background opacity</string>
@@ -43,6 +43,19 @@
 	    <item>17170451</item>
 	    <item>17170453</item>
 	    <item>17170455</item>
+	</string-array>
+    <string-array name="settings_clock_entries">
+	    <item>Small</item>
+	    <item>Large</item>
+	    <item>Auto</item>
+	    <item>Hidden</item>
+	</string-array>
+	<string-array
+	    name="settings_clock_values">
+	    <item>small</item>
+	    <item>large</item>
+	    <item>auto</item>
+	    <item>hidden</item>
 	</string-array>
     
     <string name="service_inactive_text">Service is inactive. please enable \"Notifications Widget\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>

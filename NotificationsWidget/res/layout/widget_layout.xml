@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widetcontainer"
     android:layout_width="fill_parent"
@@ -7,15 +7,23 @@
     android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/clockbar"
             android:layout_width="match_parent"
-            android:layout_height="24dp" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
             <ProgressBar
                 android:id="@+id/loadingSpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal" />
 
+            <LinearLayout
+                android:id="@+id/smallClock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
+            
             <TextView
                 android:id="@+id/timeHour"
                 android:layout_width="wrap_content"
@@ -46,9 +54,103 @@
                 android:layout_marginTop="-6dp"
                 android:layout_weight="0.97"
                 android:paddingLeft="5dp"
-                android:text="Loading, Please Wait..."
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+			</LinearLayout>
+			
+            
+
+    <LinearLayout
+        android:id="@+id/bigClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical" android:layout_gravity="center_vertical|center_horizontal" android:layout_marginTop="-18dp" android:visibility="gone">
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_horizontal"
+	    android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/bigHours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColorLink="@android:color/white"
+            android:textSize="72sp"
+            android:textStyle="bold" android:textColor="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/bigminutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textColorLink="@android:color/white"
+            android:textSize="72sp"
+            android:typeface="sans" android:fontFamily="sans-serif-light"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:id="@+id/bigDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="TUE, FEBRUARY 5"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/alarmClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_lock_idle_alarm" />
+
+            <TextView
+                android:id="@+id/alarmtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="WED 06:30"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/darker_gray"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+        <FrameLayout android:id="@+id/serviceInactiveView" android:layout_width="fill_parent" android:layout_height="fill_parent" android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_horizontal"
+                android:gravity="center"
+                android:text="@string/service_inactive_text"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
+           </FrameLayout><ListView android:id="@+id/notificationsListView" android:layout_width="fill_parent" android:layout_height="fill_parent" tools:listitem="@layout/dark_widget_item">
+           </ListView></LinearLayout>
+	    
+           
+<LinearLayout android:id="@+id/buttonsBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true">
+            
             <ImageButton
                 android:id="@+id/serviceInactiveButton"
                 android:layout_width="24dp"
@@ -58,34 +160,5 @@
                 android:src="@android:drawable/ic_dialog_alert"
                 android:visibility="gone" />
 
-            <ImageButton
-                android:id="@+id/clearButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="#00000000"
-                android:scaleType="fitCenter"
-                android:src="@drawable/clear"
-                android:visibility="gone" />
-
-        </LinearLayout>
-	    <FrameLayout
-        	android:id="@+id/serviceInactiveView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone" >
-            <TextView
-                   android:id="@+id/textView1"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_gravity="center|center_horizontal"
-                   android:gravity="center"
-                   android:text="@string/service_inactive_text"
-                   android:textAppearance="?android:attr/textAppearanceSmall" />
-           </FrameLayout>
-           <ListView
-               android:id="@+id/notificationsListView"
-               android:layout_width="fill_parent"
-               android:layout_height="fill_parent"
-               tools:listitem="@layout/dark_widget_item" >
-           </ListView>
-</LinearLayout>
+            <ImageButton android:id="@+id/clearButton" android:layout_width="24dp" android:layout_height="24dp" android:background="#00000000" android:scaleType="fitCenter" android:src="@drawable/clear" android:visibility="gone" />
+        	</LinearLayout></RelativeLayout>

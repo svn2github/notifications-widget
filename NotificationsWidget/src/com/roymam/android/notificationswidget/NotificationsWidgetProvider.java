@@ -186,7 +186,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
     	    // set up clock
     	    populateTime(ctxt, widget, R.id.timeHour, R.id.timeMinute, R.id.timeAMPM, R.id.dateFull);
-    	    
+    	    populateTime(ctxt, widget, R.id.bigHours, R.id.bigminutes, R.id.timeAMPM, R.id.bigDate);
+    	        	    
 		    // set up buttons
 		    Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
 		    clearIntent.setAction(NotificationsWidgetProvider.CLEAR_ALL);
@@ -198,16 +199,33 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    			  PendingIntent.getActivity(ctxt, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 		      
     	    // hide clock if required
-    	    Boolean showClock = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLOCK, true);					
+    	    String clockstyle = PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);					
     	    Boolean showClearButton = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_CLEAR_BUTTON, true);					
-    	      
-    	    widget.setViewVisibility(R.id.clockbar, showClock.booleanValue()?View.VISIBLE:View.GONE);
+    	   
+    	    int notificationsCount = 0;
+    	    if (NotificationsService.getSharedInstance()!=null)
+    	    	notificationsCount = NotificationsService.getSharedInstance().getNotifications().size();
+    			
+    	    if (clockstyle.equals(SettingsActivity.CLOCK_SMALL) ||
+    	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && notificationsCount > 1 )
+    	    {
+        	    widget.setViewVisibility(R.id.smallClock, View.VISIBLE);
+        	    widget.setViewVisibility(R.id.bigClock, View.GONE);
+    	    } else if (clockstyle.equals(SettingsActivity.CLOCK_LARGE) ||
+        	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && notificationsCount <= 1 )
+    	    {
+        	    widget.setViewVisibility(R.id.smallClock, View.GONE);
+        	    widget.setViewVisibility(R.id.bigClock, View.VISIBLE);
+    	    }else
+    	    {
+        	    widget.setViewVisibility(R.id.smallClock, View.GONE);
+        	    widget.setViewVisibility(R.id.bigClock, View.GONE);
+    	    }
     	    widget.setViewVisibility(R.id.clearButton, showClearButton.booleanValue()?View.VISIBLE:View.GONE); 
 
     	    // hide clear button if no notifications are displayed
-    	    if (NotificationsService.getSharedInstance()==null ||
-    	    	NotificationsService.getSharedInstance().getNotifications().size() == 0)
-				{
+    	    if (notificationsCount == 0)
+    	    	{
 				  	widget.setViewVisibility(R.id.clearButton, View.GONE);   
 				  	if (NotificationsService.getSharedInstance()==null )
 				  	{
