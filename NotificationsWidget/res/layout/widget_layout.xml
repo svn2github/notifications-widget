@@ -22,6 +22,7 @@
                 android:id="@+id/smallClock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/item_selector"
                 android:clickable="true"
                 android:visibility="gone" >
             
@@ -67,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical" android:layout_gravity="center_vertical|center_horizontal" android:layout_marginTop="-18dp" android:visibility="gone" android:clickable="true">
+        android:orientation="vertical" android:layout_gravity="center_vertical|center_horizontal" android:layout_marginTop="-18dp" android:visibility="gone" android:clickable="true" android:background="@drawable/item_selector">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -156,10 +157,10 @@
                 android:id="@+id/serviceInactiveButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:background="#00000000"
+                android:background="@drawable/item_selector"
                 android:scaleType="fitCenter"
                 android:src="@android:drawable/ic_dialog_alert"
                 android:visibility="gone" />
 
-            <ImageButton android:id="@+id/clearButton" android:layout_width="24dp" android:layout_height="24dp" android:background="#00000000" android:scaleType="fitCenter" android:src="@drawable/clear" android:visibility="gone" />
+            <ImageButton android:id="@+id/clearButton" android:layout_width="24dp" android:layout_height="24dp" android:background="@drawable/item_selector" android:scaleType="fitCenter" android:src="@drawable/clear" android:visibility="gone" />
         	</LinearLayout></RelativeLayout>
