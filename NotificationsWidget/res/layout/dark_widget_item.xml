@@ -40,8 +40,7 @@
                 android:id="@+id/notificationIcon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:background="#801d3741"
-                android:clickable="true" />
+                android:background="#801d3741" />
 
             <TextView
                 xmlns:android="http://schemas.android.com/apk/res/android"
