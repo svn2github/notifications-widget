@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.View;
@@ -35,6 +36,8 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Locale;
+
 import com.roymam.android.notificationswidget.R;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
@@ -223,7 +226,18 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    // set up clock
     	    populateTime(ctxt, widget, R.id.smallClock, R.id.timeHour, R.id.timeMinute, R.id.timeAMPM, R.id.dateFull);
     	    populateTime(ctxt, widget, R.id.bigClock, R.id.bigHours, R.id.bigminutes, R.id.timeAMPM, R.id.bigDate);
-    	        	    
+    	    
+    	    // display next alarm if needed
+    	    String nextAlarm = Settings.System.getString(ctxt.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
+    	    if (!nextAlarm.equals(""))
+    	    {
+    	    	widget.setViewVisibility(R.id.nextAlarmContainer, View.VISIBLE);
+    	    	widget.setTextViewText(R.id.alarmtime, nextAlarm.toUpperCase(Locale.getDefault()));
+    	    }
+    	    else
+    	    {
+    	    	widget.setViewVisibility(R.id.nextAlarmContainer, View.GONE);
+    	    }
 		    // set up buttons
 		    Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
 		    clearIntent.setAction(NotificationsWidgetProvider.CLEAR_ALL);

@@ -15,7 +15,6 @@
                 android:id="@+id/loadingSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal" />
 
             <LinearLayout
@@ -66,8 +65,6 @@
         android:id="@+id/bigClock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:orientation="vertical" android:layout_gravity="center_vertical|center_horizontal" android:layout_marginTop="-18dp" android:visibility="gone" android:clickable="true" android:background="@drawable/item_selector">
 
 	<LinearLayout
@@ -105,33 +102,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed"
-            android:text="TUE, FEBRUARY 5"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/alarmClock"
+            android:id="@+id/nextAlarmContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:visibility="gone" >
 
             <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@android:drawable/ic_lock_idle_alarm" />
+                android:layout_width="16dp"
+                android:layout_height="16dp"              
+                android:src="@android:drawable/ic_lock_idle_alarm" android:alpha="50" android:layout_gravity="center_vertical"/>
 
             <TextView
                 android:id="@+id/alarmtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
-                android:text="WED 06:30"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/darker_gray"
-                android:textStyle="bold" />
+            	android:text=""
+            	android:textAppearance="?android:attr/textAppearanceSmall"
+            	android:textColor="@android:color/darker_gray"
+                android:textStyle="bold" android:layout_gravity="center_vertical" android:alpha="50"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -150,8 +146,11 @@
            </FrameLayout><ListView android:id="@+id/notificationsListView" android:layout_width="fill_parent" android:layout_height="fill_parent" tools:listitem="@layout/dark_widget_item">
            </ListView></LinearLayout>
 	    
-           
-<LinearLayout android:id="@+id/buttonsBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true">
+<LinearLayout
+    android:id="@+id/buttonsBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true" >
             
             <ImageButton
                 android:id="@+id/serviceInactiveButton"
