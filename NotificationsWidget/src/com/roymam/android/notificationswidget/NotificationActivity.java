@@ -16,8 +16,11 @@ public class NotificationActivity extends Activity {
 	    {
 			try 
 		    {
-				ns.getNotifications().get(pos).action.send();
-				ns.getNotifications().remove(pos);
+				if (pos < ns.getNotifications().size())
+				{
+					ns.getNotifications().get(pos).action.send();
+					ns.getNotifications().remove(pos);
+				}
 		    } catch (CanceledException e) 
 			{
 			}

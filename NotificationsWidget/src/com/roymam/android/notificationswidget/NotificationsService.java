@@ -15,6 +15,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.view.accessibility.AccessibilityEvent;
@@ -38,6 +42,7 @@ public class NotificationsService extends AccessibilityService {
 	}
 	
 	private String clearButtonName = "Clear all notifications.";
+	private boolean deviceCovered = false;
 	
 	@Override
 	protected void onServiceConnected() 
@@ -53,6 +58,7 @@ public class NotificationsService extends AccessibilityService {
 	    sSharedInstance = this;
 	    notifications = new ArrayList<NotificationData>();
 	    
+	    // find "clear all notifications." button text
 	    Resources res;
 		try 
 		{
@@ -67,6 +73,35 @@ public class NotificationsService extends AccessibilityService {
 		{
 			
 		}
+		
+		// register proximity change sensor
+		final SensorManager mySensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+		Sensor myProximitySensor = mySensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+		        
+		if (myProximitySensor != null)
+		{
+			mySensorManager.registerListener(new SensorEventListener()
+			{
+				@Override
+				public void onAccuracyChanged(Sensor sensor, int accuracy) 
+				{
+				}
+
+				@Override
+				public void onSensorChanged(SensorEvent event) 
+				{
+					if (event.values[0] == 0)
+					{
+						deviceCovered = true;
+					}
+					else
+					{
+						deviceCovered = false;
+					}
+				}				
+			}, myProximitySensor, 5);
+		}
+
 	}	
 
 	@Override
@@ -75,7 +110,7 @@ public class NotificationsService extends AccessibilityService {
 		{
 			if (event.getClassName().equals(android.app.Notification.class.getName()))
 			{
-				Context ctx = getApplicationContext();
+				final Context ctx = getApplicationContext();
 				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 				Notification n = (Notification)event.getParcelableData();
 			
@@ -89,7 +124,7 @@ public class NotificationsService extends AccessibilityService {
 						
 			    	    
 						Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
-						if (turnScreenOn)
+						if (turnScreenOn && !deviceCovered)
 						{
 							PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 							PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");

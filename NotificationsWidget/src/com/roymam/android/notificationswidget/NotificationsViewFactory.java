@@ -106,6 +106,9 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				extras.putInt(NotificationsWidgetProvider.EXTRA_APP_ID,position);
 				i.putExtras(extras);
 				row.setOnClickFillInIntent(R.id.notificationContainer, i);
+				row.setOnClickFillInIntent(R.id.widget_item, i);
+				row.setOnClickFillInIntent(R.id.largeNotification, i);
+				
 				
 				// set opacity by preference
 				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);

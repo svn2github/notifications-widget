@@ -127,7 +127,7 @@
             	android:text=""
             	android:textAppearance="?android:attr/textAppearanceSmall"
             	android:textColor="@android:color/darker_gray"
-                android:textStyle="bold" android:layout_gravity="center_vertical" android:alpha="50"/>
+                android:textStyle="bold" android:layout_gravity="center_vertical" android:alpha="50" android:layout_marginLeft="2dp"/>
 
         </LinearLayout>
     </LinearLayout>
