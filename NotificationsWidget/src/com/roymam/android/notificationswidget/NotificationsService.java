@@ -75,34 +75,52 @@ public class NotificationsService extends AccessibilityService {
 		}
 		
 		// register proximity change sensor
-		final SensorManager mySensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-		Sensor myProximitySensor = mySensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-		        
-		if (myProximitySensor != null)
+		sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+		sensorListener = new SensorEventListener()
 		{
-			mySensorManager.registerListener(new SensorEventListener()
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) 
 			{
-				@Override
-				public void onAccuracyChanged(Sensor sensor, int accuracy) 
+			}
+
+			@Override
+			public void onSensorChanged(SensorEvent event) 
+			{
+				if (event.values[0] == 0)
 				{
+					deviceCovered = true;
 				}
-
-				@Override
-				public void onSensorChanged(SensorEvent event) 
+				else
 				{
-					if (event.values[0] == 0)
-					{
-						deviceCovered = true;
-					}
-					else
-					{
-						deviceCovered = false;
-					}
-				}				
-			}, myProximitySensor, 5);
+					deviceCovered = false;
+				}
+			}				
+		};
+		
+		if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+		{
+			startProximityMontior();
 		}
-
 	}	
+	
+	SensorManager sensorManager;
+	Sensor proximitySensor;
+	SensorEventListener sensorListener;
+	
+	public void startProximityMontior()
+	{		       
+		if (proximitySensor != null)
+		{
+			sensorManager.registerListener(sensorListener, proximitySensor, 5);
+		}		
+	}
+	
+	public void stopProximityMontior()
+	{
+		sensorManager.unregisterListener(sensorListener);
+		deviceCovered = false;
+	}
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -120,9 +138,7 @@ public class NotificationsService extends AccessibilityService {
 						!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
 						 n.tickerText != null
 								)
-					{	
-						
-			    	    
+					{										    	    
 						Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
 						if (turnScreenOn && !deviceCovered)
 						{
@@ -198,7 +214,8 @@ public class NotificationsService extends AccessibilityService {
 						for (int i=0; i<widgetIds.length; i++) 
 			            {
 			            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-			            }													
+			            }	
+						sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 					}
 				}
 			}

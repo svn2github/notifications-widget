@@ -6,7 +6,14 @@
                 android:key="turnscreenon" 
                 android:enabled="true" 
                 android:defaultValue="true" 
-                android:summary="@string/turnscreenon_summary"/>
+                android:summary="@string/turnscreenon_summary"/>            
+            <CheckBoxPreference 
+                android:title="@string/disableproximity" 
+                android:key="disableproximity" 
+                android:enabled="true" 
+                android:defaultValue="false" 
+                android:summary="@string/disableproximity_summary"
+                android:dependency="turnscreenon"/>
             <CheckBoxPreference 
                 android:title="@string/clearonunlock" 
                 android:key="clearonunlock" 

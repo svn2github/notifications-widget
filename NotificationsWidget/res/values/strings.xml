@@ -12,6 +12,8 @@
     <string name="appearance">Appearance</string>
     <string name="turnscreenon">Auto screen on</string>
     <string name="turnscreenon_summary">Wake device and turn screen on when new a notification arrives</string>
+    <string name="disableproximity">Disable proximity sensor</string>
+    <string name="disableproximity_summary">When checked, the device will always turn on screen for notifications, even if it covered.</string>
     <string name="clearonunlock">Clear when unlocked</string>
     <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
     <string name="collectonunlock">Collect when unlocked</string>
