@@ -114,7 +114,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    		}
     			if (!PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
 	    		{
-	    			//NotificationsService.getSharedInstance().stopCollecting();
+	    			NotificationsService.getSharedInstance().stopCollecting();
 	    		}
     		}
     	}
@@ -150,19 +150,20 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    widget.setTextViewText(minuteId, t.format(minuteFormat));
 	    widget.setTextViewText(ampmId, ampmstr);		    
 	    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
-	    widget.setTextViewText(dateId, datestr.toUpperCase());
+	    widget.setTextViewText(dateId, datestr.toUpperCase(Locale.getDefault()));
 	    
 	    // add alarm clock intent
 	    PackageManager packageManager = ctxt.getPackageManager();
 	    Intent alarmClockIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
 
 	    // Verify clock implementation
-	    String clockImpls[][] = {
+	    String clockImpls[][] = 
+	    	{
 	            {"HTC Alarm Clock", "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl" },
 	            {"Standar Alarm Clock", "com.android.deskclock", "com.android.deskclock.AlarmClock"},
-	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"},
 	            {"Moto Blur Alarm Clock", "com.motorola.blur.alarmclock",  "com.motorola.blur.alarmclock.AlarmClock"},
-	            {"Samsung Galaxy Clock", "com.sec.android.app.clockpackage","com.sec.android.app.clockpackage.ClockPackage"}
+	            {"Samsung Galaxy Clock", "com.sec.android.app.clockpackage","com.sec.android.app.clockpackage.ClockPackage"},
+	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"}
 	    };
 
 	    boolean foundClockImpl = false;

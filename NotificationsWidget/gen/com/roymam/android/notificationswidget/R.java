@@ -23,10 +23,12 @@ public final class R {
         public static final int widget_margin_top=0x7f050000;
     }
     public static final class drawable {
-        public static final int appicon=0x7f020000;
-        public static final int clear=0x7f020001;
-        public static final int item_selector=0x7f020002;
-        public static final int preview=0x7f020003;
+        public static final int advanced=0x7f020000;
+        public static final int appicon=0x7f020001;
+        public static final int clear=0x7f020002;
+        public static final int hardware_phone=0x7f020003;
+        public static final int item_selector=0x7f020004;
+        public static final int preview=0x7f020005;
     }
     public static final class id {
         public static final int TutorialDescription=0x7f090004;
@@ -73,56 +75,69 @@ public final class R {
     }
     public static final class string {
         public static final int accessibility_service_description=0x7f060002;
-        public static final int appearance=0x7f060005;
+        public static final int advanced=0x7f060008;
+        public static final int advancedsettings=0x7f060005;
+        public static final int appearance=0x7f060007;
+        public static final int behavior=0x7f060006;
+        public static final int clearonclear=0x7f06001d;
+        public static final int clearonclear_summary=0x7f06001e;
+        public static final int clearonunlock=0x7f06000f;
+        public static final int clearonunlock_summary=0x7f060010;
+        public static final int clock=0x7f060009;
+        public static final int clockstyle=0x7f060013;
+        public static final int clockstyle_summary=0x7f060014;
+        public static final int collectonunlock=0x7f060011;
+        public static final int collectonunlock_summary=0x7f060012;
+        public static final int disableproximity=0x7f06000d;
+        public static final int disableproximity_summary=0x7f06000e;
+        /**   Error Messages 
+         */
+        public static final int failed_to_monitor_clear_button=0x7f060030;
         /**  Settings Page 
          */
-        public static final int behavior=0x7f060004;
-        public static final int clearonclear=0x7f06000e;
-        public static final int clearonclear_summary=0x7f06000f;
-        public static final int clearonunlock=0x7f06000a;
-        public static final int clearonunlock_summary=0x7f06000b;
-        public static final int clockstyle=0x7f060010;
-        public static final int clockstyle_summary=0x7f060011;
-        public static final int collectonunlock=0x7f06000c;
-        public static final int collectonunlock_summary=0x7f06000d;
-        public static final int disableproximity=0x7f060008;
-        public static final int disableproximity_summary=0x7f060009;
+        public static final int generalsettings=0x7f060004;
+        public static final int keep_on_foreground=0x7f06001f;
+        public static final int keep_on_foreground_summary=0x7f060020;
         /**   Wizard Strings 
          */
-        public static final int menu_settings=0x7f06001b;
-        public static final int notification_bg_opacity=0x7f060014;
-        public static final int notification_bg_opacity_summary=0x7f060015;
-        public static final int notification_text_color=0x7f060016;
-        public static final int notification_time_color=0x7f060017;
+        public static final int menu_settings=0x7f060022;
+        public static final int notification_bg_opacity=0x7f060017;
+        public static final int notification_bg_opacity_summary=0x7f060018;
+        public static final int notification_text_color=0x7f060019;
+        public static final int notification_time_color=0x7f06001a;
+        public static final int notifications=0x7f06000a;
         public static final int notifications_service=0x7f060003;
-        public static final int service_inactive_text=0x7f06001a;
+        public static final int service_inactive_text=0x7f060021;
         public static final int settingstitle=0x7f060001;
-        public static final int show_full_notification=0x7f060018;
-        public static final int show_full_notification_summary=0x7f060019;
-        public static final int showclearbutton=0x7f060012;
-        public static final int showclearbutton_summary=0x7f060013;
+        public static final int show_full_notification=0x7f06001b;
+        public static final int show_full_notification_summary=0x7f06001c;
+        public static final int showclearbutton=0x7f060015;
+        public static final int showclearbutton_summary=0x7f060016;
         /**  General Strings 
          */
         public static final int title=0x7f060000;
-        public static final int title_activity_main=0x7f06001c;
-        public static final int turnscreenon=0x7f060006;
-        public static final int turnscreenon_summary=0x7f060007;
-        public static final int tutorial_help_1=0x7f06001d;
-        public static final int tutorial_help_2=0x7f06001e;
-        public static final int tutorial_help_3=0x7f06001f;
-        public static final int tutorial_step_1=0x7f060020;
-        public static final int tutorial_step_1_title=0x7f060026;
-        public static final int tutorial_step_2=0x7f060021;
-        public static final int tutorial_step_2_title=0x7f060027;
-        public static final int tutorial_step_3=0x7f060022;
-        public static final int tutorial_step_3_title=0x7f060028;
-        public static final int tutorial_toast_1=0x7f060023;
-        public static final int tutorial_toast_2=0x7f060024;
-        public static final int welcome_text=0x7f060025;
+        public static final int title_activity_main=0x7f060023;
+        public static final int turnscreenon=0x7f06000b;
+        public static final int turnscreenon_summary=0x7f06000c;
+        public static final int tutorial_help_1=0x7f060024;
+        public static final int tutorial_help_2=0x7f060025;
+        public static final int tutorial_help_3=0x7f060026;
+        public static final int tutorial_step_1=0x7f060027;
+        public static final int tutorial_step_1_title=0x7f06002d;
+        public static final int tutorial_step_2=0x7f060028;
+        public static final int tutorial_step_2_title=0x7f06002e;
+        public static final int tutorial_step_3=0x7f060029;
+        public static final int tutorial_step_3_title=0x7f06002f;
+        public static final int tutorial_toast_1=0x7f06002a;
+        public static final int tutorial_toast_2=0x7f06002b;
+        public static final int welcome_text=0x7f06002c;
     }
     public static final class xml {
-        public static final int notifications_service_config=0x7f040000;
-        public static final int preferences=0x7f040001;
-        public static final int widgetinfo=0x7f040002;
+        public static final int advancedpreferences=0x7f040000;
+        public static final int appearancepreferences=0x7f040001;
+        public static final int notifications_service_config=0x7f040002;
+        public static final int preferences=0x7f040003;
+        public static final int preferences_headers=0x7f040004;
+        public static final int widgetinfo=0x7f040005;
     }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsGeneralFragment"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="@string/generalsettings" />
+    
+    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAppearanceFragment"
+            android:icon="@drawable/hardware_phone"
+            android:title="@string/appearance" />
+    
+    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAdvancedFragment"
+        	android:icon="@drawable/advanced"
+            android:title="@string/advancedsettings" />
+
+    <!--  <header android:fragment="com.example.android.apis.preference.PreferenceWithHeaders$Prefs2Fragment"
+            android:icon="@drawable/ic_settings_display"
+            android:title="Prefs 2"
+            android:summary="Some other preferences you can see.">
+     -->   <!-- Arbitrary key/value pairs can be included with a header as
+             arguments to its fragment. -->
+    <!--    <extra android:name="someKey" android:value="someHeaderValue" />
+    </header>
+
+    <header android:icon="@drawable/ic_settings_display"
+            android:title="Intent"
+            android:summary="Launches an Intent.">
+        <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.android.com" />
+    </header>
+-->
+</preference-headers>

@@ -6,10 +6,16 @@
     <string name="settingstitle">Notifications Widget Settings</string>
     <string name="accessibility_service_description">Enable to allow NotificationsWidget receive all incoming notifications. The disclaimer displayed when enabling the accessibility service is a standard Android message. This app DOES NOT collect any of your data. Please note that this app doesn\'t have internet access permission so it actually cannot send the data anywhere.</string>
     <string name="notifications_service">Notifications Widget</string>
-
+    
     <!-- Settings Page -->
+    <string name="generalsettings">General Settings</string>
+    <string name="advancedsettings">Advanced Settings</string>
     <string name="behavior">Behavior</string>
     <string name="appearance">Appearance</string>
+    <string name="advanced">Advanced</string>
+    <string name="clock">Clock Bar</string>
+    <string name="notifications">Notifications</string>
+        
     <string name="turnscreenon">Auto screen on</string>
     <string name="turnscreenon_summary">Wake device and turn screen on when new a notification arrives</string>
     <string name="disableproximity">Disable proximity sensor</string>
@@ -18,8 +24,6 @@
     <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
     <string name="collectonunlock">Collect when unlocked</string>
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
-    <string name="clearonclear">Synchronize \"Clear All\"</string>
-    <string name="clearonclear_summary">Experimental - Clear notifications when clear button is clicked on android notifications bar</string>
     <string name="clockstyle">Clock style</string>
     <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>
@@ -30,6 +34,10 @@
     <string name="notification_time_color">Notification time color</string>
     <string name="show_full_notification">Show full notification content</string>
     <string name="show_full_notification_summary">Show full notification content as it appears on notifications bar</string>
+    <string name="clearonclear">Monitor \"Clear All\"</string>
+    <string name="clearonclear_summary">Experimental - Clear notifications when clear button is clicked on android notifications bar. (requires accessibility service restart)</string>
+    <string name="keep_on_foreground">Keep on foreground</string>
+    <string name="keep_on_foreground_summary">Keeps NotificiationsWidget service on foreground to prevent other apps from killing it</string>
     
     <string-array name="settings_colors_entries">
 	    <item>White</item>
@@ -78,5 +86,7 @@
     <string name="tutorial_step_2_title">Add Widget</string>
     <string name="tutorial_step_3_title">Customize</string>
 
+    <!--  Error Messages -->
+    <string name="failed_to_monitor_clear_button">Failed to Monitor \"Clear Notifications\" button</string>
 
 </resources>

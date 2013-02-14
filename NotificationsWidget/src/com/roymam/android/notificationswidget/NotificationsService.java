@@ -24,57 +24,69 @@ import android.preference.PreferenceManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 
-public class NotificationsService extends AccessibilityService {
-
+public class NotificationsService extends AccessibilityService 
+{
 	private static NotificationsService sSharedInstance;
 	private List<NotificationData> notifications;
 	private boolean collect = true;
-
-	public boolean onUnbind(Intent intent) 
-	{
-	    sSharedInstance = null;
-	    return super.onUnbind(intent);
-	}
-
-	public static NotificationsService getSharedInstance() 
-	{
-	    return sSharedInstance;
-	}
-	
-	private String clearButtonName = "Clear all notifications.";
 	private boolean deviceCovered = false;
+	private String clearButtonName = "Clear all notifications.";
+
+	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
 	@Override
 	protected void onServiceConnected() 
 	{
 		super.onServiceConnected();
-		System.out.println("onServiceConnected");
-	    AccessibilityServiceInfo info = new AccessibilityServiceInfo();
-	    info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED | 
-	    				  AccessibilityEvent.TYPE_VIEW_CLICKED;
-	    info.notificationTimeout = 100;
-	    info.feedbackType = AccessibilityEvent.TYPES_ALL_MASK;
-	    setServiceInfo(info);
-	    sSharedInstance = this;
-	    notifications = new ArrayList<NotificationData>();
-	    
-	    // find "clear all notifications." button text
-	    Resources res;
-		try 
+		sSharedInstance = this;
+		
+		AccessibilityServiceInfo info = new AccessibilityServiceInfo();
+		
+		// check if "Clear Notifications Monitor" feature enabled, if so - monitor view clicks
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
 		{
-			res = getPackageManager().getResourcesForApplication("com.android.systemui");
-			int i = res.getIdentifier("accessibility_clear_all", "string", "com.android.systemui");
-			if (i!=0)
+			// find "clear all notifications." button text
+		    Resources res;
+			try 
 			{
-				clearButtonName = res.getString(i);
-			}
+				res = getPackageManager().getResourcesForApplication("com.android.systemui");
+				int i = res.getIdentifier("accessibility_clear_all", "string", "com.android.systemui");
+				if (i!=0)
+				{
+					clearButtonName = res.getString(i);
+				}							
+			} 
+			catch (Exception exp)
+			{
+				Toast.makeText(this, R.string.failed_to_monitor_clear_button, Toast.LENGTH_LONG);
+			}			
+		    info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED | AccessibilityEvent.TYPE_VIEW_CLICKED;		    
 		}
-		catch (Exception exp)
-		{
-			
+		else
+		{		
+		    info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;		   
 		}
 		
-		// register proximity change sensor
+		info.notificationTimeout = 100;
+	    info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
+	    setServiceInfo(info);
+	    	    
+	    notifications = new ArrayList<NotificationData>();
+	    
+	    // register proximity change sensor
+		registerProximitySensor();
+			
+		// keep app on foreground if requested
+		keepOnForeground();
+	}	
+	
+	// Proximity Sensor Monitoring
+	SensorManager sensorManager;
+	Sensor proximitySensor;
+	SensorEventListener sensorListener;
+	
+	private void registerProximitySensor()
+	{
 		sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		sensorListener = new SensorEventListener()
@@ -102,43 +114,42 @@ public class NotificationsService extends AccessibilityService {
 		{
 			startProximityMontior();
 		}
-	}	
-	
-	SensorManager sensorManager;
-	Sensor proximitySensor;
-	SensorEventListener sensorListener;
-	
+	}
 	public void startProximityMontior()
 	{		       
 		if (proximitySensor != null)
 		{
 			sensorManager.registerListener(sensorListener, proximitySensor, 5);
 		}		
-	}
-	
+	}	
 	public void stopProximityMontior()
 	{
 		sensorManager.unregisterListener(sensorListener);
 		deviceCovered = false;
 	}
 
+	/////////////////////////////////////////
+	
 	@Override
-	public void onAccessibilityEvent(AccessibilityEvent event) {
+	public void onAccessibilityEvent(AccessibilityEvent event) 
+	{
 		if (event != null && collect)
 		{
+			// if it's notification
 			if (event.getClassName().equals(android.app.Notification.class.getName()))
 			{
-				final Context ctx = getApplicationContext();
 				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 				Notification n = (Notification)event.getParcelableData();
 			
 				if (n != null)
 				{
+					// handle only dismissable notifications
 					if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
 						!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
 						 n.tickerText != null
 								)
-					{										    	    
+					{						
+						// check if need to turn screen on
 						Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
 						if (turnScreenOn && !deviceCovered)
 						{
@@ -148,13 +159,14 @@ public class NotificationsService extends AccessibilityService {
 							wl.release();
 						}
 						
+						// build notification data object
 						NotificationData nd = new NotificationData();
 						
-						// extract app icon
+						// extract app icons
 						Resources res;
 						try {
-							res = ctx.getPackageManager().getResourcesForApplication(event.getPackageName().toString());
-							PackageInfo info = ctx.getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
+							res = getPackageManager().getResourcesForApplication(event.getPackageName().toString());
+							PackageInfo info = getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
 							nd.appicon = BitmapFactory.decodeResource(res, n.icon);
 							if (nd.appicon == null)
 							{
@@ -172,8 +184,8 @@ public class NotificationsService extends AccessibilityService {
 						else
 						{
 							try {
-								res = ctx.getPackageManager().getResourcesForApplication(event.getPackageName().toString());
-								PackageInfo info = ctx.getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
+								res = getPackageManager().getResourcesForApplication(event.getPackageName().toString());
+								PackageInfo info = getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
 								nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
 							} catch (NameNotFoundException e) 
 							{
@@ -182,7 +194,10 @@ public class NotificationsService extends AccessibilityService {
 						}
 						
 						nd.text = n.tickerText.toString();
-						nd.received = n.when;
+						if (n.when != 0)
+							nd.received = n.when;
+						else
+							nd.received = System.currentTimeMillis();
 						nd.action = n.contentIntent;
 						nd.count = 1;
 						nd.packageName = event.getPackageName().toString();
@@ -207,20 +222,20 @@ public class NotificationsService extends AccessibilityService {
 						notifications.add(0,nd);
 	
 						// update widgets
-						AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
-						ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
+						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+						ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
 						int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
 						
 						for (int i=0; i<widgetIds.length; i++) 
 			            {
-			            	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+			            	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
 			            }	
 						sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 					}
 				}
 			}
-			else if (event.getClassName().equals(android.widget.ImageView.class.getName()) &&
-					 event.getPackageName().equals("com.android.systemui") &&
+			else if (event.getPackageName().equals("com.android.systemui") &&
+					 event.getClassName().equals(android.widget.ImageView.class.getName()) &&
 					 event.getContentDescription().equals(clearButtonName))
 			{
 				// clear notifications button clicked
@@ -233,7 +248,31 @@ public class NotificationsService extends AccessibilityService {
 			}
 		}
 	}
+	
+	public void keepOnForeground()
+	{
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEEP_ON_FOREGROUND, false))
+		{
+			 Notification noti = new Notification.Builder(this)
+	         .setContentTitle("Notifications Widget")
+	         .setContentText("Notifications Widget Service is Active")
+	         .setSmallIcon(R.drawable.appicon)
+	         .getNotification();
+			noti.flags|=Notification.FLAG_NO_CLEAR;
+			this.startForeground(0, noti);
+		}
+	}
+	
+	public void removeFromForeground()
+	{
+		this.stopForeground(true);
+	}
 
+	public List<NotificationData> getNotifications()
+	{
+		return notifications;
+	}
+	
 	public void clearAllNotifications()
 	{
 		notifications.clear();
@@ -246,7 +285,8 @@ public class NotificationsService extends AccessibilityService {
 		for (int i=0; i<widgetIds.length; i++) 
         {
         	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-        }	
+        }
+		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 	}
 	
 	public void stopCollecting()
@@ -259,12 +299,16 @@ public class NotificationsService extends AccessibilityService {
 		collect = true;
 	}
 	@Override
-	public void onInterrupt() {
-		// TODO Auto-generated method stub		
+	public void onInterrupt() 
+	{
 	}
 	
-	public List<NotificationData> getNotifications()
+	public boolean onUnbind(Intent intent) 
 	{
-		return notifications;
+	    sSharedInstance = null;
+	    stopProximityMontior();
+	    return super.onUnbind(intent);
 	}
+	
+	
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference 
+            android:title="@string/clearonclear" 
+            android:key="clearonclear" 
+            android:enabled="true" 
+            android:defaultValue="false" 
+            android:summary="@string/clearonclear_summary"/>            
+    <CheckBoxPreference android:key="keep_on_foreground"
+        				android:title="@string/keep_on_foreground"
+        				android:summary="@string/keep_on_foreground_summary"
+        				android:defaultValue="false"/>
+</PreferenceScreen>
