@@ -41,8 +41,8 @@
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />      
                 <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.intent.action.SCREEN_OFF"/>
                 <action android:name="com.roymam.android.notificationswidget.update_clock" />
+                <action android:name="com.roymam.android.notificationswidget.opennotification" />
                 <action android:name="com.roymam.android.notificationswidget.test"/>
             </intent-filter>
             <!-- This specifies the widget provider info -->

@@ -18,6 +18,7 @@ package com.roymam.android.notificationswidget;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.PendingIntent.CanceledException;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -45,6 +46,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static String EXTRA_APP_ID = "com.roymam.android.notificationswidget.extraappid";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
+    public static String OPEN_NOTIFICATION = "com.roymam.android.notificationswidget.opennotification";
     
     public static boolean widgetActive = false;
     
@@ -108,22 +110,31 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	{
     		if (NotificationsService.getSharedInstance() != null)
     		{
-    			if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false))
-	    		{
-	    			NotificationsService.getSharedInstance().clearAllNotifications();
-	    		}
-    			if (!PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
-	    		{
-	    			NotificationsService.getSharedInstance().stopCollecting();
-	    		}
+    			NotificationsService.getSharedInstance().setDeviceIsUnlocked();
     		}
     	}
-    	else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
-    	{
-    		if (NotificationsService.getSharedInstance() != null)
-    		{
-    			NotificationsService.getSharedInstance().resumeCollecting();
-    		}
+    	
+    	// unused code
+    	else if (intent.getAction().equals(OPEN_NOTIFICATION))
+    	{    		
+    		int pos=intent.getIntExtra(NotificationsWidgetProvider.EXTRA_APP_ID,-1);
+    	    NotificationsService ns = NotificationsService.getSharedInstance();
+    	    if (pos != -1)
+    	    {
+    		    if (ns != null)
+    		    {
+    				try 
+    			    {
+    					if (pos < ns.getNotifications().size())
+    					{
+    						ns.getNotifications().get(pos).action.send();
+    						ns.getNotifications().remove(pos);
+    					}
+    			    } catch (CanceledException e) 
+    				{
+    				}
+    		    }
+    	  	}
     	}
     	else if (intent.getAction().equals("com.roymam.android.notificationswidget.test"))
     	{
@@ -222,6 +233,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    PendingIntent clickPI=PendingIntent.getActivity(ctxt, 0,
 	                                            			clickIntent,
 	                                            			PendingIntent.FLAG_UPDATE_CURRENT);
+    	    //Intent clickIntent=new Intent(NotificationsWidgetProvider.OPEN_NOTIFICATION);
+    	    //PendingIntent clickPI=PendingIntent.getBroadcast(ctxt, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     	    widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);    	   
 
     	    // set up clock

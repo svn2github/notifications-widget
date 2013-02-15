@@ -117,16 +117,5 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 				NotificationsService.getSharedInstance().removeFromForeground();
 			}
 		}
-		else if (key.equals(COLLECT_ON_UNLOCK))
-		{
-			if (prefs.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
-			{
-				NotificationsService.getSharedInstance().resumeCollecting();
-			}
-			else
-			{
-				NotificationsService.getSharedInstance().stopCollecting();
-			}
-		}
 	}
 }
