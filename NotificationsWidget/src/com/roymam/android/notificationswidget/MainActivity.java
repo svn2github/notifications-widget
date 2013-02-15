@@ -1,19 +1,60 @@
 package com.roymam.android.notificationswidget;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+//import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
-
+public class MainActivity extends FragmentActivity 
+{
+	public class AboutDialogFragment extends DialogFragment 
+	{
+	    @Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) 
+	    {
+	    	LayoutInflater inflater = getActivity().getLayoutInflater();
+	        
+	        // Use the Builder class for convenient dialog construction
+	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setIcon(R.id.appIcon)
+	        		.setTitle(R.string.about_title)
+	        		.setView(inflater.inflate(R.layout.about, null))
+	        		.setPositiveButton(R.string.about_contactus_title, new DialogInterface.OnClickListener() 
+	               {
+	                   public void onClick(DialogInterface dialog, int id) 
+	                   {
+	                	   Intent emailIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.about_contactus_email)));
+	               			startActivity(emailIntent);
+	                   }
+	               })
+	               .setNegativeButton(R.string.about_close, new DialogInterface.OnClickListener() 
+	               {
+	                   public void onClick(DialogInterface dialog, int id) 
+	                   {
+	                       // do nothing
+	                   }
+	               });	        
+	        // Create the AlertDialog object and return it
+	        return builder.create();
+	    }
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -54,19 +95,51 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	@Override
+	public void openAd(View v)
+    {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.about_ad_url)));
+		startActivity(browserIntent);
+    }
+	
+	public void showAbout()
+	{
+		DialogFragment dialog = new AboutDialogFragment();
+		dialog.show(getSupportFragmentManager(), "AboutDialogFragment");
+	}
+	
+	public void showSettings()
+	{
+		Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+	    startActivity(intent);
+	}
+    
+	//@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		final MenuInflater inflater = getMenuInflater();
-	    final Intent[] menuIntents = new Intent[] {
-	    		new Intent(this, SettingsActivity.class) };
-	    
 	    inflater.inflate(R.menu.activity_main, menu);
-	    final int ms = menu.size();
-	    for (int i=0; i < ms; i++) {
-	        menu.getItem(i).setIntent(menuIntents[i]);
-	    }
+	    
+	    OnMenuItemClickListener menuListener = new OnMenuItemClickListener()
+	    {
+			@Override
+			public boolean onMenuItemClick(MenuItem arg0) 
+			{
+				if (arg0.getItemId() == R.id.menu_settings)
+				{
+					showSettings();
+					return true;
+				}
+				else if (arg0.getItemId() == R.id.menu_about)
+				{
+					showAbout();
+					return true;
+				}
+				return false;
+			}
+	    };
+	    for(int i=0;i<menu.size();i++)
+	    	menu.getItem(i).setOnMenuItemClickListener(menuListener);
 	    
 	    return super.onCreateOptionsMenu(menu);
 	}

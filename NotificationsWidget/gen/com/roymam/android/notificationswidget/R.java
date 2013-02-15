@@ -29,6 +29,8 @@ public final class R {
         public static final int hardware_phone=0x7f020003;
         public static final int item_selector=0x7f020004;
         public static final int preview=0x7f020005;
+        public static final int rollypolyad=0x7f020006;
+        public static final int roymam=0x7f020007;
     }
     public static final class id {
         public static final int TutorialDescription=0x7f090004;
@@ -46,6 +48,7 @@ public final class R {
         public static final int dateFull=0x7f090013;
         public static final int largeNotification=0x7f090006;
         public static final int loadingSpinner=0x7f09000e;
+        public static final int menu_about=0x7f090021;
         public static final int menu_settings=0x7f090020;
         public static final int nextAlarmContainer=0x7f090018;
         public static final int notificationContainer=0x7f090005;
@@ -66,14 +69,24 @@ public final class R {
         public static final int widget_item=0x7f090009;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int dark_widget_item=0x7f030001;
-        public static final int widget_layout=0x7f030002;
+        public static final int about=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int dark_widget_item=0x7f030002;
+        public static final int widget_layout=0x7f030003;
     }
     public static final class menu {
         public static final int activity_main=0x7f080000;
     }
     public static final class string {
+        public static final int about_ad_url=0x7f060034;
+        public static final int about_close=0x7f060037;
+        public static final int about_contactus_email=0x7f060036;
+        public static final int about_contactus_title=0x7f060035;
+        public static final int about_content=0x7f060033;
+        public static final int about_subtitle=0x7f060032;
+        /**   About Dialog 
+         */
+        public static final int about_title=0x7f060031;
         public static final int accessibility_service_description=0x7f060002;
         public static final int advanced=0x7f060008;
         public static final int advancedsettings=0x7f060005;
@@ -92,12 +105,13 @@ public final class R {
         public static final int disableproximity_summary=0x7f06000e;
         /**   Error Messages 
          */
-        public static final int failed_to_monitor_clear_button=0x7f060030;
+        public static final int failed_to_monitor_clear_button=0x7f060038;
         /**  Settings Page 
          */
         public static final int generalsettings=0x7f060004;
         public static final int keep_on_foreground=0x7f06001f;
         public static final int keep_on_foreground_summary=0x7f060020;
+        public static final int menu_about=0x7f060023;
         /**   Wizard Strings 
          */
         public static final int menu_settings=0x7f060022;
@@ -116,21 +130,21 @@ public final class R {
         /**  General Strings 
          */
         public static final int title=0x7f060000;
-        public static final int title_activity_main=0x7f060023;
+        public static final int title_activity_main=0x7f060024;
         public static final int turnscreenon=0x7f06000b;
         public static final int turnscreenon_summary=0x7f06000c;
-        public static final int tutorial_help_1=0x7f060024;
-        public static final int tutorial_help_2=0x7f060025;
-        public static final int tutorial_help_3=0x7f060026;
-        public static final int tutorial_step_1=0x7f060027;
-        public static final int tutorial_step_1_title=0x7f06002d;
-        public static final int tutorial_step_2=0x7f060028;
-        public static final int tutorial_step_2_title=0x7f06002e;
-        public static final int tutorial_step_3=0x7f060029;
-        public static final int tutorial_step_3_title=0x7f06002f;
-        public static final int tutorial_toast_1=0x7f06002a;
-        public static final int tutorial_toast_2=0x7f06002b;
-        public static final int welcome_text=0x7f06002c;
+        public static final int tutorial_help_1=0x7f060025;
+        public static final int tutorial_help_2=0x7f060026;
+        public static final int tutorial_help_3=0x7f060027;
+        public static final int tutorial_step_1=0x7f060028;
+        public static final int tutorial_step_1_title=0x7f06002e;
+        public static final int tutorial_step_2=0x7f060029;
+        public static final int tutorial_step_2_title=0x7f06002f;
+        public static final int tutorial_step_3=0x7f06002a;
+        public static final int tutorial_step_3_title=0x7f060030;
+        public static final int tutorial_toast_1=0x7f06002b;
+        public static final int tutorial_toast_2=0x7f06002c;
+        public static final int welcome_text=0x7f06002d;
     }
     public static final class xml {
         public static final int advancedpreferences=0x7f040000;
