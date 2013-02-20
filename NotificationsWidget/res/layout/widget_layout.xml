@@ -1,189 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widetcontainer"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-            <ProgressBar
-                android:id="@+id/loadingSpinner"
-                android:layout_width="wrap_content"
+        <ProgressBar
+            android:id="@+id/loadingSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:id="@+id/bigClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="-22dp"
+            android:background="@drawable/item_selector"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/bigHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
+                    android:textSize="72sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/bigminutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
+                    android:textSize="72sp"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="-11dp"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/bigDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/nextAlarmContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:visibility="gone" >
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:alpha="50"
+                        android:src="@android:drawable/ic_lock_idle_alarm" />
+
+                    <TextView
+                        android:id="@+id/alarmtime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:alpha="50"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@android:color/darker_gray"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/clockbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
             <LinearLayout
                 android:id="@+id/smallClock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:background="@drawable/item_selector"
                 android:clickable="true"
                 android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/timeHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-6dp"
+                    android:text="00"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/timeMinute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-6dp"
+                    android:text=":00"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/timeAMPM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-6dp"
+                    android:paddingRight="5dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/dateFull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-6dp"
+                    android:layout_weight="0.97"
+                    android:paddingLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
             
-            <TextView
-                android:id="@+id/timeHour"
+            <LinearLayout
+                android:id="@+id/buttonsBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-6dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textStyle="bold" />
+                android:layout_alignParentRight="true"
+                android:gravity="right" >
 
-            <TextView
-                android:id="@+id/timeMinute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-6dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-			
-			<TextView
-			    android:id="@+id/timeAMPM"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_marginTop="-6dp"
-			    android:paddingRight="5dp"
-			    android:textAppearance="?android:attr/textAppearanceSmall" />
-            
-            <TextView
-                android:id="@+id/dateFull"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-6dp"
-                android:layout_weight="0.97"
-                android:paddingLeft="5dp"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
-			</LinearLayout>
-			
-            
+                <ImageButton
+                    android:id="@+id/serviceInactiveButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/item_selector"
+                    android:scaleType="fitCenter"
+                    android:src="@android:drawable/ic_dialog_alert"
+                    android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/bigClock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" android:layout_gravity="center_vertical|center_horizontal" android:layout_marginTop="-18dp" android:visibility="gone" android:clickable="true" android:background="@drawable/item_selector">
+                <ImageButton
+                    android:id="@+id/editMode"
+                    style="@android:style/Holo.ButtonBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/item_selector"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/content_edit"
+                    android:visibility="gone" />
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center_horizontal"
-	    android:orientation="horizontal" >
+                <ImageButton
+                    android:id="@+id/clearButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/item_selector"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/clear"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
-        <TextView
-            android:id="@+id/bigHours"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColorLink="@android:color/white"
-            android:textSize="72sp"
-            android:textStyle="bold" android:textColor="@android:color/white"/>
-
-        <TextView
-            android:id="@+id/bigminutes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textColorLink="@android:color/white"
-            android:textSize="72sp"
-            android:typeface="sans" android:fontFamily="sans-serif-light"/>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <ListView
+        android:id="@+id/notificationsListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="-4dp"
-        android:gravity="center_horizontal" >
+        android:layout_height="match_parent"
+        tools:listitem="@layout/dark_widget_item" >
+    </ListView>
+
+    <FrameLayout
+        android:id="@+id/serviceInactiveView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
 
         <TextView
-            android:id="@+id/bigDate"
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:layout_gravity="center|center_horizontal"
+            android:gravity="center"
+            android:text="@string/service_inactive_text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/nextAlarmContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:visibility="gone" >
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"              
-                android:src="@android:drawable/ic_lock_idle_alarm" android:alpha="50" android:layout_gravity="center_vertical"/>
-
-            <TextView
-                android:id="@+id/alarmtime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-            	android:text=""
-            	android:textAppearance="?android:attr/textAppearanceSmall"
-            	android:textColor="@android:color/darker_gray"
-                android:textStyle="bold" android:layout_gravity="center_vertical" android:alpha="50" android:layout_marginLeft="2dp"/>
-
-        </LinearLayout>
-    </LinearLayout>
-    </LinearLayout>
-        <FrameLayout android:id="@+id/serviceInactiveView" android:layout_width="fill_parent" android:layout_height="fill_parent" android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal"
-                android:gravity="center"
-                android:text="@string/service_inactive_text"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-           </FrameLayout><ListView android:id="@+id/notificationsListView" android:layout_width="fill_parent" android:layout_height="fill_parent" tools:listitem="@layout/dark_widget_item">
-           </ListView></LinearLayout>
-	    
-<LinearLayout
-    android:id="@+id/buttonsBar"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true" >
-            
-            <ImageButton
-                android:id="@+id/serviceInactiveButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/item_selector"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_dialog_alert"
-                android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/editMode"
-                style="@android:style/Holo.ButtonBar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/item_selector"
-                android:scaleType="fitCenter"
-                android:src="@drawable/content_edit"
-                android:visibility="gone" />
-            
-            <ImageButton
-                android:id="@+id/clearButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/item_selector"
-                android:scaleType="fitCenter"
-                android:src="@drawable/clear"
-                android:visibility="gone" />
-
-            
-
-        	</LinearLayout></RelativeLayout>
+</LinearLayout>
