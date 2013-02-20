@@ -6,6 +6,7 @@ import java.util.List;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 
@@ -30,10 +32,17 @@ public class NotificationsService extends AccessibilityService
 	private List<NotificationData> notifications;
 	private boolean deviceIsUnlocked = true;
 	private boolean deviceCovered = false;
+	private boolean editMode =  false;
 	private String clearButtonName = "Clear all notifications.";
 
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
+		return START_STICKY;
+	}
+
 	@Override
 	protected void onServiceConnected() 
 	{
@@ -268,11 +277,15 @@ public class NotificationsService extends AccessibilityService
 	{
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEEP_ON_FOREGROUND, false))
 		{
-			 Notification noti = new Notification.Builder(this)
+			 Notification noti = new NotificationCompat.Builder(this)
 	         .setContentTitle("Notifications Widget")
 	         .setContentText("Notifications Widget Service is Active")
 	         .setSmallIcon(R.drawable.appicon)
-	         .getNotification();
+	         .setContentIntent(
+	        		 PendingIntent.getActivity(this, 0, 
+	        				 new Intent(this, MainActivity.class), 
+	        				 PendingIntent.FLAG_UPDATE_CURRENT))
+	         .build();
 			noti.flags|=Notification.FLAG_NO_CLEAR;
 			this.startForeground(0, noti);
 		}
@@ -311,6 +324,16 @@ public class NotificationsService extends AccessibilityService
 			clearAllNotifications();
 		}
 		deviceIsUnlocked = true;
+	}
+	
+	public void setEditMode(boolean mode)
+	{
+		editMode = mode;
+	}
+	
+	public boolean isEditMode()
+	{
+		return editMode;
 	}
 	
 	@Override

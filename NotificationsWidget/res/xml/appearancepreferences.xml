@@ -5,14 +5,24 @@
             android:dialogTitle="@string/clockstyle" 
     	    android:entries="@array/settings_clock_entries"
     	    android:entryValues="@array/settings_clock_values" 
-            android:summary="@string/clockstyle_summary" 
             android:key="clockstyle"
             android:defaultValue="auto"  
             android:title="@string/clockstyle"/>
-    	<CheckBoxPreference 
+    	<ListPreference android:dialogTitle="@string/showclearbutton" 
+    	    			android:title="@string/showclearbutton" 
+    	    			android:entries="@array/settings_buttons_entries" 
+    	    			android:entryValues="@array/settings_buttons_values" 
+    	    			android:key="clearbuttonmode" 
+    	    			android:defaultValue="visible"/>
+    	<!-- <CheckBoxPreference 
     	    android:summary="@string/showclearbutton_summary" 
     	    android:key="showclearbutton" 
     	    android:title="@string/showclearbutton" 
+    	    android:defaultValue="true"/> -->  
+    	<CheckBoxPreference 
+    	    android:summary="@string/showeditbutton_summary" 
+    	    android:key="showeditbutton" 
+    	    android:title="@string/showeditbutton" 
     	    android:defaultValue="true"/>      	    		
     </PreferenceCategory>
     <PreferenceCategory android:key="notifications" android:title="@string/notifications"> 	

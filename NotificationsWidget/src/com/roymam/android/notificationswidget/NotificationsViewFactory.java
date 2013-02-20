@@ -85,7 +85,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		if (s != null) 
 		{
 		    List<NotificationData> notifications = s.getNotifications();
-		    if (notifications.size()>0)
+		    if (notifications.size()>0 && position < notifications.size())
 		    {
 		    	NotificationData n = notifications.get(position);
 		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
@@ -103,7 +103,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    	row.setTextViewText(R.id.notificationTime, t.format(timeFormat));
 				Intent i=new Intent();
 				Bundle extras=new Bundle();			
-				extras.putInt(NotificationsWidgetProvider.EXTRA_APP_ID,position);
+				extras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
 				i.putExtras(extras);
 				row.setOnClickFillInIntent(R.id.notificationContainer, i);
 				row.setOnClickFillInIntent(R.id.widget_item, i);
@@ -133,6 +133,21 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					row.setViewVisibility(R.id.largeNotification, View.GONE);
 					row.setViewVisibility(R.id.smallNotification, View.VISIBLE);
 				}
+				
+				if (s.isEditMode())
+				{
+					row.setViewVisibility(R.id.clearNotification, View.VISIBLE);
+				}
+				else
+				{
+					row.setViewVisibility(R.id.clearNotification, View.GONE);
+				}
+				Intent clearActionIntent=new Intent();
+				Bundle clearExtras=new Bundle();			
+				clearExtras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
+				clearExtras.putInt(NotificationsWidgetProvider.PERFORM_ACTION,1);
+				clearActionIntent.putExtras(clearExtras);
+				row.setOnClickFillInIntent(R.id.clearNotification, clearActionIntent);
 		    }
 		}	
 		return(row);

@@ -28,6 +28,8 @@
     <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>
     <string name="showclearbutton_summary">Show \"clear all notifications\" button in the clock bar</string>
+    <string name="showeditbutton">Show Edit Mode button</string>
+    <string name="showeditbutton_summary">Show \"Edit Mode\" button in the clock bar, Edit Mode allows you to clear individual notifications</string>
     <string name="notification_bg_opacity">Notification background opacity</string>
     <string name="notification_bg_opacity_summary">Set the opacity of the notification background</string>
     <string name="notification_text_color">Notification text color</string>
@@ -41,18 +43,20 @@
     
     <string-array name="settings_colors_entries">
 	    <item>White</item>
+	    <item>Black</item>
 	    <item>Gray</item>
-	    <item>Blue</item>
-	    <item>Green</item>
-	    <item>Red</item>
+	    <item>Red</item>	
+	    <item>Green</item> 
+	    <item>Blue</item>	    	       
 	</string-array>
 	<string-array
 	    name="settings_colors_values">
 	    <item>17170443</item>
+	    <item>17170444</item>
 	    <item>17170432</item>
-	    <item>17170451</item>
-	    <item>17170453</item>
 	    <item>17170455</item>
+	    <item>17170453</item>
+	    <item>17170451</item>
 	</string-array>
     <string-array name="settings_clock_entries">
 	    <item>Small</item>
@@ -66,6 +70,17 @@
 	    <item>large</item>
 	    <item>auto</item>
 	    <item>hidden</item>
+	</string-array>
+    
+    <string-array name="settings_buttons_entries">
+        <item>Always</item>
+        <item>Never</item>
+        <item>On Edit Mode only</item>
+    </string-array>
+    <string-array name="settings_buttons_values">
+	    <item>visible</item>
+	    <item>hidden</item>
+	    <item>editmode</item>
 	</string-array>
     
     <string name="service_inactive_text">Service is inactive. please enable \"Notifications Widget\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>
@@ -88,7 +103,7 @@
     <string name="tutorial_step_3_title">Customize</string>
 
     <!--  About Dialog -->
-    <string name="about_title">NotificationsWidget V0.5</string>
+    <string name="about_title">NotificationsWidget V0.51</string>
     <string name="about_subtitle">NotificationsWidget is developed by Roymam</string>
     <string name="about_content">The project is hosted on:\nhttp://code.google.com/p/notifications-widget/\nFell free to open issues for any bug report or feature request\n\nIf you would like to support the development of this app you may want to try our game below:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
