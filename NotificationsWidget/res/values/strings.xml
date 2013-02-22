@@ -114,7 +114,7 @@
     <string name="tutorial_step_3_title">Customize</string>
 
     <!--  About Dialog -->
-    <string name="about_title">NotificationsWidget V0.52</string>
+    <string name="about_title">NotificationsWidget V0.54</string>
     <string name="about_subtitle">NotificationsWidget is developed by Roymam</string>
     <string name="about_content">The project is hosted on:\nhttp://code.google.com/p/notifications-widget/\nFell free to open issues for any bug report or feature request\n\nIf you would like to support the development of this app you may want to try our game below:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
