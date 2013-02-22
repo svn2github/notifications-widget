@@ -94,6 +94,44 @@
                 </LinearLayout>
             </LinearLayout>            
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/compactNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/compactIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/appicon" />
+
+            <TextView
+                android:id="@+id/compactText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/item_selector"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="Small Text"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/compactTime"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_weight="0"
+                android:text="00:00"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <ImageButton

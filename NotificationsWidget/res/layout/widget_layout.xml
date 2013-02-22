@@ -191,7 +191,9 @@
         android:id="@+id/notificationsListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@android:color/transparent"
         tools:listitem="@layout/dark_widget_item" >
+
     </ListView>
 
     <FrameLayout

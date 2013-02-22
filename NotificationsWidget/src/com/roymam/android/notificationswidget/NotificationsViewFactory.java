@@ -89,8 +89,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    {
 		    	NotificationData n = notifications.get(position);
 		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
-		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);	
-		    	row.setTextViewText(R.id.widget_item, n.text);		
+		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);
+		    	row.setImageViewBitmap(R.id.compactIcon, n.appicon);
+		    	
+		    	row.setTextViewText(R.id.widget_item, n.text);	
+		    	row.setTextViewText(R.id.compactText, n.text);
 		    	if (n.count > 1)
 		    		row.setTextViewText(R.id.notificationCount, Integer.toString(n.count));
 		    	else
@@ -101,6 +104,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    	if (!DateFormat.is24HourFormat(ctxt))
 		    		timeFormat = "%l:%M%P";
 		    	row.setTextViewText(R.id.notificationTime, t.format(timeFormat));
+		    	row.setTextViewText(R.id.compactTime, t.format(timeFormat));
 				Intent i=new Intent();
 				Bundle extras=new Bundle();			
 				extras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
@@ -108,7 +112,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.setOnClickFillInIntent(R.id.notificationContainer, i);
 				row.setOnClickFillInIntent(R.id.widget_item, i);
 				row.setOnClickFillInIntent(R.id.largeNotification, i);
-				
+				row.setOnClickFillInIntent(R.id.compactText, i);				
 				
 				// set opacity by preference
 				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);
@@ -119,19 +123,30 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				int timeColor = Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark)));
 				row.setTextColor(R.id.widget_item, Resources.getSystem().getColor(textColor));
 				row.setTextColor(R.id.notificationTime, Resources.getSystem().getColor(timeColor));
+				row.setTextColor(R.id.compactText , Resources.getSystem().getColor(textColor));
+				row.setTextColor(R.id.compactTime, Resources.getSystem().getColor(timeColor));
 				
 				row.removeAllViews(R.id.largeNotification);
 				row.addView(R.id.largeNotification, n.notificationContent);
 				
-				if (preferences.getBoolean("showfullnotification", false))
+				String notStyle = preferences.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
+				if (notStyle.equals("large"))
 				{
 					row.setViewVisibility(R.id.largeNotification, View.VISIBLE);
 					row.setViewVisibility(R.id.smallNotification, View.GONE);
+					row.setViewVisibility(R.id.compactNotification, View.GONE);
+				}
+				else if (notStyle.equals("normal"))
+				{
+					row.setViewVisibility(R.id.largeNotification, View.GONE);
+					row.setViewVisibility(R.id.smallNotification, View.VISIBLE);
+					row.setViewVisibility(R.id.compactNotification, View.GONE);
 				}
 				else
 				{
 					row.setViewVisibility(R.id.largeNotification, View.GONE);
-					row.setViewVisibility(R.id.smallNotification, View.VISIBLE);
+					row.setViewVisibility(R.id.smallNotification, View.GONE);
+					row.setViewVisibility(R.id.compactNotification, View.VISIBLE);					
 				}
 				
 				if (s.isEditMode())

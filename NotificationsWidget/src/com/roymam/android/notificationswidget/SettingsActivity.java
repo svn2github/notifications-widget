@@ -22,6 +22,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	//public static String SHOW_CLEAR_BUTTON= "showclearbutton";
 	public static String CLEAR_BUTTON_MODE = "clearbuttonmode";
 	public static String SHOW_EDIT_BUTTON= "showeditbutton";
+	public static String NOTIFICATION_STYLE="notification_style";
 	public static String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
 	public static String TEXT_COLOR = "notification_text_color";
 	public static String TIME_COLOR = "notification_time_color";
@@ -90,6 +91,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        currValue = getPreferenceScreen().getSharedPreferences().getString(CLOCK_STYLE, "auto");	        
 	        listener.setPrefSummary(clockPref, (String)currValue);
 	        clockPref.setOnPreferenceChangeListener(listener);
+	        
+	     // notification style
+	        listener = new ListPreferenceChangeListener(
+	        		getResources().getStringArray(R.array.settings_notifications_entries),
+	        		getResources().getStringArray(R.array.settings_notifications_values));
+	        
+	        Preference notPref = findPreference(NOTIFICATION_STYLE);	        
+	        currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATION_STYLE, "normal");	        
+	        listener.setPrefSummary(notPref, (String)currValue);
+	        notPref.setOnPreferenceChangeListener(listener);
 	    }
 	}
 	

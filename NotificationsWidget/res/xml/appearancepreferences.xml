@@ -25,28 +25,33 @@
     	    android:title="@string/showeditbutton" 
     	    android:defaultValue="true"/>      	    		
     </PreferenceCategory>
-    <PreferenceCategory android:key="notifications" android:title="@string/notifications"> 	
-	<CheckBoxPreference android:disableDependentsState="true" android:summary="@string/show_full_notification_summary" android:key="showfullnotification" android:title="@string/show_full_notification" /><com.hlidskialf.android.preference.SeekBarPreference android:key="notification_bg_opacity"
+    <PreferenceCategory android:key="notifications" android:title="@string/notifications">
+          	
+	<!-- <CheckBoxPreference android:disableDependentsState="true" android:summary="@string/show_full_notification_summary" android:key="showfullnotification" android:title="@string/show_full_notification" /> -->
+	<ListPreference android:dialogTitle="@string/notification_style" 
+    	    			android:entries="@array/settings_notifications_entries" 
+    	    			android:entryValues="@array/settings_notifications_values" 
+    	    			android:title="@string/notification_style" 
+    	    			android:key="notification_style" 
+    	    			android:defaultValue="normal" />
+	<com.hlidskialf.android.preference.SeekBarPreference android:key="notification_bg_opacity"
 	        android:title="@string/notification_bg_opacity"
 	        android:summary="@string/notification_bg_opacity_summary"
 	        android:dialogMessage=""
 	        android:defaultValue="75"
 	        android:text="%"
-	        android:max="100"
-	        android:dependency="showfullnotification"/>
+	        android:max="100"/>
     	<ListPreference android:dialogTitle="@string/notification_text_color" 
     	    			android:entries="@array/settings_colors_entries" 
     	    			android:entryValues="@array/settings_colors_values" 
     	    			android:title="@string/notification_text_color" 
     	    			android:key="notification_text_color" 
-    	    			android:defaultValue="17170443" 
-    	    			android:dependency="showfullnotification"/>
+    	    			android:defaultValue="17170443" />
     	<ListPreference android:title="@string/notification_time_color" 
     	    			android:dialogTitle="@string/notification_time_color" 
     	    			android:entries="@array/settings_colors_entries" 
     	    			android:key="notification_time_color" 
     	    			android:entryValues="@array/settings_colors_values" 
-    	    			android:defaultValue="17170451" 
-    	    			android:dependency="showfullnotification"/> 
+    	    			android:defaultValue="17170451"/> 
 	</PreferenceCategory>
 </PreferenceScreen>

@@ -299,7 +299,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    String clearButtonMode = PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible");					
     	   
     	    int notificationsCount = 0;
-    	    boolean bignotifications = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean("showfullnotification", false);
+    	    String notifiationsStyle = PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
     	    
     	    boolean editMode = false;
     	    if (NotificationsService.getSharedInstance()!=null)
@@ -327,13 +327,17 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     			
     	    if (clockstyle.equals(SettingsActivity.CLOCK_SMALL) ||
     	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
-    	    		(bignotifications && notificationsCount > 0 || notificationsCount > 1))
+    	    		(notifiationsStyle.equals("large") && notificationsCount > 0 ||
+    	    		 notifiationsStyle.equals("normal") && notificationsCount > 1 || 
+    	    				notificationsCount > 2))
     	    {
         	    widget.setViewVisibility(R.id.smallClock, View.VISIBLE);
         	    widget.setViewVisibility(R.id.bigClock, View.GONE);
     	    } else if (clockstyle.equals(SettingsActivity.CLOCK_LARGE) ||
         	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
-        	    	(bignotifications && notificationsCount == 0 || notificationsCount <= 1 ))
+        	    	(notifiationsStyle.equals("large") && notificationsCount == 0 || 
+        	    	 notifiationsStyle.equals("normal") && notificationsCount <= 1 ||
+        	    	 notificationsCount <= 2 ))
     	    {
         	    widget.setViewVisibility(R.id.smallClock, View.GONE);
         	    widget.setViewVisibility(R.id.bigClock, View.VISIBLE);
