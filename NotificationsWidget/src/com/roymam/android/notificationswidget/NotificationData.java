@@ -5,6 +5,9 @@ import android.widget.RemoteViews;
 
 public class NotificationData 
 {
+	String 	title;
+	String 	info;
+	String	details;
 	String 	text;
 	Bitmap 	icon;
 	Bitmap 	appicon;

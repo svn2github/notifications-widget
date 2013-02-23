@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.48.1 "
    sodipodi:docname="promo.svg"
-   inkscape:export-filename="D:\Development\NotificationsWidget\res\drawable-xhdpi\appicon.png"
-   inkscape:export-xdpi="240"
-   inkscape:export-ydpi="240">
+   inkscape:export-filename="D:\Development\NotificationsWidget\promo180x120.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <linearGradient
@@ -390,6 +390,16 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-932.3622)">
+    <rect
+       style="fill:#e4ffff;fill-opacity:1;stroke:none"
+       id="rect4018"
+       width="263"
+       height="178"
+       x="-29"
+       y="-19"
+       transform="translate(0,932.3622)"
+       rx="1.8358072"
+       ry="5.1449795" />
     <image
        y="980.58331"
        x="-361.97836"

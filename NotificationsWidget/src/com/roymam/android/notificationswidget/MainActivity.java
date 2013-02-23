@@ -8,6 +8,7 @@ import android.app.Dialog;
 //import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -30,11 +31,18 @@ public class MainActivity extends FragmentActivity
 	    public Dialog onCreateDialog(Bundle savedInstanceState) 
 	    {
 	    	LayoutInflater inflater = getActivity().getLayoutInflater();
+	    	String versionString = "";
+	    	String appName = "";
+	    	try {
+	    		appName = getString(R.string.about_title);
+				versionString = MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(), 0).versionName;
+			} catch (NameNotFoundException e) {
+			}
 	        
 	        // Use the Builder class for convenient dialog construction
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	        builder.setIcon(R.id.appIcon)
-	        		.setTitle(R.string.about_title)
+	        		.setTitle(appName + " v" + versionString)
 	        		.setView(inflater.inflate(R.layout.about, null))
 	        		.setPositiveButton(R.string.about_contactus_title, new DialogInterface.OnClickListener() 
 	               {

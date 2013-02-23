@@ -81,16 +81,19 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		super.onDisabled(context);
 	}
 
-	public void updateWidget(Context ctx)
+	public void updateWidget(Context ctx, boolean refreshList)
 	{
 		AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
 		ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
 		int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
 		
-		for (int i=0; i<widgetIds.length; i++) 
-        {
-			AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-        }
+		if (refreshList)
+		{
+			for (int i=0; i<widgetIds.length; i++) 
+	        {
+				AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+	        }
+		}
 		onUpdate(ctx, widgetManager, widgetIds);
 	}
 	
@@ -104,12 +107,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    {
     	    	ns.getNotifications().clear();
     	    	ns.setEditMode(false);
-    	    	updateWidget(ctx);
+    	    	updateWidget(ctx,true);
     	    }
     	}
     	else if (intent.getAction().equals(UPDATE_CLOCK))
     	{
-    		updateWidget(ctx);
+    		updateWidget(ctx,false);
 			
     	}
     	else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT))
@@ -140,7 +143,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    		{
 	    			NotificationsService.getSharedInstance().setEditMode(false);
 	    		}
-	    		updateWidget(ctx);
+	    		updateWidget(ctx,true);
     		}
     	}
     	else if (intent.getAction().equals(SWITCH_TO_EDIT_MODE))

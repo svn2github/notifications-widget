@@ -23,7 +23,10 @@ import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NotificationsService extends AccessibilityService 
@@ -225,6 +228,18 @@ public class NotificationsService extends AccessibilityService
 							nd.count = 1;
 							nd.packageName = event.getPackageName().toString();
 							nd.notificationContent = n.contentView;
+							
+							// try to extract extra content from view
+							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+							ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
+							nd.notificationContent.reapply(getApplicationContext(), localView);
+							
+							TextView tv = (TextView) localView.findViewById(16908358);
+							if (tv != null) nd.details = tv.getText().toString();
+							tv = (TextView) localView.findViewById(android.R.id.title);
+							if (tv != null) nd.title = tv.getText().toString();
+							tv = (TextView) localView.findViewById(16909082);
+							if (tv != null) nd.title = tv.getText().toString();
 							
 							// check for duplicated notification
 							int duplicated = -1;
