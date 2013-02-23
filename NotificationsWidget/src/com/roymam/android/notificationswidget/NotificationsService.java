@@ -240,6 +240,8 @@ public class NotificationsService extends AccessibilityService
 							if (tv != null) nd.title = tv.getText().toString();
 							tv = (TextView) localView.findViewById(16909082);
 							if (tv != null) nd.title = tv.getText().toString();
+							tv = (TextView) localView.findViewById(16908388);
+							if (tv != null) nd.time = tv.getText().toString();
 							
 							// check for duplicated notification
 							int duplicated = -1;
@@ -273,18 +275,22 @@ public class NotificationsService extends AccessibilityService
 					}
 				}
 			}
-			else if (event.getPackageName().equals("com.android.systemui") &&
-					 event.getClassName().equals(android.widget.ImageView.class.getName()) &&
-					 event.getContentDescription().equals(clearButtonName))
-			{
-				// clear notifications button clicked
-				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-				if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
+			else 
+				if (event.getPackageName()!= null && event.getClassName() != null && event.getContentDescription() != null)
 				{
-					clearAllNotifications();
+					if (event.getPackageName().equals("com.android.systemui") &&
+							 event.getClassName().equals(android.widget.ImageView.class.getName()) &&
+							 event.getContentDescription().equals(clearButtonName))
+					{
+						// clear notifications button clicked
+						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		
+						if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
+						{
+							clearAllNotifications();
+						}
+					}
 				}
-			}
 		}
 	}
 	

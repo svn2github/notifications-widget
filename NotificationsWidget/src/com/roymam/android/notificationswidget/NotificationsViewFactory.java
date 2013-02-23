@@ -133,12 +133,18 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				if (notStyle.equals("large"))
 				{
 					row.setViewVisibility(R.id.largeNotification, View.VISIBLE);
-					n.notificationContent.setTextColor(android.R.id.title, Resources.getSystem().getColor(textColor));
-					n.notificationContent.setTextColor(16908358, Resources.getSystem().getColor(textColor));
-					n.notificationContent.setTextColor(16909082, Resources.getSystem().getColor(textColor));
-					n.notificationContent.setTextColor(16908388, Resources.getSystem().getColor(timeColor));
-
-					n.notificationContent.setInt(16909091, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
+					try
+					{
+						n.notificationContent.setInt(16909091, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
+						if (n.title != null) n.notificationContent.setTextColor(android.R.id.title, Resources.getSystem().getColor(textColor));
+						if (n.details != null) n.notificationContent.setTextColor(16908358, Resources.getSystem().getColor(textColor));
+						if (n.info != null) n.notificationContent.setTextColor(16909082, Resources.getSystem().getColor(textColor));
+						if (n.time != null) n.notificationContent.setTextColor(16908388, Resources.getSystem().getColor(timeColor));
+					}
+					catch (Exception exp)
+					{
+						
+					}
 					//row.setFloat(R.id.largeNotification, "setAlpha", (float) opacity / 100.0f);
 					row.setViewVisibility(R.id.smallNotification, View.GONE);
 					row.setViewVisibility(R.id.compactNotification, View.GONE);
