@@ -121,7 +121,12 @@
     <string name="about_contactus_title">Contact us</string>
     <string name="about_contactus_email">mailto:admin@roymam.com</string>
     <string name="about_close">Close</string>
+
     <!--  Error Messages -->
     <string name="failed_to_monitor_clear_button">Failed to Monitor \"Clear Notifications\" button</string>
-
+    
+    <!-- App specific settings -->
+	<string name="app_specific_settings_title">App Specific Settings</string>
+	<string name="ignore_notifications">Ignore this app</string>
+	<string name="ignore_notifications_summary">ignore all notifications from this app</string>
 </resources>

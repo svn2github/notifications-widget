@@ -175,103 +175,107 @@ public class NotificationsService extends AccessibilityService
 							!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
 							 n.tickerText != null
 									)
-						{						
-							// check if need to turn screen on
-							Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
-							if (turnScreenOn && !deviceCovered)
+						{			
+							boolean ignoreApp = sharedPref.getBoolean(event.getPackageName().toString()+"."+AppSettingsActivity.IGNORE_APP, false);
+							if (!ignoreApp)
 							{
-								PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-								PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-								wl.acquire();
-								wl.release();
-							}
-							
-							// build notification data object
-							NotificationData nd = new NotificationData();
-							
-							// extract app icons
-							Resources res;
-							try {
-								res = getPackageManager().getResourcesForApplication(event.getPackageName().toString());
-								PackageInfo info = getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
-								nd.appicon = BitmapFactory.decodeResource(res, n.icon);
-								if (nd.appicon == null)
+								// check if need to turn screen on
+								Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
+								if (turnScreenOn && !deviceCovered)
 								{
-									nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+									PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+									PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+									wl.acquire();
+									wl.release();
 								}
-							} catch (NameNotFoundException e) 
-							{
-								nd.appicon = null;
-							}
-							
-							if (n.largeIcon != null)
-							{
-								nd.icon = n.largeIcon;
-							}
-							else
-							{
+								
+								// build notification data object
+								NotificationData nd = new NotificationData();
+								
+								// extract app icons
+								Resources res;
 								try {
 									res = getPackageManager().getResourcesForApplication(event.getPackageName().toString());
 									PackageInfo info = getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
-									nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+									nd.appicon = BitmapFactory.decodeResource(res, n.icon);
+									if (nd.appicon == null)
+									{
+										nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+									}
 								} catch (NameNotFoundException e) 
 								{
-									nd.icon = null;
+									nd.appicon = null;
 								}
-							}
-							
-							nd.text = n.tickerText.toString();
-							if (n.when != 0)
-								nd.received = n.when;
-							else
-								nd.received = System.currentTimeMillis();
-							nd.action = n.contentIntent;
-							nd.count = 1;
-							nd.packageName = event.getPackageName().toString();
-							nd.notificationContent = n.contentView;
-							
-							// try to extract extra content from view
-							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-							ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
-							nd.notificationContent.reapply(getApplicationContext(), localView);
-							
-							View tv = localView.findViewById(16908358);
-							if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(android.R.id.title);
-							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(16909082);
-							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(16908388);
-							if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
-							
-							// check for duplicated notification
-							int duplicated = -1;
-							for(int i=0;i<notifications.size();i++)
-							{
-								if (nd.packageName.equals(notifications.get(i).packageName) &&
-									nd.text.equals(notifications.get(i).text))
+								
+								if (n.largeIcon != null)
+								{
+									nd.icon = n.largeIcon;
+								}
+								else
+								{
+									try {
+										res = getPackageManager().getResourcesForApplication(event.getPackageName().toString());
+										PackageInfo info = getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
+										nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+									} catch (NameNotFoundException e) 
 									{
-										duplicated = i;
+										nd.icon = null;
 									}
+								}
+								
+								nd.text = n.tickerText.toString();
+								if (n.when != 0)
+									nd.received = n.when;
+								else
+									nd.received = System.currentTimeMillis();
+								nd.action = n.contentIntent;
+								nd.count = 1;
+								nd.packageName = event.getPackageName().toString();
+								nd.notificationContent = n.contentView;
+								
+								// try to extract extra content from view
+								LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+								ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
+								nd.notificationContent.reapply(getApplicationContext(), localView);
+								
+								View tv = localView.findViewById(16908358);
+								if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();
+								tv = localView.findViewById(android.R.id.title);
+								if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
+								tv = localView.findViewById(16909082);
+								if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
+								tv = localView.findViewById(16908388);
+								if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
+								
+								// check for duplicated notification
+								int duplicated = -1;
+								for(int i=0;i<notifications.size();i++)
+								{
+									if (nd.packageName.equals(notifications.get(i).packageName) &&
+										nd.text.equals(notifications.get(i).text))
+										{
+											duplicated = i;
+										}
+								}
+								if (duplicated >= 0)
+								{
+									NotificationData dup = notifications.get(duplicated);
+									notifications.remove(duplicated);
+									nd.count = dup.count+1;						
+								}
+								notifications.add(0,nd);
+			
+								// update widgets
+								AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+								ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
+								int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+								
+								for (int i=0; i<widgetIds.length; i++) 
+					            {
+					            	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+					            }	
+								sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 							}
-							if (duplicated >= 0)
-							{
-								NotificationData dup = notifications.get(duplicated);
-								notifications.remove(duplicated);
-								nd.count = dup.count+1;						
-							}
-							notifications.add(0,nd);
-		
-							// update widgets
-							AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
-							ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
-							int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-							
-							for (int i=0; i<widgetIds.length; i++) 
-				            {
-				            	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-				            }	
-							sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 						}
 					}
 				}

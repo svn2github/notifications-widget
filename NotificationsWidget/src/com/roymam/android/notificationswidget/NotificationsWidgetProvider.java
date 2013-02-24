@@ -30,6 +30,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -139,6 +140,16 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    					NotificationsService.getSharedInstance().setEditMode(false);
 	    				}
 	    		}
+	    		else if (action == 2 && pos >= 0 && pos < NotificationsService.getSharedInstance().getNotifications().size())
+	    		{
+	    			Intent appSettingsIntent = new Intent(ctx, AppSettingsActivity.class);
+	    			appSettingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    			Bundle settingsExtras=new Bundle();			
+					settingsExtras.putString(AppSettingsActivity.EXTRA_PACKAGE_NAME, intent.getStringExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME));
+					appSettingsIntent.putExtras(settingsExtras);					
+	    			ctx.startActivity(appSettingsIntent);
+	    			NotificationsService.getSharedInstance().setEditMode(false);
+	    		}
 	    		else
 	    		{
 	    			NotificationsService.getSharedInstance().setEditMode(false);
@@ -216,16 +227,19 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
 	    boolean foundClockImpl = false;
 
-	    for(int i=0; i<clockImpls.length; i++) {
+	    for(int i=0; i<clockImpls.length; i++) 
+	    {
 	        String vendor = clockImpls[i][0];
 	        String packageName = clockImpls[i][1];
 	        String className = clockImpls[i][2];
-	        try {
+	        try 
+	        {
 	            ComponentName cn = new ComponentName(packageName, className);
 	            ActivityInfo aInfo = packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
 	            alarmClockIntent.setComponent(cn);
 	            foundClockImpl = true;
-	        } catch (NameNotFoundException e) {	            
+	        } catch (NameNotFoundException e) 
+	        {	            
 	        }
 	    }
 

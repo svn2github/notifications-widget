@@ -164,11 +164,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				
 				if (s.isEditMode())
 				{
-					row.setViewVisibility(R.id.clearNotification, View.VISIBLE);
+					row.setViewVisibility(R.id.notification_actionbar, View.VISIBLE);
 				}
 				else
 				{
-					row.setViewVisibility(R.id.clearNotification, View.GONE);
+					row.setViewVisibility(R.id.notification_actionbar, View.GONE);
 				}
 				Intent clearActionIntent=new Intent();
 				Bundle clearExtras=new Bundle();			
@@ -176,6 +176,14 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				clearExtras.putInt(NotificationsWidgetProvider.PERFORM_ACTION,1);
 				clearActionIntent.putExtras(clearExtras);
 				row.setOnClickFillInIntent(R.id.clearNotification, clearActionIntent);
+				
+				Intent appSettingsActionIntent=new Intent();
+				Bundle settingsExtras=new Bundle();			
+				settingsExtras.putString(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
+				settingsExtras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
+				settingsExtras.putInt(NotificationsWidgetProvider.PERFORM_ACTION,2);
+				appSettingsActionIntent.putExtras(settingsExtras);
+				row.setOnClickFillInIntent(R.id.appOptions, appSettingsActionIntent);
 		    }
 		}	
 		return(row);

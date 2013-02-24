@@ -9,6 +9,10 @@ package com.roymam.android.notificationswidget;
 
 public final class R {
     public static final class array {
+        public static final int pref_example_list_titles=0x7f070008;
+        public static final int pref_example_list_values=0x7f070009;
+        public static final int pref_sync_frequency_titles=0x7f07000a;
+        public static final int pref_sync_frequency_values=0x7f07000b;
         public static final int settings_buttons_entries=0x7f070004;
         public static final int settings_buttons_values=0x7f070005;
         public static final int settings_clock_entries=0x7f070002;
@@ -39,45 +43,47 @@ public final class R {
     }
     public static final class id {
         public static final int TutorialDescription=0x7f090004;
-        public static final int alarmtime=0x7f090019;
+        public static final int alarmtime=0x7f09001b;
         public static final int appIcon=0x7f09000b;
-        public static final int bigClock=0x7f090014;
-        public static final int bigDate=0x7f090017;
-        public static final int bigHours=0x7f090015;
-        public static final int bigminutes=0x7f090016;
+        public static final int appOptions=0x7f090012;
+        public static final int bigClock=0x7f090016;
+        public static final int bigDate=0x7f090019;
+        public static final int bigHours=0x7f090017;
+        public static final int bigminutes=0x7f090018;
         public static final int button1=0x7f090001;
         public static final int button2=0x7f090002;
         public static final int button3=0x7f090003;
-        public static final int buttonsBar=0x7f090020;
-        public static final int clearButton=0x7f090023;
-        public static final int clearNotification=0x7f090011;
-        public static final int clockbar=0x7f09001a;
+        public static final int buttonsBar=0x7f090022;
+        public static final int clearButton=0x7f090025;
+        public static final int clearNotification=0x7f090013;
+        public static final int clockbar=0x7f09001c;
         public static final int compactIcon=0x7f09000e;
         public static final int compactNotification=0x7f09000d;
         public static final int compactText=0x7f09000f;
         public static final int compactTime=0x7f090010;
-        public static final int dateFull=0x7f09001f;
-        public static final int editMode=0x7f090022;
+        public static final int dateFull=0x7f090021;
+        public static final int editMode=0x7f090024;
         public static final int largeNotification=0x7f090006;
-        public static final int loadingSpinner=0x7f090013;
-        public static final int menu_about=0x7f090028;
-        public static final int menu_settings=0x7f090027;
-        public static final int nextAlarmContainer=0x7f090018;
+        public static final int loadingSpinner=0x7f090015;
+        public static final int menu_about=0x7f09002a;
+        public static final int menu_settings=0x7f090029;
+        public static final int nextAlarmContainer=0x7f09001a;
+        public static final int notification_actionbar=0x7f090011;
         public static final int notificationContainer=0x7f090005;
         public static final int notificationCount=0x7f09000c;
         public static final int notificationIcon=0x7f090008;
         public static final int notificationTime=0x7f09000a;
-        public static final int notificationsListView=0x7f090024;
-        public static final int serviceInactiveButton=0x7f090021;
-        public static final int serviceInactiveView=0x7f090025;
-        public static final int smallClock=0x7f09001b;
+        public static final int notificationsListView=0x7f090026;
+        public static final int serviceInactiveButton=0x7f090023;
+        public static final int serviceInactiveView=0x7f090027;
+        public static final int smallClock=0x7f09001d;
         public static final int smallNotification=0x7f090007;
-        public static final int textView1=0x7f090026;
+        public static final int textView1=0x7f090028;
         public static final int textView2=0x7f090000;
-        public static final int timeAMPM=0x7f09001e;
-        public static final int timeHour=0x7f09001c;
-        public static final int timeMinute=0x7f09001d;
-        public static final int widetcontainer=0x7f090012;
+        public static final int timeAMPM=0x7f090020;
+        public static final int timeHour=0x7f09001e;
+        public static final int timeMinute=0x7f09001f;
+        public static final int widetcontainer=0x7f090014;
         public static final int widget_item=0x7f090009;
     }
     public static final class layout {
@@ -102,6 +108,9 @@ public final class R {
         public static final int accessibility_service_description=0x7f060002;
         public static final int advanced=0x7f060008;
         public static final int advancedsettings=0x7f060005;
+        /**  App specific settings 
+         */
+        public static final int app_specific_settings_title=0x7f06003c;
         public static final int appearance=0x7f060007;
         public static final int behavior=0x7f060006;
         public static final int clearonclear=0x7f060020;
@@ -121,6 +130,8 @@ public final class R {
         /**  Settings Page 
          */
         public static final int generalsettings=0x7f060004;
+        public static final int ignore_notifications=0x7f06003d;
+        public static final int ignore_notifications_summary=0x7f06003e;
         public static final int keep_on_foreground=0x7f060022;
         public static final int keep_on_foreground_summary=0x7f060023;
         public static final int menu_about=0x7f060026;
@@ -134,6 +145,27 @@ public final class R {
         public static final int notification_time_color=0x7f06001c;
         public static final int notifications=0x7f06000a;
         public static final int notifications_service=0x7f060003;
+        public static final int pref_default_display_name=0x7f060044;
+        public static final int pref_description_social_recommendations=0x7f060042;
+        /**  Example settings for Data & Sync 
+         */
+        public static final int pref_header_data_sync=0x7f060046;
+        /**  Strings related to Settings 
+ Example General settings 
+         */
+        public static final int pref_header_general=0x7f060040;
+        /**  Example settings for Notifications 
+         */
+        public static final int pref_header_notifications=0x7f060049;
+        public static final int pref_ringtone_silent=0x7f06004c;
+        public static final int pref_title_add_friends_to_messages=0x7f060045;
+        public static final int pref_title_display_name=0x7f060043;
+        public static final int pref_title_new_message_notifications=0x7f06004a;
+        public static final int pref_title_ringtone=0x7f06004b;
+        public static final int pref_title_social_recommendations=0x7f060041;
+        public static final int pref_title_sync_frequency=0x7f060047;
+        public static final int pref_title_system_sync_settings=0x7f060048;
+        public static final int pref_title_vibrate=0x7f06004d;
         public static final int service_inactive_text=0x7f060024;
         public static final int settingstitle=0x7f060001;
         public static final int show_full_notification=0x7f06001e;
@@ -145,6 +177,7 @@ public final class R {
         /**  General Strings 
          */
         public static final int title=0x7f060000;
+        public static final int title_activity_app_settings=0x7f06003f;
         public static final int title_activity_main=0x7f060027;
         public static final int turnscreenon=0x7f06000b;
         public static final int turnscreenon_summary=0x7f06000c;
@@ -164,9 +197,10 @@ public final class R {
     public static final class xml {
         public static final int advancedpreferences=0x7f040000;
         public static final int appearancepreferences=0x7f040001;
-        public static final int notifications_service_config=0x7f040002;
-        public static final int preferences=0x7f040003;
-        public static final int preferences_headers=0x7f040004;
-        public static final int widgetinfo=0x7f040005;
+        public static final int apppreferences=0x7f040002;
+        public static final int notifications_service_config=0x7f040003;
+        public static final int preferences=0x7f040004;
+        public static final int preferences_headers=0x7f040005;
+        public static final int widgetinfo=0x7f040006;
     }
 }

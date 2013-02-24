@@ -133,14 +133,26 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/clearNotification"
-        style="@android:style/Holo.ButtonBar"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="0"
-        android:background="@drawable/item_selector"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
-
+	<LinearLayout 
+	    android:id="@+id/notification.actionbar"
+	    android:orientation="horizontal"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:layout_weight="0">
+	    <ImageButton
+	        android:id="@+id/appOptions"
+	        style="@android:style/Holo.ButtonBar"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:background="@drawable/item_selector"
+	        android:src="@android:drawable/ic_menu_preferences" />
+	
+	    <ImageButton
+	        android:id="@+id/clearNotification"
+	        style="@android:style/Holo.ButtonBar"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:background="@drawable/item_selector"
+	        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+	</LinearLayout>
     </LinearLayout>
