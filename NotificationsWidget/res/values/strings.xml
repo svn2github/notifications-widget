@@ -129,4 +129,9 @@
 	<string name="app_specific_settings_title">App Specific Settings</string>
 	<string name="ignore_notifications">Ignore this app</string>
 	<string name="ignore_notifications_summary">ignore all notifications from this app</string>
+	<string name="show_only_last_notification">Keep only last notification</string>
+	<string name="show_only_last_notification_summary">Keep only the last notification that was received from this app</string>
+		<string name="clear_app_settings">Reset</string>
+	<string name="clear_app_summary">Clear app specific settings for this app</string>
+	<string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, switch to Edit Mode on the notifications widget, and use the wrench tool near the wanted notification</string>
 </resources>

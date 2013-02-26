@@ -33,13 +33,14 @@ public final class R {
     public static final class drawable {
         public static final int advanced=0x7f020000;
         public static final int appicon=0x7f020001;
-        public static final int clear=0x7f020002;
-        public static final int content_edit=0x7f020003;
-        public static final int hardware_phone=0x7f020004;
-        public static final int item_selector=0x7f020005;
-        public static final int preview=0x7f020006;
-        public static final int rollypolyad=0x7f020007;
-        public static final int roymam=0x7f020008;
+        public static final int apps=0x7f020002;
+        public static final int clear=0x7f020003;
+        public static final int content_edit=0x7f020004;
+        public static final int hardware_phone=0x7f020005;
+        public static final int item_selector=0x7f020006;
+        public static final int preview=0x7f020007;
+        public static final int rollypolyad=0x7f020008;
+        public static final int roymam=0x7f020009;
     }
     public static final class id {
         public static final int TutorialDescription=0x7f090004;
@@ -113,6 +114,8 @@ public final class R {
         public static final int app_specific_settings_title=0x7f06003c;
         public static final int appearance=0x7f060007;
         public static final int behavior=0x7f060006;
+        public static final int clear_app_settings=0x7f060041;
+        public static final int clear_app_summary=0x7f060042;
         public static final int clearonclear=0x7f060020;
         public static final int clearonclear_summary=0x7f060021;
         public static final int clearonunlock=0x7f06000f;
@@ -138,6 +141,7 @@ public final class R {
         /**   Wizard Strings 
          */
         public static final int menu_settings=0x7f060025;
+        public static final int no_apps=0x7f060043;
         public static final int notification_bg_opacity=0x7f060019;
         public static final int notification_bg_opacity_summary=0x7f06001a;
         public static final int notification_style=0x7f06001d;
@@ -145,31 +149,33 @@ public final class R {
         public static final int notification_time_color=0x7f06001c;
         public static final int notifications=0x7f06000a;
         public static final int notifications_service=0x7f060003;
-        public static final int pref_default_display_name=0x7f060044;
-        public static final int pref_description_social_recommendations=0x7f060042;
+        public static final int pref_default_display_name=0x7f060049;
+        public static final int pref_description_social_recommendations=0x7f060047;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f060046;
+        public static final int pref_header_data_sync=0x7f06004b;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f060040;
+        public static final int pref_header_general=0x7f060045;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f060049;
-        public static final int pref_ringtone_silent=0x7f06004c;
-        public static final int pref_title_add_friends_to_messages=0x7f060045;
-        public static final int pref_title_display_name=0x7f060043;
-        public static final int pref_title_new_message_notifications=0x7f06004a;
-        public static final int pref_title_ringtone=0x7f06004b;
-        public static final int pref_title_social_recommendations=0x7f060041;
-        public static final int pref_title_sync_frequency=0x7f060047;
-        public static final int pref_title_system_sync_settings=0x7f060048;
-        public static final int pref_title_vibrate=0x7f06004d;
+        public static final int pref_header_notifications=0x7f06004e;
+        public static final int pref_ringtone_silent=0x7f060051;
+        public static final int pref_title_add_friends_to_messages=0x7f06004a;
+        public static final int pref_title_display_name=0x7f060048;
+        public static final int pref_title_new_message_notifications=0x7f06004f;
+        public static final int pref_title_ringtone=0x7f060050;
+        public static final int pref_title_social_recommendations=0x7f060046;
+        public static final int pref_title_sync_frequency=0x7f06004c;
+        public static final int pref_title_system_sync_settings=0x7f06004d;
+        public static final int pref_title_vibrate=0x7f060052;
         public static final int service_inactive_text=0x7f060024;
         public static final int settingstitle=0x7f060001;
         public static final int show_full_notification=0x7f06001e;
         public static final int show_full_notification_summary=0x7f06001f;
+        public static final int show_only_last_notification=0x7f06003f;
+        public static final int show_only_last_notification_summary=0x7f060040;
         public static final int showclearbutton=0x7f060015;
         public static final int showclearbutton_summary=0x7f060016;
         public static final int showeditbutton=0x7f060017;
@@ -177,7 +183,7 @@ public final class R {
         /**  General Strings 
          */
         public static final int title=0x7f060000;
-        public static final int title_activity_app_settings=0x7f06003f;
+        public static final int title_activity_app_settings=0x7f060044;
         public static final int title_activity_main=0x7f060027;
         public static final int turnscreenon=0x7f06000b;
         public static final int turnscreenon_summary=0x7f06000c;
@@ -197,10 +203,9 @@ public final class R {
     public static final class xml {
         public static final int advancedpreferences=0x7f040000;
         public static final int appearancepreferences=0x7f040001;
-        public static final int apppreferences=0x7f040002;
-        public static final int notifications_service_config=0x7f040003;
-        public static final int preferences=0x7f040004;
-        public static final int preferences_headers=0x7f040005;
-        public static final int widgetinfo=0x7f040006;
+        public static final int notifications_service_config=0x7f040002;
+        public static final int preferences=0x7f040003;
+        public static final int preferences_headers=0x7f040004;
+        public static final int widgetinfo=0x7f040005;
     }
 }

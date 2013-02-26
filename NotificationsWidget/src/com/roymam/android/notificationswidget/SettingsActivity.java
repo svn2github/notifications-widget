@@ -4,14 +4,18 @@ import java.util.List;
 
 import com.roymam.android.common.ListPreferenceChangeListener;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
@@ -33,6 +37,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String CLOCK_LARGE = "large";
 	public static String CLOCK_HIDDEN = "hidden";
 	public static String CLOCK_AUTO = "auto";
+	public static String APPS_SETTINGS = "specificapps";
 	
 	public static class PrefsGeneralFragment extends PreferenceFragment 
 	{
@@ -113,6 +118,53 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.advancedpreferences);
+	    }
+	}
+	
+	public static class PrefsAppSpecificFragment extends PreferenceFragment
+	{
+		@Override
+	    public void onCreate(Bundle savedInstanceState) 
+	    {
+	        super.onCreate(savedInstanceState);
+
+	        // add app specific settings
+			PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
+			
+			// Specfic app list 
+			String specificApps = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(APPS_SETTINGS, "");
+
+			for (String packageName : specificApps.split(",")) 
+			{		
+				if (!packageName.equals(""))
+				{				
+					PreferenceScreen intentPref = getPreferenceManager().createPreferenceScreen(getActivity());
+					Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
+					runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+					intentPref.setIntent(runAppSpecificSettings);
+					
+					// get package title
+					try 
+					{
+						ApplicationInfo ai = getActivity().getPackageManager().getApplicationInfo(packageName, 0);
+						String appName = getActivity().getPackageManager().getApplicationLabel(ai).toString();
+						if (appName == null) appName = packageName;
+						intentPref.setTitle(appName);
+						intentPref.setIcon(getActivity().getPackageManager().getApplicationIcon(ai));
+					} catch (NameNotFoundException e) 
+					{
+						intentPref.setTitle(packageName);
+					}
+			        root.addPreference(intentPref);
+				}
+				else
+				{
+					PreferenceCategory noAppsPref =  new PreferenceCategory(getActivity());
+					noAppsPref.setTitle(R.string.no_apps);
+					root.addPreference(noAppsPref);
+				}
+			}
+	        setPreferenceScreen(root);
 	    }
 	}
 	

@@ -248,11 +248,12 @@ public class NotificationsService extends AccessibilityService
 								if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
 								
 								// check for duplicated notification
+								boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
 								int duplicated = -1;
 								for(int i=0;i<notifications.size();i++)
 								{
 									if (nd.packageName.equals(notifications.get(i).packageName) &&
-										nd.text.equals(notifications.get(i).text))
+										(nd.text.equals(notifications.get(i).text) || keepOnlyLastNotification))
 										{
 											duplicated = i;
 										}
