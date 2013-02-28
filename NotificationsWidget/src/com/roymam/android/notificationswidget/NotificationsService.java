@@ -7,6 +7,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.PendingIntent.CanceledException;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -151,30 +152,29 @@ public class NotificationsService extends AccessibilityService
 			// if it's notification
 			if (event.getClassName().equals(android.app.Notification.class.getName()))
 			{
-				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-				boolean isScreenOn = false;
-				if (!sharedPref.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
-				{
-					PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-					isScreenOn = powerManager.isScreenOn();
-					if (!isScreenOn)
-					{
-						deviceIsUnlocked = false;
-					}
-				}
-
-				// collect only on two sceneries: 1. the screen is off. 2. the screen is on but the device is unlocked.  
-				if (!isScreenOn || (isScreenOn && !deviceIsUnlocked))
-				{
-					Notification n = (Notification)event.getParcelableData();
+				Notification n = (Notification)event.getParcelableData();
 				
-					if (n != null)
+				if (n != null)
+				{
+					// handle only dismissable notifications
+					if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
+						!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
+						 n.tickerText != null)
 					{
-						// handle only dismissable notifications
-						if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
-							!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
-							 n.tickerText != null
-									)
+						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+						boolean isScreenOn = false;
+						if (!sharedPref.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
+						{
+							PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+							isScreenOn = powerManager.isScreenOn();
+							if (!isScreenOn)
+							{
+								deviceIsUnlocked = false;
+							}
+						}
+
+						// collect only on two sceneries: 1. the screen is off. 2. the screen is on but the device is unlocked.  
+						if (!isScreenOn || (isScreenOn && !deviceIsUnlocked))
 						{			
 							boolean ignoreApp = sharedPref.getBoolean(event.getPackageName().toString()+"."+AppSettingsActivity.IGNORE_APP, false);
 							if (!ignoreApp)
@@ -232,7 +232,7 @@ public class NotificationsService extends AccessibilityService
 								nd.count = 1;
 								nd.packageName = event.getPackageName().toString();
 								nd.notificationContent = n.contentView;
-								nd.notificationExpandedContent = n.bigContentView;
+								//nd.notificationExpandedContent = n.bigContentView;
 								
 								// try to extract extra content from view
 								LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -286,18 +286,20 @@ public class NotificationsService extends AccessibilityService
 			else 
 				if (event.getPackageName()!= null && event.getClassName() != null && event.getContentDescription() != null)
 				{
-					if (event.getPackageName().equals("com.android.systemui") &&
-							 event.getClassName().equals(android.widget.ImageView.class.getName()) &&
-							 event.getContentDescription().equals(clearButtonName))
-					{
-						// clear notifications button clicked
-						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		
-						if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
+					if (event.getPackageName().equals("com.android.systemui"))
 						{
-							clearAllNotifications();
+							if (event.getClassName().equals(android.widget.ImageView.class.getName()) &&
+							 event.getContentDescription().equals(clearButtonName))
+							{
+								// clear notifications button clicked
+								SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+				
+								if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
+								{
+									clearAllNotifications();
+								}
+							}
 						}
-					}
 				}
 		}
 	}
@@ -375,6 +377,32 @@ public class NotificationsService extends AccessibilityService
 	    sSharedInstance = null;
 	    stopProximityMontior();
 	    return super.onUnbind(intent);
+	}
+
+	public void launchNotification(int pos) 
+	{
+		if (pos >=0 && pos < notifications.size())
+		{
+			try 
+			{
+				notifications.get(pos).action.send();
+				notifications.remove(pos);
+				
+				// update notifications list
+				AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+				ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
+				int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+				
+				for (int i=0; i<widgetIds.length; i++) 
+		        {
+		        	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+		        }
+				sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));	
+			} catch (CanceledException e) 
+			{
+				Toast.makeText(getApplicationContext(), "Cannot open notification", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 	
 	
