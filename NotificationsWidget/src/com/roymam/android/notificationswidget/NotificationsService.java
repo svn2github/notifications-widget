@@ -158,7 +158,7 @@ public class NotificationsService extends AccessibilityService
 				{
 					// handle only dismissable notifications
 					if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
-						!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) &&
+						!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) && 
 						 n.tickerText != null)
 					{
 						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -235,19 +235,26 @@ public class NotificationsService extends AccessibilityService
 								//nd.notificationExpandedContent = n.bigContentView;
 								
 								// try to extract extra content from view
-								LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-								ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
-								nd.notificationContent.reapply(getApplicationContext(), localView);
-								nd.layoutId = localView.getId();
-								
-								View tv = localView.findViewById(16908358);
-								if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();
-								tv = localView.findViewById(android.R.id.title);
-								if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-								tv = localView.findViewById(16909082);
-								if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-								tv = localView.findViewById(16908388);
-								if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
+								try
+								{
+									LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+									ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
+									nd.notificationContent.reapply(getApplicationContext(), localView);
+									nd.layoutId = localView.getId();
+									
+									View tv = localView.findViewById(16908358);
+									if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();
+									tv = localView.findViewById(android.R.id.title);
+									if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
+									tv = localView.findViewById(16909082);
+									if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
+									tv = localView.findViewById(16908388);
+									if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
+								}
+								catch (Exception exp)
+								{
+									nd.layoutId = 0;
+								}
 								
 								// check for duplicated notification
 								boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);

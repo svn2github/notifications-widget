@@ -101,6 +101,12 @@ public class MainActivity extends FragmentActivity
 				Toast.makeText(MainActivity.this, getResources().getText(R.string.tutorial_toast_2), Toast.LENGTH_LONG).show();
 			}
 		});
+		
+		//TODO
+		// check if android version is 4.2 or higher
+		// if not - check if WidgetLocker installed
+		// if yes - change step 2 description
+		// if no - show a dialog that recommend using WidgetLocker
 	}
 
 	public void openAd(View v)
