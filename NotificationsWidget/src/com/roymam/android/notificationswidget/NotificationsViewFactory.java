@@ -135,7 +135,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					row.setViewVisibility(R.id.largeNotification, View.VISIBLE);
 					try
 					{
-						n.notificationContent.setInt(16909091, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
+						n.notificationContent.setInt(n.layoutId , "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
 						if (n.title != null) n.notificationContent.setTextColor(android.R.id.title, Resources.getSystem().getColor(textColor));
 						if (n.details != null) n.notificationContent.setTextColor(16908358, Resources.getSystem().getColor(textColor));
 						if (n.info != null) n.notificationContent.setTextColor(16909082, Resources.getSystem().getColor(textColor));

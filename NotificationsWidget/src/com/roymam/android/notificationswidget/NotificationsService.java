@@ -232,11 +232,13 @@ public class NotificationsService extends AccessibilityService
 								nd.count = 1;
 								nd.packageName = event.getPackageName().toString();
 								nd.notificationContent = n.contentView;
+								nd.notificationExpandedContent = n.bigContentView;
 								
 								// try to extract extra content from view
 								LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 								ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
 								nd.notificationContent.reapply(getApplicationContext(), localView);
+								nd.layoutId = localView.getId();
 								
 								View tv = localView.findViewById(16908358);
 								if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();

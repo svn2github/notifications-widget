@@ -17,5 +17,9 @@ public class NotificationData
 	String	packageName;
 	PendingIntent action;
 	int 	count;
+	
+	// data from notification remoteviews
 	RemoteViews notificationContent;
+	RemoteViews notificationExpandedContent;
+	int layoutId;
 }
