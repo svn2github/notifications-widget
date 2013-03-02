@@ -21,7 +21,9 @@
     <string name="disableproximity">Disable proximity sensor</string>
     <string name="disableproximity_summary">When checked, the device will always turn on screen for notifications, even if it covered.</string>
     <string name="clearonunlock">Clear when unlocked</string>
-    <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
+    <string name="clearonunlock_summary">Clear all notifications when device is unlocked (doesn\'t work with WidgetLocker)</string>
+    <string name="clearonlock">Clear when locked</string>
+    <string name="clearonlock_summary">Clear all notifications when device is locked</string>
     <string name="collectonunlock">Collect when unlocked</string>
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
     <string name="clockstyle">Clock style</string>

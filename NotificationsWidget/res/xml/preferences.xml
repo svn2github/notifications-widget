@@ -22,6 +22,12 @@
                 android:enabled="true" 
                 android:defaultValue="false" 
                 android:summary="@string/clearonunlock_summary"/>
+            <!-- <CheckBoxPreference 
+                android:title="@string/clearonlock" 
+                android:key="clearonlock" 
+                android:enabled="true" 
+                android:defaultValue="false" 
+                android:summary="@string/clearonlock_summary"/> -->
             <CheckBoxPreference 
                 android:title="@string/collectonunlock" 
                 android:key="collectonunlock" 
