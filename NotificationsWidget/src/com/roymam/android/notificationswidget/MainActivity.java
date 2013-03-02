@@ -8,6 +8,7 @@ import android.app.Dialog;
 //import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.support.v4.app.DialogFragment;
@@ -63,6 +64,9 @@ public class MainActivity extends FragmentActivity
 	        return builder.create();
 	    }
 	}
+
+	private int step2desc;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -102,11 +106,45 @@ public class MainActivity extends FragmentActivity
 			}
 		});
 		
-		//TODO
+		step2desc = R.string.tutorial_help_2;
+		
 		// check if android version is 4.2 or higher
-		// if not - check if WidgetLocker installed
-		// if yes - change step 2 description
-		// if no - show a dialog that recommend using WidgetLocker
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
+		{
+			// if not - check if WidgetLocker installed
+			try 
+			{
+				PackageInfo ai = getPackageManager().getPackageInfo("com.teslacoilsw.widgetlocker", 0);
+
+				// if yes - change step 2 description
+				step2desc = R.string.widget_locker_add_widget;
+				
+			} catch (NameNotFoundException e) 
+			{				
+				step2desc = R.string.no_widget_locker_add_widget;
+				
+				// if no - show a dialog that recommend using WidgetLocker
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.widget_locker_not_installed)
+				.setMessage(R.string.widget_locker_not_installed_summary)
+				.setPositiveButton(R.string.widget_locker_purchase, new DialogInterface.OnClickListener() 
+	               {
+	                   public void onClick(DialogInterface dialog, int id) 
+	                   {
+	                	   Intent widgetLockerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.teslacoilsw.widgetlocker"));
+	               		   startActivity(widgetLockerIntent);
+	                   }
+	               })
+				.setNegativeButton(R.string.about_close, new DialogInterface.OnClickListener() 
+	               {
+	                   public void onClick(DialogInterface dialog, int id) 
+	                   {
+	                	   // do nothing
+	                   }
+	               })
+				.show();
+			}			
+		}
 	}
 
 	public void openAd(View v)
@@ -199,7 +237,7 @@ public class MainActivity extends FragmentActivity
 					button2.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
 					button3.setEnabled(false);
 					button3.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-					desc.setText(R.string.tutorial_help_2);
+					desc.setText(step2desc);
 					break;
 				case 3:
 					button1.setEnabled(false);

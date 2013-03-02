@@ -122,6 +122,13 @@
     <string name="about_contactus_email">mailto:admin@roymam.com</string>
     <string name="about_close">Close</string>
 
+    <!-- WidgetLocker -->
+    <string name="widget_locker_not_installed">WidgetLocker is not installed</string>
+    <string name="widget_locker_not_installed_summary">Your Android version is lower than 4.2, therefore you cannot add widgets to your standard lockscreen.\n\nHowever, there is a paid app called \"WidgetLocker\" that enables adding widgets to a lockscreen.\n\nNotificationsWidget is known to work relatively well with WidgetLocker, but some features may not be working.\n\nPlease note that you can still use NotificationsWidget as a standard widget for you home screen without purchasing WidgetLocker</string>
+    <string name="widget_locker_purchase">Purchase WidgetLocker</string>
+    <string name="widget_locker_add_widget">Activate WidgetLocker and add NotificationsWidget as a widget to your lock screen</string>
+    <string name="no_widget_locker_add_widget">Add NotificationsWidget as a widget for your home screen (if you want to add it to your lockscreen you will need to purchase WidgetLocker app from Google Play Store)</string>
+    
     <!--  Error Messages -->
     <string name="failed_to_monitor_clear_button">Failed to Monitor \"Clear Notifications\" button</string>
     

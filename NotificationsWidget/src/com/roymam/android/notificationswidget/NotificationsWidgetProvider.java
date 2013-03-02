@@ -17,6 +17,7 @@
 package com.roymam.android.notificationswidget;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
@@ -64,7 +65,18 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     @Override
     public void onEnabled(Context context) 
     {    
-    	// onEnabled doesn't work, need to check why
+    	// create alarm for clock updates
+		//prepare Alarm Service to trigger Widget
+	   Intent intent = new Intent(UPDATE_CLOCK);
+	   clockPendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+	   AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+	   Calendar calendar = Calendar.getInstance();
+	   calendar.setTimeInMillis(System.currentTimeMillis());
+	   calendar.add(Calendar.SECOND, 10);
+	   alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
+	   widgetActive = true;
+	   //notifyReady(context);
+	   super.onEnabled(context);
     }
     
     @Override
@@ -251,23 +263,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
-    {    	
-    	if (clockPendingIntent == null)
-    	{
-    		// create alarm for clock updates
-    		//prepare Alarm Service to trigger Widget
-    	   Intent intent = new Intent(UPDATE_CLOCK);
-    	   clockPendingIntent = PendingIntent.getBroadcast(ctxt, 0, intent, 0);
-    	   AlarmManager alarmManager = (AlarmManager)ctxt.getSystemService(Context.ALARM_SERVICE);
-    	   Calendar calendar = Calendar.getInstance();
-    	   calendar.setTimeInMillis(System.currentTimeMillis());
-    	   calendar.add(Calendar.SECOND, 10);
-    	   alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
-    	   widgetActive = true;
-    	   //Toast.makeText(ctxt, "Hello", Toast.LENGTH_SHORT).show();
-    	   //notifyReady(ctxt);
-    	}
-    	
+    {    		
     	for (int i=0; i<appWidgetIds.length; i++) 
     	{
     		RemoteViews widget=new RemoteViews(ctxt.getPackageName(), R.layout.widget_layout);
@@ -402,9 +398,18 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	PendingIntent resultPendingIntent =
     			PendingIntent.getActivity(ctx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     	mBuilder.setContentIntent(resultPendingIntent);
-    	NotificationManager mNotificationManager =
-    	    (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+
     	// mId allows you to update the notification later on.
-    	mNotificationManager.notify(0, mBuilder.build());
+    	Notification n = mBuilder.build();
+    	if (NotificationsService.getSharedInstance()!=null)
+    	{
+    		NotificationsService.getSharedInstance().handleNotification(n, ctx.getPackageName());
+    	}
+    	else
+    	{
+        	NotificationManager mNotificationManager =
+            	    (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+    		mNotificationManager.notify(0, mBuilder.build());
+    	}
     }
 }

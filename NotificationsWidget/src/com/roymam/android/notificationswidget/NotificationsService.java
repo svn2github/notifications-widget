@@ -143,6 +143,145 @@ public class NotificationsService extends AccessibilityService
 	}
 
 	/////////////////////////////////////////
+
+	public void handleNotification(Notification n, String packageName)
+	{
+		if (n != null)
+		{
+			// handle only dismissable notifications
+			if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
+				!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) && 
+				 n.tickerText != null)
+			{
+				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+				boolean isScreenOn = false;
+				if (!sharedPref.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
+				{
+					PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+					isScreenOn = powerManager.isScreenOn();
+					if (!isScreenOn)
+					{
+						deviceIsUnlocked = false;
+					}
+				}
+
+				// collect only on two sceneries: 1. the screen is off. 2. the screen is on but the device is unlocked.  
+				if (!isScreenOn || (isScreenOn && !deviceIsUnlocked))
+				{			
+					boolean ignoreApp = sharedPref.getBoolean(packageName+"."+AppSettingsActivity.IGNORE_APP, false);
+					if (!ignoreApp)
+					{
+						// check if need to turn screen on
+						Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
+						if (turnScreenOn && !deviceCovered)
+						{
+							PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+							PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+							wl.acquire();
+							wl.release();
+						}
+						
+						// build notification data object
+						NotificationData nd = new NotificationData();
+						
+						// extract app icons
+						Resources res;
+						try {
+							res = getPackageManager().getResourcesForApplication(packageName);
+							PackageInfo info = getPackageManager().getPackageInfo(packageName,0);
+							nd.appicon = BitmapFactory.decodeResource(res, n.icon);
+							if (nd.appicon == null)
+							{
+								nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+							}
+						} catch (NameNotFoundException e) 
+						{
+							nd.appicon = null;
+						}
+						
+						if (n.largeIcon != null)
+						{
+							nd.icon = n.largeIcon;
+						}
+						else
+						{
+							try {
+								res = getPackageManager().getResourcesForApplication(packageName);
+								PackageInfo info = getPackageManager().getPackageInfo(packageName,0);
+								nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+							} catch (NameNotFoundException e) 
+							{
+								nd.icon = null;
+							}
+						}
+						
+						nd.text = n.tickerText.toString();
+						if (n.when != 0)
+							nd.received = n.when;
+						else
+							nd.received = System.currentTimeMillis();
+						nd.action = n.contentIntent;
+						nd.count = 1;
+						nd.packageName = packageName;
+						nd.notificationContent = n.contentView;
+						//nd.notificationExpandedContent = n.bigContentView;
+						
+						// try to extract extra content from view
+						try
+						{
+							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+							ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
+							nd.notificationContent.reapply(getApplicationContext(), localView);
+							nd.layoutId = localView.getId();
+							
+							View tv = localView.findViewById(16908358);
+							if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();
+							tv = localView.findViewById(android.R.id.title);
+							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
+							tv = localView.findViewById(16909082);
+							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
+							tv = localView.findViewById(16908388);
+							if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
+						}
+						catch (Exception exp)
+						{
+							nd.layoutId = 0;
+						}
+						
+						// check for duplicated notification
+						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
+						int duplicated = -1;
+						for(int i=0;i<notifications.size();i++)
+						{
+							if (nd.packageName.equals(notifications.get(i).packageName) &&
+								(nd.text.equals(notifications.get(i).text) || keepOnlyLastNotification))
+								{
+									duplicated = i;
+								}
+						}
+						if (duplicated >= 0)
+						{
+							NotificationData dup = notifications.get(duplicated);
+							notifications.remove(duplicated);
+							nd.count = dup.count+1;						
+						}
+						notifications.add(0,nd);
+	
+						// update widgets
+						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+						ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
+						int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+						
+						for (int i=0; i<widgetIds.length; i++) 
+			            {
+			            	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+			            }	
+						sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+					}
+				}
+			}
+		}
+	}
 	
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) 
@@ -153,142 +292,7 @@ public class NotificationsService extends AccessibilityService
 			if (event.getClassName().equals(android.app.Notification.class.getName()))
 			{
 				Notification n = (Notification)event.getParcelableData();
-				
-				if (n != null)
-				{
-					// handle only dismissable notifications
-					if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
-						!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) && 
-						 n.tickerText != null)
-					{
-						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-						boolean isScreenOn = false;
-						if (!sharedPref.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true))
-						{
-							PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-							isScreenOn = powerManager.isScreenOn();
-							if (!isScreenOn)
-							{
-								deviceIsUnlocked = false;
-							}
-						}
-
-						// collect only on two sceneries: 1. the screen is off. 2. the screen is on but the device is unlocked.  
-						if (!isScreenOn || (isScreenOn && !deviceIsUnlocked))
-						{			
-							boolean ignoreApp = sharedPref.getBoolean(event.getPackageName().toString()+"."+AppSettingsActivity.IGNORE_APP, false);
-							if (!ignoreApp)
-							{
-								// check if need to turn screen on
-								Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
-								if (turnScreenOn && !deviceCovered)
-								{
-									PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-									PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-									wl.acquire();
-									wl.release();
-								}
-								
-								// build notification data object
-								NotificationData nd = new NotificationData();
-								
-								// extract app icons
-								Resources res;
-								try {
-									res = getPackageManager().getResourcesForApplication(event.getPackageName().toString());
-									PackageInfo info = getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
-									nd.appicon = BitmapFactory.decodeResource(res, n.icon);
-									if (nd.appicon == null)
-									{
-										nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
-									}
-								} catch (NameNotFoundException e) 
-								{
-									nd.appicon = null;
-								}
-								
-								if (n.largeIcon != null)
-								{
-									nd.icon = n.largeIcon;
-								}
-								else
-								{
-									try {
-										res = getPackageManager().getResourcesForApplication(event.getPackageName().toString());
-										PackageInfo info = getPackageManager().getPackageInfo(event.getPackageName().toString(),0);
-										nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
-									} catch (NameNotFoundException e) 
-									{
-										nd.icon = null;
-									}
-								}
-								
-								nd.text = n.tickerText.toString();
-								if (n.when != 0)
-									nd.received = n.when;
-								else
-									nd.received = System.currentTimeMillis();
-								nd.action = n.contentIntent;
-								nd.count = 1;
-								nd.packageName = event.getPackageName().toString();
-								nd.notificationContent = n.contentView;
-								//nd.notificationExpandedContent = n.bigContentView;
-								
-								// try to extract extra content from view
-								try
-								{
-									LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-									ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
-									nd.notificationContent.reapply(getApplicationContext(), localView);
-									nd.layoutId = localView.getId();
-									
-									View tv = localView.findViewById(16908358);
-									if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();
-									tv = localView.findViewById(android.R.id.title);
-									if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-									tv = localView.findViewById(16909082);
-									if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-									tv = localView.findViewById(16908388);
-									if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
-								}
-								catch (Exception exp)
-								{
-									nd.layoutId = 0;
-								}
-								
-								// check for duplicated notification
-								boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
-								int duplicated = -1;
-								for(int i=0;i<notifications.size();i++)
-								{
-									if (nd.packageName.equals(notifications.get(i).packageName) &&
-										(nd.text.equals(notifications.get(i).text) || keepOnlyLastNotification))
-										{
-											duplicated = i;
-										}
-								}
-								if (duplicated >= 0)
-								{
-									NotificationData dup = notifications.get(duplicated);
-									notifications.remove(duplicated);
-									nd.count = dup.count+1;						
-								}
-								notifications.add(0,nd);
-			
-								// update widgets
-								AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
-								ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
-								int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-								
-								for (int i=0; i<widgetIds.length; i++) 
-					            {
-					            	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-					            }	
-								sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
-							}
-						}
-					}
-				}
+				handleNotification(n, event.getPackageName().toString());
 			}
 			else 
 				if (event.getPackageName()!= null && event.getClassName() != null && event.getContentDescription() != null)
