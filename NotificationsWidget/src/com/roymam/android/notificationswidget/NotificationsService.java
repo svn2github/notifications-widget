@@ -124,7 +124,8 @@ public class NotificationsService extends AccessibilityService
 			}				
 		};
 		
-		if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+		if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
+		     PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.TURNSCREENON, true))
 		{
 			startProximityMontior();
 		}
