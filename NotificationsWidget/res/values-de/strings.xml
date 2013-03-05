@@ -117,7 +117,7 @@
 
     <!--  About Dialog -->
     <string name="about_title">NotificationsWidget</string>
-    <string name="about_subtitle">NotificationsWidget wurde entwickelt von Roymam</string>
+    <string name="about_subtitle">NotificationsWidget wurde entwickelt von Roymam\nGerman language support by robvisual</string>
     <string name="about_content">Sie finden das Projekt hier:\nhttp://code.google.com/p/notifications-widget/\nFühlen Sie sich frei, sich am Projekt zu beteiligen und Fehler zu melden\n\nWenn Sie uns gerne finanzielle unterstützen möchten, dann verweisen wir auf ein Spiel aus unserer Entwicklung:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
     <string name="about_contactus_title">Kontaktieren Sie uns</string>
