@@ -110,8 +110,8 @@ public final class R {
         public static final int app_specific_settings_title=0x7f060043;
         public static final int appearance=0x7f060007;
         public static final int behavior=0x7f060006;
-        public static final int clear_app_settings=0x7f060048;
-        public static final int clear_app_summary=0x7f060049;
+        public static final int clear_app_settings=0x7f06004a;
+        public static final int clear_app_summary=0x7f06004b;
         public static final int clearonclear=0x7f060022;
         public static final int clearonclear_summary=0x7f060023;
         public static final int clearonlock=0x7f060011;
@@ -125,6 +125,8 @@ public final class R {
         public static final int collectonunlock_summary=0x7f060014;
         public static final int disableproximity=0x7f06000d;
         public static final int disableproximity_summary=0x7f06000e;
+        public static final int extract_expanded_text=0x7f060048;
+        public static final int extract_expanded_text_summary=0x7f060049;
         /**   Error Messages 
          */
         public static final int failed_to_monitor_clear_button=0x7f060042;
@@ -139,7 +141,7 @@ public final class R {
         /**   Wizard Strings 
          */
         public static final int menu_settings=0x7f060027;
-        public static final int no_apps=0x7f06004a;
+        public static final int no_apps=0x7f06004c;
         public static final int no_widget_locker_add_widget=0x7f060041;
         public static final int notification_bg_opacity=0x7f06001b;
         public static final int notification_bg_opacity_summary=0x7f06001c;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
@@ -21,6 +22,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -253,6 +255,15 @@ public class NotificationsService extends AccessibilityService
 							nd.layoutId = 0;
 						}
 						
+						if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, false))
+						{
+							String expandedText = getExpandedText(n);
+							if (expandedText!=null)
+							{
+								nd.text = expandedText;
+							}
+						}
+						
 						// check for duplicated notification
 						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
 						int duplicated = -1;
@@ -286,6 +297,47 @@ public class NotificationsService extends AccessibilityService
 				}
 			}
 		}
+	}
+	
+	private String recursiveGetText(ViewGroup parentView)
+	{
+		String s = "";
+		
+		// skip title and time 
+		if (parentView.getId()==16909092) return s;
+		
+		for(int i=0;i<parentView.getChildCount();i++)
+		{
+			View v = parentView.getChildAt(i);
+			if (v instanceof TextView)
+			{
+				String text = ((TextView)v).getText().toString();
+				if (!text.equals(""))
+					s += text + "\n";
+			}
+			else if (v instanceof ViewGroup)
+				s += recursiveGetText((ViewGroup)v);
+		}
+		return s;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private String getExpandedText(Notification n)
+	{
+		String text = null;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+		{		
+			if (n.bigContentView != null)
+			{
+				LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
+				n.bigContentView.reapply(getApplicationContext(), localView);
+
+				text = recursiveGetText(localView);
+			}
+		}
+		
+		return text;
 	}
 	
 	@Override

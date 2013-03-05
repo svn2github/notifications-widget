@@ -19,9 +19,10 @@ import android.view.WindowManager;
 
 public class AppSettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener 
 {
-	public static String EXTRA_PACKAGE_NAME = "com.roymam.android.notificationswidget.packagename";
-	public static String IGNORE_APP = "ignoreapp";
-	public static String KEEP_ONLY_LAST = "showlast";
+	public static final String EXTRA_PACKAGE_NAME = "com.roymam.android.notificationswidget.packagename";
+	public static final String IGNORE_APP = "ignoreapp";
+	public static final String KEEP_ONLY_LAST = "showlast";
+	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	
 	private String packageName;
 	
@@ -61,6 +62,14 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         showlastNotificationsPref.setSummary(R.string.show_only_last_notification_summary);
         //showlastNotificationsPref.setDependency(packageName+"."+IGNORE_APP);
         root.addPreference(showlastNotificationsPref);
+        
+        // Extract expanded text preference
+        CheckBoxPreference useExpandedTextPref = new CheckBoxPreference(this);
+        useExpandedTextPref.setKey(packageName+"."+USE_EXPANDED_TEXT);
+        useExpandedTextPref.setTitle(R.string.extract_expanded_text);
+        useExpandedTextPref.setDefaultValue(false);
+        useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
+        root.addPreference(useExpandedTextPref);        
         
         // Clear app specific preferences button
         PreferenceScreen clearPref = getPreferenceManager().createPreferenceScreen(this);
