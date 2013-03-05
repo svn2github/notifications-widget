@@ -100,12 +100,14 @@ public final class R {
         public static final int about_content=0x7f060038;
         public static final int about_subtitle=0x7f060037;
         /**   About Dialog 
+  About Dialog 
          */
         public static final int about_title=0x7f060036;
         public static final int accessibility_service_description=0x7f060002;
         public static final int advanced=0x7f060008;
         public static final int advancedsettings=0x7f060005;
         /**  App specific settings 
+ App specific settings 
          */
         public static final int app_specific_settings_title=0x7f060043;
         public static final int appearance=0x7f060007;
@@ -128,9 +130,11 @@ public final class R {
         public static final int extract_expanded_text=0x7f060048;
         public static final int extract_expanded_text_summary=0x7f060049;
         /**   Error Messages 
+  Error Messages 
          */
         public static final int failed_to_monitor_clear_button=0x7f060042;
         /**  Settings Page 
+ Settings Page 
          */
         public static final int generalsettings=0x7f060004;
         public static final int ignore_notifications=0x7f060044;
@@ -139,6 +143,7 @@ public final class R {
         public static final int keep_on_foreground_summary=0x7f060025;
         public static final int menu_about=0x7f060028;
         /**   Wizard Strings 
+  Wizard Strings 
          */
         public static final int menu_settings=0x7f060027;
         public static final int no_apps=0x7f06004c;
@@ -161,6 +166,7 @@ public final class R {
         public static final int showeditbutton=0x7f060019;
         public static final int showeditbutton_summary=0x7f06001a;
         /**  General Strings 
+ General Strings 
          */
         public static final int title=0x7f060000;
         public static final int title_activity_main=0x7f060029;
@@ -180,6 +186,7 @@ public final class R {
         public static final int welcome_text=0x7f060032;
         public static final int widget_locker_add_widget=0x7f060040;
         /**  WidgetLocker 
+ WidgetLocker 
          */
         public static final int widget_locker_not_installed=0x7f06003d;
         public static final int widget_locker_not_installed_summary=0x7f06003e;
