@@ -7,6 +7,7 @@ import android.widget.RemoteViews;
 public class NotificationData 
 {
 	String 	title;
+	String 	subtext;
 	String 	info;
 	String	details;
 	String 	text;

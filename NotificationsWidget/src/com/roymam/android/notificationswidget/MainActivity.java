@@ -2,9 +2,13 @@ package com.roymam.android.notificationswidget;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 //import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,10 +17,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -153,8 +159,48 @@ public class MainActivity extends FragmentActivity
 		startActivity(browserIntent);
     }
 	
+	@SuppressLint("NewApi")
 	public void showAbout()
-	{
+	{	
+		/*
+		// todo: remove this		
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+	    .setSmallIcon(R.drawable.appicon)
+	    .setContentTitle("Content Title")
+	    .setContentText("Content Text")
+	    .setContentInfo("Content Info")
+	    .setSubText("Subtext")
+	    .setTicker("ticker text");
+		
+		NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+		bigtextstyle.setSummaryText("summary text");
+		bigtextstyle.setBigContentTitle("big content title");
+		bigtextstyle.bigText("big text");
+
+		mBuilder.setStyle(bigtextstyle);*/
+		
+		/*NotificationCompat.InboxStyle inboxStyle =
+		        new NotificationCompat.InboxStyle();
+		String[] events = {"event 1","event 2"};
+		// Sets a title for the Inbox style big view
+		inboxStyle.setBigContentTitle("Big Content Title");
+		inboxStyle.setSummaryText("Summary text");
+		// Moves events into the big view
+		for (int i=0; i < events.length; i++) 
+		{	
+		    inboxStyle.addLine(events[i]);
+		}
+		// Moves the big view style object into the notification object.
+		mBuilder.setStyle(inboxStyle);*/
+		/*
+		NotificationManager mNotificationManager =
+        	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification n = mBuilder.build();
+		mNotificationManager.notify(0, n);
+				
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
+		n.bigContentView.reapply(getApplicationContext(), localView);*/
 		DialogFragment dialog = new AboutDialogFragment();
 		dialog.show(getSupportFragmentManager(), "AboutDialogFragment");
 	}

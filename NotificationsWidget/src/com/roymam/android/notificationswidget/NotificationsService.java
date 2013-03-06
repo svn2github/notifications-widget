@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.webkit.WebView.FindListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,15 @@ public class NotificationsService extends AccessibilityService
 	private boolean deviceCovered = false;
 	private boolean editMode =  false;
 	private String clearButtonName = "Clear all notifications.";
+	
+	private final int CONTENT_TEXT_ID = 16908309;
+	private final int CONTENT_SUBTEXT_ID = 16908358;
+	private final int CONTENT_INFO_ID = 16909095;	
+	private final int EXPANDED_LINE_1_ID = 16909100;
+	private final int EXPANDED_LINE_2_ID = 16909101;
+	private final int EXPANDED_LINE_3_ID = 16909103;
+	private final int BIG_TEXT_ID = 16909096;
+	
 
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
@@ -241,12 +251,12 @@ public class NotificationsService extends AccessibilityService
 							nd.notificationContent.reapply(getApplicationContext(), localView);
 							nd.layoutId = localView.getId();
 							
-							View tv = localView.findViewById(16908358);
-							if (tv != null && tv instanceof TextView) nd.details = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(android.R.id.title);
+							View tv = localView.findViewById(android.R.id.title);
 							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(16909082);
-							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
+							tv = localView.findViewById(CONTENT_SUBTEXT_ID);
+							if (tv != null && tv instanceof TextView) nd.subtext = ((TextView) tv).getText().toString();
+							tv = localView.findViewById(CONTENT_INFO_ID);
+							if (tv != null && tv instanceof TextView) nd.info = ((TextView) tv).getText().toString();
 							tv = localView.findViewById(16908388);
 							if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
 						}
@@ -297,29 +307,7 @@ public class NotificationsService extends AccessibilityService
 				}
 			}
 		}
-	}
-	
-	private String recursiveGetText(ViewGroup parentView)
-	{
-		String s = "";
-		
-		// skip title and time 
-		if (parentView.getId()==16909092) return s;
-		
-		for(int i=0;i<parentView.getChildCount();i++)
-		{
-			View v = parentView.getChildAt(i);
-			if (v instanceof TextView)
-			{
-				String text = ((TextView)v).getText().toString();
-				if (!text.equals(""))
-					s += text + "\n";
-			}
-			else if (v instanceof ViewGroup)
-				s += recursiveGetText((ViewGroup)v);
-		}
-		return s;
-	}
+	}	
 	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private String getExpandedText(Notification n)
@@ -332,8 +320,68 @@ public class NotificationsService extends AccessibilityService
 				LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
 				n.bigContentView.reapply(getApplicationContext(), localView);
-
-				text = recursiveGetText(localView);
+				View v;		
+				
+				// try to get big text				
+				v = localView.findViewById(this.BIG_TEXT_ID);
+				if (v != null && v instanceof TextView)
+				{
+					String s = ((TextView)v).getText().toString();
+					if (!s.equals(""))
+					{
+						// add title string if available
+						View titleView = localView.findViewById(android.R.id.title);
+						if (v != null && v instanceof TextView)
+						{
+							String title = ((TextView)titleView).getText().toString();
+							if (!title.equals(""))
+								text = title + " " + s;
+							else
+								text = s;
+						}
+						else
+							text = s;
+					}
+				}
+				
+				// if not found, try to get expanded content lines
+				if (text == null)
+				{
+					// try to extract details lines 
+					v = localView.findViewById(EXPANDED_LINE_1_ID);
+					if (v != null && v instanceof TextView) 
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text = s;
+					}
+					v = localView.findViewById(EXPANDED_LINE_2_ID);
+					if (v != null && v instanceof TextView) 
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(EXPANDED_LINE_3_ID);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+				}
+				
+				// if no content lines, try to get subtext
+				if (text == null)
+				{
+					v = localView.findViewById(this.CONTENT_SUBTEXT_ID);
+					if (v != null && v instanceof TextView)
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals(""))
+						{
+							text = s;
+						}
+					}
+				}
 			}
 		}
 		
