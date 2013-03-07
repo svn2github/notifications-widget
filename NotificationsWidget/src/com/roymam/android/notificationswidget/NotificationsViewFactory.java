@@ -142,10 +142,6 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 							if (n.details != null) 
 								{
 									n.notificationContent.setTextColor(16908358, Resources.getSystem().getColor(textColor));
-									if (preferences.getBoolean(n.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, false))
-									{
-										n.notificationContent.setTextViewText(16908358, n.text);
-									}
 								}
 							if (n.info != null) n.notificationContent.setTextColor(16909082, Resources.getSystem().getColor(textColor));
 							if (n.time != null) n.notificationContent.setTextColor(16908388, Resources.getSystem().getColor(timeColor));

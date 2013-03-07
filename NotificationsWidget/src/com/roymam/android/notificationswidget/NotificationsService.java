@@ -267,11 +267,7 @@ public class NotificationsService extends AccessibilityService
 						
 						if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, false))
 						{
-							String expandedText = getExpandedText(n);
-							if (expandedText!=null)
-							{
-								nd.text = expandedText;
-							}
+							getExpandedText(n,nd);							
 						}
 						
 						// check for duplicated notification
@@ -310,7 +306,7 @@ public class NotificationsService extends AccessibilityService
 	}	
 	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private String getExpandedText(Notification n)
+	private void getExpandedText(Notification n, NotificationData nd)
 	{
 		String text = null;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
@@ -385,7 +381,11 @@ public class NotificationsService extends AccessibilityService
 			}
 		}
 		
-		return text;
+		if (text!=null)
+		{
+			nd.text = text;
+			nd.notificationContent = n.bigContentView;
+		}
 	}
 	
 	@Override
