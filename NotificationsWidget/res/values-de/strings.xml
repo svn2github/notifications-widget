@@ -19,20 +19,20 @@
     <string name="turnscreenon">Display automatisch ein</string>
     <string name="turnscreenon_summary">Weckt das Gerät aus dem Standby auf und schaltet das Display ein</string>
     <string name="disableproximity">Annäherungssensor verwenden</string>
-    <string name="disableproximity_summary">Weckt das Gerät nur noch dann auf, wenn es nicht verdeckt wird und z.B. nicht in einer Tasche steckt</string>
+    <string name="disableproximity_summary">Weckt das Gerät nur dann auf, wenn es nicht verdeckt wird und z.B. nicht in einer Tasche steckt</string>
     <string name="clearonunlock">Löschen nach Entsperrung</string>
     <string name="clearonunlock_summary">Löscht alle Benachrichtigungen auf dem Widget wenn das Gerät ensperrt wird (funktioniert nicht mit WidgetLocker)</string>
     <string name="clearonlock">Löschen nach Sperrung</string>
     <string name="clearonlock_summary">Löscht alle Benachrichtigungen auf dem Widget wenn das Gerät gesperrt wird.</string>
-    <string name="collectonunlock">Sammeln in entsperrtem Zustand</string>
+    <string name="collectonunlock">entsperrtes Sammeln</string>
     <string name="collectonunlock_summary">Benachrichtigungen sammeln während das Gerät entsperrt ist.</string>
     <string name="clockstyle">Uhr Stile</string>
     <string name="clockstyle_summary">Wählen Sie zwischen klein, groß und versteckt.</string>
     <string name="showclearbutton">Zeige Lösch-Knopf</string>
     <string name="showclearbutton_summary">Zeigt eine Schaltfläche auf dem Widget, mit der man alle Benachrichtigungen zurücksetzen kann.</string>
     <string name="showeditbutton">Zeige Bearbeitungs-Icon</string>
-    <string name="showeditbutton_summary">Zeigt eine Schaltfläche auf dem Widget, welche eine Bearbeitung des Benachrichtigungstyps (Blacklist usw.) ermöglicht.</string>
-    <string name="notification_bg_opacity">Benachrichtigung Hintergrundtransparenz</string>
+    <string name="showeditbutton_summary">Zeigt eine Schaltfläche auf dem Widget, die eine Bearbeitung des Benachrichtigungstyps (Blacklist usw.) ermöglicht.</string>
+    <string name="notification_bg_opacity">Benachrichtigung Hintergrund</string>
     <string name="notification_bg_opacity_summary">Die Transparenz des Hintergrunds einer Benachrichtigung</string>
     <string name="notification_text_color">Benachrichtigungstext farbe</string>
     <string name="notification_time_color">Benachrichtigungstext Zeit farbe</string>
@@ -87,7 +87,7 @@
         <string-array name="settings_notifications_entries">
             <item>kompakt</item>
             <item>normal</item>
-            <item>groß (Original)</item>
+            <item>groß (Original Android)</item>
         </string-array>
         <string-array
             name="settings_notifications_values">
@@ -110,7 +110,7 @@
     <string name="tutorial_step_3">Passen Sie Ihr \"Notifications Widget\" in den \"Einstellungen\" an</string>
     <string name="tutorial_toast_1">Aktivieren Sie den \"Notifications Widget\" Dienst und kommen Sie zurück zum Assistenten</string>
     <string name="tutorial_toast_2">Sie brauchen nur den Bildschirm sperren und das Widget hinzufügen</string>
-    <string name="welcome_text">Willkommen zum Notifications Widget! Lasst uns loslegen...</string>
+    <string name="welcome_text">Willkommen zum Notifications Widget!\nSo wird es gemacht...</string>
     <string name="tutorial_step_1_title">Dienst aktivieren</string>
     <string name="tutorial_step_2_title">Widget hinzufügen</string>
     <string name="tutorial_step_3_title">Anpassen</string>
@@ -118,7 +118,7 @@
     <!--  About Dialog -->
     <string name="about_title">NotificationsWidget</string>
     <string name="about_subtitle">NotificationsWidget wurde entwickelt von Roymam\nGerman language support by robvisual</string>
-    <string name="about_content">Sie finden das Projekt hier:\nhttp://code.google.com/p/notifications-widget/\nFühlen Sie sich frei, sich am Projekt zu beteiligen und Fehler zu melden\n\nWenn Sie uns gerne finanzielle unterstützen möchten, dann verweisen wir auf ein Spiel aus unserer Entwicklung:</string>
+    <string name="about_content">Sie finden das Projekt hier:\nhttp://code.google.com/p/notifications-widget/\nFühlen Sie sich frei, sich am Projekt zu beteiligen und Fehler zu melden\n\nWenn Sie uns gerne finanziell unterstützen möchten, dann verweisen wir auf ein Spiel aus unserer Entwicklung:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
     <string name="about_contactus_title">Kontaktieren Sie uns</string>
     <string name="about_contactus_email">mailto:admin@roymam.com</string>
@@ -135,7 +135,7 @@
     <string name="failed_to_monitor_clear_button">Überwachung des \"Clear Notifications\" Button fehlgeschlagen</string>
     
     <!-- App specific settings -->
-    <string name="app_specific_settings_title">Anwendungsspezifische Einstellungen</string>
+    <string name="app_specific_settings_title">Anwendungen</string>
     <string name="ignore_notifications">Ignoriere diese Anwendung</string>
     <string name="ignore_notifications_summary">Ignoriere alle Benachrichtigungen dieser Anwendung</string>
     <string name="show_only_last_notification">Nu die letzt Benachrichtigung der Anwendung anzeigen</string>
