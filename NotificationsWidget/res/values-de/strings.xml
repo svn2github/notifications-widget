@@ -52,50 +52,22 @@
             <item>Grün</item> 
             <item>Blau</item>                  
         </string-array>
-        <string-array
-            name="settings_colors_values">
-            <item>17170443</item>
-            <item>17170444</item>
-            <item>17170432</item>
-            <item>17170455</item>
-            <item>17170453</item>
-            <item>17170451</item>
-        </string-array>
     <string-array name="settings_clock_entries">
             <item>kompakt (klein)</item>
             <item>Android 4.2 (groß)</item>
             <item>automatisch</item>
             <item>versteckt</item>
-        </string-array>
-        <string-array
-            name="settings_clock_values">
-            <item>klein</item>
-            <item>groß</item>
-            <item>auto</item>
-            <item>versteckt</item>
-        </string-array>    
+        </string-array>           
     <string-array name="settings_buttons_entries">
         <item>immer</item>
         <item>nie</item>
         <item>nur im Bearbeitungsmodus</item>
     </string-array>
-    <string-array name="settings_buttons_values">
-            <item>sichtbar</item>
-            <item>versteckt</item>
-            <item>Bearbeitungsmodus</item>
-        </string-array>
         <string-array name="settings_notifications_entries">
             <item>kompakt</item>
             <item>normal</item>
             <item>groß (Original Android)</item>
         </string-array>
-        <string-array
-            name="settings_notifications_values">
-            <item>kompakt</item>
-            <item>normal</item>
-            <item>groß</item>
-        </string-array>
-    
     <string name="service_inactive_text">Dienst inaktiviert. Bitte schalten Sie den \"Notifications Widget\" Dienst in den Bendienungshilfen ein.</string>
     
     <!--  Wizard Strings -->
