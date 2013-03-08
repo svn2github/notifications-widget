@@ -27,6 +27,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ComponentName;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -264,6 +265,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
     {    		
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
     	for (int i=0; i<appWidgetIds.length; i++) 
     	{
     		RemoteViews widget=new RemoteViews(ctxt.getPackageName(), R.layout.widget_layout);
@@ -307,12 +309,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    			  PendingIntent.getBroadcast(ctxt, 0, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 		     
     	    // hide clock if required
-    	    String clockstyle = PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);					
-    	    Boolean showEditButton = PreferenceManager.getDefaultSharedPreferences(ctxt).getBoolean(SettingsActivity.SHOW_EDIT_BUTTON, true);
-    	    String clearButtonMode = PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible");					
+    	    String clockstyle = prefs.getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);					
+    	    Boolean showEditButton = prefs.getBoolean(SettingsActivity.SHOW_EDIT_BUTTON, true);
+    	    String clearButtonMode = prefs.getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible");					
     	   
     	    int notificationsCount = 0;
-    	    String notifiationsStyle = PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
+    	    String notifiationsStyle = prefs.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
     	    
     	    boolean editMode = false;
     	    if (NotificationsService.getSharedInstance()!=null)
@@ -323,7 +325,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
         	    editMode = NotificationsService.getSharedInstance().isEditMode();
     	    }
     	    
-    	    if (!editMode )
+    	    if (!editMode && !prefs.getBoolean(SettingsActivity.DISABLE_NOTIFICATION_CLICK, false))
     	    {
     	    	Intent clickIntent=new Intent(ctxt, NotificationActivity.class);
     	    	PendingIntent clickPI=PendingIntent.getActivity(ctxt, 0,

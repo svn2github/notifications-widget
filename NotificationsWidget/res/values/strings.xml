@@ -26,6 +26,8 @@
     <string name="clearonlock_summary">Clear all notifications when device is locked</string>
     <string name="collectonunlock">Collect when unlocked</string>
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
+    <string name="disable_notification_click">Disable notification click</string>
+    <string name="disable_notification_click_summary">Do not allow clicking on notification to open it</string>
     <string name="clockstyle">Clock style</string>
     <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>

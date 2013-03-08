@@ -33,6 +33,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_ON_LOCK = "clearonlock";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";
+	public static String DISABLE_NOTIFICATION_CLICK = "disable_notification_click";
 	public static String CLEAR_ON_CLEAR = "clearonclear";
 	public static String CLOCK_SMALL = "small";
 	public static String CLOCK_LARGE = "large";

@@ -34,5 +34,11 @@
                 android:enabled="true" 
                 android:defaultValue="true" 
                 android:summary="@string/collectonunlock_summary"/>        
-    </PreferenceCategory>    
+            <CheckBoxPreference 
+                android:title="@string/disable_notification_click" 
+                android:key="disable_notification_click" 
+                android:enabled="true" 
+                android:defaultValue="false" 
+                android:summary="@string/disable_notification_click_summary"/>        
+            </PreferenceCategory>    
 </PreferenceScreen>
