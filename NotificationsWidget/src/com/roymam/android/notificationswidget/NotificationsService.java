@@ -40,6 +40,7 @@ public class NotificationsService extends AccessibilityService
 	private List<NotificationData> notifications;
 	private boolean deviceIsUnlocked = true;
 	private boolean deviceCovered = false;
+	private boolean newNotificationsAvailable = false;
 	private boolean editMode =  false;
 	private String clearButtonName = "Clear all notifications.";
 	
@@ -61,7 +62,6 @@ public class NotificationsService extends AccessibilityService
 	private final int EXPANDED_LINE_2_ID = 16909101;
 	private final int EXPANDED_LINE_3_ID = 16909103;
 	private final int BIG_TEXT_ID = 16909096;*/
-	
 
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
@@ -148,7 +148,15 @@ public class NotificationsService extends AccessibilityService
 				}
 				else
 				{
-					deviceCovered = false;
+					if (deviceCovered)
+					{
+						deviceCovered = false;
+						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(NotificationsService.this);
+						if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false) && newNotificationsAvailable)
+						{
+							turnScreenOn();
+						}
+					}
 				}
 			}				
 		};
@@ -205,15 +213,9 @@ public class NotificationsService extends AccessibilityService
 					boolean ignoreApp = sharedPref.getBoolean(packageName+"."+AppSettingsActivity.IGNORE_APP, false);
 					if (!ignoreApp)
 					{
-						// check if need to turn screen on
-						Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
-						if (turnScreenOn && !deviceCovered)
-						{
-							PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-							PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-							wl.acquire();
-							wl.release();
-						}
+						newNotificationsAvailable = true;
+						
+						turnScreenOn();
 						
 						// build notification data object
 						NotificationData nd = new NotificationData();
@@ -305,7 +307,7 @@ public class NotificationsService extends AccessibilityService
 							nd.count = dup.count+1;						
 						}
 						notifications.add(0,nd);
-	
+						
 						// update widgets
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
 						ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
@@ -322,6 +324,22 @@ public class NotificationsService extends AccessibilityService
 		}
 	}	
 	
+	private void turnScreenOn() 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		// check if need to turn screen on
+		Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
+		if (turnScreenOn && !deviceCovered)
+		{
+			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+			wl.acquire();
+			wl.release();
+			newNotificationsAvailable = false;
+		}	
+	}
+
 	private void recursiveDetectNotificationsIds(ViewGroup v)
 	{
 		for(int i=0; i<v.getChildCount(); i++)

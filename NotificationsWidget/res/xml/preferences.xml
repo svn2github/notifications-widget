@@ -12,8 +12,16 @@
                 android:key="disableproximity" 
                 android:enabled="true" 
                 android:defaultValue="false" 
+                android:disableDependentsState="true"
                 android:summary="@string/disableproximity_summary"
                 android:dependency="turnscreenon"/>
+            <CheckBoxPreference 
+                android:title="@string/delayed_screenon"
+                android:key="delayed_screenon"
+                android:enabled="true"
+                android:defaultValue="false"
+                android:summary="@string/delayed_screenon_summary"
+                android:dependency="disableproximity"/>"
     </PreferenceCategory>             
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
             <CheckBoxPreference 

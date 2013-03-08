@@ -21,9 +21,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 {
 	public static String TURNSCREENON = "turnscreenon";
 	public static String DISABLE_PROXIMITY = "disableproximity";
+	public static String DELAYED_SCREEON = "delayed_screenon";
 	public static String KEEP_ON_FOREGROUND = "keep_on_foreground";
 	public static String CLOCK_STYLE = "clockstyle";
-	//public static String SHOW_CLEAR_BUTTON= "showclearbutton";
 	public static String CLEAR_BUTTON_MODE = "clearbuttonmode";
 	public static String SHOW_EDIT_BUTTON= "showeditbutton";
 	public static String NOTIFICATION_STYLE="notification_style";
