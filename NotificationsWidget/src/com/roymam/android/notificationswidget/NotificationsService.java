@@ -7,6 +7,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
 import android.appwidget.AppWidgetManager;
@@ -30,7 +31,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
-import android.webkit.WebView.FindListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,13 +43,24 @@ public class NotificationsService extends AccessibilityService
 	private boolean editMode =  false;
 	private String clearButtonName = "Clear all notifications.";
 	
-	private final int CONTENT_TEXT_ID = 16908309;
+	private int notification_title_id = 0;
+	private int notification_text_id = 0;
+	private int notification_info_id = 0;
+	private int notification_subtext_id = 0;
+	private int big_notification_summary_id = 0;
+	private int big_notification_content_title = 0;
+	private int big_notification_content_text = 0;
+	private int inbox_notification_event_1_id = 0;
+	private int inbox_notification_event_2_id = 0;
+	private int inbox_notification_event_3_id = 0;
+
+	/*private final int CONTENT_TEXT_ID = 16908309;
 	private final int CONTENT_SUBTEXT_ID = 16908358;
 	private final int CONTENT_INFO_ID = 16909095;	
 	private final int EXPANDED_LINE_1_ID = 16909100;
 	private final int EXPANDED_LINE_2_ID = 16909101;
 	private final int EXPANDED_LINE_3_ID = 16909103;
-	private final int BIG_TEXT_ID = 16909096;
+	private final int BIG_TEXT_ID = 16909096;*/
 	
 
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
@@ -104,6 +115,12 @@ public class NotificationsService extends AccessibilityService
 			
 		// keep app on foreground if requested
 		keepOnForeground();
+		
+		// detect expanded notification id's 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+		{
+			detectNotificationIds();
+		}
 	}	
 	
 	// Proximity Sensor Monitoring
@@ -253,9 +270,9 @@ public class NotificationsService extends AccessibilityService
 							
 							View tv = localView.findViewById(android.R.id.title);
 							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(CONTENT_SUBTEXT_ID);
+							tv = localView.findViewById(notification_subtext_id);
 							if (tv != null && tv instanceof TextView) nd.subtext = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(CONTENT_INFO_ID);
+							tv = localView.findViewById(notification_info_id);
 							if (tv != null && tv instanceof TextView) nd.info = ((TextView) tv).getText().toString();
 							tv = localView.findViewById(16908388);
 							if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
@@ -305,6 +322,79 @@ public class NotificationsService extends AccessibilityService
 		}
 	}	
 	
+	private void recursiveDetectNotificationsIds(ViewGroup v)
+	{
+		for(int i=0; i<v.getChildCount(); i++)
+		{
+			View child = v.getChildAt(i);
+			if (child instanceof ViewGroup)
+				recursiveDetectNotificationsIds((ViewGroup)child);
+			else if (child instanceof TextView)
+			{
+				String text = ((TextView)child).getText().toString();
+				int id = child.getId();
+				if (text.equals("1")) notification_title_id = id;
+				else if (text.equals("2")) notification_text_id = id;
+				else if (text.equals("3")) notification_info_id = id;
+				else if (text.equals("4")) notification_subtext_id = id;
+				else if (text.equals("5")) big_notification_summary_id = id;
+				else if (text.equals("6")) big_notification_content_title = id;
+				else if (text.equals("7")) big_notification_content_text = id;
+				else if (text.equals("8")) inbox_notification_event_1_id = id;
+				else if (text.equals("9")) inbox_notification_event_2_id = id;
+				else if (text.equals("10")) inbox_notification_event_3_id = id;
+			}
+		}
+	}
+	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void detectNotificationIds()
+	{
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+	    .setSmallIcon(R.drawable.appicon)
+	    .setContentTitle("1")
+	    .setContentText("2")
+	    .setContentInfo("3")
+	    .setSubText("4");
+		
+		NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+		bigtextstyle.setSummaryText("5");
+		bigtextstyle.setBigContentTitle("6");
+		bigtextstyle.bigText("7");
+
+		mBuilder.setStyle(bigtextstyle);
+
+		NotificationManager mNotificationManager =
+        	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification n = mBuilder.build();
+				
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
+		n.bigContentView.reapply(getApplicationContext(), localView);
+		
+		recursiveDetectNotificationsIds(localView);
+
+		NotificationCompat.InboxStyle inboxStyle =
+		        new NotificationCompat.InboxStyle();
+		String[] events = {"8","9","10"};
+		inboxStyle.setBigContentTitle("6");
+		inboxStyle.setSummaryText("5");
+		
+		for (int i=0; i < events.length; i++) 
+		{	
+		    inboxStyle.addLine(events[i]);
+		}
+		mBuilder.setStyle(inboxStyle);
+		
+		n = mBuilder.build();
+				
+		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
+		n.bigContentView.reapply(getApplicationContext(), localView);
+
+		recursiveDetectNotificationsIds(localView);
+	}
+	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private void getExpandedText(Notification n, NotificationData nd)
 	{
@@ -319,7 +409,7 @@ public class NotificationsService extends AccessibilityService
 				View v;		
 				
 				// try to get big text				
-				v = localView.findViewById(this.BIG_TEXT_ID);
+				v = localView.findViewById(big_notification_content_text);
 				if (v != null && v instanceof TextView)
 				{
 					String s = ((TextView)v).getText().toString();
@@ -344,20 +434,20 @@ public class NotificationsService extends AccessibilityService
 				if (text == null)
 				{
 					// try to extract details lines 
-					v = localView.findViewById(EXPANDED_LINE_1_ID);
+					v = localView.findViewById(inbox_notification_event_1_id);
 					if (v != null && v instanceof TextView) 
 					{
 						String s = ((TextView)v).getText().toString();
 						if (!s.equals("")) text = s;
 					}
-					v = localView.findViewById(EXPANDED_LINE_2_ID);
+					v = localView.findViewById(inbox_notification_event_2_id);
 					if (v != null && v instanceof TextView) 
 					{
 						String s = ((TextView)v).getText().toString();
 						if (!s.equals("")) text += "\n" + s;
 					}
 					
-					v = localView.findViewById(EXPANDED_LINE_3_ID);
+					v = localView.findViewById(inbox_notification_event_3_id);
 					if (v != null && v instanceof TextView)  
 					{
 						String s = ((TextView)v).getText().toString();
@@ -368,7 +458,7 @@ public class NotificationsService extends AccessibilityService
 				// if no content lines, try to get subtext
 				if (text == null)
 				{
-					v = localView.findViewById(this.CONTENT_SUBTEXT_ID);
+					v = localView.findViewById(notification_subtext_id);
 					if (v != null && v instanceof TextView)
 					{
 						String s = ((TextView)v).getText().toString();

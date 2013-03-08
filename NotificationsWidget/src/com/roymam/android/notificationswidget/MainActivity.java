@@ -159,48 +159,8 @@ public class MainActivity extends FragmentActivity
 		startActivity(browserIntent);
     }
 	
-	@SuppressLint("NewApi")
 	public void showAbout()
 	{	
-		/*
-		// todo: remove this		
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-	    .setSmallIcon(R.drawable.appicon)
-	    .setContentTitle("Content Title")
-	    .setContentText("Content Text")
-	    .setContentInfo("Content Info")
-	    .setSubText("Subtext")
-	    .setTicker("ticker text");
-		
-		NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
-		bigtextstyle.setSummaryText("summary text");
-		bigtextstyle.setBigContentTitle("big content title");
-		bigtextstyle.bigText("big text");
-
-		mBuilder.setStyle(bigtextstyle);*/
-		
-		/*NotificationCompat.InboxStyle inboxStyle =
-		        new NotificationCompat.InboxStyle();
-		String[] events = {"event 1","event 2"};
-		// Sets a title for the Inbox style big view
-		inboxStyle.setBigContentTitle("Big Content Title");
-		inboxStyle.setSummaryText("Summary text");
-		// Moves events into the big view
-		for (int i=0; i < events.length; i++) 
-		{	
-		    inboxStyle.addLine(events[i]);
-		}
-		// Moves the big view style object into the notification object.
-		mBuilder.setStyle(inboxStyle);*/
-		/*
-		NotificationManager mNotificationManager =
-        	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification n = mBuilder.build();
-		mNotificationManager.notify(0, n);
-				
-		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
-		n.bigContentView.reapply(getApplicationContext(), localView);*/
 		DialogFragment dialog = new AboutDialogFragment();
 		dialog.show(getSupportFragmentManager(), "AboutDialogFragment");
 	}
