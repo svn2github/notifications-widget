@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- General Strings -->
@@ -16,19 +16,19 @@
     <string name="clock">Uhr</string>
     <string name="notifications">Benachrichtigungen</string>
     
-    <string name="disableproximity_nexus4_warning">Please note that Nexus 4 has known issues when enabling proximity sensor, it may cause a battery drain, and you may hear tick sounds during music playback or a phone call.\nAre you sure that you want to enable this feature?</string>
-    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warning</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="delayed_screenon">Delayed screen on</string>
-    <string name="delayed_screenon_summary">When a new notification arrives, turn screen on only after putting device out of the pocket</string>
-    <string name="disable_notification_click">Disable notification click</string>
-    <string name="disable_notification_click_summary">Do not allow clicking on notification to open it</string>
-    <string name="extract_expanded_text">Use expanded text</string>
-	<string name="extract_expanded_text_summary">Try to use the expanded text from the notification if available</string>
+    <string name="disableproximity_nexus4_warning">Beachten Sie, dass, bei aktiviertem Näherungssensor, Probleme mit dem Nexus 4 auftreten können: Erhöhter Akkuverbrauch und Tick-Geräusche bei der Musik-Wiedergabe und in Anrufen.\nSind sie sicher, dass sie dieses Feature aktivieren wollen?</string>
+    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warnung</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="delayed_screenon">Verzögerte automatische Displayaktivierung</string>
+    <string name="delayed_screenon_summary">Aktiviert das Display bei neuer Benachrichtgung erst, wenn Sie das Gerät aus der Tasche nehmen</string>
+    <string name="disable_notification_click">Deaktiviere klickbare Benachrichtigungen</string>
+    <string name="disable_notification_click_summary">Verhindert, dass sich die Benachrichtigungen beim darauf Tippen öffnen</string>
+    <string name="extract_expanded_text">Verwende erweiterten Text</string>
+	<string name="extract_expanded_text_summary">Verwende den gesamten Text aus erweiterbaren Benachrichtigungen</string>
     
         
-    <string name="turnscreenon">Display automatisch ein</string>
+    <string name="turnscreenon">Automatische Displayaktivierung</string>
     <string name="turnscreenon_summary">Schaltet das Display bei neuer Benachrichtigung ein</string>
     <string name="disableproximity">Näherungssensor deaktivieren</string>
     <string name="disableproximity_summary">Weckt das Gerät auch auf, wenn es in einer Tasche steckt</string>
