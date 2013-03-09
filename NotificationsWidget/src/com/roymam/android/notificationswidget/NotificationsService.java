@@ -42,6 +42,7 @@ public class NotificationsService extends AccessibilityService
 	private boolean deviceCovered = false;
 	private boolean newNotificationsAvailable = false;
 	private boolean editMode =  false;
+	private boolean widgetLockerEnabled = false;
 	private String clearButtonName = "Clear all notifications.";
 	
 	private int notification_title_id = 0;
@@ -66,7 +67,8 @@ public class NotificationsService extends AccessibilityService
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public int onStartCommand(Intent intent, int flags, int startId) 
+	{
 		super.onStartCommand(intent, flags, startId);
 		return START_STICKY;
 	}
@@ -75,12 +77,24 @@ public class NotificationsService extends AccessibilityService
 	protected void onServiceConnected() 
 	{
 		super.onServiceConnected();
-		sSharedInstance = this;
+	
+		// first run preferences
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean firstRun = prefs.getBoolean("com.roymam.android.notificationswidget.firstrun", true);
+		prefs.edit().putBoolean("com.roymam.android.notificationswidget.firstrun", false).commit();
+		if (firstRun)
+		{
+			if (Build.MODEL.equals("Nexus 4"))
+			{
+				prefs.edit().putBoolean(SettingsActivity.DISABLE_PROXIMITY, true).commit();
+			}
+		}
 		
+		sSharedInstance = this;		
 		AccessibilityServiceInfo info = new AccessibilityServiceInfo();
 		
 		// check if "Clear Notifications Monitor" feature enabled, if so - monitor view clicks
-		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
+		if (prefs.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
 		{
 			// find "clear all notifications." button text
 		    Resources res;
@@ -130,6 +144,8 @@ public class NotificationsService extends AccessibilityService
 	
 	private void registerProximitySensor()
 	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		sensorListener = new SensorEventListener()
@@ -161,8 +177,8 @@ public class NotificationsService extends AccessibilityService
 			}				
 		};
 		
-		if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
-		     PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.TURNSCREENON, true))
+		if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
+		     prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
 		{
 			startProximityMontior();
 		}
@@ -581,6 +597,11 @@ public class NotificationsService extends AccessibilityService
 		deviceIsUnlocked = true;
 	}
 	
+	public void setDeviceIsLocked()
+	{
+		deviceIsUnlocked = false;
+	}
+	
 	public void setEditMode(boolean mode)
 	{
 		editMode = mode;
@@ -627,6 +648,16 @@ public class NotificationsService extends AccessibilityService
 				Toast.makeText(getApplicationContext(), "Cannot open notification", Toast.LENGTH_SHORT).show();
 			}
 		}
+	}
+
+	public boolean isWidgetLockerEnabled() 
+	{
+		return widgetLockerEnabled;
+	}
+
+	public void setWidgetLockerEnabled(boolean widgetLockerEnabled) 
+	{
+		this.widgetLockerEnabled = widgetLockerEnabled;
 	}
 	
 	

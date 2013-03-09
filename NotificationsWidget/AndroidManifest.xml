@@ -44,6 +44,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.teslacoilsw.widgetlocker.intent.LOCKED"/>
+                <action android:name="com.teslacoilsw.widgetlocker.intent.UNLOCKED"/>
+                <action android:name="com.teslacoilsw.widgetlocker.ENABLE"/>
+				<action android:name="com.teslacoilsw.widgetlocker.DISABLE"/>
                 <action android:name="com.roymam.android.notificationswidget.update_clock" />
                 <action android:name="com.roymam.android.notificationswidget.switchmode" />
                 <action android:name="com.roymam.android.notificationswidget.performaction" />

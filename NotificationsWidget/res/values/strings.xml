@@ -20,10 +20,14 @@
     <string name="turnscreenon_summary">Wake device and turn screen on when a new notification arrives</string>
     <string name="disableproximity">Disable proximity sensor</string>
     <string name="disableproximity_summary">When checked, the device will always turn on screen for notifications, even if it covered. (may improve battery consumption)</string>
+    <string name="disableproximity_nexus4_warning">Please note that Nexus 4 has known issues when enabling proximity sensor, it may cause a battery drain, and you may hear tick sounds during music playback or a phone call.\nAre you sure that you want to enable this feature?</string>
+    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warning</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="delayed_screenon">Delayed screen on</string>
     <string name="delayed_screenon_summary">When a new notification arrives, turn screen on only after putting device out of the pocket</string>
     <string name="clearonunlock">Clear when unlocked</string>
-    <string name="clearonunlock_summary">Clear all notifications when device is unlocked (doesn\'t work with WidgetLocker)</string>
+    <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
     <string name="clearonlock">Clear when locked</string>
     <string name="clearonlock_summary">Clear all notifications when device is locked</string>
     <string name="collectonunlock">Collect when unlocked</string>

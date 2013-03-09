@@ -114,10 +114,11 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	@Override
     public void onReceive(Context ctx, Intent intent) 
     {    
+		NotificationsService ns = NotificationsService.getSharedInstance();
+	    
     	if (intent.getAction().equals(CLEAR_ALL))
     	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
-    	    if (ns != null)
+    		if (ns != null)
     	    {
     	    	ns.getNotifications().clear();
     	    	ns.setEditMode(false);
@@ -129,31 +130,64 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		updateWidget(ctx,false);
 			
     	}
-    	else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT))
+    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.LOCKED"))
     	{
-    		if (NotificationsService.getSharedInstance() != null)
+    		if (ns!=null)
     		{
-    			NotificationsService.getSharedInstance().setDeviceIsUnlocked();
-    			NotificationsService.getSharedInstance().setEditMode(false);
+    			ns.setDeviceIsLocked();
+    			ns.setWidgetLockerEnabled(true);
     		}
     	}
-    	
+    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.UNLOCKED"))
+    	{
+    		if (ns != null)
+    		{
+    			ns.setDeviceIsUnlocked();
+				ns.setEditMode(false);
+				ns.setWidgetLockerEnabled(true);
+    		}
+    	}
+    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.DISABLED"))
+    	{
+    		if (ns != null)
+    		{
+    			ns.setWidgetLockerEnabled(false);
+    		}
+    	}
+    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.ENABLED"))
+    	{
+    		if (ns != null)
+    		{
+    			ns.setWidgetLockerEnabled(true);
+    		}
+    	}
+    	else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT))
+    	{
+    		if (ns != null)
+    		{
+    			if (!ns.isWidgetLockerEnabled())
+    			{
+    				ns.setDeviceIsUnlocked();
+    				ns.setEditMode(false);
+    			}
+    		}
+    	}
     	else if (intent.getAction().equals(PERFORM_ACTION))
     	{   
     		int pos=intent.getIntExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,-1);
     		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,0);
     		
-    		if (NotificationsService.getSharedInstance()!=null)
+    		if (ns!=null)
     		{
-	    		if (action == 1 && pos >= 0 && pos < NotificationsService.getSharedInstance().getNotifications().size())
+	    		if (action == 1 && pos >= 0 && pos < ns.getNotifications().size())
 	    		{	    			
-	    				NotificationsService.getSharedInstance().getNotifications().remove(pos);
-	    				if (NotificationsService.getSharedInstance().getNotifications().size()==0)
+	    				ns.getNotifications().remove(pos);
+	    				if (ns.getNotifications().size()==0)
 	    				{
-	    					NotificationsService.getSharedInstance().setEditMode(false);
+	    					ns.setEditMode(false);
 	    				}
 	    		}
-	    		else if (action == 2 && pos >= 0 && pos < NotificationsService.getSharedInstance().getNotifications().size())
+	    		else if (action == 2 && pos >= 0 && pos < ns.getNotifications().size())
 	    		{
 	    			Intent appSettingsIntent = new Intent(ctx, AppSettingsActivity.class);
 	    			appSettingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -161,21 +195,21 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 					settingsExtras.putString(AppSettingsActivity.EXTRA_PACKAGE_NAME, intent.getStringExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME));
 					appSettingsIntent.putExtras(settingsExtras);					
 	    			ctx.startActivity(appSettingsIntent);
-	    			NotificationsService.getSharedInstance().setEditMode(false);
+	    			ns.setEditMode(false);
 	    		}
 	    		else
 	    		{
-	    			NotificationsService.getSharedInstance().setEditMode(false);
+	    			ns.setEditMode(false);
 	    		}
 	    		updateWidget(ctx,true);
     		}
     	}
     	else if (intent.getAction().equals(SWITCH_TO_EDIT_MODE))
     	{   
-    		if (NotificationsService.getSharedInstance()!=null)
+    		if (ns!=null)
     		{
 	    		// switch mode
-    			boolean editMode = NotificationsService.getSharedInstance().isEditMode();
+    			boolean editMode = ns.isEditMode();
 	    		if (!editMode)
 	    		{
 	    			editMode = true;
@@ -186,7 +220,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    		}
 	    		
 				// update notifications view
-				NotificationsService.getSharedInstance().setEditMode(editMode);
+				ns.setEditMode(editMode);
 				
 				AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
 				ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
@@ -196,9 +230,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	            {
 					AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
 	            }
-				onUpdate(ctx, widgetManager, widgetIds);
-				
-				
+				onUpdate(ctx, widgetManager, widgetIds);		
     		}
     	}
     	super.onReceive(ctx, intent);
@@ -266,6 +298,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
     {    		
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+		NotificationsService ns = NotificationsService.getSharedInstance();
+
     	for (int i=0; i<appWidgetIds.length; i++) 
     	{
     		RemoteViews widget=new RemoteViews(ctxt.getPackageName(), R.layout.widget_layout);
@@ -317,12 +351,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    String notifiationsStyle = prefs.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
     	    
     	    boolean editMode = false;
-    	    if (NotificationsService.getSharedInstance()!=null)
+    	    if (ns!=null)
     	    {
-    	    	notificationsCount = NotificationsService.getSharedInstance().getNotifications().size();
+    	    	notificationsCount = ns.getNotifications().size();
     	    	
     	    	// register click event on list
-        	    editMode = NotificationsService.getSharedInstance().isEditMode();
+        	    editMode = ns.isEditMode();
     	    }
     	    
     	    if (!editMode && !prefs.getBoolean(SettingsActivity.DISABLE_NOTIFICATION_CLICK, false))
@@ -369,7 +403,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    	{
 	    	    	widget.setViewVisibility(R.id.editMode, View.GONE);   
 	    	    	widget.setViewVisibility(R.id.clearButton, View.GONE);   
-				  	if (NotificationsService.getSharedInstance()==null )
+				  	if (ns==null )
 				  	{
 				  		widget.setViewVisibility(R.id.serviceInactiveButton, View.VISIBLE);
 				  		widget.setViewVisibility(R.id.serviceInactiveView, View.VISIBLE);
@@ -390,11 +424,14 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     
     public void notifyReady(Context ctx)
     {
+		NotificationsService ns = NotificationsService.getSharedInstance();
+
     	NotificationCompat.Builder mBuilder =
     	        new NotificationCompat.Builder(ctx)
     	        .setSmallIcon(R.drawable.appicon)
     	        .setContentTitle("Congratulations!")
-    	        .setContentText("You successfully added NotificationsWidget");
+    	        .setContentText("You have successfully added NotificationsWidget")
+    	        .setTicker("You have successfully added NotificationsWidget");
 
     	Intent resultIntent = new Intent(ctx, MainActivity.class);    	
     	PendingIntent resultPendingIntent =
@@ -403,9 +440,9 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
     	// mId allows you to update the notification later on.
     	Notification n = mBuilder.build();
-    	if (NotificationsService.getSharedInstance()!=null)
+    	if (ns!=null)
     	{
-    		NotificationsService.getSharedInstance().handleNotification(n, ctx.getPackageName());
+    		ns.handleNotification(n, ctx.getPackageName());
     	}
     	else
     	{

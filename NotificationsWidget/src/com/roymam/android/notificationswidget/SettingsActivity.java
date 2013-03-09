@@ -4,18 +4,24 @@ import java.util.List;
 
 import com.roymam.android.common.ListPreferenceChangeListener;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.widget.BaseAdapter;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
@@ -50,6 +56,47 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.preferences);
+	        
+		    // proximity sensor listener
+	        Preference proxPref = findPreference(DISABLE_PROXIMITY);	        
+	        Boolean currValue = getPreferenceScreen().getSharedPreferences().getBoolean(DISABLE_PROXIMITY, true);	        
+	        
+	        proxPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+	        {
+				@Override
+				public boolean onPreferenceChange(final Preference preference,
+						Object newValue) 
+				{
+					Boolean value = (Boolean)newValue;
+					if (value == false && Build.MODEL.equals("Nexus 4"))
+					{
+						AlertDialog.Builder builder = new AlertDialog.Builder(preference.getContext());
+						builder.setTitle(R.string.disableproximity_nexus4_warning_title)
+						.setMessage(R.string.disableproximity_nexus4_warning)
+						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() 
+			               {
+			                   public void onClick(DialogInterface dialog, int id) 
+			                   {
+			                	   preference.getEditor().putBoolean(SettingsActivity.DISABLE_PROXIMITY, false).commit();
+			                	   getActivity().recreate();
+			                   }
+			               })
+						.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() 
+			               {
+			                   public void onClick(DialogInterface dialog, int id) 
+			                   {
+			                	   // do nothing
+			                   }
+			               })
+						.show();
+						return false;
+					}
+
+					return true;
+				}
+	        	
+	        });
+
 	    }
 	}	
 	
@@ -197,7 +244,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	}
 	
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) 
+	public void onSharedPreferenceChanged(final SharedPreferences prefs, String key) 
 	{		
 		NotificationsService ns = NotificationsService.getSharedInstance();
 		if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null) 
