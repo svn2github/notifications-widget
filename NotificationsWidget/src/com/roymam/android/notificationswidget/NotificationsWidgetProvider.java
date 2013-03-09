@@ -299,6 +299,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     {    		
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		NotificationsService ns = NotificationsService.getSharedInstance();
+		widgetActive = true;
 
     	for (int i=0; i<appWidgetIds.length; i++) 
     	{

@@ -4,7 +4,7 @@
     <!-- General Strings -->
     <string name="title">Notifications Widget</string>
     <string name="settingstitle">Notifications Widget Einstellungen</string>
-    <string name="accessibility_service_description">Erlaubt NotificationsWidget das Empfangen aller eingehenden Benachrichtigungen. Der eingeblendete Hinweis nach dem Einschalten ist ein Standard Dialog von Android. Die Anwendung sammelt keine Daten in jeglicher Form und hat keinen Internetzugriff. Der Quellcode kann öffentlich bei google code eingesehen werden.</string>
+    <string name="accessibility_service_description">Erlaubt Notifications Widget das Empfangen aller eingehenden Benachrichtigungen. Der eingeblendete Hinweis beim Einschalten ist ein Standard-Dialog von Android. Die Anwendung sammelt keine Daten in jeglicher Form und hat keinen Internetzugriff. Der Quellcode kann öffentlich bei Google Code eingesehen werden.</string>
     <string name="notifications_service">Notifications Widget</string>
     
     <!-- Settings Page -->
@@ -15,34 +15,46 @@
     <string name="advanced">Erweitert</string>
     <string name="clock">Uhr</string>
     <string name="notifications">Benachrichtigungen</string>
+    
+    <string name="disableproximity_nexus4_warning">Please note that Nexus 4 has known issues when enabling proximity sensor, it may cause a battery drain, and you may hear tick sounds during music playback or a phone call.\nAre you sure that you want to enable this feature?</string>
+    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warning</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delayed_screenon">Delayed screen on</string>
+    <string name="delayed_screenon_summary">When a new notification arrives, turn screen on only after putting device out of the pocket</string>
+    <string name="disable_notification_click">Disable notification click</string>
+    <string name="disable_notification_click_summary">Do not allow clicking on notification to open it</string>
+    <string name="extract_expanded_text">Use expanded text</string>
+	<string name="extract_expanded_text_summary">Try to use the expanded text from the notification if available</string>
+    
         
     <string name="turnscreenon">Display automatisch ein</string>
-    <string name="turnscreenon_summary">Weckt das Gerät aus dem Standby auf und schaltet das Display ein</string>
-    <string name="disableproximity">Annäherungssensor verwenden</string>
-    <string name="disableproximity_summary">Weckt das Gerät nur dann auf, wenn es nicht verdeckt wird und z.B. nicht in einer Tasche steckt</string>
-    <string name="clearonunlock">Löschen nach Entsperrung</string>
-    <string name="clearonunlock_summary">Löscht alle Benachrichtigungen auf dem Widget wenn das Gerät ensperrt wird (funktioniert nicht mit WidgetLocker)</string>
-    <string name="clearonlock">Löschen nach Sperrung</string>
-    <string name="clearonlock_summary">Löscht alle Benachrichtigungen auf dem Widget wenn das Gerät gesperrt wird.</string>
+    <string name="turnscreenon_summary">Schaltet das Display bei neuer Benachrichtigung ein</string>
+    <string name="disableproximity">Näherungssensor deaktivieren</string>
+    <string name="disableproximity_summary">Weckt das Gerät auch auf, wenn es in einer Tasche steckt</string>
+    <string name="clearonunlock">Löschen bei Entsperrung</string>
+    <string name="clearonunlock_summary">Löscht alle Benachrichtigungen, wenn das Gerät ensperrt wird (funktioniert nicht mit WidgetLocker)</string>
+    <string name="clearonlock">Löschen bei Sperrung</string>
+    <string name="clearonlock_summary">Löscht alle Benachrichtigungen wenn das Gerät gesperrt wird</string>
     <string name="collectonunlock">entsperrtes Sammeln</string>
-    <string name="collectonunlock_summary">Benachrichtigungen sammeln während das Gerät entsperrt ist.</string>
-    <string name="clockstyle">Uhr Stile</string>
-    <string name="clockstyle_summary">Wählen Sie zwischen klein, groß und versteckt.</string>
-    <string name="showclearbutton">Zeige Lösch-Knopf</string>
-    <string name="showclearbutton_summary">Zeigt eine Schaltfläche auf dem Widget, mit der man alle Benachrichtigungen zurücksetzen kann.</string>
+    <string name="collectonunlock_summary">Benachrichtigungen sammeln während das Gerät entsperrt ist</string>
+    <string name="clockstyle">Uhr-Design</string>
+    <string name="clockstyle_summary">Kleine, große oder versteckte Uhr</string>
+    <string name="showclearbutton">Zeige Lösch-Icon</string>
+    <string name="showclearbutton_summary">Zeigt ein Icon auf dem Widget, mit dem man alle Benachrichtigungen löschen kann</string>
     <string name="showeditbutton">Zeige Bearbeitungs-Icon</string>
-    <string name="showeditbutton_summary">Zeigt eine Schaltfläche auf dem Widget, die eine Bearbeitung des Benachrichtigungstyps (Blacklist usw.) ermöglicht.</string>
-    <string name="notification_bg_opacity">Benachrichtigung Hintergrund</string>
-    <string name="notification_bg_opacity_summary">Die Transparenz des Hintergrunds einer Benachrichtigung</string>
-    <string name="notification_text_color">Benachrichtigungstext farbe</string>
-    <string name="notification_time_color">Benachrichtigungstext Zeit farbe</string>
-    <string name="notification_style">Benachrichtigung Darstellungsstil</string>
-    <string name="show_full_notification">Zeige den ganzen Inhalt</string>
-    <string name="show_full_notification_summary">Zeige den ganzen Inhalt so, wie in der Benachrichtigungsleiste im System</string>
-    <string name="clearonclear">Überwachen von \"alle löschen\"</string>
-    <string name="clearonclear_summary">Experimental – Alle Benachrichtigungen löschen, wenn der Löschknopf in der Android Benachrichtigungsleiste gedrückt wurde. (Erfordert einen Neustart der Bedienungshilfe)</string>
+    <string name="showeditbutton_summary">Zeigt ein Icon auf dem Widget, das eine Bearbeitung des Benachrichtigungen ermöglicht</string>
+    <string name="notification_bg_opacity">Hintergrundtransparenz</string>
+    <string name="notification_bg_opacity_summary">Transparenz des Hintergrunds der Benachrichtigungen einstellen</string>
+    <string name="notification_text_color">Farbe des Benachrichtigungstexts</string>
+    <string name="notification_time_color">Farbe der Zeit</string>
+    <string name="notification_style">Darstellungstyp</string>
+    <string name="show_full_notification">Zeige vollständige Benachrichtigung</string>
+    <string name="show_full_notification_summary">Zeige die Benachrichtigung, wie in der Benachrichtigungsleiste im System</string>
+    <string name="clearonclear">Überwachen von \"Alle löschen\"</string>
+    <string name="clearonclear_summary">Experimentell – Alle Benachrichtigungen löschen, wenn der Löschknopf in der Android-Benachrichtigungsleiste gedrückt wurde (Erfordert einen Neustart der Bedienungshilfe)</string>
     <string name="keep_on_foreground">Immer im Vordergrund halten</string>
-    <string name="keep_on_foreground_summary">Bewahrt NotificiationsWidget davor, beendet zu werden, wenn alle Programme vom Benutzer über den Taskmanager beendet werden.</string>
+    <string name="keep_on_foreground_summary">Bewahrt Notificiations Widget davor beendet zu werden, wenn alle Programme vom Benutzer über den Taskmanager beendet werden</string>
         
     <string-array name="settings_colors_entries">
             <item>Weiß</item>
@@ -68,28 +80,28 @@
             <item>normal</item>
             <item>groß (Original Android)</item>
         </string-array>
-    <string name="service_inactive_text">Dienst inaktiviert. Bitte schalten Sie den \"Notifications Widget\" Dienst in den Bendienungshilfen ein.</string>
+    <string name="service_inactive_text">Dienst inaktiv. Bitte aktivieren sie \"Notifications Widget\" in den Bendienungshilfen.</string>
     
     <!--  Wizard Strings -->
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_about">Über</string>
     <string name="title_activity_main">Notifications Widget</string>
-    <string name="tutorial_help_1">Wenn die Bedienungshilfen sich öffnen, wählen Sie \"Notifications Widget\" und ziehen Sie den Schieberegler von \"Aus\" auf \"Ein\".  Bestätigen Sie die Warnung mit \"OK\".</string>
-    <string name="tutorial_help_2">Nachdem Sie das Gerät gesperrt haben, fügen Sie dem Lockscreen das \"Notifications Widget\" hinzu und löschen ggf. das vorhandene.</string>
+    <string name="tutorial_help_1">Wenn sich die Bedienungshilfen öffnen, wählen Sie \"Notifications Widget\" und ziehen Sie den Schieberegler von \"Aus\" auf \"Ein\".  Bestätigen Sie die Warnung mit \"OK\".</string>
+    <string name="tutorial_help_2">Nachdem Sie das Gerät gesperrt haben, fügen Sie dem Lockscreen das \"Notifications Widget\" hinzu und löschen ggf. das Bisherige.</string>
     <string name="tutorial_help_3">Das war es schon! Falls Sie noch Fragen oder Anregungen haben sollten, dann schicken Sie eine Email an admin@roymam.com</string>
     <string name="tutorial_step_1">Aktivieren Sie den \"Notifications Widget\" Dienst in den Bedienungshilfen</string>
     <string name="tutorial_step_2">Sperren Sie den Bildschirm und fügen Sie dem Sperrbildschirm das \"Notifications Widget\" hinzu</string>
     <string name="tutorial_step_3">Passen Sie Ihr \"Notifications Widget\" in den \"Einstellungen\" an</string>
-    <string name="tutorial_toast_1">Aktivieren Sie den \"Notifications Widget\" Dienst und kommen Sie zurück zum Assistenten</string>
-    <string name="tutorial_toast_2">Sie brauchen nur den Bildschirm sperren und das Widget hinzufügen</string>
+    <string name="tutorial_toast_1">Aktivieren Sie den \"Notifications Widget\"-Dienst und kehren Sie zurück zum Assistenten</string>
+    <string name="tutorial_toast_2">Sie müssen nur den Bildschirm sperren und das Widget hinzufügen</string>
     <string name="welcome_text">Willkommen zum Notifications Widget!\nSo wird es gemacht...</string>
     <string name="tutorial_step_1_title">Dienst aktivieren</string>
     <string name="tutorial_step_2_title">Widget hinzufügen</string>
     <string name="tutorial_step_3_title">Anpassen</string>
-
+    
     <!--  About Dialog -->
     <string name="about_title">NotificationsWidget</string>
-    <string name="about_subtitle">NotificationsWidget wurde entwickelt von Roymam\nGerman language support by robvisual</string>
+    <string name="about_subtitle">Notifications Widget wurde entwickelt von Roymam\nGerman language support by robvisual,philipsleder</string>
     <string name="about_content">Sie finden das Projekt hier:\nhttp://code.google.com/p/notifications-widget/\nFühlen Sie sich frei, sich am Projekt zu beteiligen und Fehler zu melden\n\nWenn Sie uns gerne finanziell unterstützen möchten, dann verweisen wir auf ein Spiel aus unserer Entwicklung:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
     <string name="about_contactus_title">Kontaktieren Sie uns</string>
@@ -98,21 +110,20 @@
 
     <!-- WidgetLocker -->
     <string name="widget_locker_not_installed">WidgetLocker ist nicht installiert</string>
-    <string name="widget_locker_not_installed_summary">Ihre Android Version ist kleiner als 4.2. Daher können Sie diese Software nur in Verbindung mit der kostenpflichtigen Sperrbildschirm-Ersatz-App \"WidgetLocker\" nutzen. Einige Funktionen können im Zusammenspiel mit WidgetLocker nicht funktionieren. Sie können das Widget auch auf dem Homescreen ohne Zusatzsoftware verwenden.</string>
+    <string name="widget_locker_not_installed_summary">Ihre Android-Version ist älter als 4.2. Daher können Sie diese Software nur in Verbindung mit der kostenpflichtigen Sperrbildschirm-Ersatz-App \"WidgetLocker\" nutzen. Einige Funktionen können im Zusammenspiel mit WidgetLocker nicht funktionieren. Sie können das Widget auch auf dem Homescreen ohne Zusatzsoftware verwenden.</string>
     <string name="widget_locker_purchase">WidgetLocker kaufen</string>
-    <string name="widget_locker_add_widget">Aktiviere WidgetLocker und füge NotificationsWidget als Widget Ihrem Sperrbildschirm hinzu</string>
-    <string name="no_widget_locker_add_widget">Füge NotificationsWidget als Widget dem Homescreen hinzu</string>
+    <string name="widget_locker_add_widget">Aktiviere WidgetLocker und füge Notifications Widget als Widget Ihrem Sperrbildschirm hinzu</string>
+    <string name="no_widget_locker_add_widget">Füge Notifications Widget als Widget dem Homescreen hinzu</string>
     
     <!--  Error Messages -->
-    <string name="failed_to_monitor_clear_button">Überwachung des \"Clear Notifications\" Button fehlgeschlagen</string>
-    
+    <string name="failed_to_monitor_clear_button">Überwachung des \"Lösche alle Benachrichtigungen\"-Buttons fehlgeschlagen</string>
     <!-- App specific settings -->
     <string name="app_specific_settings_title">Anwendungen</string>
     <string name="ignore_notifications">Ignoriere diese Anwendung</string>
     <string name="ignore_notifications_summary">Ignoriere alle Benachrichtigungen dieser Anwendung</string>
-    <string name="show_only_last_notification">Nu die letzt Benachrichtigung der Anwendung anzeigen</string>
-    <string name="show_only_last_notification_summary">Behält nur den letzten Benachrichtigungstext der Anwendung</string>
+    <string name="show_only_last_notification">Nur die neueste Benachrichtigung der Anwendung anzeigen</string>
+    <string name="show_only_last_notification_summary">Behält nur die neueste Benachrichtigung der Anwendung</string>
             <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Alle Einstellungen dieser Anwendung zurücksetzen</string>
-    <string name="no_apps">Es sind noch keine Anwendungsspezifischen Einstellungen vorhanden – um Einstellungen zu setzen, benutzen Sie einfach das Bleistiftsymbol im Widget. Damit gelangen Sie zu den individuellen Einstellungen für Benachrichtigungen der Anwendung.</string>
+    <string name="no_apps">Es sind noch keine anwendungsspezifischen Einstellungen vorhanden – um Einstellungen zu setzen, benutzen Sie einfach das Bleistiftsymbol im Widget. Damit gelangen Sie zu den individuellen Einstellungen für Benachrichtigungen der Anwendung.</string>
 </resources>

@@ -33,8 +33,7 @@
     <string name="collectonunlock">Collect when unlocked</string>
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
     <string name="disable_notification_click">Disable notification click</string>
-    <string name="disable_notification_click_summary">Do not allow clicking on notification to 
-        open it</string>
+    <string name="disable_notification_click_summary">Do not allow clicking on notification to open it</string>
     <string name="clockstyle">Clock style</string>
     <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>
@@ -62,7 +61,7 @@
 	    <item>Blue</item>	    	       
 	</string-array>
 	<string-array
-	    name="settings_colors_values">
+	    name="settings_colors_values" translatable="false">
 	    <item>17170443</item>
 	    <item>17170444</item>
 	    <item>17170432</item>
@@ -77,7 +76,7 @@
 	    <item>Hidden</item>
 	</string-array>
 	<string-array
-	    name="settings_clock_values">
+	    name="settings_clock_values" translatable="false">
 	    <item>small</item>
 	    <item>large</item>
 	    <item>auto</item>
@@ -88,7 +87,7 @@
         <item>Never</item>
         <item>On Edit Mode only</item>
     </string-array>
-    <string-array name="settings_buttons_values">
+    <string-array name="settings_buttons_values" translatable="false">
 	    <item>visible</item>
 	    <item>hidden</item>
 	    <item>editmode</item>
@@ -99,7 +98,7 @@
 	    <item>Large (original)</item>
 	</string-array>
 	<string-array
-	    name="settings_notifications_values">
+	    name="settings_notifications_values" translatable="false">
 	    <item>compact</item>
 	    <item>normal</item>
 	    <item>large</item>
