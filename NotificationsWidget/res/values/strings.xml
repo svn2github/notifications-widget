@@ -141,7 +141,7 @@
     <!--  Action Bar -->
     <string name="settings">Settings</string>
 	<string name="pin">Pin</string>
-	<string name="clear">Clear</string>
+	<string name="unpin">Unpin</string>
     
     <!-- App specific settings -->
 	<string name="app_specific_settings_title">App Specific Settings</string>

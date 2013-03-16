@@ -49,6 +49,7 @@ public class NotificationsService extends AccessibilityService
 	private boolean newNotificationsAvailable = false;
 	private boolean widgetLockerEnabled = false;
 	private int 	selectedIndex = -1;
+	private int 	firstUnpinned = 0;
 	private String clearButtonName = "Clear all notifications.";
 	
 	public int notification_image_id = 0;
@@ -331,8 +332,8 @@ public class NotificationsService extends AccessibilityService
 						
 						nd.normalNotification = createNormalNotification(nd);
 						nd.smallNotification = createSmallNotification(nd);
-						notifications.add(0,nd);
-				    	if (selectedIndex >= 0) selectedIndex++;
+						notifications.add(firstUnpinned,nd);						
+				    	if (selectedIndex >= firstUnpinned) selectedIndex++;
 						
 						// update widgets
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
@@ -642,15 +643,40 @@ public class NotificationsService extends AccessibilityService
 		this.stopForeground(true);
 	}
 
-	public List<NotificationData> getNotifications()
+	public int getNotificationsCount()
 	{
-		return notifications;
+		return notifications.size();
+	}
+	
+	public NotificationData getNotification(int i)
+	{
+		if (i>=0 && i<notifications.size())
+			return notifications.get(i);
+		else
+			return null;
+	}
+	
+	public void removeNotification(int i)
+	{
+		if (i>=0 && i<notifications.size())
+		{
+			if (!notifications.get(i).pinned)
+				notifications.remove(i);
+		}
 	}
 	
 	public void clearAllNotifications()
 	{
-		notifications.clear();
+		for(int i=notifications.size()-1; i>=firstUnpinned;i--)
+		{
+			notifications.remove(i);
+		}		
 		
+		updateWidget();			
+	}
+	
+	private void updateWidget() 
+	{
 		Context ctx = getApplicationContext();
 		AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
 		ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
@@ -660,9 +686,9 @@ public class NotificationsService extends AccessibilityService
         {
         	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
         }
-		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));		
 	}
-	
+
 	public void setDeviceIsUnlocked()
 	{
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false))
@@ -689,6 +715,27 @@ public class NotificationsService extends AccessibilityService
 	    stopProximityMontior();
 	    return super.onUnbind(intent);
 	}
+	
+	public void togglePinNotification(int pos)
+	{
+		if (pos >=0 && pos < notifications.size())
+		{
+			NotificationData n = notifications.get(pos);
+			if (!n.pinned)
+			{				
+				notifications.remove(n);
+				notifications.add(0,n);
+				selectedIndex=0;
+				n.pinned = true;
+				firstUnpinned++;
+			}
+			else
+			{
+				n.pinned = false;
+				firstUnpinned--;
+			}
+		}
+	}
 
 	public void launchNotification(int pos) 
 	{
@@ -697,19 +744,8 @@ public class NotificationsService extends AccessibilityService
 			try 
 			{
 				notifications.get(pos).action.send();
-				notifications.remove(pos);
-				
-				// update notifications list
-				AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
-				ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
-				int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-				
-				for (int i=0; i<widgetIds.length; i++) 
-		        {
-		        	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-		        }
-				sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));	
-			} catch (CanceledException e) 
+				removeNotification(pos);
+			} catch (Exception e) 
 			{
 				Toast.makeText(getApplicationContext(), "Cannot open notification", Toast.LENGTH_SHORT).show();
 			}
@@ -726,11 +762,13 @@ public class NotificationsService extends AccessibilityService
 		this.widgetLockerEnabled = widgetLockerEnabled;
 	}
 
-	public int getSelectedIndex() {
+	public int getSelectedIndex() 
+	{
 		return selectedIndex;
 	}
 
-	public void setSelectedIndex(int selectedIndex) {
+	public void setSelectedIndex(int selectedIndex) 
+	{
 		this.selectedIndex = selectedIndex;
 	}
 	

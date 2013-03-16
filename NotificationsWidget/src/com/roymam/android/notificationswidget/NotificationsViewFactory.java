@@ -53,8 +53,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		if (s != null) 
 		{
 		        // The service is running and connected.
-		        events = s.getNotifications();
-		        return(events.size());		        
+		        return(s.getNotificationsCount());		        
 		}
 		else
 		{
@@ -83,11 +82,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		NotificationsService s = NotificationsService.getSharedInstance();
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		if (s != null) 
-		{
-		    List<NotificationData> notifications = s.getNotifications();
-		    if (notifications.size()>0 && position < notifications.size())
+		{		   
+		    if (s.getNotificationsCount() >0 && position < s.getNotificationsCount())
 		    {
-		    	NotificationData n = notifications.get(position);
+		    	NotificationData n = s.getNotification(position);
 		    	
 		    	// set on click intent 
 				Intent i=new Intent();
@@ -140,7 +138,17 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				
 				styleView.setTextColor(R.id.notificationText, textColor);
 				styleView.setTextColor(R.id.notificationTime, timeColor);
-				styleView.setTextColor(R.id.notificationCount, textColor);				
+				styleView.setTextColor(R.id.notificationCount, textColor);	
+				if (n.pinned)
+				{
+					styleView.setViewVisibility(R.id.pinIcon, View.VISIBLE);
+					styleView.setViewVisibility(R.id.notificationCount, View.GONE);
+				}
+				else
+				{
+					styleView.setViewVisibility(R.id.pinIcon, View.GONE);	
+					styleView.setViewVisibility(R.id.notificationCount, View.VISIBLE);
+				}
 								
 				// set action bar intent
 				Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
@@ -149,7 +157,6 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				styleView.setOnClickPendingIntent(
 						iconId, 
 						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE*10+position, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-
 				
 		    }
 		}	
@@ -194,7 +201,19 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 		actionBar.setOnClickPendingIntent(
 				R.id.actionClear, 
-				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION*10+position, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    			
+				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION*10+position, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+		
+		// hide clear button for pinned notifications
+		if (NotificationsService.getSharedInstance().getNotification(position).pinned)
+		{
+			actionBar.setViewVisibility(R.id.actionClear, View.GONE);	
+			actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.unpin));			
+		}
+		else
+		{
+			actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
+			actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));			
+		}
 	}
 
 	@Override

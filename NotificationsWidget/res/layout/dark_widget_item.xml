@@ -27,14 +27,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
             android:orientation="vertical" >
-</LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/actionbarContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0.1"
             android:orientation="vertical" >
-
         </LinearLayout>
 
 </LinearLayout>       

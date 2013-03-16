@@ -124,7 +124,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	{
     		if (ns != null)
     	    {
-    	    	ns.getNotifications().clear();
+    	    	ns.clearAllNotifications();
     	    	ns.setSelectedIndex(-1);
     	    	updateWidget(ctx,true);
     	    }
@@ -190,12 +190,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     				else
     					ns.setSelectedIndex(-1);
     			}
-	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotifications().size())
+	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
 	    		{	    			
-	    				ns.getNotifications().remove(pos);
+	    				ns.removeNotification(pos);
 	    				ns.setSelectedIndex(-1);
 	    		}
-	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotifications().size())
+	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
 	    		{
 	    			Intent appSettingsIntent = new Intent(ctx, AppSettingsActivity.class);
 	    			appSettingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -204,9 +204,9 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 					appSettingsIntent.putExtras(settingsExtras);					
 	    			ctx.startActivity(appSettingsIntent);
 	    		}
-	    		else if (action == PIN_ACTION && pos >= 0 && pos < ns.getNotifications().size())
+	    		else if (action == PIN_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
 	    		{
-	    			//TODO
+	    			ns.togglePinNotification(pos);
 	    		}	    		
 	    		updateWidget(ctx,true);
     		}
@@ -326,7 +326,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	        	    
     	    if (ns!=null)
     	    {
-    	    	notificationsCount = ns.getNotifications().size();    	    	
+    	    	notificationsCount = ns.getNotificationsCount();    	    	
     	    }
     	    
     	    if (!prefs.getBoolean(SettingsActivity.DISABLE_NOTIFICATION_CLICK, false))

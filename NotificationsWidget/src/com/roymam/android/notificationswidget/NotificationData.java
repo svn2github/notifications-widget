@@ -13,6 +13,7 @@ public class NotificationData
 	String	packageName;
 	PendingIntent action;
 	int 	count;
+	boolean pinned = false;
 	
 	// indicator for content view
 	boolean hasTime = false;

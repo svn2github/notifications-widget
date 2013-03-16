@@ -27,6 +27,13 @@
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
+            <ImageView
+                android:id="@+id/pinIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_weight="0.0"
+                android:src="@drawable/pin" />
+
             <TextView
                 android:id="@+id/notificationTime"
                 android:layout_width="wrap_content"
