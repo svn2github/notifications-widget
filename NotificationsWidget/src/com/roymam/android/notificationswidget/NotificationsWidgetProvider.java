@@ -52,8 +52,11 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static String NOTIFICATION_INDEX = "com.roymam.android.notificationswidget.notification_index";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
-    public static String SWITCH_TO_EDIT_MODE = "com.roymam.android.notificationswidget.switchmode";
     public static String PERFORM_ACTION = "com.roymam.android.notificationswidget.performaction";
+    public static int ACTIONBAR_TOGGLE = 0;
+    public static int CLEAR_ACTION = 1;
+    public static int PIN_ACTION = 3;
+    public static int SETTINGS_ACTION = 2;
     
     public static boolean widgetActive = false;
     
@@ -113,7 +116,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	
 	@Override
     public void onReceive(Context ctx, Intent intent) 
-    {    
+    {  
+		//Toast.makeText(ctx, intent.getAction()+":"+intent.getIntExtra(NOTIFICATION_INDEX, -1), Toast.LENGTH_LONG).show();
 		NotificationsService ns = NotificationsService.getSharedInstance();
 	    
     	if (intent.getAction().equals(CLEAR_ALL))
@@ -121,7 +125,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		if (ns != null)
     	    {
     	    	ns.getNotifications().clear();
-    	    	ns.setEditMode(false);
+    	    	ns.setSelectedIndex(-1);
     	    	updateWidget(ctx,true);
     	    }
     	}
@@ -143,7 +147,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		if (ns != null)
     		{
     			ns.setDeviceIsUnlocked();
-				ns.setEditMode(false);
+				ns.setSelectedIndex(-1);
 				ns.setWidgetLockerEnabled(true);
     		}
     	}
@@ -168,35 +172,30 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     			if (!ns.isWidgetLockerEnabled())
     			{
     				ns.setDeviceIsUnlocked();
-    				ns.setEditMode(false);
+    				ns.setSelectedIndex(-1);
     			}
     		}
     	}
-    	else if (intent.getAction().startsWith(PERFORM_ACTION))
+    	else if (intent.getAction().equals(PERFORM_ACTION))
     	{   
-    		//int pos=intent.getIntExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,-1);
-    		String s = intent.getAction().substring(PERFORM_ACTION.length());
-    		int pos = Integer.parseInt(s);
+    		int pos = intent.getIntExtra(NOTIFICATION_INDEX, -1);
     		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,-1);
-    		
+    		    		
     		if (ns!=null)
     		{
-    			if (action == 0)
+    			if (action == ACTIONBAR_TOGGLE)
     			{
     				if (pos != ns.getSelectedIndex())
     					ns.setSelectedIndex(pos);
     				else
     					ns.setSelectedIndex(-1);
     			}
-	    		if (action == 1 && pos >= 0 && pos < ns.getNotifications().size())
+	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotifications().size())
 	    		{	    			
 	    				ns.getNotifications().remove(pos);
-	    				if (ns.getNotifications().size()==0)
-	    				{
-	    					ns.setEditMode(false);
-	    				}
+	    				ns.setSelectedIndex(-1);
 	    		}
-	    		else if (action == 2 && pos >= 0 && pos < ns.getNotifications().size())
+	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotifications().size())
 	    		{
 	    			Intent appSettingsIntent = new Intent(ctx, AppSettingsActivity.class);
 	    			appSettingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -204,44 +203,14 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 					settingsExtras.putString(AppSettingsActivity.EXTRA_PACKAGE_NAME, intent.getStringExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME));
 					appSettingsIntent.putExtras(settingsExtras);					
 	    			ctx.startActivity(appSettingsIntent);
-	    			ns.setEditMode(false);
 	    		}
-	    		else
+	    		else if (action == PIN_ACTION && pos >= 0 && pos < ns.getNotifications().size())
 	    		{
-	    			ns.setEditMode(false);
-	    		}
+	    			//TODO
+	    		}	    		
 	    		updateWidget(ctx,true);
     		}
-    	}
-    	else if (intent.getAction().equals(SWITCH_TO_EDIT_MODE))
-    	{   
-    		if (ns!=null)
-    		{
-	    		// switch mode
-    			boolean editMode = ns.isEditMode();
-	    		if (!editMode)
-	    		{
-	    			editMode = true;
-	    		}
-	    		else
-	    		{
-	    			editMode = false;
-	    		}
-	    		
-				// update notifications view
-				ns.setEditMode(editMode);
-				
-				AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
-				ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
-				int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-				
-				for (int i=0; i<widgetIds.length; i++) 
-	            {
-					AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-	            }
-				onUpdate(ctx, widgetManager, widgetIds);		
-    		}
-    	}
+    	}    	
     	super.onReceive(ctx, intent);
     }
 	
@@ -347,29 +316,20 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		    Intent settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
 	    	widget.setOnClickPendingIntent(R.id.serviceInactiveButton, 
 	    			  PendingIntent.getActivity(ctxt, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-		     
-	    	Intent editModeIntent = new Intent(NotificationsWidgetProvider.SWITCH_TO_EDIT_MODE);
-	    	widget.setOnClickPendingIntent(R.id.editMode, 
-	    			  PendingIntent.getBroadcast(ctxt, 0, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-		     
+		     	    	
     	    // hide clock if required
     	    String clockstyle = prefs.getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);					
-    	    Boolean showEditButton = prefs.getBoolean(SettingsActivity.SHOW_EDIT_BUTTON, true);
     	    String clearButtonMode = prefs.getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible");					
     	   
     	    int notificationsCount = 0;
     	    String notifiationsStyle = prefs.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
-    	    
-    	    boolean editMode = false;
+    	        	    
     	    if (ns!=null)
     	    {
-    	    	notificationsCount = ns.getNotifications().size();
-    	    	
-    	    	// register click event on list
-        	    editMode = ns.isEditMode();
+    	    	notificationsCount = ns.getNotifications().size();    	    	
     	    }
     	    
-    	    if (!editMode && !prefs.getBoolean(SettingsActivity.DISABLE_NOTIFICATION_CLICK, false))
+    	    if (!prefs.getBoolean(SettingsActivity.DISABLE_NOTIFICATION_CLICK, false))
     	    {
     	    	Intent clickIntent=new Intent(ctxt, NotificationActivity.class);
     	    	PendingIntent clickPI=PendingIntent.getActivity(ctxt, 0,
@@ -405,13 +365,11 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
         	    widget.setViewVisibility(R.id.smallClock, View.GONE);
         	    widget.setViewVisibility(R.id.bigClock, View.GONE);
     	    }
-    	    widget.setViewVisibility(R.id.clearButton, (clearButtonMode.equals("visible") || clearButtonMode.equals("editmode") && editMode)?View.VISIBLE:View.GONE); 
-    	    widget.setViewVisibility(R.id.editMode, showEditButton.booleanValue()?View.VISIBLE:View.GONE); 
-
+    	    widget.setViewVisibility(R.id.clearButton, (clearButtonMode.equals("visible"))?View.VISIBLE:View.GONE); 
+    	    
     	    // hide clear button if no notifications are displayed
     	    if (notificationsCount == 0)
     	    	{
-	    	    	widget.setViewVisibility(R.id.editMode, View.GONE);   
 	    	    	widget.setViewVisibility(R.id.clearButton, View.GONE);   
 				  	if (ns==null )
 				  	{

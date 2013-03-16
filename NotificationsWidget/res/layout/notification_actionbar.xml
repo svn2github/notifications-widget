@@ -5,17 +5,9 @@
     android:layout_height="28dp"
     android:layout_weight="0"
     android:orientation="horizontal" >
-	
-	    <ImageButton
-	        android:id="@+id/clearNotification"
-	        style="@android:style/Holo.ButtonBar"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:background="@drawable/item_selector"
-	        android:src="@drawable/item_selector" />
 
 	    <Button
-	        android:id="@+id/appOptions"
+	        android:id="@+id/actionSettings"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="0.5"
@@ -27,7 +19,7 @@
 	        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	    <Button
-	        android:id="@+id/pinNotification"
+	        android:id="@+id/actionPin"
 	        style="android:buttonStyle"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -38,14 +30,11 @@
 	        android:text="@string/pin"
 	        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	    <Button
-	        android:id="@+id/ClearNotification"
+	    <ImageButton
+	        android:id="@+id/actionClear"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:background="@drawable/item_selector"
-	        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
-	        android:gravity="left|center_vertical"
-	        android:text="@string/clear"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
 	</LinearLayout>

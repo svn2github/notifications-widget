@@ -126,8 +126,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.setTextColor(R.id.compactText , Resources.getSystem().getColor(textColor));
 				row.setTextColor(R.id.compactTime, Resources.getSystem().getColor(timeColor));
 				
+				// prepare action bar
 				row.removeAllViews(R.id.actionbarContainer);
-				row.addView(R.id.actionbarContainer, new RemoteViews(ctxt.getPackageName(),R.layout.notification_actionbar));				
+				RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.notification_actionbar);
+				row.addView(R.id.actionbarContainer, actionBar);	
+				
 				if (s.getSelectedIndex() == position)
 				{
 					row.setViewVisibility(R.id.actionbarContainer, View.VISIBLE);
@@ -137,76 +140,61 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					row.setViewVisibility(R.id.actionbarContainer, View.GONE);
 				}
 				
-				row.removeAllViews(R.id.largeNotification);
-				row.addView(R.id.largeNotification, n.notificationContent);				
-				
+				// set app settings intent
+				Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+				appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
+				appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
+				appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+				actionBar.setOnClickPendingIntent(
+						R.id.actionSettings, 
+						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION*10+position, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+
+				// set pin notification intent
+				Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+				pinIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.PIN_ACTION);
+				pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+				actionBar.setOnClickPendingIntent(
+						R.id.actionPin, 
+						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION*10+position, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+
+				// set clear notification intent
+				Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+				clearIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.CLEAR_ACTION);
+				clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+				actionBar.setOnClickPendingIntent(
+						R.id.actionClear, 
+						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION*10+position, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+											
+				// set notification style
 				String notStyle = preferences.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
+				RemoteViews styleView;
 				if (notStyle.equals("large"))
 				{
-					row.setViewVisibility(R.id.largeNotification, View.VISIBLE);
-					try
-					{
-						if (n.layoutId != 0)
-						{
-							n.notificationContent.setInt(n.layoutId , "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
-							if (n.title != null) n.notificationContent.setTextColor(android.R.id.title, Resources.getSystem().getColor(textColor));
-							if (n.details != null) 
-								{
-									n.notificationContent.setTextColor(16908358, Resources.getSystem().getColor(textColor));
-								}
-							if (n.info != null) n.notificationContent.setTextColor(16909082, Resources.getSystem().getColor(textColor));
-							if (n.time != null) n.notificationContent.setTextColor(16908388, Resources.getSystem().getColor(timeColor));
-						}
-					}
-					catch (Exception exp)
-					{
-						
-					}
-					//row.setFloat(R.id.largeNotification, "setAlpha", (float) opacity / 100.0f);
-					row.setViewVisibility(R.id.smallNotification, View.GONE);
-					row.setViewVisibility(R.id.compactNotification, View.GONE);
+					styleView = n.notificationExpandedContent;
 				}
 				else if (notStyle.equals("normal"))
 				{
-					row.removeAllViews(R.id.notificationContainer);
-					row.addView(R.id.notificationContainer, n.normalNotification);
-					Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION+position);
-					editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,0);			    							
-					//editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
-			    	n.normalNotification.setOnClickPendingIntent(R.id.notificationIcon, PendingIntent.getBroadcast(ctxt, 0, editModeIntent, PendingIntent.FLAG_ONE_SHOT));			    	
-					//row.setViewVisibility(R.id.largeNotification, View.GONE);
-					//row.setViewVisibility(R.id.smallNotification, View.VISIBLE);
-					//row.setViewVisibility(R.id.compactNotification, View.GONE);
+					styleView = n.normalNotification;
 				}
 				else
 				{
-					row.setViewVisibility(R.id.largeNotification, View.GONE);
-					row.setViewVisibility(R.id.smallNotification, View.GONE);
-					row.setViewVisibility(R.id.compactNotification, View.VISIBLE);					
+					// TODO - change to compact view
+					styleView = n.normalNotification;				
 				}
 				
-				if (s.isEditMode())
-				{
-					//row.setViewVisibility(R.id.notification_actionbar, View.VISIBLE);
-				}
-				else
-				{
-					//row.setViewVisibility(R.id.notification_actionbar, View.GONE);
-				}
-				Intent clearActionIntent=new Intent();
-				Bundle clearExtras=new Bundle();			
-				clearExtras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
-				clearExtras.putInt(NotificationsWidgetProvider.PERFORM_ACTION,1);
-				clearActionIntent.putExtras(clearExtras);
-				row.setOnClickFillInIntent(R.id.clearNotification, clearActionIntent);
+				// add style view
+				row.removeAllViews(R.id.notificationContainer);
+				row.addView(R.id.notificationContainer, styleView);
 				
-				Intent appSettingsActionIntent=new Intent();
-				Bundle settingsExtras=new Bundle();			
-				settingsExtras.putString(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
-				settingsExtras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
-				settingsExtras.putInt(NotificationsWidgetProvider.PERFORM_ACTION,2);
-				appSettingsActionIntent.putExtras(settingsExtras);
-				row.setOnClickFillInIntent(R.id.appOptions, appSettingsActionIntent);
+				// set action bar intent
+				Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+				editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.ACTIONBAR_TOGGLE);
+				editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+				styleView.setOnClickPendingIntent(
+						R.id.notificationIcon, 
+						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE*10+position, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+
+				
 		    }
 		}	
 		return(row);

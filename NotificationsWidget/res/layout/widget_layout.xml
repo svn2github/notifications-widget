@@ -164,17 +164,6 @@
                     android:visibility="gone" />
 
                 <ImageButton
-                    android:id="@+id/editMode"
-                    style="@android:style/Holo.ButtonBar"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/item_selector"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/content_edit"
-                    android:visibility="gone" />
-
-                <ImageButton
                     android:id="@+id/clearButton"
                     android:layout_width="24dp"
                     android:layout_height="24dp"

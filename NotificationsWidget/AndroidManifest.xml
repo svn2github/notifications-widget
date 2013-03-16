@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="82"
-    android:versionName="0.8" >
+    android:versionCode="84"
+    android:versionName="0.9dev1" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -39,15 +39,22 @@
         <!-- The widget provider -->
         <receiver android:name="com.roymam.android.notificationswidget.NotificationsWidgetProvider" >
             <intent-filter>
+                <!--  widget add/remove events -->
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                
+                <!--  locking/unlocking device -->
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="com.teslacoilsw.widgetlocker.intent.LOCKED"/>
                 <action android:name="com.teslacoilsw.widgetlocker.intent.UNLOCKED"/>
+                
+                <!--  WidgetLocker integration -->
                 <action android:name="com.teslacoilsw.widgetlocker.ENABLE"/>
 				<action android:name="com.teslacoilsw.widgetlocker.DISABLE"/>
+				
+				<!--  internal actions -->
                 <action android:name="com.roymam.android.notificationswidget.update_clock" />
                 <action android:name="com.roymam.android.notificationswidget.switchmode" />
                 <action android:name="com.roymam.android.notificationswidget.performaction" />

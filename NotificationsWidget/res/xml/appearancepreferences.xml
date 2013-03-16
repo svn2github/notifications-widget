@@ -18,12 +18,7 @@
     	    android:summary="@string/showclearbutton_summary" 
     	    android:key="showclearbutton" 
     	    android:title="@string/showclearbutton" 
-    	    android:defaultValue="true"/> -->  
-    	<CheckBoxPreference 
-    	    android:summary="@string/showeditbutton_summary" 
-    	    android:key="showeditbutton" 
-    	    android:title="@string/showeditbutton" 
-    	    android:defaultValue="true"/>      	    		
+    	    android:defaultValue="true"/> -->      	     	    		
     </PreferenceCategory>
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
           	

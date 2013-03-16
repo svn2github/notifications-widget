@@ -42,8 +42,6 @@
     <string name="clockstyle_summary">Kleine, große oder versteckte Uhr</string>
     <string name="showclearbutton">Zeige Lösch-Icon</string>
     <string name="showclearbutton_summary">Zeigt ein Icon auf dem Widget, mit dem man alle Benachrichtigungen löschen kann</string>
-    <string name="showeditbutton">Zeige Bearbeitungs-Icon</string>
-    <string name="showeditbutton_summary">Zeigt ein Icon auf dem Widget, das eine Bearbeitung des Benachrichtigungen ermöglicht</string>
     <string name="notification_bg_opacity">Hintergrundtransparenz</string>
     <string name="notification_bg_opacity_summary">Transparenz des Hintergrunds der Benachrichtigungen einstellen</string>
     <string name="notification_text_color">Farbe des Benachrichtigungstexts</string>
@@ -72,8 +70,7 @@
         </string-array>           
     <string-array name="settings_buttons_entries">
         <item>immer</item>
-        <item>nie</item>
-        <item>nur im Bearbeitungsmodus</item>
+        <item>nie</item>        
     </string-array>
         <string-array name="settings_notifications_entries">
             <item>kompakt</item>
@@ -125,5 +122,6 @@
     <string name="show_only_last_notification_summary">Behält nur die neueste Benachrichtigung der Anwendung</string>
             <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Alle Einstellungen dieser Anwendung zurücksetzen</string>
-    <string name="no_apps">Es sind noch keine anwendungsspezifischen Einstellungen vorhanden – um Einstellungen zu setzen, benutzen Sie einfach das Bleistiftsymbol im Widget. Damit gelangen Sie zu den individuellen Einstellungen für Benachrichtigungen der Anwendung.</string>
+    <!--  TODO - update translation for this  -->
+    <string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>
 </resources>

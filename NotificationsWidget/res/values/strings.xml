@@ -38,8 +38,6 @@
     <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>
     <string name="showclearbutton_summary">Show \"clear all notifications\" button in the clock bar</string>
-    <string name="showeditbutton">Show Edit Mode button</string>
-    <string name="showeditbutton_summary">Show \"Edit Mode\" button in the clock bar, Edit Mode allows you to clear individual notifications</string>
     <string name="notification_bg_opacity">Notification background opacity</string>
     <string name="notification_bg_opacity_summary">Set the opacity of the notification background</string>
     <string name="notification_text_color">Notification text color</string>
@@ -83,14 +81,12 @@
 	    <item>hidden</item>
 	</string-array>	   
     <string-array name="settings_buttons_entries">
-        <item>Always</item>
-        <item>Never</item>
-        <item>On Edit Mode only</item>
+        <item>Visible</item>
+        <item>Hidden</item>
     </string-array>
     <string-array name="settings_buttons_values" translatable="false">
 	    <item>visible</item>
 	    <item>hidden</item>
-	    <item>editmode</item>
 	</string-array>
 	<string-array name="settings_notifications_entries">
 	    <item>Compact</item>
@@ -157,5 +153,5 @@
 	<string name="extract_expanded_text_summary">Try to use the expanded text from the notification if available</string>
 			<string name="clear_app_settings">Reset</string>
 	<string name="clear_app_summary">Clear app specific settings for this app</string>
-	<string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, switch to Edit Mode on the notifications widget, and use the wrench tool near the wanted notification</string>
+	<string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>
 </resources>

@@ -42,7 +42,6 @@ public class NotificationsService extends AccessibilityService
 	private boolean deviceIsUnlocked = true;
 	private boolean deviceCovered = false;
 	private boolean newNotificationsAvailable = false;
-	private boolean editMode =  false;
 	private boolean widgetLockerEnabled = false;
 	private int 	selectedIndex = -1;
 	private String clearButtonName = "Clear all notifications.";
@@ -611,16 +610,6 @@ public class NotificationsService extends AccessibilityService
 	public void setDeviceIsLocked()
 	{
 		deviceIsUnlocked = false;
-	}
-	
-	public void setEditMode(boolean mode)
-	{
-		editMode = mode;
-	}
-	
-	public boolean isEditMode()
-	{
-		return editMode;
 	}
 	
 	@Override
