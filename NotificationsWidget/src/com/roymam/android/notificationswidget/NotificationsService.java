@@ -15,6 +15,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -199,8 +200,7 @@ public class NotificationsService extends AccessibilityService
 		{
 			// handle only dismissable notifications
 			if (!((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) &&
-				!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) && 
-				 n.tickerText != null)
+				!((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT))
 			{
 				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 				boolean isScreenOn = false;
@@ -262,7 +262,22 @@ public class NotificationsService extends AccessibilityService
 							}
 						}
 						
-						nd.text = n.tickerText.toString();
+						if (n.tickerText != null)
+						{
+							nd.text = n.tickerText.toString();
+						}
+						else
+						{
+							ApplicationInfo ai;
+							try 
+							{
+								ai = getPackageManager().getApplicationInfo(packageName, 0);
+								nd.text = getPackageManager().getApplicationLabel(ai).toString();
+							} catch (NameNotFoundException e) 
+							{
+								nd.text = packageName;
+							}							
+						}
 						if (n.when != 0)
 							nd.received = n.when;
 						else
@@ -277,7 +292,7 @@ public class NotificationsService extends AccessibilityService
 						{
 							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 							ViewGroup localView = (ViewGroup) inflater.inflate(nd.originalNotification.getLayoutId(), null);
-							nd.originalNotification.reapply(getApplicationContext(), localView);
+							//nd.originalNotification.reapply(getApplicationContext(), localView);
 							nd.layoutId = localView.getId();							
 							nd.hasTime = (localView.findViewById(16908388) != null);
 							nd.hasTitle = (localView.findViewById(notification_title_id) != null);
@@ -422,7 +437,7 @@ public class NotificationsService extends AccessibilityService
 	}	
 		
 	private void detectNotificationIds()
-	{
+	{		
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
 	    .setSmallIcon(R.drawable.appicon)
 	    .setContentTitle("1")
@@ -482,13 +497,27 @@ public class NotificationsService extends AccessibilityService
 		String text = null;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 		{		
-			if (n.bigContentView != null)
+			RemoteViews view = n.bigContentView;
+			
+			if (n.bigContentView == null)
+			{
+				view = n.contentView;
+			}	
+			boolean hasParsableContent = true;
+			ViewGroup localView = null;
+			try
 			{
 				LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
-				n.bigContentView.reapply(getApplicationContext(), localView);
-				View v;		
-				
+				localView = (ViewGroup) inflater.inflate(view.getLayoutId(), null);
+				view.reapply(getApplicationContext(), localView);
+			}
+			catch (Exception exp)
+			{
+				hasParsableContent = false;				
+			}
+			if (hasParsableContent)
+			{
+				View v;						
 				// try to get big text				
 				v = localView.findViewById(big_notification_content_text);
 				if (v != null && v instanceof TextView)
@@ -548,14 +577,13 @@ public class NotificationsService extends AccessibilityService
 							text = s;
 						}
 					}
-				}
+				}	
 			}
-		}
-		
-		if (text!=null)
-		{
-			nd.text = text;
-			nd.originalNotification = n.bigContentView;
+			if (text!=null)
+			{
+				nd.text = text;
+				nd.originalNotification = n.bigContentView;
+			}
 		}
 	}
 	
