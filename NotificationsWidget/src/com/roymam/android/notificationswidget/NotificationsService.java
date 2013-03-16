@@ -19,6 +19,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -27,10 +28,13 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,24 +50,17 @@ public class NotificationsService extends AccessibilityService
 	private int 	selectedIndex = -1;
 	private String clearButtonName = "Clear all notifications.";
 	
-	private int notification_title_id = 0;
-	private int notification_text_id = 0;
-	private int notification_info_id = 0;
-	private int notification_subtext_id = 0;
-	private int big_notification_summary_id = 0;
-	private int big_notification_content_title = 0;
-	private int big_notification_content_text = 0;
-	private int inbox_notification_event_1_id = 0;
-	private int inbox_notification_event_2_id = 0;
-	private int inbox_notification_event_3_id = 0;
-
-	/*private final int CONTENT_TEXT_ID = 16908309;
-	private final int CONTENT_SUBTEXT_ID = 16908358;
-	private final int CONTENT_INFO_ID = 16909095;	
-	private final int EXPANDED_LINE_1_ID = 16909100;
-	private final int EXPANDED_LINE_2_ID = 16909101;
-	private final int EXPANDED_LINE_3_ID = 16909103;
-	private final int BIG_TEXT_ID = 16909096;*/
+	public int notification_image_id = 0;
+	public int notification_title_id = 0;
+	public int notification_text_id = 0;
+	public int notification_info_id = 0;
+	public int notification_subtext_id = 0;
+	public int big_notification_summary_id = 0;
+	public int big_notification_content_title = 0;
+	public int big_notification_content_text = 0;
+	public int inbox_notification_event_1_id = 0;
+	public int inbox_notification_event_2_id = 0;
+	public int inbox_notification_event_3_id = 0;
 
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
@@ -132,10 +129,7 @@ public class NotificationsService extends AccessibilityService
 		keepOnForeground();
 		
 		// detect expanded notification id's 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-		{
-			detectNotificationIds();
-		}
+		detectNotificationIds();		
 	}	
 	
 	// Proximity Sensor Monitoring
@@ -276,26 +270,21 @@ public class NotificationsService extends AccessibilityService
 						nd.action = n.contentIntent;
 						nd.count = 1;
 						nd.packageName = packageName;
-						nd.notificationContent = n.contentView;
+						nd.originalNotification = n.contentView;
 						
-						//nd.notificationExpandedContent = n.bigContentView;
-						
-						// try to extract extra content from view
+						// find layout background id
 						try
 						{
 							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-							ViewGroup localView = (ViewGroup) inflater.inflate(nd.notificationContent.getLayoutId(), null);
-							nd.notificationContent.reapply(getApplicationContext(), localView);
-							nd.layoutId = localView.getId();
-							
-							View tv = localView.findViewById(android.R.id.title);
-							if (tv != null && tv instanceof TextView) nd.title = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(notification_subtext_id);
-							if (tv != null && tv instanceof TextView) nd.subtext = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(notification_info_id);
-							if (tv != null && tv instanceof TextView) nd.info = ((TextView) tv).getText().toString();
-							tv = localView.findViewById(16908388);
-							if (tv != null && tv instanceof TextView) nd.time = ((TextView) tv).getText().toString();
+							ViewGroup localView = (ViewGroup) inflater.inflate(nd.originalNotification.getLayoutId(), null);
+							nd.originalNotification.reapply(getApplicationContext(), localView);
+							nd.layoutId = localView.getId();							
+							nd.hasTime = (localView.findViewById(16908388) != null);
+							nd.hasTitle = (localView.findViewById(notification_title_id) != null);
+							nd.hasSubtitle = (localView.findViewById(notification_subtext_id) != null);
+							nd.hasText = (localView.findViewById(notification_text_id) != null);
+							nd.hasBigText = (localView.findViewById(big_notification_content_text) != null);
+							nd.hasImage = (localView.findViewById(notification_image_id) != null);
 						}
 						catch (Exception exp)
 						{
@@ -325,12 +314,8 @@ public class NotificationsService extends AccessibilityService
 							nd.count = dup.count+1;						
 						}
 						
-						// create remoteview for normal notification
-						nd.normalNotification = new RemoteViews(getPackageName(), R.layout.normal_notification);
-						nd.normalNotification.setImageViewBitmap(R.id.notificationIcon, nd.icon);
-						nd.normalNotification.setImageViewBitmap(R.id.appIcon, nd.appicon);
-						nd.normalNotification.setTextViewText(R.id.notificationText, nd.text);
-						nd.normalNotification.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));
+						nd.normalNotification = createNormalNotification(nd);
+						nd.smallNotification = createSmallNotification(nd);
 						notifications.add(0,nd);
 				    	if (selectedIndex >= 0) selectedIndex++;
 						
@@ -350,6 +335,42 @@ public class NotificationsService extends AccessibilityService
 		}
 	}	
 	
+	private RemoteViews createNormalNotification(NotificationData nd) 
+	{
+		// create remoteview for normal notification
+		RemoteViews n = new RemoteViews(getPackageName(), R.layout.normal_notification);
+		
+		n.setImageViewBitmap(R.id.notificationIcon, nd.icon);
+		n.setImageViewBitmap(R.id.appIcon, nd.appicon);
+		n.setTextViewText(R.id.notificationText, nd.text);
+		if (nd.count > 1)
+			n.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));
+    	else
+    		n.setTextViewText(R.id.notificationCount, null);
+		Time t = new Time();
+    	t.set(nd.received);
+    	String timeFormat = "%H:%M";
+    	if (!DateFormat.is24HourFormat(this)) timeFormat = "%l:%M%P";
+    	n.setTextViewText(R.id.notificationTime, t.format(timeFormat));	
+    	
+    	return n;
+	}
+	
+	private RemoteViews createSmallNotification(NotificationData nd) 
+	{
+		// create remoteview for small notification
+		RemoteViews n = new RemoteViews(getPackageName(), R.layout.compact_notification);
+		
+		n.setImageViewBitmap(R.id.notificationIcon, nd.appicon);
+		n.setTextViewText(R.id.notificationText, nd.text);
+		Time t = new Time();
+    	t.set(nd.received);
+    	String timeFormat = "%H:%M";
+    	if (!DateFormat.is24HourFormat(this)) timeFormat = "%l:%M%P";
+    	n.setTextViewText(R.id.notificationTime, t.format(timeFormat));	    	
+    	return n;
+	}
+
 	private void turnScreenOn() 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -388,10 +409,18 @@ public class NotificationsService extends AccessibilityService
 				else if (text.equals("9")) inbox_notification_event_2_id = id;
 				else if (text.equals("10")) inbox_notification_event_3_id = id;
 			}
+			else if (child instanceof ImageView)
+			{
+				Drawable d = ((ImageView)child).getDrawable();
+				if (d!=null)
+				{
+					this.notification_image_id = child.getId();
+				}
+			}
+				
 		}
-	}
-	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	}	
+		
 	private void detectNotificationIds()
 	{
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
@@ -400,42 +429,50 @@ public class NotificationsService extends AccessibilityService
 	    .setContentText("2")
 	    .setContentInfo("3")
 	    .setSubText("4");
-		
-		NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
-		bigtextstyle.setSummaryText("5");
-		bigtextstyle.setBigContentTitle("6");
-		bigtextstyle.bigText("7");
 
-		mBuilder.setStyle(bigtextstyle);
-
-		NotificationManager mNotificationManager =
-        	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification n = mBuilder.build();
 				
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		ViewGroup localView;
+	
+		// detect id's from normal view
+		localView = (ViewGroup) inflater.inflate(n.contentView.getLayoutId(), null);
+		n.contentView.reapply(getApplicationContext(), localView);
+		recursiveDetectNotificationsIds(localView);
+		
+		// detect id's from expanded views		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) 
+		{
+			NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+			bigtextstyle.setSummaryText("5");
+			bigtextstyle.setBigContentTitle("6");
+			bigtextstyle.bigText("7");
+
+			mBuilder.setStyle(bigtextstyle);
+			detectExpandedNotificationsIds(mBuilder.build());
+			
+			NotificationCompat.InboxStyle inboxStyle =
+			        new NotificationCompat.InboxStyle();
+			String[] events = {"8","9","10"};
+			inboxStyle.setBigContentTitle("6");
+			inboxStyle.setSummaryText("5");
+			
+			for (int i=0; i < events.length; i++) 
+			{	
+			    inboxStyle.addLine(events[i]);
+			}
+			mBuilder.setStyle(inboxStyle);
+			
+			detectExpandedNotificationsIds(mBuilder.build());			
+		}
+	}
+	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void detectExpandedNotificationsIds(Notification n)
+	{
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
 		n.bigContentView.reapply(getApplicationContext(), localView);
-		
-		recursiveDetectNotificationsIds(localView);
-
-		NotificationCompat.InboxStyle inboxStyle =
-		        new NotificationCompat.InboxStyle();
-		String[] events = {"8","9","10"};
-		inboxStyle.setBigContentTitle("6");
-		inboxStyle.setSummaryText("5");
-		
-		for (int i=0; i < events.length; i++) 
-		{	
-		    inboxStyle.addLine(events[i]);
-		}
-		mBuilder.setStyle(inboxStyle);
-		
-		n = mBuilder.build();
-				
-		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
-		n.bigContentView.reapply(getApplicationContext(), localView);
-
 		recursiveDetectNotificationsIds(localView);
 	}
 	
@@ -518,7 +555,7 @@ public class NotificationsService extends AccessibilityService
 		if (text!=null)
 		{
 			nd.text = text;
-			nd.notificationContent = n.bigContentView;
+			nd.originalNotification = n.bigContentView;
 		}
 	}
 	
@@ -619,6 +656,7 @@ public class NotificationsService extends AccessibilityService
 	
 	public boolean onUnbind(Intent intent) 
 	{
+		//Toast.makeText(this, "Notifications Service Stopped", Toast.LENGTH_LONG).show();
 	    sSharedInstance = null;
 	    stopProximityMontior();
 	    return super.onUnbind(intent);

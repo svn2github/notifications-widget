@@ -5,13 +5,8 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
 public class NotificationData 
-{
-	String 	title;
-	String 	subtext;
-	String 	info;
-	String	details;
+{	
 	String 	text;
-	String  time;
 	Bitmap 	icon;
 	Bitmap 	appicon;
 	long	received;
@@ -19,9 +14,20 @@ public class NotificationData
 	PendingIntent action;
 	int 	count;
 	
+	// indicator for content view
+	boolean hasTime = false;
+	boolean hasTitle = false;
+	boolean hasSubtitle = false;
+	boolean hasText = false;
+	boolean hasBigText = false;
+	boolean hasImage = false;
+	
 	// data from notification remoteviews
+	RemoteViews smallNotification;
 	RemoteViews normalNotification;
-	RemoteViews notificationContent;
-	RemoteViews notificationExpandedContent;
+	RemoteViews originalNotification;
 	int layoutId;
+	
+	
+	
 }

@@ -88,89 +88,38 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    if (notifications.size()>0 && position < notifications.size())
 		    {
 		    	NotificationData n = notifications.get(position);
-		    	row.setImageViewBitmap(R.id.notificationIcon, n.icon);
-		    	row.setImageViewBitmap(R.id.appIcon, n.appicon);
-		    	row.setImageViewBitmap(R.id.compactIcon, n.appicon);
 		    	
-		    	row.setTextViewText(R.id.widget_item, n.text);	
-		    	row.setTextViewText(R.id.compactText, n.text);
-		    	if (n.count > 1)
-		    		row.setTextViewText(R.id.notificationCount, Integer.toString(n.count));
-		    	else
-		    		row.setTextViewText(R.id.notificationCount, null);
-		    	Time t = new Time();
-		    	t.set(n.received);
-		    	String timeFormat = "%H:%M";
-		    	if (!DateFormat.is24HourFormat(ctxt))
-		    		timeFormat = "%l:%M%P";
-		    	row.setTextViewText(R.id.notificationTime, t.format(timeFormat));
-		    	row.setTextViewText(R.id.compactTime, t.format(timeFormat));
+		    	// set on click intent 
 				Intent i=new Intent();
 				Bundle extras=new Bundle();			
 				extras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
 				i.putExtras(extras);
-				row.setOnClickFillInIntent(R.id.notificationContainer, i);
-				row.setOnClickFillInIntent(R.id.widget_item, i);
-				row.setOnClickFillInIntent(R.id.largeNotification, i);
-				row.setOnClickFillInIntent(R.id.compactText, i);				
-				
-				// set opacity by preference
-				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);
-				row.setInt(R.id.smallNotification, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
-				
-				// set colors by preferences
-				int textColor = Integer.parseInt(preferences.getString("notification_text_color", String.valueOf(android.R.color.white)));
-				int timeColor = Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark)));
-				row.setTextColor(R.id.widget_item, Resources.getSystem().getColor(textColor));
-				row.setTextColor(R.id.notificationTime, Resources.getSystem().getColor(timeColor));
-				row.setTextColor(R.id.compactText , Resources.getSystem().getColor(textColor));
-				row.setTextColor(R.id.compactTime, Resources.getSystem().getColor(timeColor));
-				
+				row.setOnClickFillInIntent(R.id.notificationContainer, i);							
+								
 				// prepare action bar
-				row.removeAllViews(R.id.actionbarContainer);
-				RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.notification_actionbar);
-				row.addView(R.id.actionbarContainer, actionBar);	
+				createActionBar(row,position,n.packageName);
 				
-				if (s.getSelectedIndex() == position)
-				{
-					row.setViewVisibility(R.id.actionbarContainer, View.VISIBLE);
-				}
-				else
-				{
-					row.setViewVisibility(R.id.actionbarContainer, View.GONE);
-				}
-				
-				// set app settings intent
-				Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-				appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
-				appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
-				appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-				actionBar.setOnClickPendingIntent(
-						R.id.actionSettings, 
-						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION*10+position, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-
-				// set pin notification intent
-				Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-				pinIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.PIN_ACTION);
-				pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-				actionBar.setOnClickPendingIntent(
-						R.id.actionPin, 
-						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION*10+position, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-
-				// set clear notification intent
-				Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-				clearIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.CLEAR_ACTION);
-				clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-				actionBar.setOnClickPendingIntent(
-						R.id.actionClear, 
-						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION*10+position, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-											
 				// set notification style
+				int textColor = Resources.getSystem().getColor(Integer.parseInt(preferences.getString("notification_text_color", String.valueOf(android.R.color.white))));
+				int timeColor = Resources.getSystem().getColor(Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark))));				
+				
 				String notStyle = preferences.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
 				RemoteViews styleView;
+				int iconId = R.id.notificationIcon;
+				
 				if (notStyle.equals("large"))
 				{
-					styleView = n.notificationExpandedContent;
+					styleView = n.originalNotification;
+					
+					// change style for large notification
+					// set background to transparent (the item background will be shown instead)
+					if (n.layoutId != 0) n.originalNotification.setInt(n.layoutId , "setBackgroundColor", Color.TRANSPARENT);
+					if (n.hasTime) n.originalNotification.setTextColor(16908388, timeColor);
+					if (n.hasTitle) n.originalNotification.setTextColor(s.notification_title_id, textColor); 
+					if (n.hasSubtitle) n.originalNotification.setTextColor(s.notification_subtext_id, textColor);
+					if (n.hasText) n.originalNotification.setTextColor(s.notification_text_id, textColor);
+					if (n.hasBigText) n.originalNotification.setTextColor(s.big_notification_content_text, textColor);
+					if (n.hasImage) iconId = s.notification_image_id;
 				}
 				else if (notStyle.equals("normal"))
 				{
@@ -178,20 +127,27 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				}
 				else
 				{
-					// TODO - change to compact view
-					styleView = n.normalNotification;				
+					styleView = n.smallNotification;				
 				}
 				
 				// add style view
 				row.removeAllViews(R.id.notificationContainer);
 				row.addView(R.id.notificationContainer, styleView);
 				
+				// customize style
+				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);				
+				row.setInt(R.id.notificationBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
+				
+				styleView.setTextColor(R.id.notificationText, textColor);
+				styleView.setTextColor(R.id.notificationTime, timeColor);
+				styleView.setTextColor(R.id.notificationCount, textColor);				
+								
 				// set action bar intent
 				Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
 				editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.ACTIONBAR_TOGGLE);
 				editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 				styleView.setOnClickPendingIntent(
-						R.id.notificationIcon, 
+						iconId, 
 						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE*10+position, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
 
 				
@@ -200,6 +156,47 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		return(row);
 	}
 	
+	private void createActionBar(RemoteViews row, int position, String packageName) 
+	{
+		row.removeAllViews(R.id.actionbarContainer);
+		RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.notification_actionbar);
+		row.addView(R.id.actionbarContainer, actionBar);	
+		
+		if (NotificationsService.getSharedInstance().getSelectedIndex() == position)
+		{
+			row.setViewVisibility(R.id.actionbarContainer, View.VISIBLE);
+		}
+		else
+		{
+			row.setViewVisibility(R.id.actionbarContainer, View.GONE);
+		}
+		
+		// set app settings intent
+		Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+		appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
+		appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+		appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+		actionBar.setOnClickPendingIntent(
+				R.id.actionSettings, 
+				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION*10+position, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+
+		// set pin notification intent
+		Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+		pinIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.PIN_ACTION);
+		pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+		actionBar.setOnClickPendingIntent(
+				R.id.actionPin, 
+				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION*10+position, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+
+		// set clear notification intent
+		Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+		clearIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.CLEAR_ACTION);
+		clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+		actionBar.setOnClickPendingIntent(
+				R.id.actionClear, 
+				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION*10+position, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    			
+	}
+
 	@Override
 	public RemoteViews getLoadingView() {
 	return(null);
