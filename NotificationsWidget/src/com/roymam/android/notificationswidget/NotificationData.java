@@ -20,6 +20,7 @@ public class NotificationData
 	int 	count;
 	
 	// data from notification remoteviews
+	RemoteViews normalNotification;
 	RemoteViews notificationContent;
 	RemoteViews notificationExpandedContent;
 	int layoutId;

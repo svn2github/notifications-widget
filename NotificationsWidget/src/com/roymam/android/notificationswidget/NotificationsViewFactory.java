@@ -126,8 +126,19 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.setTextColor(R.id.compactText , Resources.getSystem().getColor(textColor));
 				row.setTextColor(R.id.compactTime, Resources.getSystem().getColor(timeColor));
 				
+				row.removeAllViews(R.id.actionbarContainer);
+				row.addView(R.id.actionbarContainer, new RemoteViews(ctxt.getPackageName(),R.layout.notification_actionbar));				
+				if (s.getSelectedIndex() == position)
+				{
+					row.setViewVisibility(R.id.actionbarContainer, View.VISIBLE);
+				}
+				else
+				{
+					row.setViewVisibility(R.id.actionbarContainer, View.GONE);
+				}
+				
 				row.removeAllViews(R.id.largeNotification);
-				row.addView(R.id.largeNotification, n.notificationContent);
+				row.addView(R.id.largeNotification, n.notificationContent);				
 				
 				String notStyle = preferences.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
 				if (notStyle.equals("large"))
@@ -157,9 +168,15 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				}
 				else if (notStyle.equals("normal"))
 				{
-					row.setViewVisibility(R.id.largeNotification, View.GONE);
-					row.setViewVisibility(R.id.smallNotification, View.VISIBLE);
-					row.setViewVisibility(R.id.compactNotification, View.GONE);
+					row.removeAllViews(R.id.notificationContainer);
+					row.addView(R.id.notificationContainer, n.normalNotification);
+					Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION+position);
+					editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,0);			    							
+					//editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
+			    	n.normalNotification.setOnClickPendingIntent(R.id.notificationIcon, PendingIntent.getBroadcast(ctxt, 0, editModeIntent, PendingIntent.FLAG_ONE_SHOT));			    	
+					//row.setViewVisibility(R.id.largeNotification, View.GONE);
+					//row.setViewVisibility(R.id.smallNotification, View.VISIBLE);
+					//row.setViewVisibility(R.id.compactNotification, View.GONE);
 				}
 				else
 				{
@@ -170,11 +187,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				
 				if (s.isEditMode())
 				{
-					row.setViewVisibility(R.id.notification_actionbar, View.VISIBLE);
+					//row.setViewVisibility(R.id.notification_actionbar, View.VISIBLE);
 				}
 				else
 				{
-					row.setViewVisibility(R.id.notification_actionbar, View.GONE);
+					//row.setViewVisibility(R.id.notification_actionbar, View.GONE);
 				}
 				Intent clearActionIntent=new Intent();
 				Bundle clearExtras=new Bundle();			

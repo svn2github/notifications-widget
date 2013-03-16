@@ -172,13 +172,22 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     			}
     		}
     	}
-    	else if (intent.getAction().equals(PERFORM_ACTION))
+    	else if (intent.getAction().startsWith(PERFORM_ACTION))
     	{   
-    		int pos=intent.getIntExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,-1);
-    		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,0);
+    		//int pos=intent.getIntExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,-1);
+    		String s = intent.getAction().substring(PERFORM_ACTION.length());
+    		int pos = Integer.parseInt(s);
+    		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,-1);
     		
     		if (ns!=null)
     		{
+    			if (action == 0)
+    			{
+    				if (pos != ns.getSelectedIndex())
+    					ns.setSelectedIndex(pos);
+    				else
+    					ns.setSelectedIndex(-1);
+    			}
 	    		if (action == 1 && pos >= 0 && pos < ns.getNotifications().size())
 	    		{	    			
 	    				ns.getNotifications().remove(pos);

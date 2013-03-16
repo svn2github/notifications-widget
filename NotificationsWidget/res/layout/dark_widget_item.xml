@@ -14,9 +14,11 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#bf141414"
+    android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/notificationContainer"
@@ -25,75 +27,75 @@
             android:layout_weight="0.1"
             android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/largeNotification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone" >
+	        <LinearLayout
+	            android:id="@+id/largeNotification"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:visibility="gone" >
+	
+	        </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/smallNotification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#bf141414"
-            android:visibility="visible" >
-
-            <ImageView
-                android:id="@+id/notificationIcon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="#801d3741" />
-
-            <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/widget_item"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:layout_weight="0.46"
-                android:background="@drawable/item_selector"
-                android:gravity="top"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:scrollHorizontally="false"
-                android:textColor="#e5e5e1"
-                android:textSize="14sp" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:layout_weight="0.00"
-                android:background="@drawable/item_selector"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/notificationTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:textColor="#ff32b6e6"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <ImageView
-                        android:id="@+id/appIcon"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp" />
-
-                    <TextView
-                        android:id="@+id/notificationCount"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>            
-        </LinearLayout>
+	        <LinearLayout
+	            android:id="@+id/smallNotification"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:background="#bf141414"
+	            android:visibility="visible" >
+	
+	            <ImageView
+	                android:id="@+id/notificationIcon"
+	                android:layout_width="36dp"
+	                android:layout_height="36dp"
+	                android:background="#801d3741" />
+	
+	            <TextView
+	                xmlns:android="http://schemas.android.com/apk/res/android"
+	                xmlns:tools="http://schemas.android.com/tools"
+	                android:id="@+id/widget_item"
+	                android:layout_width="wrap_content"
+	                android:layout_height="36dp"
+	                android:layout_weight="0.46"
+	                android:background="@drawable/item_selector"
+	                android:gravity="top"
+	                android:paddingLeft="5dp"
+	                android:paddingRight="5dp"
+	                android:scrollHorizontally="false"
+	                android:textColor="#e5e5e1"
+	                android:textSize="14sp" />
+	            <LinearLayout
+	                android:layout_width="wrap_content"
+	                android:layout_height="36dp"
+	                android:layout_weight="0.00"
+	                android:background="@drawable/item_selector"
+	                android:orientation="vertical" >
+	
+	                <TextView
+	                    android:id="@+id/notificationTime"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:gravity="center_vertical|center_horizontal"
+	                    android:textColor="#ff32b6e6"
+	                    android:textSize="14sp" />
+	
+	                <LinearLayout
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content" >
+	
+	                    <ImageView
+	                        android:id="@+id/appIcon"
+	                        android:layout_width="16dp"
+	                        android:layout_height="16dp" />
+	
+	                    <TextView
+	                        android:id="@+id/notificationCount"
+	                        android:layout_width="match_parent"
+	                        android:layout_height="match_parent"
+	                        android:gravity="center_vertical|center_horizontal"
+	                        android:textSize="12sp" />
+	                </LinearLayout>
+	            </LinearLayout>            
+        	</LinearLayout>
 
         <LinearLayout
             android:id="@+id/compactNotification"
@@ -130,22 +132,12 @@
                 android:text="00:00"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        </LinearLayout>
-
-    </LinearLayout>
-	<LinearLayout 
-	    android:id="@+id/notification.actionbar"
-	    android:orientation="horizontal"
-	    android:layout_width="wrap_content"
+<LinearLayout
+	    android:id="@+id/notificationActionbar"
+	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:layout_weight="0">
-	    <ImageButton
-	        android:id="@+id/appOptions"
-	        style="@android:style/Holo.ButtonBar"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:background="@drawable/item_selector"
-	        android:src="@android:drawable/ic_menu_preferences" />
+	    android:layout_weight="0"
+	    android:orientation="horizontal" >
 	
 	    <ImageButton
 	        android:id="@+id/clearNotification"
@@ -153,6 +145,38 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="match_parent"
 	        android:background="@drawable/item_selector"
-	        android:src="@android:drawable/ic_menu_close_clear_cancel" />
-	</LinearLayout>
-    </LinearLayout>
+	        android:src="@drawable/item_selector" />
+
+	    <Button
+	        android:id="@+id/appOptions"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        android:background="@drawable/item_selector"
+	        android:drawableLeft="@android:drawable/ic_menu_preferences"
+	        android:drawablePadding="4dp"
+	        android:text="App Settings" />
+
+	    <Button
+	        android:id="@+id/ClearNotification"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        android:background="@drawable/item_selector"
+	        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+	        android:text="Clear" />
+
+		</LinearLayout>
+	 </LinearLayout>
+</LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/actionbarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
+</LinearLayout>       
+        

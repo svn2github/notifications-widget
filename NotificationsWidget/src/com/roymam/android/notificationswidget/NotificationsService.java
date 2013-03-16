@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class NotificationsService extends AccessibilityService
 	private boolean newNotificationsAvailable = false;
 	private boolean editMode =  false;
 	private boolean widgetLockerEnabled = false;
+	private int 	selectedIndex = -1;
 	private String clearButtonName = "Clear all notifications.";
 	
 	private int notification_title_id = 0;
@@ -276,6 +278,7 @@ public class NotificationsService extends AccessibilityService
 						nd.count = 1;
 						nd.packageName = packageName;
 						nd.notificationContent = n.contentView;
+						
 						//nd.notificationExpandedContent = n.bigContentView;
 						
 						// try to extract extra content from view
@@ -322,7 +325,15 @@ public class NotificationsService extends AccessibilityService
 							notifications.remove(duplicated);
 							nd.count = dup.count+1;						
 						}
+						
+						// create remoteview for normal notification
+						nd.normalNotification = new RemoteViews(getPackageName(), R.layout.normal_notification);
+						nd.normalNotification.setImageViewBitmap(R.id.notificationIcon, nd.icon);
+						nd.normalNotification.setImageViewBitmap(R.id.appIcon, nd.appicon);
+						nd.normalNotification.setTextViewText(R.id.notificationText, nd.text);
+						nd.normalNotification.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));
 						notifications.add(0,nd);
+				    	if (selectedIndex >= 0) selectedIndex++;
 						
 						// update widgets
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
@@ -658,6 +669,14 @@ public class NotificationsService extends AccessibilityService
 	public void setWidgetLockerEnabled(boolean widgetLockerEnabled) 
 	{
 		this.widgetLockerEnabled = widgetLockerEnabled;
+	}
+
+	public int getSelectedIndex() {
+		return selectedIndex;
+	}
+
+	public void setSelectedIndex(int selectedIndex) {
+		this.selectedIndex = selectedIndex;
 	}
 	
 	
