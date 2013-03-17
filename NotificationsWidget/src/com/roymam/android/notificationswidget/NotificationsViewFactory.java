@@ -156,7 +156,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 				styleView.setOnClickPendingIntent(
 						iconId, 
-						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE*10+position, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE+position*10, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
 				
 		    }
 		}	
@@ -185,7 +185,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 		actionBar.setOnClickPendingIntent(
 				R.id.actionSettings, 
-				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION*10+position, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION+position*10, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
 
 		// set pin notification intent
 		Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
@@ -193,7 +193,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 		actionBar.setOnClickPendingIntent(
 				R.id.actionPin, 
-				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION*10+position, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION+position*10, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
 
 		// set clear notification intent
 		Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
@@ -201,7 +201,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 		actionBar.setOnClickPendingIntent(
 				R.id.actionClear, 
-				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION*10+position, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 		
 		// hide clear button for pinned notifications
 		if (NotificationsService.getSharedInstance().getNotification(position).pinned)
