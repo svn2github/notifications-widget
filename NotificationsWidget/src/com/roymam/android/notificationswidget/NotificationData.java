@@ -26,8 +26,11 @@ public class NotificationData
 	// data from notification remoteviews
 	RemoteViews smallNotification;
 	RemoteViews normalNotification;
+	RemoteViews largeNotification;
 	RemoteViews originalNotification;
 	int layoutId;
+	int customImageId = -1;
+	
 	
 	
 	

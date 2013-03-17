@@ -291,7 +291,7 @@ public class NotificationsService extends AccessibilityService
 						// find layout background id
 						try
 						{
-							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);						
 							ViewGroup localView = (ViewGroup) inflater.inflate(nd.originalNotification.getLayoutId(), null);
 							//nd.originalNotification.reapply(getApplicationContext(), localView);
 							nd.layoutId = localView.getId();							
@@ -301,6 +301,11 @@ public class NotificationsService extends AccessibilityService
 							nd.hasText = (localView.findViewById(notification_text_id) != null);
 							nd.hasBigText = (localView.findViewById(big_notification_content_text) != null);
 							nd.hasImage = (localView.findViewById(notification_image_id) != null);
+							if (!nd.hasImage)
+							{
+								// try to find an image
+								nd.customImageId = recursiveFindFirstImage(localView);
+							}
 						}
 						catch (Exception exp)
 						{
@@ -332,6 +337,7 @@ public class NotificationsService extends AccessibilityService
 						
 						nd.normalNotification = createNormalNotification(nd);
 						nd.smallNotification = createSmallNotification(nd);
+						nd.largeNotification = createLargeNotification(nd);
 						notifications.add(firstUnpinned,nd);						
 				    	if (selectedIndex >= firstUnpinned) selectedIndex++;
 						
@@ -372,6 +378,15 @@ public class NotificationsService extends AccessibilityService
     	return n;
 	}
 	
+	private RemoteViews createLargeNotification(NotificationData nd) 
+	{
+		// create remoteview for normal notification
+		RemoteViews n = new RemoteViews(getPackageName(), R.layout.large_notification);
+		n.removeAllViews(R.id.largeNotificationContainer);
+		n.addView(R.id.largeNotificationContainer, nd.originalNotification);
+		return n;
+	}
+	
 	private RemoteViews createSmallNotification(NotificationData nd) 
 	{
 		// create remoteview for small notification
@@ -403,6 +418,25 @@ public class NotificationsService extends AccessibilityService
 		}	
 	}
 
+	private int recursiveFindFirstImage(ViewGroup v)
+	{
+		for(int i=0; i<v.getChildCount(); i++)
+		{
+			View child = v.getChildAt(i);
+			if (child instanceof ViewGroup)
+				recursiveFindFirstImage((ViewGroup)child);			
+			if (child instanceof ImageView)
+			{
+				Drawable d = ((ImageView)child).getDrawable();
+				if (d!=null)
+				{
+					return child.getId();
+				}
+			}			
+		}
+		return -1;
+	}
+	
 	private void recursiveDetectNotificationsIds(ViewGroup v)
 	{
 		for(int i=0; i<v.getChildCount(); i++)

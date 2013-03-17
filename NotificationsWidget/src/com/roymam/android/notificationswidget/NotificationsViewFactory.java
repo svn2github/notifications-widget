@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -107,7 +108,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				
 				if (notStyle.equals("large"))
 				{
-					styleView = n.originalNotification;
+					styleView = n.largeNotification;
 					
 					// change style for large notification
 					// set background to transparent (the item background will be shown instead)
@@ -118,6 +119,13 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					if (n.hasText) n.originalNotification.setTextColor(s.notification_text_id, textColor);
 					if (n.hasBigText) n.originalNotification.setTextColor(s.big_notification_content_text, textColor);
 					if (n.hasImage) iconId = s.notification_image_id;
+					else if (n.customImageId != -1)
+						iconId = n.customImageId;
+					else
+					{
+						styleView.setViewVisibility(R.id.notificationIcon, View.VISIBLE);
+					}	
+						
 				}
 				else if (notStyle.equals("normal"))
 				{

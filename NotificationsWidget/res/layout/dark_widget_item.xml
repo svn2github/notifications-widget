@@ -14,28 +14,29 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/notificationBG"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#bf141414"
-    android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/notificationContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:orientation="vertical" >
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/actionbarContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:orientation="vertical" >
-        </LinearLayout>
-
-</LinearLayout>       
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/notificationBG"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="#bf141414"
+	    android:orientation="vertical" >
+	
+	        <LinearLayout
+	            android:id="@+id/notificationContainer"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="0.1"
+	            android:orientation="vertical" >
+	        </LinearLayout>
+	
+	        <LinearLayout
+	            android:id="@+id/actionbarContainer"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="0.1"
+	            android:orientation="vertical" >
+	        </LinearLayout>
+	
+	</LinearLayout>
+      
         
