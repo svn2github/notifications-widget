@@ -358,7 +358,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
     	    		(notifiationsStyle.equals("large") && notificationsCount > 0 ||
     	    		 notifiationsStyle.equals("normal") && notificationsCount > 1 || 
-    	    				notificationsCount > 2))
+    	    				notificationsCount > 2 || 
+    	    				ns != null && ns.getSelectedIndex() >= 0))
     	    {
         	    widget.setViewVisibility(R.id.smallClock, View.VISIBLE);
         	    widget.setViewVisibility(R.id.bigClock, View.GONE);

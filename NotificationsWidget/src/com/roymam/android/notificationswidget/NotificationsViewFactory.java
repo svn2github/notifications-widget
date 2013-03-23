@@ -219,54 +219,69 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		}
 		
 		// add custom app action
-		if (n.actions != null)
-		{
-			if (n.actions.length >= 1)
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+		
+		// if it's expanded large notification - don't show buttons in actions bar 
+		if (!(sharedPref.getBoolean(n.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true))
+		      && sharedPref.getString(SettingsActivity.NOTIFICATION_STYLE, "normal").equals("large"))		
+			&& n.actions != null)
 			{
-				actionBar.setImageViewBitmap(R.id.customAction1, n.actions[0].drawable);
-				actionBar.setOnClickPendingIntent(R.id.customAction1, n.actions[0].actionIntent);
-				actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
+				if (n.actions.length >= 1)
+				{
+					actionBar.setImageViewBitmap(R.id.customAction1, n.actions[0].drawable);
+					actionBar.setOnClickPendingIntent(R.id.customAction1, n.actions[0].actionIntent);
+					actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
+				}
+				else
+				{
+					actionBar.setViewVisibility(R.id.customAction1, View.GONE);
+				}
+				
+				if (n.actions.length >= 2)
+				{
+					actionBar.setImageViewBitmap(R.id.customAction2, n.actions[1].drawable);
+					actionBar.setOnClickPendingIntent(R.id.customAction2, n.actions[1].actionIntent);
+					actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
+				}
+				else
+				{
+					actionBar.setViewVisibility(R.id.customAction2, View.GONE);
+				}
 			}
 			else
 			{
 				actionBar.setViewVisibility(R.id.customAction1, View.GONE);
-			}
-			
-			if (n.actions.length >= 2)
-			{
-				actionBar.setImageViewBitmap(R.id.customAction2, n.actions[1].drawable);
-				actionBar.setOnClickPendingIntent(R.id.customAction2, n.actions[1].actionIntent);
-				actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
-			}
-			else
-			{
 				actionBar.setViewVisibility(R.id.customAction2, View.GONE);
 			}
-		}
 	}
 
 	@Override
-	public RemoteViews getLoadingView() {
-	return(null);
+	public RemoteViews getLoadingView() 
+	{
+		return(null);
 	}
 	
 	@Override
-	public int getViewTypeCount() {
-	return(1);
+	public int getViewTypeCount() 
+	{
+		return(1);
 	}
 	
 	@Override
-	public long getItemId(int position) {
-	return(position);
+	public long getItemId(int position) 
+	{
+		return(position);
 	}
 	
 	@Override
-	public boolean hasStableIds() {
-	return(true);
+	public boolean hasStableIds() 
+	{
+		return(true);
 	}
 	
 	@Override
-	public void onDataSetChanged() {
-	// no-op
+	public void onDataSetChanged() 
+	{
+		// no-op
 	}
 }
