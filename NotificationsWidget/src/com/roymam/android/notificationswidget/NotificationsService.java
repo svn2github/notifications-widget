@@ -186,7 +186,7 @@ public class NotificationsService extends AccessibilityService
 	{		       
 		if (proximitySensor != null)
 		{
-			sensorManager.registerListener(sensorListener, proximitySensor, 5);
+			sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_UI);
 		}		
 	}	
 	public void stopProximityMontior()
