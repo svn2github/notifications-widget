@@ -4,12 +4,23 @@
     android:layout_height="wrap_content"
     android:visibility="visible" >
 
+    <RelativeLayout
+        android:layout_width="36dp"
+        android:layout_height="36dp" >
+
         <ImageButton
             android:id="@+id/notificationIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:background="#801d3741"
             android:scaleType="fitCenter" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/actionspinner" />
+
+    </RelativeLayout>
 
         <TextView
             android:id="@+id/notificationText"
@@ -68,4 +79,5 @@
 
             </LinearLayout>
         </LinearLayout>
+
 </LinearLayout>

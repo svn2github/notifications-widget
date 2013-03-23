@@ -36,6 +36,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
 	public static String TEXT_COLOR = "notification_text_color";
 	public static String TIME_COLOR = "notification_time_color";
+	public static String CLOCK_COLOR = "clock_text_color";
 	public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_ON_LOCK = "clearonlock";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";
@@ -136,6 +137,11 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        listener.setPrefSummary(timeColorPref, (String)currValue);
 	        timeColorPref.setOnPreferenceChangeListener(listener);
 	        
+	        Preference clockColorPref = findPreference(CLOCK_COLOR);	        
+	        currValue = getPreferenceScreen().getSharedPreferences().getString(CLOCK_COLOR, "white");	        
+	        listener.setPrefSummary(clockColorPref, (String)currValue);
+	        clockColorPref.setOnPreferenceChangeListener(listener);
+	        
 	        // clock style
 	        listener = new ListPreferenceChangeListener(
 	        		getResources().getStringArray(R.array.settings_clock_entries),
@@ -145,6 +151,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        currValue = getPreferenceScreen().getSharedPreferences().getString(CLOCK_STYLE, "auto");	        
 	        listener.setPrefSummary(clockPref, (String)currValue);
 	        clockPref.setOnPreferenceChangeListener(listener);
+	        
 	        
 	     // notification style
 	        listener = new ListPreferenceChangeListener(

@@ -82,7 +82,8 @@
                         android:layout_height="16dp"
                         android:layout_gravity="center_vertical"
                         android:alpha="50"
-                        android:src="@android:drawable/ic_lock_idle_alarm" />
+                        android:src="@android:drawable/ic_lock_idle_alarm"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/alarmtime"

@@ -40,6 +40,7 @@
     <string name="showclearbutton_summary">Show \"clear all notifications\" button in the clock bar</string>
     <string name="notification_bg_opacity">Notification background opacity</string>
     <string name="notification_bg_opacity_summary">Set the opacity of the notification background</string>
+    <string name="clock_text_color">Clock text color</string>
     <string name="notification_text_color">Notification text color</string>
     <string name="notification_time_color">Notification time color</string>
     <string name="notification_style">Notification Style</string>
@@ -149,8 +150,8 @@
 	<string name="ignore_notifications_summary">ignore all notifications from this app</string>
 	<string name="show_only_last_notification">Keep only last notification</string>
 	<string name="show_only_last_notification_summary">Keep only the last notification that was received from this app</string>
-	<string name="extract_expanded_text">Use expanded text</string>
-	<string name="extract_expanded_text_summary">Try to use the expanded text from the notification if available</string>
+	<string name="extract_expanded_text">Use expanded notification</string>
+	<string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>
 			<string name="clear_app_settings">Reset</string>
 	<string name="clear_app_summary">Clear app specific settings for this app</string>
 	<string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>

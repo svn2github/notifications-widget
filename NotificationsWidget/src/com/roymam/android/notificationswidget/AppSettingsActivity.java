@@ -67,7 +67,8 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         CheckBoxPreference useExpandedTextPref = new CheckBoxPreference(this);
         useExpandedTextPref.setKey(packageName+"."+USE_EXPANDED_TEXT);
         useExpandedTextPref.setTitle(R.string.extract_expanded_text);
-        useExpandedTextPref.setDefaultValue(false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
+		useExpandedTextPref.setDefaultValue(prefs.getBoolean(USE_EXPANDED_TEXT, true));
         useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
         root.addPreference(useExpandedTextPref);        
         

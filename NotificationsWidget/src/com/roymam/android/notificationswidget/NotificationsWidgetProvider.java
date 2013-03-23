@@ -31,6 +31,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -234,6 +236,14 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
 	    widget.setTextViewText(dateId, datestr.toUpperCase(Locale.getDefault()));
 	    
+	    // set clock text color
+	    int color = Resources.getSystem().getColor(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.CLOCK_COLOR, String.valueOf(android.R.color.white))));
+	    widget.setTextColor(hourId, color);
+	    widget.setTextColor(minuteId, color);
+	    widget.setTextColor(ampmId, color);
+	    widget.setTextColor(dateId, color);
+	    widget.setTextColor(R.id.alarmtime, color);
+	    
 	    // add alarm clock intent
 	    PackageManager packageManager = ctxt.getPackageManager();
 	    Intent alarmClockIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
@@ -301,7 +311,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    if (!nextAlarm.equals(""))
     	    {
     	    	widget.setViewVisibility(R.id.nextAlarmContainer, View.VISIBLE);
-    	    	widget.setTextViewText(R.id.alarmtime, nextAlarm.toUpperCase(Locale.getDefault()));
+    	    	widget.setTextViewText(R.id.alarmtime, "⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
     	    }
     	    else
     	    {

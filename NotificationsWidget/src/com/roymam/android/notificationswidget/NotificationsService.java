@@ -2,6 +2,7 @@ package com.roymam.android.notificationswidget;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.roymam.android.notificationswidget.NotificationData.Action;
@@ -10,9 +11,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.TargetApi;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.PendingIntent.CanceledException;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -53,7 +52,6 @@ public class NotificationsService extends AccessibilityService
 	private boolean newNotificationsAvailable = false;
 	private boolean widgetLockerEnabled = false;
 	private int 	selectedIndex = -1;
-	private int 	firstUnpinned = 0;
 	private String clearButtonName = "Clear all notifications.";
 	
 	public int notification_image_id = 0;
@@ -67,8 +65,7 @@ public class NotificationsService extends AccessibilityService
 	public int inbox_notification_event_1_id = 0;
 	public int inbox_notification_event_2_id = 0;
 	public int inbox_notification_event_3_id = 0;
-	public int buttons_panel_id_id = 0;
-
+	
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
 	@Override
@@ -329,7 +326,7 @@ public class NotificationsService extends AccessibilityService
 							nd.layoutId = 0;
 						}
 						
-						if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, false))
+						if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
 						{
 							getExpandedText(n,nd);							
 						}
@@ -355,8 +352,8 @@ public class NotificationsService extends AccessibilityService
 						nd.normalNotification = createNormalNotification(nd);
 						nd.smallNotification = createSmallNotification(nd);
 						nd.largeNotification = createLargeNotification(nd);
-						notifications.add(firstUnpinned,nd);						
-				    	if (selectedIndex >= firstUnpinned) selectedIndex++;
+						notifications.add(0,nd);						
+				    	if (selectedIndex >= 0) selectedIndex++;
 						
 						// update widgets
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
@@ -418,30 +415,7 @@ public class NotificationsService extends AccessibilityService
 		returnActions.toArray(returnArray);
 		return returnArray;
 	}
-
-	private View recursiveFindButtons(ViewGroup v) 
-	{
-		for(int i=0; i<v.getChildCount(); i++)
-		{
-			View child = v.getChildAt(i);
-			if (child instanceof ViewGroup)
-				return recursiveFindButtons((ViewGroup)child);			
-			if (child instanceof Button)
-			{
-				return v;
-			}
-			if (child instanceof TextView)
-			{
-				TextView t = (TextView)child;
-				if (t.getText().equals("Archive"))
-				{
-					return v;
-				}
-			}
-		}
-		return null;
-	}
-
+	
 	private RemoteViews createNormalNotification(NotificationData nd) 
 	{
 		// create remoteview for normal notification
@@ -551,14 +525,7 @@ public class NotificationsService extends AccessibilityService
 				{
 					this.notification_image_id = child.getId();
 				}
-			}
-			
-			if (child instanceof Button)
-			{
-				String text = ((Button)child).getText().toString();
-				if (text.equals("11")) buttons_panel_id_id = v.getId();				
-			}
-				
+			}	
 		}
 	}	
 		
@@ -570,10 +537,6 @@ public class NotificationsService extends AccessibilityService
 	    .setContentText("2")
 	    .setContentInfo("3")
 	    .setSubText("4");
-
-		mBuilder.addAction(R.drawable.appicon, "11", PendingIntent.getBroadcast(this, 0, new Intent("Dummy"), PendingIntent.FLAG_UPDATE_CURRENT));
-		mBuilder.addAction(R.drawable.appicon, "12", PendingIntent.getBroadcast(this, 0, new Intent("Dummy"), PendingIntent.FLAG_UPDATE_CURRENT));
-		mBuilder.addAction(R.drawable.appicon, "13", PendingIntent.getBroadcast(this, 0, new Intent("Dummy"), PendingIntent.FLAG_UPDATE_CURRENT));
 
 		Notification n = mBuilder.build();
 				
@@ -796,11 +759,12 @@ public class NotificationsService extends AccessibilityService
 	
 	public void clearAllNotifications()
 	{
-		for(int i=notifications.size()-1; i>=firstUnpinned;i--)
+		Iterator<NotificationData> i = notifications.iterator();
+		while (i.hasNext()) 
 		{
-			notifications.remove(i);
-		}		
-		
+			NotificationData nd = i.next(); 
+			if (!nd.pinned) i.remove();
+		}
 		updateWidget();			
 	}
 	
@@ -852,16 +816,11 @@ public class NotificationsService extends AccessibilityService
 			NotificationData n = notifications.get(pos);
 			if (!n.pinned)
 			{				
-				notifications.remove(n);
-				notifications.add(0,n);
-				selectedIndex=0;
 				n.pinned = true;
-				firstUnpinned++;
 			}
 			else
 			{
 				n.pinned = false;
-				firstUnpinned--;
 			}
 		}
 	}

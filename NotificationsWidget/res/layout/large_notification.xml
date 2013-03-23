@@ -13,13 +13,14 @@
 
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/notificationIcon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@android:color/transparent"
-        android:visibility="gone" />
+        android:background="@drawable/item_selector"
+        android:scaleType="fitXY"
+        android:src="@drawable/actionspinner" />
     
 </RelativeLayout>

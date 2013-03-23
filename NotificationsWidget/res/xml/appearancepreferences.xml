@@ -8,6 +8,12 @@
             android:key="clockstyle"
             android:defaultValue="auto"  
             android:title="@string/clockstyle"/>
+    	<ListPreference android:dialogTitle="@string/clock_text_color" 
+    	    			android:entries="@array/settings_colors_entries" 
+    	    			android:entryValues="@array/settings_colors_values" 
+    	    			android:title="@string/clock_text_color" 
+    	    			android:key="clock_text_color" 
+    	    			android:defaultValue="17170443" />
     	<ListPreference android:dialogTitle="@string/showclearbutton" 
     	    			android:title="@string/showclearbutton" 
     	    			android:entries="@array/settings_buttons_entries" 
@@ -22,7 +28,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
           	
-	<!-- <CheckBoxPreference android:disableDependentsState="true" android:summary="@string/show_full_notification_summary" android:key="showfullnotification" android:title="@string/show_full_notification" /> -->
 	<ListPreference android:dialogTitle="@string/notification_style" 
     	    			android:entries="@array/settings_notifications_entries" 
     	    			android:entryValues="@array/settings_notifications_values" 
@@ -49,4 +54,5 @@
     	    			android:entryValues="@array/settings_colors_values" 
     	    			android:defaultValue="17170451"/> 
 	</PreferenceCategory>
+	<CheckBoxPreference android:summary="@string/extract_expanded_text_summary" android:key="useexpandedtext" android:title="@string/extract_expanded_text" android:defaultValue="true"/>
 </PreferenceScreen>

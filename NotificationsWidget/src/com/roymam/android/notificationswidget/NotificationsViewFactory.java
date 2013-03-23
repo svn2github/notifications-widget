@@ -120,14 +120,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					if (n.hasSubtitle) n.originalNotification.setTextColor(s.notification_subtext_id, textColor);
 					if (n.hasText) n.originalNotification.setTextColor(s.notification_text_id, textColor);
 					if (n.hasBigText) n.originalNotification.setTextColor(s.big_notification_content_text, textColor);
-					if (n.hasImage) iconId = s.notification_image_id;
-					else if (n.customImageId != -1)
-						iconId = n.customImageId;
-					else
-					{
-						styleView.setViewVisibility(R.id.notificationIcon, View.VISIBLE);
-					}	
-						
+					//if (n.hasImage) iconId = s.notification_image_id;	
 				}
 				else if (notStyle.equals("normal"))
 				{
