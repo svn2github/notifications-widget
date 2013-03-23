@@ -16,6 +16,11 @@
     <string name="clock">Uhr</string>
     <string name="notifications">Benachrichtigungen</string>
     
+     <!--  Action Bar -->
+    <string name="settings">Settings</string>
+	<string name="pin">Pin</string>
+	<string name="unpin">Unpin</string>
+	
     <string name="disableproximity_nexus4_warning">Beachten Sie, dass, bei aktiviertem Näherungssensor, Probleme mit dem Nexus 4 auftreten können: Erhöhter Akkuverbrauch und Tick-Geräusche bei der Musik-Wiedergabe und in Anrufen.\nSind sie sicher, dass sie dieses Feature aktivieren wollen?</string>
     <string name="disableproximity_nexus4_warning_title">Nexus 4 Warnung</string>
     <string name="yes">Ja</string>
@@ -24,8 +29,8 @@
     <string name="delayed_screenon_summary">Aktiviert das Display bei neuer Benachrichtgung erst, wenn Sie das Gerät aus der Tasche nehmen</string>
     <string name="disable_notification_click">Deaktiviere klickbare Benachrichtigungen</string>
     <string name="disable_notification_click_summary">Verhindert, dass sich die Benachrichtigungen beim darauf Tippen öffnen</string>
-    <string name="extract_expanded_text">Verwende erweiterten Text</string>
-	<string name="extract_expanded_text_summary">Verwende den gesamten Text aus erweiterbaren Benachrichtigungen</string>
+    <string name="extract_expanded_text">Use expanded notification</string>
+	<string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>		
     
         
     <string name="turnscreenon">Automatische Displayaktivierung</string>
@@ -45,6 +50,7 @@
     <string name="notification_bg_opacity">Hintergrundtransparenz</string>
     <string name="notification_bg_opacity_summary">Transparenz des Hintergrunds der Benachrichtigungen einstellen</string>
     <string name="notification_text_color">Farbe des Benachrichtigungstexts</string>
+    <string name="clock_text_color">Clock text color</string>
     <string name="notification_time_color">Farbe der Zeit</string>
     <string name="notification_style">Darstellungstyp</string>
     <string name="show_full_notification">Zeige vollständige Benachrichtigung</string>

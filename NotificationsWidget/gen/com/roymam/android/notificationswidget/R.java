@@ -175,6 +175,7 @@ public final class R {
         public static final int pin=0x7f06004b;
         public static final int service_inactive_text=0x7f06002d;
         /**   Action Bar 
+  Action Bar 
          */
         public static final int settings=0x7f06004a;
         public static final int settingstitle=0x7f060001;
