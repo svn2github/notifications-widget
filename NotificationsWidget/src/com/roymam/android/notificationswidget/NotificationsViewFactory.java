@@ -18,7 +18,9 @@ import android.graphics.Paint;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.text.format.DateFormat;
@@ -86,8 +88,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		{		   
 		    if (s.getNotificationsCount() >0 && position < s.getNotificationsCount())
 		    {
-		    	NotificationData n = s.getNotification(position);
-		    	
+		    	NotificationData n = s.getNotification(position);		    		    
+				
 		    	// set on click intent 
 				Intent i=new Intent();
 				Bundle extras=new Bundle();			
@@ -96,7 +98,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.setOnClickFillInIntent(R.id.notificationContainer, i);							
 								
 				// prepare action bar
-				createActionBar(row,position,n.packageName);
+				createActionBar(row,position,n);
 				
 				// set notification style
 				int textColor = Resources.getSystem().getColor(Integer.parseInt(preferences.getString("notification_text_color", String.valueOf(android.R.color.white))));
@@ -171,7 +173,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		return(row);
 	}
 	
-	private void createActionBar(RemoteViews row, int position, String packageName) 
+	private void createActionBar(RemoteViews row, int position, NotificationData n) 
 	{
 		row.removeAllViews(R.id.actionbarContainer);
 		RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.notification_actionbar);
@@ -189,7 +191,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		// set app settings intent
 		Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
 		appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
-		appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+		appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
 		appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 		actionBar.setOnClickPendingIntent(
 				R.id.actionSettings, 
@@ -221,6 +223,32 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		{
 			actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
 			actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));			
+		}
+		
+		// add custom app action
+		if (n.actions != null)
+		{
+			if (n.actions.length >= 1)
+			{
+				actionBar.setImageViewBitmap(R.id.customAction1, n.actions[0].drawable);
+				actionBar.setOnClickPendingIntent(R.id.customAction1, n.actions[0].actionIntent);
+				actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
+			}
+			else
+			{
+				actionBar.setViewVisibility(R.id.customAction1, View.GONE);
+			}
+			
+			if (n.actions.length >= 2)
+			{
+				actionBar.setImageViewBitmap(R.id.customAction2, n.actions[1].drawable);
+				actionBar.setOnClickPendingIntent(R.id.customAction2, n.actions[1].actionIntent);
+				actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
+			}
+			else
+			{
+				actionBar.setViewVisibility(R.id.customAction2, View.GONE);
+			}
 		}
 	}
 

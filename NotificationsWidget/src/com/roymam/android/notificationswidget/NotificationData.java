@@ -6,6 +6,15 @@ import android.widget.RemoteViews;
 
 public class NotificationData 
 {	
+	public static class Action
+	{
+		public Action() {};
+		public int icon;
+		public CharSequence title;
+		public PendingIntent actionIntent;
+		public Bitmap drawable;
+	}
+
 	String 	text;
 	Bitmap 	icon;
 	Bitmap 	appicon;
@@ -30,8 +39,5 @@ public class NotificationData
 	RemoteViews originalNotification;
 	int layoutId;
 	int customImageId = -1;
-	
-	
-	
-	
+	public Action[] actions = null;
 }

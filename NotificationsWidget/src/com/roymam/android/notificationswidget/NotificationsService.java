@@ -1,7 +1,10 @@
 package com.roymam.android.notificationswidget;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.roymam.android.notificationswidget.NotificationData.Action;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
@@ -35,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -63,6 +67,7 @@ public class NotificationsService extends AccessibilityService
 	public int inbox_notification_event_1_id = 0;
 	public int inbox_notification_event_2_id = 0;
 	public int inbox_notification_event_3_id = 0;
+	public int buttons_panel_id_id = 0;
 
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
@@ -288,24 +293,36 @@ public class NotificationsService extends AccessibilityService
 						nd.packageName = packageName;
 						nd.originalNotification = n.contentView;
 						
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) 
+						{
+							nd.actions = getActionsFromNotification(n, packageName);
+						}
+				        
 						// find layout background id
 						try
-						{
+						{							
 							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);						
 							ViewGroup localView = (ViewGroup) inflater.inflate(nd.originalNotification.getLayoutId(), null);
-							//nd.originalNotification.reapply(getApplicationContext(), localView);
-							nd.layoutId = localView.getId();							
-							nd.hasTime = (localView.findViewById(16908388) != null);
-							nd.hasTitle = (localView.findViewById(notification_title_id) != null);
-							nd.hasSubtitle = (localView.findViewById(notification_subtext_id) != null);
-							nd.hasText = (localView.findViewById(notification_text_id) != null);
-							nd.hasBigText = (localView.findViewById(big_notification_content_text) != null);
-							nd.hasImage = (localView.findViewById(notification_image_id) != null);
+							nd.originalNotification.reapply(getApplicationContext(), localView);
+							nd.layoutId = localView.getId();
+							View time = localView.findViewById(16908388);
+							View title = localView.findViewById(notification_title_id);
+							View subtitle = localView.findViewById(notification_subtext_id);
+							View text = localView.findViewById(notification_text_id);
+							View bigtext = localView.findViewById(big_notification_content_text);
+							View image = localView.findViewById(notification_image_id);
+							
+							nd.hasTime = (time != null && time instanceof TextView);
+							nd.hasTitle = (title != null && title instanceof TextView);
+							nd.hasSubtitle = (subtitle != null && subtitle instanceof TextView);
+							nd.hasText = (text != null && text instanceof TextView);
+							nd.hasBigText = (bigtext != null && bigtext instanceof TextView);
+							nd.hasImage = (image != null && image instanceof ImageView);
 							if (!nd.hasImage)
 							{
 								// try to find an image
 								nd.customImageId = recursiveFindFirstImage(localView);
-							}
+							}														
 						}
 						catch (Exception exp)
 						{
@@ -355,8 +372,76 @@ public class NotificationsService extends AccessibilityService
 				}
 			}
 		}
-	}	
-	
+	}
+		
+	private Action[] getActionsFromNotification(Notification n, String packageName) 
+	{
+		ArrayList<Action> returnActions = new ArrayList<Action>();
+		try
+		{
+			Object[] actions = null;
+			Field fs = n.getClass().getDeclaredField("actions");
+			if (fs != null)
+			{
+				fs.setAccessible(true);
+				actions = (Object[]) fs.get(n);												
+			}
+			if (actions != null)
+			{
+				for(int i=0; i<actions.length; i++)
+				{
+					Action a = new Action();
+					Class<?> actionClass=Class.forName("android.app.Notification$Action");
+					a.icon = actionClass.getDeclaredField("icon").getInt(actions[i]);
+					a.title = (CharSequence) actionClass.getDeclaredField("title").get(actions[i]);;
+					a.actionIntent = (PendingIntent) actionClass.getDeclaredField("actionIntent").get(actions[i]);;					
+					
+					// find drawable 
+					// extract app icons
+					Resources res;
+					try {
+						res = getPackageManager().getResourcesForApplication(packageName);
+						a.drawable = BitmapFactory.decodeResource(res, a.icon);						
+					} catch (NameNotFoundException e) 
+					{
+						a.drawable = null;
+					}
+					returnActions.add(a);
+				}
+			}
+		}
+		catch(Exception exp)
+		{
+			
+		}	
+		Action[] returnArray = new Action[returnActions.size()];
+		returnActions.toArray(returnArray);
+		return returnArray;
+	}
+
+	private View recursiveFindButtons(ViewGroup v) 
+	{
+		for(int i=0; i<v.getChildCount(); i++)
+		{
+			View child = v.getChildAt(i);
+			if (child instanceof ViewGroup)
+				return recursiveFindButtons((ViewGroup)child);			
+			if (child instanceof Button)
+			{
+				return v;
+			}
+			if (child instanceof TextView)
+			{
+				TextView t = (TextView)child;
+				if (t.getText().equals("Archive"))
+				{
+					return v;
+				}
+			}
+		}
+		return null;
+	}
+
 	private RemoteViews createNormalNotification(NotificationData nd) 
 	{
 		// create remoteview for normal notification
@@ -457,7 +542,7 @@ public class NotificationsService extends AccessibilityService
 				else if (text.equals("7")) big_notification_content_text = id;
 				else if (text.equals("8")) inbox_notification_event_1_id = id;
 				else if (text.equals("9")) inbox_notification_event_2_id = id;
-				else if (text.equals("10")) inbox_notification_event_3_id = id;
+				else if (text.equals("10")) inbox_notification_event_3_id = id;				
 			}
 			else if (child instanceof ImageView)
 			{
@@ -466,6 +551,12 @@ public class NotificationsService extends AccessibilityService
 				{
 					this.notification_image_id = child.getId();
 				}
+			}
+			
+			if (child instanceof Button)
+			{
+				String text = ((Button)child).getText().toString();
+				if (text.equals("11")) buttons_panel_id_id = v.getId();				
 			}
 				
 		}
@@ -479,6 +570,10 @@ public class NotificationsService extends AccessibilityService
 	    .setContentText("2")
 	    .setContentInfo("3")
 	    .setSubText("4");
+
+		mBuilder.addAction(R.drawable.appicon, "11", PendingIntent.getBroadcast(this, 0, new Intent("Dummy"), PendingIntent.FLAG_UPDATE_CURRENT));
+		mBuilder.addAction(R.drawable.appicon, "12", PendingIntent.getBroadcast(this, 0, new Intent("Dummy"), PendingIntent.FLAG_UPDATE_CURRENT));
+		mBuilder.addAction(R.drawable.appicon, "13", PendingIntent.getBroadcast(this, 0, new Intent("Dummy"), PendingIntent.FLAG_UPDATE_CURRENT));
 
 		Notification n = mBuilder.build();
 				
@@ -496,8 +591,8 @@ public class NotificationsService extends AccessibilityService
 			NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
 			bigtextstyle.setSummaryText("5");
 			bigtextstyle.setBigContentTitle("6");
-			bigtextstyle.bigText("7");
-
+			bigtextstyle.bigText("7");			
+					
 			mBuilder.setStyle(bigtextstyle);
 			detectExpandedNotificationsIds(mBuilder.build());
 			
