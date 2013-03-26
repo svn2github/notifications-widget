@@ -110,17 +110,24 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				
 				if (notStyle.equals("large"))
 				{
-					styleView = n.largeNotification;
-					
-					// change style for large notification
-					// set background to transparent (the item background will be shown instead)
-					if (n.layoutId != 0) n.originalNotification.setInt(n.layoutId , "setBackgroundColor", Color.TRANSPARENT);
-					if (n.hasTime) n.originalNotification.setTextColor(16908388, timeColor);
-					if (n.hasTitle) n.originalNotification.setTextColor(s.notification_title_id, textColor); 
-					if (n.hasSubtitle) n.originalNotification.setTextColor(s.notification_subtext_id, textColor);
-					if (n.hasText) n.originalNotification.setTextColor(s.notification_text_id, textColor);
-					if (n.hasBigText) n.originalNotification.setTextColor(s.big_notification_content_text, textColor);
+					if (n.originalNotification != null)
+					{
+						styleView = n.largeNotification;
+						
+						// change style for large notification
+						// set background to transparent (the item background will be shown instead)						
+						if (n.layoutId != 0) n.originalNotification.setInt(n.layoutId , "setBackgroundColor", Color.TRANSPARENT);
+						if (n.hasTime) n.originalNotification.setTextColor(16908388, timeColor);
+						if (n.hasTitle) n.originalNotification.setTextColor(s.notification_title_id, textColor); 
+						if (n.hasSubtitle) n.originalNotification.setTextColor(s.notification_subtext_id, textColor);
+						if (n.hasText) n.originalNotification.setTextColor(s.notification_text_id, textColor);
+						if (n.hasBigText) n.originalNotification.setTextColor(s.big_notification_content_text, textColor);
 					//if (n.hasImage) iconId = s.notification_image_id;	
+					}
+					else
+					{
+						styleView = n.normalNotification;
+					}
 				}
 				else if (notStyle.equals("normal"))
 				{

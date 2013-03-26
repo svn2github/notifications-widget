@@ -161,8 +161,6 @@ public final class R {
          */
         public static final int menu_settings=0x7f06002e;
         public static final int no=0x7f060012;
-        /**   TODO - update translation for this  
-         */
         public static final int no_apps=0x7f060056;
         public static final int no_widget_locker_add_widget=0x7f060048;
         public static final int notification_bg_opacity=0x7f060021;

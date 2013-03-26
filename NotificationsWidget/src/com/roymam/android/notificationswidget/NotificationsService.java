@@ -675,6 +675,9 @@ public class NotificationsService extends AccessibilityService
 			if (text!=null)
 			{
 				nd.text = text;
+			}
+			if (n.bigContentView != null)
+			{
 				nd.originalNotification = n.bigContentView;
 			}
 		}

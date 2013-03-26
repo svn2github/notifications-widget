@@ -17,9 +17,9 @@
     <string name="notifications">Benachrichtigungen</string>
     
      <!--  Action Bar -->
-    <string name="settings">Settings</string>
-	<string name="pin">Pin</string>
-	<string name="unpin">Unpin</string>
+    <string name="settings">Einstellungen</string>
+	<string name="pin">Anheften</string>
+	<string name="unpin">Lösen</string>
 	
     <string name="disableproximity_nexus4_warning">Beachten Sie, dass, bei aktiviertem Näherungssensor, Probleme mit dem Nexus 4 auftreten können: Erhöhter Akkuverbrauch und Tick-Geräusche bei der Musik-Wiedergabe und in Anrufen.\nSind sie sicher, dass sie dieses Feature aktivieren wollen?</string>
     <string name="disableproximity_nexus4_warning_title">Nexus 4 Warnung</string>
@@ -29,8 +29,8 @@
     <string name="delayed_screenon_summary">Aktiviert das Display bei neuer Benachrichtgung erst, wenn Sie das Gerät aus der Tasche nehmen</string>
     <string name="disable_notification_click">Deaktiviere klickbare Benachrichtigungen</string>
     <string name="disable_notification_click_summary">Verhindert, dass sich die Benachrichtigungen beim darauf Tippen öffnen</string>
-    <string name="extract_expanded_text">Use expanded notification</string>
-	<string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>		
+    <string name="extract_expanded_text">Verwende erweiterte Benachrichtigungen</string>
+	<string name="extract_expanded_text_summary">Nur Android 4.1+: Verwende erweiterte Benachrichtigungen, wenn verfügbar</string>		
     
         
     <string name="turnscreenon">Automatische Displayaktivierung</string>
@@ -104,7 +104,7 @@
     
     <!--  About Dialog -->
     <string name="about_title">NotificationsWidget</string>
-    <string name="about_subtitle">Notifications Widget wurde entwickelt von Roymam\nGerman language support by robvisual,philipsleder</string>
+    <string name="about_subtitle">Notifications Widget wurde entwickelt von Roymam\nDeutsche Übersetzung von robvisual und Wikiwix</string>
     <string name="about_content">Sie finden das Projekt hier:\nhttp://code.google.com/p/notifications-widget/\nFühlen Sie sich frei, sich am Projekt zu beteiligen und Fehler zu melden\n\nWenn Sie uns gerne finanziell unterstützen möchten, dann verweisen wir auf ein Spiel aus unserer Entwicklung:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
     <string name="about_contactus_title">Kontaktieren Sie uns</string>
@@ -128,6 +128,5 @@
     <string name="show_only_last_notification_summary">Behält nur die neueste Benachrichtigung der Anwendung</string>
             <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Alle Einstellungen dieser Anwendung zurücksetzen</string>
-    <!--  TODO - update translation for this  -->
-    <string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>
+    <string name="no_apps">Es gibt keine Apps mit speziellen Einstellungen - Um Anpassungen für eine App vorzunehmen, tippen sie auf das App-Icon in der Benachrichtigung und wählen sie \"Einstellungen\"</string>
 </resources>
