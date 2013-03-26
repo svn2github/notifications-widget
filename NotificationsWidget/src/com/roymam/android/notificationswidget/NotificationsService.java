@@ -831,15 +831,27 @@ public class NotificationsService extends AccessibilityService
 	public void launchNotification(int pos) 
 	{
 		if (pos >=0 && pos < notifications.size())
-		{
+		{			
 			try 
 			{
 				notifications.get(pos).action.send();
-				removeNotification(pos);
 			} catch (Exception e) 
 			{
-				Toast.makeText(getApplicationContext(), "Cannot open notification", Toast.LENGTH_SHORT).show();
+				// if cannot launch intent, create a new one for the app
+				try
+				{
+					Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(notifications.get(pos).packageName);
+					startActivity(LaunchIntent);					
+				}
+				catch(Exception e2)
+				{
+					// cannot launch intent - do nothing...
+					e2.printStackTrace();
+					Toast.makeText(this, "Error - cannot launch app", Toast.LENGTH_SHORT).show();
+				}
 			}
+			removeNotification(pos);
+			updateWidget();
 		}
 	}
 
