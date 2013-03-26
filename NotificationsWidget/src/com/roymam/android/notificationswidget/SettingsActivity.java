@@ -3,6 +3,7 @@ package com.roymam.android.notificationswidget;
 import java.util.List;
 
 import com.roymam.android.common.ListPreferenceChangeListener;
+import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +22,11 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.v4.app.DialogFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.BaseAdapter;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
@@ -235,6 +241,41 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	{
         super.onCreate(savedInstanceState);
     }
+	
+	private void showAbout() 
+	{	
+		DialogFragment dialog = new WizardActivity.AboutDialogFragment();
+		//TBD - find a way to show about dialog
+		//dialog.show(getFragmentManager(), "AboutDialogFragment");	
+	}
+	
+	// TBD - find a way to show about dialog
+	/*
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		// Inflate the menu; this adds items to the action bar if it is present.
+		final MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.settings_menu, menu);
+	    
+	    OnMenuItemClickListener menuListener = new OnMenuItemClickListener()
+	    {
+			@Override
+			public boolean onMenuItemClick(MenuItem arg0) 
+			{
+				if (arg0.getItemId() == R.id.menu_about)
+				{
+					showAbout();
+					return true;
+				}
+				return false;
+			}
+	    };
+	    for(int i=0;i<menu.size();i++)
+	    	menu.getItem(i).setOnMenuItemClickListener(menuListener);
+	    
+	    return super.onCreateOptionsMenu(menu);
+	}
+*/
 	
 	@Override
 	protected void onResume() 
