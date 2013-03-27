@@ -53,6 +53,8 @@
     <string name="clock_text_color">Clock text color</string>
     <string name="notification_time_color">Farbe der Zeit</string>
     <string name="notification_style">Darstellungstyp</string>
+    <string name="max_lines">Maximum text lines</string>
+    <string name="max_lines_summary">When \"Normal\" notification style selected, set the maximum number of text lines that can be displayed for a single notification</string>
     <string name="show_full_notification">Zeige vollständige Benachrichtigung</string>
     <string name="show_full_notification_summary">Zeige die Benachrichtigung, wie in der Benachrichtigungsleiste im System</string>
     <string name="clearonclear">Überwachen von \"Alle löschen\"</string>
@@ -60,6 +62,15 @@
     <string name="keep_on_foreground">Immer im Vordergrund halten</string>
     <string name="keep_on_foreground_summary">Bewahrt Notificiations Widget davor beendet zu werden, wenn alle Programme vom Benutzer über den Taskmanager beendet werden</string>
         
+    <string-array name="max_lines_entries">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>Unbegrenzt</item>
+    </string-array>
+    
     <string-array name="settings_colors_entries">
             <item>Weiß</item>
             <item>Schwarz</item>

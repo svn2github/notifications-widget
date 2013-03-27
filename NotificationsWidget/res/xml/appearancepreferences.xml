@@ -34,6 +34,13 @@
     	    			android:title="@string/notification_style" 
     	    			android:key="notification_style" 
     	    			android:defaultValue="normal" />
+	<ListPreference android:title="@string/max_lines" 
+    	    			android:dialogTitle="@string/max_lines" 
+    	    			android:entries="@array/max_lines_entries" 
+    	    			android:summary="@string/max_lines_summary"
+    	    			android:key="max_lines" 
+    	    			android:entryValues="@array/max_lines_values" 
+    	    			android:defaultValue="2"/> 
 	<com.hlidskialf.android.preference.SeekBarPreference android:key="notification_bg_opacity"
 	        android:title="@string/notification_bg_opacity"
 	        android:summary="@string/notification_bg_opacity_summary"
@@ -53,6 +60,7 @@
     	    			android:key="notification_time_color" 
     	    			android:entryValues="@array/settings_colors_values" 
     	    			android:defaultValue="17170451"/> 
-	</PreferenceCategory>
+    	
 	<CheckBoxPreference android:summary="@string/extract_expanded_text_summary" android:key="useexpandedtext" android:title="@string/extract_expanded_text" android:defaultValue="true"/>
+	</PreferenceCategory>
 </PreferenceScreen>

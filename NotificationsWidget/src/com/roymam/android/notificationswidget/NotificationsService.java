@@ -65,6 +65,13 @@ public class NotificationsService extends AccessibilityService
 	public int inbox_notification_event_1_id = 0;
 	public int inbox_notification_event_2_id = 0;
 	public int inbox_notification_event_3_id = 0;
+	public int inbox_notification_event_4_id = 0;
+	public int inbox_notification_event_5_id = 0;
+	public int inbox_notification_event_6_id = 0;
+	public int inbox_notification_event_7_id = 0;
+	public int inbox_notification_event_8_id = 0;
+	public int inbox_notification_event_9_id = 0;
+	public int inbox_notification_event_10_id = 0;
 	
 	public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
@@ -433,7 +440,6 @@ public class NotificationsService extends AccessibilityService
     	String timeFormat = "%H:%M";
     	if (!DateFormat.is24HourFormat(this)) timeFormat = "%l:%M%P";
     	n.setTextViewText(R.id.notificationTime, t.format(timeFormat));	
-    	
     	return n;
 	}
 	
@@ -517,6 +523,13 @@ public class NotificationsService extends AccessibilityService
 				else if (text.equals("8")) inbox_notification_event_1_id = id;
 				else if (text.equals("9")) inbox_notification_event_2_id = id;
 				else if (text.equals("10")) inbox_notification_event_3_id = id;				
+				else if (text.equals("11")) inbox_notification_event_4_id = id;
+				else if (text.equals("12")) inbox_notification_event_5_id = id;
+				else if (text.equals("13")) inbox_notification_event_6_id = id;				
+				else if (text.equals("14")) inbox_notification_event_7_id = id;
+				else if (text.equals("15")) inbox_notification_event_8_id = id;
+				else if (text.equals("16")) inbox_notification_event_9_id = id;				
+				else if (text.equals("17")) inbox_notification_event_10_id = id;
 			}
 			else if (child instanceof ImageView)
 			{
@@ -561,7 +574,7 @@ public class NotificationsService extends AccessibilityService
 			
 			NotificationCompat.InboxStyle inboxStyle =
 			        new NotificationCompat.InboxStyle();
-			String[] events = {"8","9","10"};
+			String[] events = {"8","9","10","11","12","13","14","15","16","17"};
 			inboxStyle.setBigContentTitle("6");
 			inboxStyle.setSummaryText("5");
 			
@@ -651,6 +664,55 @@ public class NotificationsService extends AccessibilityService
 					}
 					
 					v = localView.findViewById(inbox_notification_event_3_id);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(inbox_notification_event_4_id);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(inbox_notification_event_5_id);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(inbox_notification_event_6_id);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(inbox_notification_event_7_id);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(inbox_notification_event_8_id);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(inbox_notification_event_9_id);
+					if (v != null && v instanceof TextView)  
+					{
+						String s = ((TextView)v).getText().toString();
+						if (!s.equals("")) text += "\n" + s;
+					}
+					
+					v = localView.findViewById(inbox_notification_event_10_id);
 					if (v != null && v instanceof TextView)  
 					{
 						String s = ((TextView)v).getText().toString();
