@@ -218,13 +218,9 @@ public class NotificationsService extends AccessibilityService
 				{
 					PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 					isScreenOn = powerManager.isScreenOn();
-					if (!isScreenOn)
+					if (!isScreenOn && deviceIsUnlocked)
 					{
-						if (deviceIsUnlocked && sharedPref.getBoolean(SettingsActivity.CLEAR_ON_LOCK, false))
-						{
-							clearAllNotifications();
-						}
-						deviceIsUnlocked = false;
+						setDeviceIsLocked();
 					}
 				}
 

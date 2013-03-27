@@ -39,8 +39,7 @@
     	    			android:entries="@array/max_lines_entries" 
     	    			android:summary="@string/max_lines_summary"
     	    			android:key="max_lines" 
-    	    			android:entryValues="@array/max_lines_values" 
-    	    			android:defaultValue="2"/> 
+    	    			android:entryValues="@array/max_lines_values"/> 
 	<com.hlidskialf.android.preference.SeekBarPreference android:key="notification_bg_opacity"
 	        android:title="@string/notification_bg_opacity"
 	        android:summary="@string/notification_bg_opacity_summary"

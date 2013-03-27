@@ -137,7 +137,9 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				}
 				else
 				{
-					styleView = n.smallNotification;				
+					styleView = n.smallNotification;
+					int maxLines = Integer.parseInt(preferences.getString(SettingsActivity.MAX_LINES, "1"));
+					styleView.setInt(R.id.notificationText, "setMaxLines", maxLines);					
 				}
 				
 				// add style view

@@ -17,6 +17,7 @@
 package com.roymam.android.notificationswidget;
 
 import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -133,8 +134,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	}
     	else if (intent.getAction().equals(UPDATE_CLOCK))
     	{
-    		updateWidget(ctx,false);
-			
+    		updateWidget(ctx,false);			
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.LOCKED"))
     	{
@@ -151,6 +151,14 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     			ns.setDeviceIsUnlocked();
 				ns.setSelectedIndex(-1);
 				ns.setWidgetLockerEnabled(true);
+    		}
+    	}
+    	else if (intent.getAction().equals("android.intent.action.SCREEN_ON"))
+    	{
+    		if (ns != null)
+    		{
+    			// if the screen is on, so the device is currently ocked (until USER_PRESENT will trigger)
+    			ns.setDeviceIsLocked();
     		}
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.DISABLED"))

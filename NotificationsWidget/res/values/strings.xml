@@ -44,7 +44,7 @@
     <string name="notification_time_color">Notification time color</string>
     <string name="notification_style">Notification Style</string>
     <string name="max_lines">Maximum text lines</string>
-    <string name="max_lines_summary">When \"Normal\" notification style selected, set the maximum number of text lines that can be displayed for a single notification</string>
+    <string name="max_lines_summary">When \"Normal\" or \"Compact\" notification style is selected, set the maximum number of text lines for a single notification</string>
     <string name="show_full_notification">Show full notification content</string>
     <string name="show_full_notification_summary">Show full notification content as it appears on notifications bar</string>
     <string name="clearonclear">Monitor \"Clear All\"</string>
@@ -53,6 +53,7 @@
     <string name="keep_on_foreground_summary">Keeps NotificiationsWidget service on foreground to prevent other apps from killing it</string>
 
     <string-array name="max_lines_entries">
+        <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>
@@ -61,6 +62,7 @@
         <item>Unlimited</item>
     </string-array>
     <string-array name="max_lines_values" translatable="false">
+        <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>
