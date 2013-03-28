@@ -224,6 +224,23 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	super.onReceive(ctx, intent);
     }
 	
+	@Override
+	public void onAppWidgetOptionsChanged(Context context,
+			AppWidgetManager appWidgetManager, int appWidgetId,
+			Bundle newOptions) 
+	{
+		int currHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+		
+		if (currHeight < 140)
+		{
+			// it's compact mode
+		}
+		else
+		{
+			// it's expanded mode
+		}
+	}
+
 	private void populateTime(Context ctxt, RemoteViews widget, int containerId, int hourId, int minuteId, int ampmId, int dateId)
 	{
 	    // set up clock

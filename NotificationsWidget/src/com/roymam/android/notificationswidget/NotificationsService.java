@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.roymam.android.notificationswidget.NotificationData.Action;
 
@@ -37,7 +40,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -144,57 +146,59 @@ public class NotificationsService extends AccessibilityService
 	}	
 	
 	// Proximity Sensor Monitoring
-	SensorManager sensorManager;
-	Sensor proximitySensor;
-	SensorEventListener sensorListener;
+	SensorManager sensorManager = null;
+	Sensor proximitySensor = null;
+	SensorEventListener sensorListener = null;
 	
 	private void registerProximitySensor()
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-		sensorListener = new SensorEventListener()
-		{
-			@Override
-			public void onAccuracyChanged(Sensor sensor, int accuracy) 
-			{
-			}
-
-			@Override
-			public void onSensorChanged(SensorEvent event) 
-			{
-				if (event.values[0] == 0)
-				{
-					deviceCovered = true;
-				}
-				else
-				{
-					if (deviceCovered)
-					{
-						deviceCovered = false;
-						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(NotificationsService.this);
-						if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false) && newNotificationsAvailable)
-						{
-							turnScreenOn();
-						}
-					}
-				}
-			}				
-		};
-		
 		if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
-		     prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
-		{
-			startProximityMontior();
-		}
+			 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
+			{
+				sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+				proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+				sensorListener = new SensorEventListener()
+				{
+					@Override
+					public void onAccuracyChanged(Sensor sensor, int accuracy) 
+					{
+					}
+		
+					@Override
+					public void onSensorChanged(SensorEvent event) 
+					{
+						if (event.values[0] == 0)
+						{
+							deviceCovered = true;
+						}
+						else
+						{
+							if (deviceCovered)
+							{
+								deviceCovered = false;
+								SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(NotificationsService.this);
+								if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false) && newNotificationsAvailable)
+								{
+									turnScreenOn();
+								}
+							}
+						}
+					}				
+				};
+				startProximityMontior();
+			}
+		
 	}
 	public void startProximityMontior()
-	{		       
+	{	
 		if (proximitySensor != null)
 		{
 			sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_UI);
-		}		
+		}
+		else registerProximitySensor();
+			
 	}	
 	public void stopProximityMontior()
 	{
@@ -203,7 +207,7 @@ public class NotificationsService extends AccessibilityService
 	}
 
 	/////////////////////////////////////////
-
+	
 	public void handleNotification(Notification n, String packageName)
 	{
 		if (n != null)
@@ -472,9 +476,23 @@ public class NotificationsService extends AccessibilityService
 		if (turnScreenOn && !deviceCovered)
 		{
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-			wl.acquire();
-			wl.release();
+			// turn the screen on only if it was off
+			if (!pm.isScreenOn())
+			{
+				final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+				wl.acquire();	
+				
+				// release after 5 seconds
+				final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+				Runnable task = new Runnable() 
+				{
+				    public void run() 
+				    {
+				    	wl.release();
+				    }
+				};
+				worker.schedule(task, 10, TimeUnit.SECONDS);
+			}		
 			newNotificationsAvailable = false;
 		}	
 	}
