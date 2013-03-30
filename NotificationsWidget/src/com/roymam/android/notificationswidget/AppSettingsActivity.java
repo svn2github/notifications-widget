@@ -2,6 +2,7 @@ package com.roymam.android.notificationswidget;
 
 import java.util.StringTokenizer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -23,6 +24,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String IGNORE_APP = "ignoreapp";
 	public static final String KEEP_ONLY_LAST = "showlast";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
+	public static final String SHOW_PERSISTENT_NOTIFICATION = "showpersistent";
 	
 	private String packageName;
 	
@@ -70,7 +72,15 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
 		useExpandedTextPref.setDefaultValue(prefs.getBoolean(USE_EXPANDED_TEXT, true));
         useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
-        root.addPreference(useExpandedTextPref);        
+        root.addPreference(useExpandedTextPref);  
+        
+        // Show persistent notifications preference
+        CheckBoxPreference showPresistentPref = new CheckBoxPreference(this);
+        showPresistentPref.setKey(packageName+"."+SHOW_PERSISTENT_NOTIFICATION);
+        showPresistentPref.setTitle(R.string.show_persistent_notifications);        
+        showPresistentPref.setDefaultValue(false);
+        showPresistentPref.setSummary(R.string.show_persistent_notifications_summary);
+        root.addPreference(showPresistentPref); 
         
         // Clear app specific preferences button
         PreferenceScreen clearPref = getPreferenceManager().createPreferenceScreen(this);
@@ -80,24 +90,12 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) 
-			{
+			{	
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
-				String specficApps = prefs.getString(SettingsActivity.APPS_SETTINGS, "");
-				String updatedSpecificApps = "";
-				for(String app:specficApps.split(","))
-				{
-					if (!app.equals(packageName))
-					{
-						if (updatedSpecificApps.isEmpty())
-							updatedSpecificApps = app;
-						else
-							updatedSpecificApps+=","+app;
-					}
-				}
-				prefs.edit()
-					.remove(packageName+"."+IGNORE_APP)
-					.putString(SettingsActivity.APPS_SETTINGS, updatedSpecificApps)
-					.commit();
+				prefs.edit().remove(packageName+"."+IGNORE_APP).commit();
+				
+				addAppToAppSpecificSettings(packageName, AppSettingsActivity.this);
+				
 				finish();
 				return false;
 			}
@@ -110,6 +108,29 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         setPreferenceScreen(root);
 	}
 	
+	public static void addAppToAppSpecificSettings(String packageName, Context ctx)
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		
+		String specficApps = prefs.getString(SettingsActivity.APPS_SETTINGS, "");
+		String updatedSpecificApps = "";
+		for(String app:specficApps.split(","))
+		{
+			if (!app.equals(packageName))
+			{
+				if (updatedSpecificApps.isEmpty())
+					updatedSpecificApps = app;
+				else
+					updatedSpecificApps+=","+app;
+			}
+		}
+		
+		if (updatedSpecificApps.isEmpty())
+			updatedSpecificApps = packageName;
+		else
+			updatedSpecificApps+=","+packageName;
+		prefs.edit().putString(SettingsActivity.APPS_SETTINGS, updatedSpecificApps).commit();
+	}
 	@Override
 	protected void onResume() 
 	{

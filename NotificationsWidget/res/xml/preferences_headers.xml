@@ -18,6 +18,10 @@
         	android:icon="@drawable/apps"
             android:title="@string/app_specific_settings_title" />
     
+     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsPersistentNotificationsFragment"
+        	android:icon="@android:drawable/stat_notify_sync_noanim"
+            android:title="@string/persistent_notifications" />
+    
     <!--  <header android:fragment="com.example.android.apis.preference.PreferenceWithHeaders$Prefs2Fragment"
             android:icon="@drawable/ic_settings_display"
             android:title="Prefs 2"

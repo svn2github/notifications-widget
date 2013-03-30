@@ -173,4 +173,8 @@
     <string name="clear_app_summary">Clear app specific settings for this app</string>
     <string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>
     
+    <!--  Persistent Notifications -->
+    <string name="persistent_notifications">Persistent Notifications</string>
+    <string name="show_persistent_notifications">Show persistent notification</string>
+    <string name="show_persistent_notifications_summary">Show persistent notification from this app</string>
 </resources>

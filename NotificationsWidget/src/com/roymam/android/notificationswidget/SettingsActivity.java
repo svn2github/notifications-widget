@@ -1,6 +1,8 @@
 package com.roymam.android.notificationswidget;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.roymam.android.common.ListPreferenceChangeListener;
 import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment;
@@ -15,8 +17,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -28,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.RemoteViews;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
@@ -226,6 +231,71 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 					noAppsPref.setTitle(R.string.no_apps);
 					root.addPreference(noAppsPref);
 				}
+			}
+	        setPreferenceScreen(root);
+	    }
+	}
+	
+	public static class PrefsPersistentNotificationsFragment extends PreferenceFragment
+	{
+		@Override
+	    public void onCreate(Bundle savedInstanceState) 
+	    {
+	        super.onCreate(savedInstanceState);
+
+	        // add app specific settings
+			PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
+			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			
+			// Persistent notifications list
+			NotificationsService ns = NotificationsService.getSharedInstance();
+			if (ns != null)
+    		{    			
+    			Iterator<Entry<String, RemoteViews>> it = ns.getPersistentNotifications().entrySet().iterator();
+    			
+    			while (it.hasNext())
+    			{
+    				Entry<String, RemoteViews> e = it.next();
+    				final String packageName = e.getKey();    				
+    				CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());					
+					getPreferenceManager();
+					intentPref.setChecked(prefs.getBoolean(packageName + "." + AppSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false));
+					intentPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+					{
+						@Override
+						public boolean onPreferenceChange(Preference preference, Object newValue) 
+						{
+							prefs.edit().putBoolean(packageName + "." + AppSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, (Boolean)newValue).commit();
+							AppSettingsActivity.addAppToAppSpecificSettings(packageName, getActivity());
+							return true;
+						}
+						
+					});
+					/*intentPref.setOnPreferenceClickListener(new OnPreferenceClickListener()
+					{
+						@Override
+						public boolean onPreferenceClick(Preference preference) 
+						{	
+							Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
+							runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+							getActivity().startActivity(runAppSpecificSettings);
+							return true;
+						}					
+					});*/
+					// get package title
+					try 
+					{
+						ApplicationInfo ai = getActivity().getPackageManager().getApplicationInfo(packageName, 0);
+						String appName = getActivity().getPackageManager().getApplicationLabel(ai).toString();
+						if (appName == null) appName = packageName;
+						intentPref.setTitle(appName);
+						intentPref.setIcon(getActivity().getPackageManager().getApplicationIcon(ai));
+					} catch (NameNotFoundException e2) 
+					{
+						intentPref.setTitle(packageName);
+					}
+			        root.addPreference(intentPref);
+    			}	    			    			
 			}
 	        setPreferenceScreen(root);
 	    }

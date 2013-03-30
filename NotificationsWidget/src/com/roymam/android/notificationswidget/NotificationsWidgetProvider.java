@@ -46,7 +46,9 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map.Entry;
 
 import com.roymam.android.notificationswidget.R;
 
@@ -320,6 +322,24 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    
     		// hide loading spinner
     		widget.setViewVisibility(R.id.loadingSpinner, View.GONE);
+    		
+    		// set up persistent notifications list
+    		widget.removeAllViews(R.id.persistentNotificationsView);
+    		if (ns != null)
+    		{
+    			widget.removeAllViews(R.id.persistentNotificationsView);
+    			Iterator<Entry<String, RemoteViews>> it = ns.getPersistentNotifications().entrySet().iterator();
+    			
+    			while (it.hasNext())
+    			{
+    				Entry<String, RemoteViews> e = it.next();
+    				String packageName = e.getKey();
+    				if (prefs.getBoolean(packageName + "." + AppSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
+    				{
+    					widget.addView(R.id.persistentNotificationsView, e.getValue());
+    				}
+    			}
+    		}
     		
     		// set up notifications list
     		Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);

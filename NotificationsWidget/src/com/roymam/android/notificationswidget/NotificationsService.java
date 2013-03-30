@@ -2,14 +2,13 @@ package com.roymam.android.notificationswidget;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import com.roymam.android.notificationswidget.NotificationData.Action;
-
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.TargetApi;
@@ -49,6 +48,7 @@ public class NotificationsService extends AccessibilityService
 {
 	private static NotificationsService sSharedInstance;
 	private List<NotificationData> notifications;
+	private HashMap<String, RemoteViews> persistentNotifications;
 	private boolean deviceIsUnlocked = true;
 	private boolean deviceCovered = false;
 	private boolean newNotificationsAvailable = false;
@@ -134,6 +134,7 @@ public class NotificationsService extends AccessibilityService
 	    setServiceInfo(info);
 	    	    
 	    notifications = new ArrayList<NotificationData>();
+	    persistentNotifications = new HashMap<String, RemoteViews>();
 	    
 	    // register proximity change sensor
 		registerProximitySensor();
@@ -375,9 +376,36 @@ public class NotificationsService extends AccessibilityService
 					}
 				}
 			}
+			// handle persistent notifications
+			else //if ((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR)
+			{
+				// keep only the last persistent notification for the app
+				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+				boolean useExpanded = (sharedPref.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT, 
+									sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)));
+
+				if (useExpanded && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				{
+					this.persistentNotifications.put(packageName, getExpandedContent(n));
+				}
+				else
+				{
+					this.persistentNotifications.put(packageName, n.contentView);
+				}				
+				updateWidget();
+			}
 		}
 	}
 		
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private RemoteViews getExpandedContent(Notification n) 
+	{
+		if (n.bigContentView != null)
+			return n.bigContentView;
+		else
+			return n.contentView;
+	}
+
 	private Action[] getActionsFromNotification(Notification n, String packageName) 
 	{
 		ArrayList<Action> returnActions = new ArrayList<Action>();
@@ -929,6 +957,11 @@ public class NotificationsService extends AccessibilityService
 			removeNotification(pos);
 			updateWidget();
 		}
+	}
+	
+	public HashMap<String, RemoteViews> getPersistentNotifications() 
+	{
+		return persistentNotifications;
 	}
 
 	public boolean isWidgetLockerEnabled() 
