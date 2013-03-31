@@ -17,6 +17,8 @@ public final class R {
         public static final int settings_clock_values=0x7f070005;
         public static final int settings_colors_entries=0x7f070002;
         public static final int settings_colors_values=0x7f070003;
+        public static final int settings_notification_height_entries=0x7f07000a;
+        public static final int settings_notification_height_values=0x7f07000b;
         public static final int settings_notifications_entries=0x7f070008;
         public static final int settings_notifications_values=0x7f070009;
     }
@@ -48,27 +50,29 @@ public final class R {
         public static final int actionPin=0x7f0a0014;
         public static final int actionSettings=0x7f0a0013;
         public static final int actionbarContainer=0x7f0a000c;
-        public static final int alarmtime=0x7f0a001d;
+        public static final int alarmtime=0x7f0a0020;
         public static final int appIcon=0x7f0a000f;
-        public static final int bigClock=0x7f0a0018;
-        public static final int bigDate=0x7f0a001b;
-        public static final int bigHours=0x7f0a0019;
-        public static final int bigminutes=0x7f0a001a;
+        public static final int bigClock=0x7f0a001b;
+        public static final int bigDate=0x7f0a001e;
+        public static final int bigHours=0x7f0a001c;
+        public static final int bigminutes=0x7f0a001d;
         public static final int button1=0x7f0a0001;
         public static final int button2=0x7f0a0002;
         public static final int button3=0x7f0a0003;
-        public static final int buttonsBar=0x7f0a0024;
-        public static final int clearButton=0x7f0a0026;
-        public static final int clockbar=0x7f0a001e;
+        public static final int buttonsBar=0x7f0a0027;
+        public static final int clearButton=0x7f0a0029;
+        public static final int clockbar=0x7f0a0021;
         public static final int compactNotification=0x7f0a0005;
         public static final int customAction1=0x7f0a0011;
         public static final int customAction2=0x7f0a0012;
-        public static final int dateFull=0x7f0a0023;
+        public static final int dateFull=0x7f0a0026;
         public static final int largeNotificationContainer=0x7f0a000d;
-        public static final int loadingSpinner=0x7f0a0017;
-        public static final int menu_about=0x7f0a002c;
-        public static final int menu_settings=0x7f0a002b;
-        public static final int nextAlarmContainer=0x7f0a001c;
+        public static final int loadingSpinner=0x7f0a001a;
+        public static final int maxLayout=0x7f0a0018;
+        public static final int menu_about=0x7f0a002f;
+        public static final int menu_settings=0x7f0a002e;
+        public static final int nextAlarmContainer=0x7f0a001f;
+        public static final int normalLayout=0x7f0a0017;
         public static final int notificationActionbar=0x7f0a0010;
         public static final int notificationBG=0x7f0a000a;
         public static final int notificationContainer=0x7f0a000b;
@@ -76,18 +80,19 @@ public final class R {
         public static final int notificationIcon=0x7f0a0006;
         public static final int notificationText=0x7f0a0007;
         public static final int notificationTime=0x7f0a0009;
-        public static final int notificationsListView=0x7f0a0028;
-        public static final int persistentNotificationsView=0x7f0a0027;
+        public static final int notificationsListView=0x7f0a002b;
+        public static final int persistentNotificationsView=0x7f0a002a;
         public static final int pinIcon=0x7f0a0008;
-        public static final int serviceInactiveButton=0x7f0a0025;
-        public static final int serviceInactiveView=0x7f0a0029;
-        public static final int smallClock=0x7f0a001f;
-        public static final int textView1=0x7f0a002a;
+        public static final int serviceInactiveButton=0x7f0a0028;
+        public static final int serviceInactiveView=0x7f0a002c;
+        public static final int smallClock=0x7f0a0022;
+        public static final int smallLayout=0x7f0a0016;
+        public static final int textView1=0x7f0a002d;
         public static final int textView2=0x7f0a0000;
-        public static final int timeAMPM=0x7f0a0022;
-        public static final int timeHour=0x7f0a0020;
-        public static final int timeMinute=0x7f0a0021;
-        public static final int widetcontainer=0x7f0a0016;
+        public static final int timeAMPM=0x7f0a0025;
+        public static final int timeHour=0x7f0a0023;
+        public static final int timeMinute=0x7f0a0024;
+        public static final int widetcontainer=0x7f0a0019;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -98,7 +103,8 @@ public final class R {
         public static final int large_notification=0x7f030005;
         public static final int normal_notification=0x7f030006;
         public static final int notification_actionbar=0x7f030007;
-        public static final int widget_layout=0x7f030008;
+        public static final int persistent_notification_container=0x7f030008;
+        public static final int widget_layout=0x7f030009;
     }
     public static final class menu {
         public static final int activity_main=0x7f090000;
@@ -175,12 +181,14 @@ public final class R {
         public static final int no_widget_locker_add_widget=0x7f06004c;
         public static final int notification_bg_opacity=0x7f060021;
         public static final int notification_bg_opacity_summary=0x7f060022;
+        public static final int notification_height=0x7f06005e;
         public static final int notification_style=0x7f060026;
         public static final int notification_text_color=0x7f060024;
         public static final int notification_time_color=0x7f060025;
         public static final int notifications=0x7f06000a;
         public static final int notifications_service=0x7f060003;
         /**   Persistent Notifications 
+  Persistent Notifications 
          */
         public static final int persistent_notifications=0x7f06005b;
         public static final int pin=0x7f06004f;

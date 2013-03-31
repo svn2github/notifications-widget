@@ -339,7 +339,28 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     				String packageName = e.getKey();
     				if (prefs.getBoolean(packageName + "." + AppSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
     				{
-    					widget.addView(R.id.persistentNotificationsView, e.getValue());
+    					String layout = prefs.getString(packageName +"." + AppSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "max");
+    					RemoteViews rv = new RemoteViews(ctxt.getPackageName(), R.layout.persistent_notification_container);
+    					if (layout.equals("small"))
+    					{
+    						rv.addView(R.id.smallLayout, e.getValue());
+    						rv.setViewVisibility(R.id.smallLayout, View.VISIBLE);
+    						rv.setViewVisibility(R.id.normalLayout, View.GONE);
+    						rv.setViewVisibility(R.id.maxLayout, View.GONE);
+    					} else if (layout.equals("normal"))
+    					{
+    						rv.addView(R.id.normalLayout, e.getValue());
+    						rv.setViewVisibility(R.id.smallLayout, View.GONE);
+    						rv.setViewVisibility(R.id.normalLayout, View.VISIBLE);
+    						rv.setViewVisibility(R.id.maxLayout, View.GONE);
+    					} else 
+    					{
+    						rv.addView(R.id.maxLayout, e.getValue());
+    						rv.setViewVisibility(R.id.smallLayout, View.GONE);
+    						rv.setViewVisibility(R.id.normalLayout, View.GONE);
+    						rv.setViewVisibility(R.id.maxLayout, View.VISIBLE);
+    					}
+    					widget.addView(R.id.persistentNotificationsView, rv);
     				}
     			}
     		}

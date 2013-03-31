@@ -179,4 +179,15 @@
     <string name="persistent_notifications">Persistent Notifications</string>
     <string name="show_persistent_notifications">Show persistent notification</string>
     <string name="show_persistent_notifications_summary">Show persistent notification from this app</string>
+    <string name="notification_height">Persistent notification size</string>
+    <string-array name="settings_notification_height_entries">
+        <item>Small</item>
+        <item>Normal</item>
+        <item>Maximum</item>
+    </string-array>
+    <string-array name="settings_notification_height_values" translatable="false">
+        <item>small</item>
+        <item>normal</item>
+        <item>max</item>
+    </string-array>
 </resources>

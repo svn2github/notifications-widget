@@ -143,4 +143,20 @@
             <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Alle Einstellungen dieser Anwendung zurücksetzen</string>
     <string name="no_apps">Es gibt keine Apps mit speziellen Einstellungen - Um Anpassungen für eine App vorzunehmen, tippen sie auf das App-Icon in der Benachrichtigung und wählen sie \"Einstellungen\"</string>
+    
+    <!--  Persistent Notifications -->
+    <string name="persistent_notifications">Persistent Notifications</string>
+    <string name="show_persistent_notifications">Show persistent notification</string>
+    <string name="show_persistent_notifications_summary">Show persistent notification from this app</string>
+    <string name="notification_height">Persistent notification size</string>
+    <string-array name="settings_notification_height_entries">
+        <item>Small</item>
+        <item>Normal</item>
+        <item>Maximum</item>
+    </string-array>
+    <string-array name="settings_notification_height_values" translatable="false">
+        <item>small</item>
+        <item>normal</item>
+        <item>max</item>
+    </string-array>
 </resources>

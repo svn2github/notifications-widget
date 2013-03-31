@@ -10,6 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
@@ -25,6 +26,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String KEEP_ONLY_LAST = "showlast";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String SHOW_PERSISTENT_NOTIFICATION = "showpersistent";
+	public static final String PERSISTENT_NOTIFICATION_HEIGHT = "persistent_notification_height";
 	
 	private String packageName;
 	
@@ -81,6 +83,15 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         showPresistentPref.setDefaultValue(false);
         showPresistentPref.setSummary(R.string.show_persistent_notifications_summary);
         root.addPreference(showPresistentPref); 
+        
+        ListPreference persistentHeight = new ListPreference(this);
+        persistentHeight.setKey(packageName +"." +PERSISTENT_NOTIFICATION_HEIGHT);
+        persistentHeight.setTitle(R.string.notification_height);
+        persistentHeight.setDialogTitle(R.string.notification_height);
+        persistentHeight.setEntries(R.array.settings_notification_height_entries);
+        persistentHeight.setEntryValues(R.array.settings_notification_height_values);
+        persistentHeight.setDefaultValue("max");
+        root.addPreference(persistentHeight);
         
         // Clear app specific preferences button
         PreferenceScreen clearPref = getPreferenceManager().createPreferenceScreen(this);
