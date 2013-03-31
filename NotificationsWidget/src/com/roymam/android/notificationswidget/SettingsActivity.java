@@ -7,7 +7,9 @@ import java.util.Map.Entry;
 import com.roymam.android.common.ListPreferenceChangeListener;
 import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -300,11 +302,11 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        setPreferenceScreen(root);
 	    }
 	}
-	
+
 	@Override
     public void onBuildHeaders(List<Header> target) 
 	{
-        loadHeadersFromResource(R.xml.preferences_headers, target);
+        loadHeadersFromResource(R.xml.preferences_headers, target); 
     }
 	
 	@Override
@@ -315,13 +317,11 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	
 	private void showAbout() 
 	{	
-		DialogFragment dialog = new WizardActivity.AboutDialogFragment();
+		AboutDialogFragment dialog = new WizardActivity.AboutDialogFragment();
 		//TBD - find a way to show about dialog
-		//dialog.show(getFragmentManager(), "AboutDialogFragment");	
+		dialog.show(getFragmentManager(), "AboutDialogFragment");	
 	}
 	
-	// TBD - find a way to show about dialog
-	/*
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -346,7 +346,6 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    
 	    return super.onCreateOptionsMenu(menu);
 	}
-*/
 	
 	@Override
 	protected void onResume() 

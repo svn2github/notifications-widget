@@ -1,15 +1,16 @@
 package com.roymam.android.notificationswidget;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 //import android.app.DialogFragment;
 
-public class WizardActivity extends FragmentActivity 
+public class WizardActivity extends Activity 
 {
 	public static class AboutDialogFragment extends DialogFragment 
 	{
@@ -65,7 +66,7 @@ public class WizardActivity extends FragmentActivity
 	private int step2desc;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) 
+	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -153,7 +154,7 @@ public class WizardActivity extends FragmentActivity
 	public void showAbout()
 	{	
 		DialogFragment dialog = new AboutDialogFragment();
-		dialog.show(getSupportFragmentManager(), "AboutDialogFragment");
+		dialog.show(getFragmentManager(), "AboutDialogFragment");
 	}
 	
 	public void showSettings()
