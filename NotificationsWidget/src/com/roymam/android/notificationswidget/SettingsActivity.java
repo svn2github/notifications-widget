@@ -46,6 +46,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String CLEAR_BUTTON_MODE = "clearbuttonmode";
 	public static String SHOW_EDIT_BUTTON= "showeditbutton";
 	public static String NOTIFICATION_STYLE="notification_style";
+	public static String AUTO_COMPACT_STYLE="auto_compact_style";
 	public static String MAX_LINES="max_lines";
 	public static String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
 	public static String TEXT_COLOR = "notification_text_color";

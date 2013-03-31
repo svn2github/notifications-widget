@@ -43,6 +43,8 @@
     <string name="notification_text_color">Notification text color</string>
     <string name="notification_time_color">Notification time color</string>
     <string name="notification_style">Notification Style</string>
+    <string name="auto_compact_style">Auto Compact Style</string>
+    <string name="auto_compact_style_summary">Auto switch to compact style when widget is collapsed (Android 4.2+)</string>
     <string name="max_lines">Maximum text lines</string>
     <string name="max_lines_summary">When \"Normal\" or \"Compact\" notification style is selected, set the maximum number of text lines for a single notification</string>
     <string name="show_full_notification">Show full notification content</string>
@@ -110,7 +112,7 @@
     <string-array name="settings_notifications_entries">
         <item>Compact</item>
         <item>Normal</item>
-        <item>Large (original)</item>
+        <item>Large (Original)</item>
     </string-array>
     <string-array name="settings_notifications_values" translatable="false">
         <item>compact</item>

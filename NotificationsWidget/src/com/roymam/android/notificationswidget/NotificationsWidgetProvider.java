@@ -64,6 +64,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static int SETTINGS_ACTION = 2;
     
     public static boolean widgetActive = false;
+	public static boolean widgetExpanded = false;
     
     public NotificationsWidgetProvider() 
     {
@@ -235,12 +236,14 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		
 		if (currHeight < 140)
 		{
-			// it's compact mode
+			widgetExpanded = false;
 		}
 		else
 		{
-			// it's expanded mode
+			widgetExpanded = true;
 		}
+		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false))
+			updateWidget(context, true);
 	}
 
 	private void populateTime(Context ctxt, RemoteViews widget, int containerId, int hourId, int minuteId, int ampmId, int dateId)
@@ -377,7 +380,13 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    String clearButtonMode = prefs.getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible");					
     	   
     	    int notificationsCount = 0;
+    	    
     	    String notifiationsStyle = prefs.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
+    	    boolean autoCompact = prefs.getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false);
+			if (autoCompact && !NotificationsWidgetProvider.widgetExpanded)
+			{
+				notifiationsStyle = "compact";
+			}
     	        	    
     	    if (ns!=null)
     	    {

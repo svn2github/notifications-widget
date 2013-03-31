@@ -40,6 +40,11 @@
     	    			android:summary="@string/max_lines_summary"
     	    			android:key="max_lines" 
     	    			android:entryValues="@array/max_lines_values"/> 
+    <CheckBoxPreference 
+        android:key="auto_compact_style"
+        android:title="@string/auto_compact_style"
+        android:summary="@string/auto_compact_style_summary"
+        android:defaultValue="false"/>
 	<com.hlidskialf.android.preference.SeekBarPreference android:key="notification_bg_opacity"
 	        android:title="@string/notification_bg_opacity"
 	        android:summary="@string/notification_bg_opacity_summary"

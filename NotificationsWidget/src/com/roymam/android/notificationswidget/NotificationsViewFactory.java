@@ -105,6 +105,13 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				int timeColor = Resources.getSystem().getColor(Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark))));				
 				
 				String notStyle = preferences.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
+				
+				boolean autoCompact = preferences.getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false);
+				if (autoCompact && !NotificationsWidgetProvider.widgetExpanded)
+				{
+					notStyle = "compact";
+				}
+				
 				RemoteViews styleView;
 				int iconId = R.id.notificationIcon;
 				

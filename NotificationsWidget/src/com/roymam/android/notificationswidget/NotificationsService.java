@@ -53,6 +53,7 @@ public class NotificationsService extends AccessibilityService
 	private boolean deviceCovered = false;
 	private boolean newNotificationsAvailable = false;
 	private boolean widgetLockerEnabled = false;
+
 	private int 	selectedIndex = -1;
 	private String clearButtonName = "Clear all notifications.";
 	
