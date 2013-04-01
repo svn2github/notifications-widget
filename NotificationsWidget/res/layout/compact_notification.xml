@@ -10,7 +10,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/appicon" />
+                android:src="@drawable/appicon" android:contentDescription="@string/app_icon"/>
 
             <TextView
                 android:id="@+id/notificationText"
@@ -24,7 +24,6 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
-                android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ImageView
@@ -32,13 +31,12 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_weight="0.0"
-                android:src="@drawable/pin" />
+                android:src="@drawable/pin" android:contentDescription="@string/pin"/>
 
             <TextView
                 android:id="@+id/notificationTime"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:layout_weight="0"
-                android:text="00:00"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 </LinearLayout>

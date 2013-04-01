@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginBottom="0dp"
-            android:layout_marginTop="-22dp"
+            android:layout_marginTop="-24dp"
             android:background="@drawable/item_selector"
             android:clickable="true"
             android:orientation="vertical"
@@ -77,14 +77,6 @@
                     android:layout_marginLeft="10dp"
                     android:visibility="gone" >
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center_vertical"
-                        android:alpha="50"
-                        android:src="@android:drawable/ic_lock_idle_alarm"
-                        android:visibility="gone" />
-
                     <TextView
                         android:id="@+id/alarmtime"
                         android:layout_width="wrap_content"
@@ -118,7 +110,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-6dp"
-                    android:text="00"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textStyle="bold" />
 
@@ -127,7 +118,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-6dp"
-                    android:text=":00"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
@@ -140,7 +130,7 @@
 
                 <TextView
                     android:id="@+id/dateFull"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-6dp"
                     android:layout_weight="0.97"
@@ -162,7 +152,7 @@
                     android:background="@drawable/item_selector"
                     android:scaleType="fitCenter"
                     android:src="@android:drawable/ic_dialog_alert"
-                    android:visibility="gone" />
+                    android:visibility="gone" android:contentDescription="@string/service_inactive_text"/>
 
                 <ImageButton
                     android:id="@+id/clearButton"
@@ -172,7 +162,7 @@
                     android:background="@drawable/item_selector"
                     android:scaleType="fitCenter"
                     android:src="@drawable/clear"
-                    android:visibility="gone" />
+                    android:visibility="gone" android:contentDescription="@string/clear_all_notifications"/>
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

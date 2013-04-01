@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
@@ -112,7 +110,7 @@ public class WizardActivity extends Activity
 			// if not - check if WidgetLocker installed
 			try 
 			{
-				PackageInfo ai = getPackageManager().getPackageInfo("com.teslacoilsw.widgetlocker", 0);
+				getPackageManager().getPackageInfo("com.teslacoilsw.widgetlocker", 0);
 
 				// if yes - change step 2 description
 				step2desc = R.string.widget_locker_add_widget;

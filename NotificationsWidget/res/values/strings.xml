@@ -190,4 +190,8 @@
         <item>normal</item>
         <item>max</item>
     </string-array>
+        <string name="clear_all_notifications">Clear All Notifications</string>
+        <string name="action_bar">Action Bar</string>
+        <string name="notification_icon">Notification Icon</string>
+        <string name="app_icon">App Icon</string>
 </resources>

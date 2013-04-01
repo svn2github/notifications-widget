@@ -1,8 +1,5 @@
 package com.roymam.android.notificationswidget;
 
-import java.util.List;
-
-import android.R.anim;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -15,16 +12,11 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.text.format.DateFormat;
-import android.text.format.Time;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
@@ -51,7 +43,6 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	@Override
 	public int getCount() 
 	{
-		List<NotificationData> events = null;
 		NotificationsService s = NotificationsService.getSharedInstance();
 		if (s != null) 
 		{

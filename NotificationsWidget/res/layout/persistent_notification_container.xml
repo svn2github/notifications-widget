@@ -15,7 +15,7 @@
     <LinearLayout
         android:id="@+id/normalLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="64dp"
         android:orientation="vertical" >
 
     </LinearLayout>

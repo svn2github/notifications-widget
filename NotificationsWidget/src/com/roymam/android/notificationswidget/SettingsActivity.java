@@ -4,37 +4,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.roymam.android.common.ListPreferenceChangeListener;
-import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment;
-
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.MenuItem.OnMenuItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.RemoteViews;
+import android.widget.TextView;
+
+import com.roymam.android.common.ListPreferenceChangeListener;
+import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
@@ -75,8 +70,6 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        
 		    // proximity sensor listener
 	        Preference proxPref = findPreference(DISABLE_PROXIMITY);	        
-	        Boolean currValue = getPreferenceScreen().getSharedPreferences().getBoolean(DISABLE_PROXIMITY, true);	        
-	        
 	        proxPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 	        {
 				@Override
@@ -254,37 +247,28 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			NotificationsService ns = NotificationsService.getSharedInstance();
 			if (ns != null)
     		{    			
-    			Iterator<Entry<String, RemoteViews>> it = ns.getPersistentNotifications().entrySet().iterator();
+    			Iterator<Entry<String, PersistentNotification>> it = ns.getPersistentNotifications().entrySet().iterator();
     			
     			while (it.hasNext())
     			{
-    				Entry<String, RemoteViews> e = it.next();
+    				Entry<String, PersistentNotification> e = it.next();
     				final String packageName = e.getKey();    				
     				CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());					
 					getPreferenceManager();
-					intentPref.setChecked(prefs.getBoolean(packageName + "." + AppSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false));
+					intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings);
+					intentPref.setChecked(prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false));
 					intentPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 					{
 						@Override
 						public boolean onPreferenceChange(Preference preference, Object newValue) 
 						{
-							prefs.edit().putBoolean(packageName + "." + AppSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, (Boolean)newValue).commit();
+							prefs.edit().putBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, (Boolean)newValue).commit();
 							AppSettingsActivity.addAppToAppSpecificSettings(packageName, getActivity());
 							return true;
 						}
 						
 					});
-					/*intentPref.setOnPreferenceClickListener(new OnPreferenceClickListener()
-					{
-						@Override
-						public boolean onPreferenceClick(Preference preference) 
-						{	
-							Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
-							runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
-							getActivity().startActivity(runAppSpecificSettings);
-							return true;
-						}					
-					});*/
+					
 					// get package title
 					try 
 					{
@@ -297,6 +281,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 					{
 						intentPref.setTitle(packageName);
 					}
+					intentPref.setSummary(packageName);
 			        root.addPreference(intentPref);
     			}	    			    			
 			}
@@ -389,5 +374,18 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 				NotificationsService.getSharedInstance().removeFromForeground();
 			}
 		}		
+	}
+	
+	// openSettings is launched from the custom checkbox in persistent notifications settings 
+	public void openSettings(View v)
+	{		
+		// this is a dirty hack to get the package name within the settings button
+		String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
+		
+		// open persistent notification settings
+		Intent runAppSpecificSettings = new Intent(this, PersistentNotificationSettingsActivity.class);
+		runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+		startActivity(runAppSpecificSettings);
+		
 	}
 }

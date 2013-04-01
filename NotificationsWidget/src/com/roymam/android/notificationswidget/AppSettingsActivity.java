@@ -1,22 +1,17 @@
 package com.roymam.android.notificationswidget;
 
-import java.util.StringTokenizer;
-
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.view.WindowManager;
 
 public class AppSettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener 
@@ -25,8 +20,6 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String IGNORE_APP = "ignoreapp";
 	public static final String KEEP_ONLY_LAST = "showlast";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
-	public static final String SHOW_PERSISTENT_NOTIFICATION = "showpersistent";
-	public static final String PERSISTENT_NOTIFICATION_HEIGHT = "persistent_notification_height";
 	
 	private String packageName;
 	
@@ -75,24 +68,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 		useExpandedTextPref.setDefaultValue(prefs.getBoolean(USE_EXPANDED_TEXT, true));
         useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
         root.addPreference(useExpandedTextPref);  
-        
-        // Show persistent notifications preference
-        CheckBoxPreference showPresistentPref = new CheckBoxPreference(this);
-        showPresistentPref.setKey(packageName+"."+SHOW_PERSISTENT_NOTIFICATION);
-        showPresistentPref.setTitle(R.string.show_persistent_notifications);        
-        showPresistentPref.setDefaultValue(false);
-        showPresistentPref.setSummary(R.string.show_persistent_notifications_summary);
-        root.addPreference(showPresistentPref); 
-        
-        ListPreference persistentHeight = new ListPreference(this);
-        persistentHeight.setKey(packageName +"." +PERSISTENT_NOTIFICATION_HEIGHT);
-        persistentHeight.setTitle(R.string.notification_height);
-        persistentHeight.setDialogTitle(R.string.notification_height);
-        persistentHeight.setEntries(R.array.settings_notification_height_entries);
-        persistentHeight.setEntryValues(R.array.settings_notification_height_values);
-        persistentHeight.setDefaultValue("max");
-        root.addPreference(persistentHeight);
-        
+                
         // Clear app specific preferences button
         PreferenceScreen clearPref = getPreferenceManager().createPreferenceScreen(this);
         clearPref.setTitle(R.string.clear_app_settings);
@@ -105,7 +81,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
 				prefs.edit().remove(packageName+"."+IGNORE_APP).commit();
 				
-				addAppToAppSpecificSettings(packageName, AppSettingsActivity.this);
+				removeAppFromAppSpecificSettings(packageName, AppSettingsActivity.this);
 				
 				finish();
 				return false;
@@ -119,7 +95,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         setPreferenceScreen(root);
 	}
 	
-	public static void addAppToAppSpecificSettings(String packageName, Context ctx)
+	public static void removeAppFromAppSpecificSettings(String packageName, Context ctx)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
@@ -135,13 +111,30 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 					updatedSpecificApps+=","+app;
 			}
 		}
-		
-		if (updatedSpecificApps.isEmpty())
-			updatedSpecificApps = packageName;
-		else
-			updatedSpecificApps+=","+packageName;
 		prefs.edit().putString(SettingsActivity.APPS_SETTINGS, updatedSpecificApps).commit();
 	}
+	
+	public static void addAppToAppSpecificSettings(String packageName, Context ctx)
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+	
+		String specificApps = prefs.getString(SettingsActivity.APPS_SETTINGS, "");
+		boolean hasApp = false;
+		for (String token : specificApps.split(",")) 
+		{
+		     if (token.equals(packageName)) hasApp = true;
+		}
+		if (!hasApp)
+		{
+			// add this app to the list of specific apps
+			if (!specificApps.equals(""))
+				specificApps+= ",";
+			specificApps+= packageName; 
+		}
+		
+		prefs.edit().putString("specificapps", specificApps).commit();		
+	}
+	
 	@Override
 	protected void onResume() 
 	{

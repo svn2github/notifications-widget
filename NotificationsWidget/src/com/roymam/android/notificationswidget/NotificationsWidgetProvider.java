@@ -16,24 +16,24 @@
 
 package com.roymam.android.notificationswidget;
 
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map.Entry;
+
 import android.app.AlarmManager;
-import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.PendingIntent.CanceledException;
-import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ComponentName;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -43,14 +43,6 @@ import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
-
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map.Entry;
-
-import com.roymam.android.notificationswidget.R;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
@@ -292,13 +284,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
 	    for(int i=0; i<clockImpls.length; i++) 
 	    {
-	        String vendor = clockImpls[i][0];
 	        String packageName = clockImpls[i][1];
 	        String className = clockImpls[i][2];
 	        try 
 	        {
 	            ComponentName cn = new ComponentName(packageName, className);
-	            ActivityInfo aInfo = packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
+	            packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
 	            alarmClockIntent.setComponent(cn);
 	            foundClockImpl = true;
 	        } catch (NameNotFoundException e) 
@@ -331,31 +322,35 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		if (ns != null)
     		{
     			widget.removeAllViews(R.id.persistentNotificationsView);
-    			Iterator<Entry<String, RemoteViews>> it = ns.getPersistentNotifications().entrySet().iterator();
+    			Iterator<Entry<String, PersistentNotification>> it = ns.getPersistentNotifications().entrySet().iterator();
     			
     			while (it.hasNext())
     			{
-    				Entry<String, RemoteViews> e = it.next();
+    				Entry<String, PersistentNotification> e = it.next();
     				String packageName = e.getKey();
-    				if (prefs.getBoolean(packageName + "." + AppSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
+    				if (prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
     				{
-    					String layout = prefs.getString(packageName +"." + AppSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "max");
+    					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "max");
     					RemoteViews rv = new RemoteViews(ctxt.getPackageName(), R.layout.persistent_notification_container);
+    					RemoteViews content = e.getValue().content;
+    					if (prefs.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT, 
+    							prefs.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
+    						content = e.getValue().expandedContent;
     					if (layout.equals("small"))
     					{
-    						rv.addView(R.id.smallLayout, e.getValue());
+    						rv.addView(R.id.smallLayout, content);
     						rv.setViewVisibility(R.id.smallLayout, View.VISIBLE);
     						rv.setViewVisibility(R.id.normalLayout, View.GONE);
     						rv.setViewVisibility(R.id.maxLayout, View.GONE);
     					} else if (layout.equals("normal"))
     					{
-    						rv.addView(R.id.normalLayout, e.getValue());
+    						rv.addView(R.id.normalLayout, content);
     						rv.setViewVisibility(R.id.smallLayout, View.GONE);
     						rv.setViewVisibility(R.id.normalLayout, View.VISIBLE);
     						rv.setViewVisibility(R.id.maxLayout, View.GONE);
     					} else 
     					{
-    						rv.addView(R.id.maxLayout, e.getValue());
+    						rv.addView(R.id.maxLayout, content);
     						rv.setViewVisibility(R.id.smallLayout, View.GONE);
     						rv.setViewVisibility(R.id.normalLayout, View.GONE);
     						rv.setViewVisibility(R.id.maxLayout, View.VISIBLE);

@@ -13,13 +13,12 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:background="#801d3741"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter" android:contentDescription="@string/notification_icon"/>
 
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@drawable/actionspinner" />
-
+            android:src="@drawable/actionspinner" android:contentDescription="@string/action_bar"/>
     </RelativeLayout>
 
         <TextView
@@ -48,7 +47,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="00:00"
                 android:textColor="#ff32b6e6"
                 android:textSize="14sp" />
 
@@ -61,7 +59,7 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_weight="0.0"
-                    android:src="@drawable/pin" />
+                    android:src="@drawable/pin" android:contentDescription="@string/pin"/>
 
                 <TextView
                     android:id="@+id/notificationCount"
@@ -75,7 +73,7 @@
                     android:id="@+id/appIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_weight="0.0" />
+                    android:layout_weight="0.0" android:contentDescription="@string/app_icon"/>
 
             </LinearLayout>
         </LinearLayout>
