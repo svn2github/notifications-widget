@@ -322,40 +322,41 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		if (ns != null)
     		{
     			widget.removeAllViews(R.id.persistentNotificationsView);
-    			Iterator<Entry<String, PersistentNotification>> it = ns.getPersistentNotifications().entrySet().iterator();
-    			
-    			while (it.hasNext())
+    			String persistentApps = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
+    			for (String packageName : persistentApps.split(","))
     			{
-    				Entry<String, PersistentNotification> e = it.next();
-    				String packageName = e.getKey();
-    				if (prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
+    				PersistentNotification pn = ns.getPersistentNotifications().get(packageName);
+    				if (pn != null)
     				{
-    					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "max");
-    					RemoteViews rv = new RemoteViews(ctxt.getPackageName(), R.layout.persistent_notification_container);
-    					RemoteViews content = e.getValue().content;
-    					if (prefs.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT, 
-    							prefs.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
-    						content = e.getValue().expandedContent;
-    					if (layout.equals("small"))
-    					{
-    						rv.addView(R.id.smallLayout, content);
-    						rv.setViewVisibility(R.id.smallLayout, View.VISIBLE);
-    						rv.setViewVisibility(R.id.normalLayout, View.GONE);
-    						rv.setViewVisibility(R.id.maxLayout, View.GONE);
-    					} else if (layout.equals("normal"))
-    					{
-    						rv.addView(R.id.normalLayout, content);
-    						rv.setViewVisibility(R.id.smallLayout, View.GONE);
-    						rv.setViewVisibility(R.id.normalLayout, View.VISIBLE);
-    						rv.setViewVisibility(R.id.maxLayout, View.GONE);
-    					} else 
-    					{
-    						rv.addView(R.id.maxLayout, content);
-    						rv.setViewVisibility(R.id.smallLayout, View.GONE);
-    						rv.setViewVisibility(R.id.normalLayout, View.GONE);
-    						rv.setViewVisibility(R.id.maxLayout, View.VISIBLE);
-    					}
-    					widget.addView(R.id.persistentNotificationsView, rv);
+    					if (prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
+        				{
+        					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "max");
+        					RemoteViews rv = new RemoteViews(ctxt.getPackageName(), R.layout.persistent_notification_container);
+        					RemoteViews content = pn.content;
+        					if (prefs.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT, 
+        							prefs.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
+        						content = pn.expandedContent;
+        					if (layout.equals("small"))
+        					{
+        						rv.addView(R.id.smallLayout, content);
+        						rv.setViewVisibility(R.id.smallLayout, View.VISIBLE);
+        						rv.setViewVisibility(R.id.normalLayout, View.GONE);
+        						rv.setViewVisibility(R.id.maxLayout, View.GONE);
+        					} else if (layout.equals("normal"))
+        					{
+        						rv.addView(R.id.normalLayout, content);
+        						rv.setViewVisibility(R.id.smallLayout, View.GONE);
+        						rv.setViewVisibility(R.id.normalLayout, View.VISIBLE);
+        						rv.setViewVisibility(R.id.maxLayout, View.GONE);
+        					} else 
+        					{
+        						rv.addView(R.id.maxLayout, content);
+        						rv.setViewVisibility(R.id.smallLayout, View.GONE);
+        						rv.setViewVisibility(R.id.normalLayout, View.GONE);
+        						rv.setViewVisibility(R.id.maxLayout, View.VISIBLE);
+        					}
+        					widget.addView(R.id.persistentNotificationsView, rv);
+        				}
     				}
     			}
     		}

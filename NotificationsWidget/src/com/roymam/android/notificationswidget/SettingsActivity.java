@@ -1,10 +1,12 @@
 package com.roymam.android.notificationswidget;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -247,14 +249,33 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			NotificationsService ns = NotificationsService.getSharedInstance();
 			if (ns != null)
     		{    			
-    			Iterator<Entry<String, PersistentNotification>> it = ns.getPersistentNotifications().entrySet().iterator();
+    			List<String> apps = new ArrayList<String>();
     			
+    			// show first the enabled persistent apps
+    			String packages = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
+    			for (String packageName : packages.split(",")) 
+    			{
+    				if (!packageName.isEmpty())
+    					apps.add(packageName);
+    			}
+    			
+    			// then add the current persistent notifications apps
+    			Iterator<Entry<String, PersistentNotification>> it = ns.getPersistentNotifications().entrySet().iterator();
     			while (it.hasNext())
     			{
     				Entry<String, PersistentNotification> e = it.next();
-    				final String packageName = e.getKey();    				
+    				String packageName = e.getKey();    				
+    				if (!apps.contains(packageName))
+    					apps.add(packageName);
+    			}
+    			
+    			// build preferences list
+    			for (final String packageName : apps)
+    			{
+    				final Context ctx = getActivity();
     				CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());					
 					getPreferenceManager();
+					intentPref.setKey(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION);					
 					intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings);
 					intentPref.setChecked(prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false));
 					intentPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
@@ -262,11 +283,13 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 						@Override
 						public boolean onPreferenceChange(Preference preference, Object newValue) 
 						{
-							prefs.edit().putBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, (Boolean)newValue).commit();
-							AppSettingsActivity.addAppToAppSpecificSettings(packageName, getActivity());
+							prefs.edit().putBoolean(preference.getKey(), (Boolean)newValue).commit();
+							if ((Boolean)newValue)
+								PersistentNotificationSettingsActivity.addAppToPersistentNotifications(packageName, ctx);
+							else
+								PersistentNotificationSettingsActivity.removeAppFromPersistentNotifications(packageName, ctx);
 							return true;
-						}
-						
+						}						
 					});
 					
 					// get package title

@@ -1,5 +1,6 @@
 package com.roymam.android.notificationswidget;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
@@ -18,6 +19,7 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String SHOW_PERSISTENT_NOTIFICATION = "showpersistent";
 	public static final String PERSISTENT_NOTIFICATION_HEIGHT = "persistent_notification_height";
+	public static final String PERSISTENT_APPS = "persistent_apps";
 	
 	private String packageName;
 	
@@ -87,13 +89,54 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
 	}
 		
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) 
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) 
 	{
-		if (key.startsWith(packageName))
+		if (key.endsWith(SHOW_PERSISTENT_NOTIFICATION))
 		{
-			AppSettingsActivity.addAppToAppSpecificSettings(packageName, this);
+			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(key, false))
+				addAppToPersistentNotifications(packageName, this);
+			else
+				removeAppFromPersistentNotifications(packageName, this);
 		}
 	}
 	
+	public static void removeAppFromPersistentNotifications(String packageName, Context ctx)
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		
+		String specficApps = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
+		String updatedSpecificApps = "";
+		for(String app:specficApps.split(","))
+		{
+			if (!app.equals(packageName))
+			{
+				if (updatedSpecificApps.isEmpty())
+					updatedSpecificApps = app;
+				else
+					updatedSpecificApps+=","+app;
+			}
+		}
+		prefs.edit().putString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, updatedSpecificApps).commit();
+	}
+	
+	public static void addAppToPersistentNotifications(String packageName, Context ctx)
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+	
+		String specificApps = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
+		boolean hasApp = false;
+		for (String token : specificApps.split(",")) 
+		{
+		     if (token.equals(packageName)) hasApp = true;
+		}
+		if (!hasApp)
+		{
+			// add this app to the list of specific apps
+			if (!specificApps.equals(""))
+				specificApps+= ",";
+			specificApps+= packageName; 
+		}
+		
+		prefs.edit().putString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, specificApps).commit();		
+	}
 }
