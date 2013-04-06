@@ -30,6 +30,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -67,18 +68,11 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     @Override
     public void onEnabled(Context context) 
     {    
-    	// create alarm for clock updates
-		//prepare Alarm Service to trigger Widget
-	   Intent intent = new Intent(UPDATE_CLOCK);
-	   clockPendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-	   AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-	   Calendar calendar = Calendar.getInstance();
-	   calendar.setTimeInMillis(System.currentTimeMillis());
-	   calendar.add(Calendar.SECOND, 10);
-	   alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 20*1000, clockPendingIntent);
+    	// register clock for tick events
 	   widgetActive = true;
 	   //notifyReady(context);
 	   super.onEnabled(context);
+	   context.getApplicationContext().registerReceiver(this, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
     
     @Override
@@ -127,7 +121,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    	updateWidget(ctx,true);
     	    }
     	}
-    	else if (intent.getAction().equals(UPDATE_CLOCK))
+    	else if (intent.getAction().equals(Intent.ACTION_TIME_TICK) ||
+    			 intent.getAction().equals(UPDATE_CLOCK))
     	{
     		updateWidget(ctx,false);			
     	}
