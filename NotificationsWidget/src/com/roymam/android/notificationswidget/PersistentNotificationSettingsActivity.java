@@ -68,7 +68,7 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
         persistentHeight.setDialogTitle(R.string.notification_height);
         persistentHeight.setEntries(R.array.settings_notification_height_entries);
         persistentHeight.setEntryValues(R.array.settings_notification_height_values);
-        persistentHeight.setDefaultValue("max");
+        persistentHeight.setDefaultValue("normal");
         root.addPreference(persistentHeight);
         
         setPreferenceScreen(root);

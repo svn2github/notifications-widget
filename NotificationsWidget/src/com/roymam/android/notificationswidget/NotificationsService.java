@@ -393,6 +393,7 @@ public class NotificationsService extends AccessibilityService
 				pn.content = n.contentView;
 				pn.recieved = n.when;
 				pn.packageName = packageName;
+				pn.contentIntent = n.contentIntent;
 				this.persistentNotifications.put(packageName, pn);
 				updateWidget();
 			}

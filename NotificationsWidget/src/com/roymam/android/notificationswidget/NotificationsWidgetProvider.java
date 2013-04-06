@@ -16,11 +16,7 @@
 
 package com.roymam.android.notificationswidget;
 
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map.Entry;
-
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -325,7 +321,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     				{
     					if (prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
         				{
-        					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "max");
+        					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "normal");
         					RemoteViews rv = new RemoteViews(ctxt.getPackageName(), R.layout.persistent_notification_container);
         					RemoteViews content = pn.content;
         					if (prefs.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT, 
@@ -337,19 +333,22 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
         						rv.setViewVisibility(R.id.smallLayout, View.VISIBLE);
         						rv.setViewVisibility(R.id.normalLayout, View.GONE);
         						rv.setViewVisibility(R.id.maxLayout, View.GONE);
+        						rv.setOnClickPendingIntent(R.id.smallLayout, pn.contentIntent);
         					} else if (layout.equals("normal"))
         					{
         						rv.addView(R.id.normalLayout, content);
         						rv.setViewVisibility(R.id.smallLayout, View.GONE);
         						rv.setViewVisibility(R.id.normalLayout, View.VISIBLE);
         						rv.setViewVisibility(R.id.maxLayout, View.GONE);
+        						rv.setOnClickPendingIntent(R.id.normalLayout, pn.contentIntent);
         					} else 
         					{
         						rv.addView(R.id.maxLayout, content);
         						rv.setViewVisibility(R.id.smallLayout, View.GONE);
         						rv.setViewVisibility(R.id.normalLayout, View.GONE);
         						rv.setViewVisibility(R.id.maxLayout, View.VISIBLE);
-        					}
+        						rv.setOnClickPendingIntent(R.id.maxLayout, pn.contentIntent);
+        					}        					
         					widget.addView(R.id.persistentNotificationsView, rv);
         				}
     				}
