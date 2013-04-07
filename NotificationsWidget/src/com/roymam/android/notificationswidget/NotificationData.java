@@ -39,4 +39,5 @@ public class NotificationData
 	int layoutId;
 	int customImageId = -1;
 	public Action[] actions = null;
+	public int priority;
 }

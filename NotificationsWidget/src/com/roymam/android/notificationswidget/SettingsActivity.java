@@ -38,6 +38,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String TURNSCREENON = "turnscreenon";
 	public static String DISABLE_PROXIMITY = "disableproximity";
 	public static String DELAYED_SCREEON = "delayed_screenon";
+	public static String NOTIFICATIONS_ORDER = "order_notifications_by";
 	public static String KEEP_ON_FOREGROUND = "keep_on_foreground";
 	public static String CLOCK_STYLE = "clockstyle";
 	public static String CLEAR_BUTTON_MODE = "clearbuttonmode";
@@ -102,13 +103,20 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 						.show();
 						return false;
 					}
-
 					return true;
-				}
-	        	
+				}	        	
 	        });
-
-	    }
+	        
+	        // notification order by 
+	        ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
+	        		getResources().getStringArray(R.array.settings_orderby_entries),
+	        		getResources().getStringArray(R.array.settings_orderby_values));
+	        
+	        Preference orderPref = findPreference(NOTIFICATIONS_ORDER);	        
+	        String currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATIONS_ORDER, "time");	        
+	        listener.setPrefSummary(orderPref, (String)currValue);
+	        orderPref.setOnPreferenceChangeListener(listener);
+	    }	    
 	}	
 	
 	public static class PrefsAppearanceFragment extends PreferenceFragment 

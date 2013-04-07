@@ -21,7 +21,7 @@
                 android:enabled="true"
                 android:defaultValue="false"
                 android:summary="@string/delayed_screenon_summary"
-                android:dependency="disableproximity"/>"
+                android:dependency="disableproximity"/>"                
     </PreferenceCategory>             
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
             <CheckBoxPreference 
@@ -47,6 +47,12 @@
                 android:key="disable_notification_click" 
                 android:enabled="true" 
                 android:defaultValue="false" 
-                android:summary="@string/disable_notification_click_summary"/>        
+                android:summary="@string/disable_notification_click_summary"/>                  
+            <ListPreference android:dialogTitle="@string/order_notifications_by" 
+    	    			android:entries="@array/settings_orderby_entries" 
+    	    			android:entryValues="@array/settings_orderby_values" 
+    	    			android:title="@string/order_notifications_by" 
+    	    			android:key="order_notifications_by" 
+    	    			android:defaultValue="time" />      
             </PreferenceCategory>    
 </PreferenceScreen>

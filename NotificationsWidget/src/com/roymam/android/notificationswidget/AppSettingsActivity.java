@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
@@ -20,6 +21,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String IGNORE_APP = "ignoreapp";
 	public static final String KEEP_ONLY_LAST = "showlast";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
+	public static final String APP_PRIORITY = "apppriority";
 	
 	private String packageName;
 	
@@ -68,6 +70,15 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 		useExpandedTextPref.setDefaultValue(prefs.getBoolean(USE_EXPANDED_TEXT, true));
         useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
         root.addPreference(useExpandedTextPref);  
+        
+        ListPreference overrideAppPriority = new ListPreference(this);
+        overrideAppPriority.setKey(packageName + "." + APP_PRIORITY);
+        overrideAppPriority.setTitle(R.string.set_app_priority);
+        overrideAppPriority.setSummary(R.string.set_app_priority_summary);
+        overrideAppPriority.setDefaultValue("-3");
+        overrideAppPriority.setEntries(R.array.settings_app_priority_entries);
+        overrideAppPriority.setEntryValues(R.array.settings_app_priority_values);
+        root.addPreference(overrideAppPriority);
                 
         // Clear app specific preferences button
         PreferenceScreen clearPref = getPreferenceManager().createPreferenceScreen(this);

@@ -2,6 +2,8 @@ package com.roymam.android.notificationswidget;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -358,11 +360,25 @@ public class NotificationsService extends AccessibilityService
 							nd.count = dup.count+1;						
 						}
 						
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						{
+							nd.priority = getPriority(n);
+						}
+						else
+						{
+							nd.priority = 0;
+						}
+						int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));						
+						if (apppriority != -9) nd.priority = apppriority;
+						
 						nd.normalNotification = createNormalNotification(nd);
 						nd.smallNotification = createSmallNotification(nd);
 						nd.largeNotification = createLargeNotification(nd);
+
 						notifications.add(0,nd);						
-				    	if (selectedIndex >= 0) selectedIndex++;
+					    if (selectedIndex >= 0) selectedIndex++;
+						
+						sortNotificationsList();
 						
 						// update widgets
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
@@ -401,7 +417,43 @@ public class NotificationsService extends AccessibilityService
 			}
 		}
 	}
+	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private int getPriority(Notification n)
+	{
+		return n.priority;
+	}
 		
+	private void sortNotificationsList() 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    	String sortBy = sharedPref.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
+    	if (sortBy.equals("priority"))
+    	{
+    		// sort by priority
+    		Collections.sort(notifications, new Comparator<NotificationData>() 
+    		{
+    	        @Override
+    	        public int compare(NotificationData n1, NotificationData n2) 
+    	        {
+    	        	if (n1.priority < n2.priority)
+    	        		return 1;
+    	        	if (n2.priority > n2.priority)
+    	        		return -1;
+    	        	// if we reached here, the priorities are equal - sory by time
+    	        	if (n1.received < n2.received)
+    	        		return 1;
+    	        	if (n2.received > n2.received)
+    	        		return -1;
+    	        	return 0;
+    	        }
+    	    });
+    		
+    		// reset selected index (because we don't know where is it now
+    		selectedIndex = -1;
+    	}
+	}
+
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private RemoteViews getExpandedContent(Notification n) 
 	{

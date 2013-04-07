@@ -33,6 +33,16 @@
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
     <string name="disable_notification_click">Disable notification click</string>
     <string name="disable_notification_click_summary">Do not allow clicking on notification to open it</string>
+    <string name="order_notifications_by">Order notifications by</string>
+    <string-array name="settings_orderby_entries">
+        <item>Time</item>
+        <item>Priority</item>
+    </string-array>
+    <string-array name="settings_orderby_values" translatable="false">
+        <item>time</item>
+        <item>priority</item>
+    </string-array>
+    
     <string name="clockstyle">Clock style</string>
     <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>
@@ -171,6 +181,24 @@
     <string name="show_only_last_notification_summary">Keep only the last notification that was received from this app</string>
     <string name="extract_expanded_text">Use expanded notification</string>
     <string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>
+    <string name="set_app_priority">Set priority</string>
+    <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
+    <string-array name="settings_app_priority_entries">
+        <item>Default</item>
+        <item>Min</item>
+        <item>Low</item>
+        <item>Normal</item>
+        <item>High</item>
+        <item>Max</item>
+    </string-array>
+    <string-array name="settings_app_priority_values" translatable="false">
+        <item>-9</item>
+        <item>-2</item>
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Clear app specific settings for this app</string>
     <string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>
