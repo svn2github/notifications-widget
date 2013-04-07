@@ -190,8 +190,34 @@
         <item>normal</item>
         <item>max</item>
     </string-array>
-        <string name="clear_all_notifications">Clear All Notifications</string>
-        <string name="action_bar">Action Bar</string>
-        <string name="notification_icon">Notification Icon</string>
-        <string name="app_icon">App Icon</string>
+    <string name="hide_when_notifications">Hide when notifications appear</string>
+    <string name="hide_when_notifications_summary">Hide this persistent notification when normal notifications appear</string>
+    <string name="auto_hide_persistent_notification">Hide when inactive</string>
+    <string name="auto_hide_persistent_notification_summary">Hide when the persistent notification wasn\'t updated for selected period</string>
+    <string-array name="settings_auto_hide_persistent_notifications_entries">
+        <item>Never Hide</item>
+        <item>After 5 Minutes</item>
+        <item>After 15 Minutes</item>
+        <item>After 30 Minutes</item>
+        <item>After 1 Hour</item>
+        <item>After 4 Hours</item>
+        <item>After 24 Hours</item>
+        </string-array>
+    <string-array name="settings_auto_hide_persistent_notifications_values" translatable="false">
+        <item>0</item>
+        <item>5</item>
+        <item>15</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+        <item>1440</item>
+	</string-array>
+    
+    
+    <!--  strings for accessibility  -->
+    <string name="clear_all_notifications">Clear All Notifications</string>
+    <string name="action_bar">Action Bar</string>
+    <string name="notification_icon">Notification Icon</string>
+    <string name="app_icon">App Icon</string>
 </resources>

@@ -19,6 +19,8 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String SHOW_PERSISTENT_NOTIFICATION = "showpersistent";
 	public static final String PERSISTENT_NOTIFICATION_HEIGHT = "persistent_notification_height";
+	public static final String HIDE_WHEN_NOTIFICATIONS = "hidewhennotifications";
+	public static final String PN_TIMEOUT = "pn_timeout";
 	public static final String PERSISTENT_APPS = "persistent_apps";
 	
 	private String packageName;
@@ -70,6 +72,25 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
         persistentHeight.setEntryValues(R.array.settings_notification_height_values);
         persistentHeight.setDefaultValue("normal");
         root.addPreference(persistentHeight);
+        
+        // Hide when notifications appears
+        CheckBoxPreference hideWhenNotifications = new CheckBoxPreference(this);
+        hideWhenNotifications.setKey(packageName+"."+HIDE_WHEN_NOTIFICATIONS);
+        hideWhenNotifications.setTitle(R.string.hide_when_notifications);
+        hideWhenNotifications.setDefaultValue(false);
+        hideWhenNotifications.setSummary(R.string.hide_when_notifications_summary);
+        root.addPreference(hideWhenNotifications);  
+        
+        // persistent notification timeout
+        ListPreference persistenttimeout = new ListPreference(this);
+        persistenttimeout.setKey(packageName +"." +PN_TIMEOUT);
+        persistenttimeout.setTitle(R.string.auto_hide_persistent_notification);
+        persistenttimeout.setSummary(R.string.auto_hide_persistent_notification_summary);
+        persistenttimeout.setDialogTitle(R.string.auto_hide_persistent_notification);
+        persistenttimeout.setEntries(R.array.settings_auto_hide_persistent_notifications_entries);
+        persistenttimeout.setEntryValues(R.array.settings_auto_hide_persistent_notifications_values);
+        persistenttimeout.setDefaultValue("0");
+        root.addPreference(persistenttimeout);
         
         setPreferenceScreen(root);
 	}

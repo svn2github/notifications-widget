@@ -319,7 +319,19 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     				PersistentNotification pn = ns.getPersistentNotifications().get(packageName);
     				if (pn != null)
     				{
-    					if (prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
+    	    			long persistentTimeout = Long.parseLong(prefs.getString(packageName +"." +PersistentNotificationSettingsActivity.PN_TIMEOUT,"0"));
+    	    			Time now = new Time();
+    	    		    now.setToNow();
+    	    		    Time max = new Time();
+    	    		    max.set(pn.recieved + persistentTimeout*60*1000);
+    	    		    
+    	    			if (
+    	    					// notification is not too old 
+    	    					(persistentTimeout == 0 || now.toMillis(true)<max.toMillis(true))
+    	    					// and notification is set to be seen
+    	    					&& prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false)
+    	    					// and notification is not set to hide when notifications appears 
+    	    					&& (!prefs.getBoolean(packageName+"."+PersistentNotificationSettingsActivity.HIDE_WHEN_NOTIFICATIONS, false) || ns.getNotificationsCount() == 0))
         				{
         					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "normal");
         					RemoteViews rv = new RemoteViews(ctxt.getPackageName(), R.layout.persistent_notification_container);

@@ -11,6 +11,8 @@ public final class R {
     public static final class array {
         public static final int max_lines_entries=0x7f070000;
         public static final int max_lines_values=0x7f070001;
+        public static final int settings_auto_hide_persistent_notifications_entries=0x7f07000c;
+        public static final int settings_auto_hide_persistent_notifications_values=0x7f07000d;
         public static final int settings_buttons_entries=0x7f070006;
         public static final int settings_buttons_values=0x7f070007;
         public static final int settings_clock_entries=0x7f070004;
@@ -126,10 +128,10 @@ public final class R {
          */
         public static final int about_title=0x7f060041;
         public static final int accessibility_service_description=0x7f060002;
-        public static final int action_bar=0x7f060060;
+        public static final int action_bar=0x7f060064;
         public static final int advanced=0x7f060008;
         public static final int advancedsettings=0x7f060005;
-        public static final int app_icon=0x7f060062;
+        public static final int app_icon=0x7f060066;
         /**  App specific settings 
  App specific settings 
          */
@@ -137,8 +139,12 @@ public final class R {
         public static final int appearance=0x7f060007;
         public static final int auto_compact_style=0x7f060027;
         public static final int auto_compact_style_summary=0x7f060028;
+        public static final int auto_hide_persistent_notification=0x7f060061;
+        public static final int auto_hide_persistent_notification_summary=0x7f060062;
         public static final int behavior=0x7f060006;
-        public static final int clear_all_notifications=0x7f06005f;
+        /**   strings for accessibility  
+         */
+        public static final int clear_all_notifications=0x7f060063;
         public static final int clear_app_settings=0x7f060058;
         public static final int clear_app_summary=0x7f060059;
         public static final int clearonclear=0x7f06002d;
@@ -171,6 +177,8 @@ public final class R {
  Settings Page 
          */
         public static final int generalsettings=0x7f060004;
+        public static final int hide_when_notifications=0x7f06005f;
+        public static final int hide_when_notifications_summary=0x7f060060;
         public static final int ignore_notifications=0x7f060052;
         public static final int ignore_notifications_summary=0x7f060053;
         public static final int keep_on_foreground=0x7f06002f;
@@ -188,7 +196,7 @@ public final class R {
         public static final int notification_bg_opacity=0x7f060021;
         public static final int notification_bg_opacity_summary=0x7f060022;
         public static final int notification_height=0x7f06005e;
-        public static final int notification_icon=0x7f060061;
+        public static final int notification_icon=0x7f060065;
         public static final int notification_style=0x7f060026;
         public static final int notification_text_color=0x7f060024;
         public static final int notification_time_color=0x7f060025;

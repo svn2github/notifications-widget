@@ -378,7 +378,7 @@ public class NotificationsService extends AccessibilityService
 				}
 			}
 			// handle persistent notifications
-			else //if ((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR)
+			else 
 			{
 				// keep only the last persistent notification for the app
 				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -391,10 +391,12 @@ public class NotificationsService extends AccessibilityService
 					pn.expandedContent = this.getExpandedContent(n);
 				}
 				pn.content = n.contentView;
-				pn.recieved = n.when;
+				Time now = new Time();
+				now.setToNow();
+				pn.recieved = now.toMillis(true);
 				pn.packageName = packageName;
 				pn.contentIntent = n.contentIntent;
-				this.persistentNotifications.put(packageName, pn);
+				persistentNotifications.put(packageName, pn);
 				updateWidget();
 			}
 		}
