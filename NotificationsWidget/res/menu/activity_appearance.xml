@@ -1,9 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_settings"
+        android:id="@+id/collapsedState"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/menu_settings"/>
-
+        android:showAsAction="collapseActionView"
+        android:title="@string/collapsed"/>
 </menu>

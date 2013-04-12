@@ -41,7 +41,7 @@ public class WizardActivity extends Activity
 	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	        builder.setIcon(R.id.appIcon)
 	        		.setTitle(appName + " v" + versionString)
-	        		.setView(inflater.inflate(R.layout.about, null))
+	        		.setView(inflater.inflate(R.layout.dialog_about, null))
 	        		.setPositiveButton(R.string.about_contactus_title, new DialogInterface.OnClickListener() 
 	               {
 	                   public void onClick(DialogInterface dialog, int id) 

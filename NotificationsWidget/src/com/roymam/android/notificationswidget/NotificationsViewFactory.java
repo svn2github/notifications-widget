@@ -72,7 +72,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	@Override
 	public RemoteViews getViewAt(int position) 
 	{
-		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.dark_widget_item);	
+		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.listitem_notification);	
 		NotificationsService s = NotificationsService.getSharedInstance();
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		if (s != null) 
@@ -178,7 +178,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	private void createActionBar(RemoteViews row, int position, NotificationData n) 
 	{
 		row.removeAllViews(R.id.actionbarContainer);
-		RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.notification_actionbar);
+		RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.view_actionbar);
 		row.addView(R.id.actionbarContainer, actionBar);	
 		
 		if (NotificationsService.getSharedInstance().getSelectedIndex() == position)

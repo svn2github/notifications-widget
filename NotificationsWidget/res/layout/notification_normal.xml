@@ -13,7 +13,9 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:background="#801d3741"
-            android:scaleType="fitCenter" android:contentDescription="@string/notification_icon"/>
+            android:contentDescription="@string/notification_icon"
+            android:scaleType="fitCenter"
+            android:src="@drawable/appicon" />
 
         <ImageView
             android:layout_width="36dp"
@@ -32,6 +34,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:scrollHorizontally="false"
+            android:text="Notification text line 1\nNotification text line 2"
             android:textColor="#e5e5e1"
             android:textSize="14sp" />
 
@@ -47,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
+                android:text="16:39"
                 android:textColor="#ff32b6e6"
                 android:textSize="14sp" />
 
@@ -67,13 +71,16 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:gravity="center_vertical|center_horizontal"
+                    android:text="2"
                     android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/appIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_weight="0.0" android:contentDescription="@string/app_icon"/>
+                    android:layout_weight="0.0"
+                    android:contentDescription="@string/app_icon"
+                    android:src="@drawable/appicon" />
 
             </LinearLayout>
         </LinearLayout>

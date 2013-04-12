@@ -252,10 +252,12 @@
     <string name="action_bar">Action Bar</string>
     <string name="notification_icon">Notification Icon</string>
     <string name="app_icon">App Icon</string>
-    <string name="title_section3">Section 3</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section1">Section 1</string>
-    <string name="hello_world">Hello world!</string>
+    
+    <!-- Appearance new activity -->
+    <string name="title_section2">Notification</string>
+    <string name="title_section1">Clock</string>
     <string name="title_activity_appearance">Appearance</string>
+    <string name="collapsed">Collapsed</string>
+    <string name="expanded">Expanded</string>
 
 </resources>

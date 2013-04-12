@@ -511,7 +511,7 @@ public class NotificationsService extends AccessibilityService
 	private RemoteViews createNormalNotification(NotificationData nd) 
 	{
 		// create remoteview for normal notification
-		RemoteViews n = new RemoteViews(getPackageName(), R.layout.normal_notification);
+		RemoteViews n = new RemoteViews(getPackageName(), R.layout.notification_normal);
 		
 		n.setImageViewBitmap(R.id.notificationIcon, nd.icon);
 		n.setImageViewBitmap(R.id.appIcon, nd.appicon);
@@ -531,7 +531,7 @@ public class NotificationsService extends AccessibilityService
 	private RemoteViews createLargeNotification(NotificationData nd) 
 	{
 		// create remoteview for normal notification
-		RemoteViews n = new RemoteViews(getPackageName(), R.layout.large_notification);
+		RemoteViews n = new RemoteViews(getPackageName(), R.layout.notification_large);
 		n.removeAllViews(R.id.largeNotificationContainer);
 		n.addView(R.id.largeNotificationContainer, nd.originalNotification);
 		return n;
@@ -540,7 +540,7 @@ public class NotificationsService extends AccessibilityService
 	private RemoteViews createSmallNotification(NotificationData nd) 
 	{
 		// create remoteview for small notification
-		RemoteViews n = new RemoteViews(getPackageName(), R.layout.compact_notification);
+		RemoteViews n = new RemoteViews(getPackageName(), R.layout.notification_compact);
 		
 		n.setImageViewBitmap(R.id.notificationIcon, nd.appicon);
 		n.setTextViewText(R.id.notificationText, nd.text);

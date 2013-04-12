@@ -214,7 +214,7 @@ public class NotificationsWidgetService extends RemoteViewsService
 	    					&& (!prefs.getBoolean(packageName+"."+PersistentNotificationSettingsActivity.HIDE_WHEN_NOTIFICATIONS, false) || ns.getNotificationsCount() == 0))
     				{
     					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "normal");
-    					RemoteViews rv = new RemoteViews(this.getPackageName(), R.layout.persistent_notification_container);
+    					RemoteViews rv = new RemoteViews(this.getPackageName(), R.layout.notification_persistent);
     					RemoteViews content = pn.content;
     					if (prefs.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT, 
     							prefs.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
@@ -254,6 +254,9 @@ public class NotificationsWidgetService extends RemoteViewsService
 
 	private RemoteViews createClock(String type)
 	{		
+		NotificationsService ns = NotificationsService.getSharedInstance();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		RemoteViews clock;
 		if (type.equals(SettingsActivity.CLOCK_SMALL))
 		{
@@ -339,6 +342,14 @@ public class NotificationsWidgetService extends RemoteViewsService
 	        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, alarmClockIntent, 0);
 	        clock.setOnClickPendingIntent(clock.getLayoutId(), pendingIntent);	       
 	    }
+	    
+	    // set up filler for clear button
+	    if (ns != null &&
+	    	ns.getNotificationsCount() > 0 &&
+	    	prefs.getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible").equals("visible"))
+	    	clock.setViewVisibility(R.id.clearButtonFiller, View.VISIBLE);
+	    else
+	    	clock.setViewVisibility(R.id.clearButtonFiller, View.GONE);
 	    
 	    return clock;
 	}
