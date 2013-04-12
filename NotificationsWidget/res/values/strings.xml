@@ -34,6 +34,7 @@
     <string name="disable_notification_click">Disable notification click</string>
     <string name="disable_notification_click_summary">Do not allow clicking on notification to open it</string>
     <string name="order_notifications_by">Order notifications by</string>
+
     <string-array name="settings_orderby_entries">
         <item>Time</item>
         <item>Priority</item>
@@ -42,7 +43,7 @@
         <item>time</item>
         <item>priority</item>
     </string-array>
-    
+
     <string name="clockstyle">Clock style</string>
     <string name="clockstyle_summary">Choose between small,large and hidden clock</string>
     <string name="showclearbutton">Show Clear button</string>
@@ -82,7 +83,6 @@
         <item>6</item>
         <item>999</item>
     </string-array>
-    
     <string-array name="settings_colors_entries">
         <item>White</item>
         <item>Black</item>
@@ -183,6 +183,7 @@
     <string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>
     <string name="set_app_priority">Set priority</string>
     <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
+
     <string-array name="settings_app_priority_entries">
         <item>Default</item>
         <item>Min</item>
@@ -199,15 +200,17 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Clear app specific settings for this app</string>
     <string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>
-    
-    <!--  Persistent Notifications -->
+
+    <!-- Persistent Notifications -->
     <string name="persistent_notifications">Persistent Notifications</string>
     <string name="show_persistent_notifications">Show persistent notification</string>
     <string name="show_persistent_notifications_summary">Show persistent notification from this app</string>
     <string name="notification_height">Persistent notification size</string>
+
     <string-array name="settings_notification_height_entries">
         <item>Small</item>
         <item>Normal</item>
@@ -218,10 +221,12 @@
         <item>normal</item>
         <item>max</item>
     </string-array>
+
     <string name="hide_when_notifications">Hide when notifications appear</string>
     <string name="hide_when_notifications_summary">Hide this persistent notification when normal notifications appear</string>
     <string name="auto_hide_persistent_notification">Hide when inactive</string>
     <string name="auto_hide_persistent_notification_summary">Hide when the persistent notification wasn\'t updated for selected period</string>
+
     <string-array name="settings_auto_hide_persistent_notifications_entries">
         <item>Never Hide</item>
         <item>After 5 Minutes</item>
@@ -230,7 +235,7 @@
         <item>After 1 Hour</item>
         <item>After 4 Hours</item>
         <item>After 24 Hours</item>
-        </string-array>
+    </string-array>
     <string-array name="settings_auto_hide_persistent_notifications_values" translatable="false">
         <item>0</item>
         <item>5</item>
@@ -240,12 +245,17 @@
         <item>60</item>
         <item>240</item>
         <item>1440</item>
-	</string-array>
-    
-    
-    <!--  strings for accessibility  -->
+    </string-array>
+
+    <!-- strings for accessibility -->
     <string name="clear_all_notifications">Clear All Notifications</string>
     <string name="action_bar">Action Bar</string>
     <string name="notification_icon">Notification Icon</string>
     <string name="app_icon">App Icon</string>
+    <string name="title_section3">Section 3</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section1">Section 1</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_appearance">Appearance</string>
+
 </resources>

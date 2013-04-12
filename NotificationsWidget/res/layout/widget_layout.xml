@@ -15,129 +15,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
-
-        <LinearLayout
-            android:id="@+id/bigClock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="-24dp"
-            android:background="@drawable/item_selector"
-            android:clickable="true"
-            android:orientation="vertical"
-            android:visibility="gone" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/bigHours"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:textColorLink="@android:color/white"
-                    android:textSize="72sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/bigminutes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:textColor="@android:color/white"
-                    android:textColorLink="@android:color/white"
-                    android:textSize="72sp"
-                    android:typeface="sans" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="13dp"
-                android:layout_marginTop="-11dp"
-                android:gravity="center_horizontal" >
-
-                <TextView
-                    android:id="@+id/bigDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/nextAlarmContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:visibility="gone" >
-
-                    <TextView
-                        android:id="@+id/alarmtime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="2dp"
-                        android:alpha="50"
-                        android:fontFamily="sans-serif-condensed"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@android:color/darker_gray"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+        
         <RelativeLayout
             android:id="@+id/clockbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-
-            <LinearLayout
-                android:id="@+id/smallClock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/item_selector"
-                android:clickable="true"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/timeHour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-6dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/timeMinute"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-6dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <TextView
-                    android:id="@+id/timeAMPM"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-6dp"
-                    android:paddingRight="5dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <TextView
-                    android:id="@+id/dateFull"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-6dp"
-                    android:layout_weight="0.97"
-                    android:paddingLeft="5dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
-            
+                      
             <LinearLayout
                 android:id="@+id/buttonsBar"
                 android:layout_width="wrap_content"
@@ -165,6 +48,17 @@
                     android:visibility="gone" android:contentDescription="@string/clear_all_notifications"/>
             </LinearLayout>
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/clockContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="false"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
     </RelativeLayout>
  
     <LinearLayout

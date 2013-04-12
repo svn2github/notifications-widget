@@ -54,7 +54,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     
     public static boolean widgetActive = false;
 	public static boolean widgetExpanded = false;
-    
+	
     public NotificationsWidgetProvider() 
     {
     }
@@ -86,9 +86,20 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		super.onDisabled(context);
 	}
 
-	public void updateWidget(Context ctx, boolean refreshList)
+	public void updateWidget(Context ctx, AppWidgetManager appWidgetManager, boolean refreshList)
 	{
-		AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
+		ComponentName thisWidget = new ComponentName(ctx, NotificationsWidgetProvider.class);
+		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+
+	    // Build the intent to call the service
+	    Intent intent = new Intent(ctx.getApplicationContext(), NotificationsWidgetService.class);
+	    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
+	    intent.putExtra(NotificationsWidgetService.REFRESH_LIST, refreshList);
+
+	    // Update the widgets via the service
+	    ctx.startService(intent);
+		    
+		/*AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
 		ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
 		int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
 		
@@ -99,13 +110,13 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 				AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
 	        }
 		}
-		onUpdate(ctx, widgetManager, widgetIds);
+		onUpdate(ctx, widgetManager, widgetIds);*/
 	}
 	
 	@Override
     public void onReceive(Context ctx, Intent intent) 
     {  
-		//Toast.makeText(ctx, intent.getAction()+":"+intent.getIntExtra(NOTIFICATION_INDEX, -1), Toast.LENGTH_LONG).show();
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ctx.getApplicationContext());
 		NotificationsService ns = NotificationsService.getSharedInstance();
 	    
     	if (intent.getAction().equals(CLEAR_ALL))
@@ -114,13 +125,13 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	    {
     	    	ns.clearAllNotifications();
     	    	ns.setSelectedIndex(-1);
-    	    	updateWidget(ctx,true);
+    	    	updateWidget(ctx,appWidgetManager, true);
     	    }
     	}
     	else if (intent.getAction().equals(Intent.ACTION_TIME_TICK) ||
     			 intent.getAction().equals(UPDATE_CLOCK))
     	{
-    		updateWidget(ctx,false);			
+    		updateWidget(ctx, appWidgetManager, false);			
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.LOCKED"))
     	{
@@ -204,7 +215,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    		{
 	    			ns.togglePinNotification(pos);
 	    		}	    		
-	    		updateWidget(ctx,true);
+	    		updateWidget(ctx, appWidgetManager, true);
     		}
     	}    	
     	super.onReceive(ctx, intent);
@@ -226,256 +237,17 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 			widgetExpanded = true;
 		}
 		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false))
-			updateWidget(context, true);
+			updateWidget(context, appWidgetManager, true);
 	}
 
-	private void populateTime(Context ctxt, RemoteViews widget, int containerId, int hourId, int minuteId, int ampmId, int dateId)
-	{
-	    // set up clock
-	    Time t = new Time();
-	    t.setToNow();
-	    String hourFormat = "%H";
-	    String minuteFormat = ":%M";
-	    String ampmstr = "";
-    	if (!DateFormat.is24HourFormat(ctxt))
-    	{
-    		hourFormat = "%l";
-    		minuteFormat = ":%M";
-    		ampmstr = t.format("%p");
-    	}
-	    widget.setTextViewText(hourId, t.format(hourFormat));
-	    widget.setTextViewText(minuteId, t.format(minuteFormat));
-	    widget.setTextViewText(ampmId, ampmstr);		    
-	    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
-	    widget.setTextViewText(dateId, datestr.toUpperCase(Locale.getDefault()));
-	    
-	    // set clock text color
-	    int color = Resources.getSystem().getColor(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(ctxt).getString(SettingsActivity.CLOCK_COLOR, String.valueOf(android.R.color.white))));
-	    widget.setTextColor(hourId, color);
-	    widget.setTextColor(minuteId, color);
-	    widget.setTextColor(ampmId, color);
-	    widget.setTextColor(dateId, color);
-	    widget.setTextColor(R.id.alarmtime, color);
-	    
-	    // add alarm clock intent
-	    PackageManager packageManager = ctxt.getPackageManager();
-	    Intent alarmClockIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
-
-	    // Verify clock implementation
-	    String clockImpls[][] = 
-	    	{
-	            {"HTC Alarm Clock", "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl" },
-	            {"Standar Alarm Clock", "com.android.deskclock", "com.android.deskclock.AlarmClock"},
-	            {"Moto Blur Alarm Clock", "com.motorola.blur.alarmclock",  "com.motorola.blur.alarmclock.AlarmClock"},
-	            {"Samsung Galaxy Clock", "com.sec.android.app.clockpackage","com.sec.android.app.clockpackage.ClockPackage"},
-	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"}
-	    };
-
-	    boolean foundClockImpl = false;
-
-	    for(int i=0; i<clockImpls.length; i++) 
-	    {
-	        String packageName = clockImpls[i][1];
-	        String className = clockImpls[i][2];
-	        try 
-	        {
-	            ComponentName cn = new ComponentName(packageName, className);
-	            packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
-	            alarmClockIntent.setComponent(cn);
-	            foundClockImpl = true;
-	        } catch (NameNotFoundException e) 
-	        {	            
-	        }
-	    }
-
-	    if (foundClockImpl) {
-	        PendingIntent pendingIntent = PendingIntent.getActivity(ctxt, 0, alarmClockIntent, 0);
-	        widget.setOnClickPendingIntent(containerId, pendingIntent);	       
-	    }
-	}
+	
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
-    {    		
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
-		NotificationsService ns = NotificationsService.getSharedInstance();
-		widgetActive = true;
-
-    	for (int i=0; i<appWidgetIds.length; i++) 
-    	{
-    		RemoteViews widget=new RemoteViews(ctxt.getPackageName(), R.layout.widget_layout);
-    	    
-    		// hide loading spinner
-    		widget.setViewVisibility(R.id.loadingSpinner, View.GONE);
-    		
-    		// set up persistent notifications list
-    		widget.removeAllViews(R.id.persistentNotificationsView);
-    		if (ns != null)
-    		{
-    			widget.removeAllViews(R.id.persistentNotificationsView);
-    			String persistentApps = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
-    			for (String packageName : persistentApps.split(","))
-    			{
-    				PersistentNotification pn = ns.getPersistentNotifications().get(packageName);
-    				if (pn != null)
-    				{
-    	    			long persistentTimeout = Long.parseLong(prefs.getString(packageName +"." +PersistentNotificationSettingsActivity.PN_TIMEOUT,"0"));
-    	    			Time now = new Time();
-    	    		    now.setToNow();
-    	    		    Time max = new Time();
-    	    		    max.set(pn.recieved + persistentTimeout*60*1000);
-    	    		    
-    	    			if (
-    	    					// notification is not too old 
-    	    					(persistentTimeout == 0 || now.toMillis(true)<max.toMillis(true))
-    	    					// and notification is set to be seen
-    	    					&& prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false)
-    	    					// and notification is not set to hide when notifications appears 
-    	    					&& (!prefs.getBoolean(packageName+"."+PersistentNotificationSettingsActivity.HIDE_WHEN_NOTIFICATIONS, false) || ns.getNotificationsCount() == 0))
-        				{
-        					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "normal");
-        					RemoteViews rv = new RemoteViews(ctxt.getPackageName(), R.layout.persistent_notification_container);
-        					RemoteViews content = pn.content;
-        					if (prefs.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT, 
-        							prefs.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
-        						content = pn.expandedContent;
-        					if (layout.equals("small"))
-        					{
-        						rv.addView(R.id.smallLayout, content);
-        						rv.setViewVisibility(R.id.smallLayout, View.VISIBLE);
-        						rv.setViewVisibility(R.id.normalLayout, View.GONE);
-        						rv.setViewVisibility(R.id.maxLayout, View.GONE);
-        						rv.setOnClickPendingIntent(R.id.smallLayout, pn.contentIntent);
-        					} else if (layout.equals("normal"))
-        					{
-        						rv.addView(R.id.normalLayout, content);
-        						rv.setViewVisibility(R.id.smallLayout, View.GONE);
-        						rv.setViewVisibility(R.id.normalLayout, View.VISIBLE);
-        						rv.setViewVisibility(R.id.maxLayout, View.GONE);
-        						rv.setOnClickPendingIntent(R.id.normalLayout, pn.contentIntent);
-        					} else 
-        					{
-        						rv.addView(R.id.maxLayout, content);
-        						rv.setViewVisibility(R.id.smallLayout, View.GONE);
-        						rv.setViewVisibility(R.id.normalLayout, View.GONE);
-        						rv.setViewVisibility(R.id.maxLayout, View.VISIBLE);
-        						rv.setOnClickPendingIntent(R.id.maxLayout, pn.contentIntent);
-        					}        					
-        					widget.addView(R.id.persistentNotificationsView, rv);
-        				}
-    				}
-    			}
-    		}
-    		
-    		// set up notifications list
-    		Intent svcIntent=new Intent(ctxt, NotificationsWidgetService.class);
-    	    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-    	    svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
-    	    widget.setRemoteAdapter(R.id.notificationsListView, svcIntent);
-
-    	    // set up clock
-    	    populateTime(ctxt, widget, R.id.smallClock, R.id.timeHour, R.id.timeMinute, R.id.timeAMPM, R.id.dateFull);
-    	    populateTime(ctxt, widget, R.id.bigClock, R.id.bigHours, R.id.bigminutes, R.id.timeAMPM, R.id.bigDate);
-    	    
-    	    // display next alarm if needed
-    	    String nextAlarm = Settings.System.getString(ctxt.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
-    	    if (!nextAlarm.equals(""))
-    	    {
-    	    	widget.setViewVisibility(R.id.nextAlarmContainer, View.VISIBLE);
-    	    	widget.setTextViewText(R.id.alarmtime, "⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
-    	    }
-    	    else
-    	    {
-    	    	widget.setViewVisibility(R.id.nextAlarmContainer, View.GONE);
-    	    }
-		    // set up buttons
-		    Intent clearIntent = new Intent(ctxt, NotificationsWidgetProvider.class);
-		    clearIntent.setAction(NotificationsWidgetProvider.CLEAR_ALL);
-		    widget.setOnClickPendingIntent(R.id.clearButton, 
-		    		  PendingIntent.getBroadcast(ctxt, 0, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-    	          	      
-		    Intent settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-	    	widget.setOnClickPendingIntent(R.id.serviceInactiveButton, 
-	    			  PendingIntent.getActivity(ctxt, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-		     	    	
-    	    // hide clock if required
-    	    String clockstyle = prefs.getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);					
-    	    String clearButtonMode = prefs.getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible");					
-    	   
-    	    int notificationsCount = 0;
-    	    
-    	    String notifiationsStyle = prefs.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
-    	    boolean autoCompact = prefs.getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false);
-			if (autoCompact && !NotificationsWidgetProvider.widgetExpanded)
-			{
-				notifiationsStyle = "compact";
-			}
-    	        	    
-    	    if (ns!=null)
-    	    {
-    	    	notificationsCount = ns.getNotificationsCount();    	    	
-    	    }
-    	    
-    	    if (!prefs.getBoolean(SettingsActivity.DISABLE_NOTIFICATION_CLICK, false))
-    	    {
-    	    	Intent clickIntent=new Intent(ctxt, NotificationActivity.class);
-    	    	PendingIntent clickPI=PendingIntent.getActivity(ctxt, 0,
-	                                            			clickIntent,
-	                                            			PendingIntent.FLAG_UPDATE_CURRENT);
-    	    	widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);  
-    	    }
-    	    else
-    	    {
-    	    	Intent clickIntent=new Intent(NotificationsWidgetProvider.PERFORM_ACTION);
-    	    	PendingIntent clickPI=PendingIntent.getBroadcast(ctxt, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    	    	widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);    	   
-    	    }
-    			
-    	    if (clockstyle.equals(SettingsActivity.CLOCK_SMALL) ||
-    	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
-    	    		(notifiationsStyle.equals("large") && notificationsCount > 0 ||
-    	    		 notifiationsStyle.equals("normal") && notificationsCount > 1 || 
-    	    				notificationsCount > 2 || 
-    	    				ns != null && ns.getSelectedIndex() >= 0))
-    	    {
-        	    widget.setViewVisibility(R.id.smallClock, View.VISIBLE);
-        	    widget.setViewVisibility(R.id.bigClock, View.GONE);
-    	    } else if (clockstyle.equals(SettingsActivity.CLOCK_LARGE) ||
-        	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
-        	    	(notifiationsStyle.equals("large") && notificationsCount == 0 || 
-        	    	 notifiationsStyle.equals("normal") && notificationsCount <= 1 ||
-        	    	 notificationsCount <= 2 ))
-    	    {
-        	    widget.setViewVisibility(R.id.smallClock, View.GONE);
-        	    widget.setViewVisibility(R.id.bigClock, View.VISIBLE);
-    	    }else
-    	    {
-        	    widget.setViewVisibility(R.id.smallClock, View.GONE);
-        	    widget.setViewVisibility(R.id.bigClock, View.GONE);
-    	    }
-    	    widget.setViewVisibility(R.id.clearButton, (clearButtonMode.equals("visible"))?View.VISIBLE:View.GONE); 
-    	    
-    	    // hide clear button if no notifications are displayed
-    	    if (notificationsCount == 0)
-    	    	{
-	    	    	widget.setViewVisibility(R.id.clearButton, View.GONE);   
-				  	if (ns==null )
-				  	{
-				  		widget.setViewVisibility(R.id.serviceInactiveButton, View.VISIBLE);
-				  		widget.setViewVisibility(R.id.serviceInactiveView, View.VISIBLE);
-				  		widget.setViewVisibility(R.id.notificationsListView, View.GONE);
-				  	}
-				  	else
-				  	{
-				  		widget.setViewVisibility(R.id.serviceInactiveButton, View.GONE);   
-				  		widget.setViewVisibility(R.id.serviceInactiveView, View.GONE);
-				  		widget.setViewVisibility(R.id.notificationsListView, View.VISIBLE);
-				  	}
-				}
-    	
-		      appWidgetManager.updateAppWidget(appWidgetIds[i], widget);    	      
-    	    }
-    		super.onUpdate(ctxt, appWidgetManager, appWidgetIds);    		
+    {   
+    	updateWidget(ctxt, appWidgetManager, false);
+    	widgetActive = true;
+    	super.onUpdate(ctxt, appWidgetManager, appWidgetIds);    		
     }
     
     public void notifyReady(Context ctx)

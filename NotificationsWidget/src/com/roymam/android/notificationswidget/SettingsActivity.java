@@ -67,7 +67,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    public void onCreate(Bundle savedInstanceState) 
 	    {
 	        super.onCreate(savedInstanceState);
-
+	        
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.preferences);
 	        
@@ -329,7 +329,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@Override
     public void onCreate(Bundle savedInstanceState) 
 	{
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);        
     }
 	
 	private void showAbout() 

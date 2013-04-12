@@ -9,6 +9,13 @@
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAppearanceFragment"
             android:icon="@drawable/hardware_phone"
             android:title="@string/appearance" />
+      
+    <header 
+            android:icon="@drawable/hardware_phone"
+            android:title="@string/appearance">
+            	<intent android:targetPackage="com.roymam.android.notificationswidget"
+        		android:targetClass="com.roymam.android.notificationswidget.AppearanceActivity" />
+            </header>
     
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAppSpecificFragment"
         	android:icon="@drawable/apps"
