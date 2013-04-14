@@ -1,5 +1,8 @@
 package com.roymam.android.notificationswidget;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment;
@@ -12,16 +15,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +47,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewAnimator;
 
@@ -119,7 +130,10 @@ public class AppearanceActivity extends FragmentActivity
 					break;
 				}
 				if (clockSettingsFragment!=null)
+				{					
 					clockSettingsFragment.loadSettings(widgetMode);
+					clockSettingsFragment.refreshPreview();
+				}
 			}
 
 			@Override
@@ -171,6 +185,7 @@ public class AppearanceActivity extends FragmentActivity
 			clockStyleView.setDisplayedChild(position);
 			autoSwitch.setChecked(false);
 			prefs.edit().putString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, clockStyle).commit();
+			clockSettingsFragment.refreshPreview();
 		}
 	}
 	
@@ -198,6 +213,7 @@ public class AppearanceActivity extends FragmentActivity
 		}
 		
 		prefs.edit().putString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, clockStyle).commit();
+		clockSettingsFragment.refreshPreview();
 	}	
 	
 	public void onClockPrefChanged(View v)
@@ -216,7 +232,12 @@ public class AppearanceActivity extends FragmentActivity
 			// set background color using the color button background
 			View v2 = this.findViewById(updateViewId);
 			String colorStr = (String) v.getTag();
-			int colorId = Color.parseColor(colorStr);
+			int colorId;
+			if (!colorStr.equals("#0"))
+				colorId = Color.parseColor(colorStr);
+			else
+				colorId = Color.TRANSPARENT;
+			
 			v2.setBackgroundColor(colorId);
 			
 			// store value using the view preference
@@ -329,7 +350,80 @@ public class AppearanceActivity extends FragmentActivity
 		}
 
 		public void refreshPreview() 
-		{
+		{			
+			//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			List<View> clockPreviews = Arrays.asList(getView().findViewById(R.id.smallClock),
+													 getView().findViewById(R.id.mediumClock),
+													 getView().findViewById(R.id.largeClock));
+			
+			for(View v : clockPreviews)
+			{
+				TextView hours = (TextView) v.findViewById(R.id.hours);
+				TextView minutes = (TextView) v.findViewById(R.id.minutes);
+				TextView ampm = (TextView) v.findViewById(R.id.ampm);
+				TextView date = (TextView) v.findViewById(R.id.date);
+				TextView alarm = (TextView) v.findViewById(R.id.alarmtime);
+				
+				// get current time
+				Time t = new Time();
+			    t.setToNow();
+			    String hourFormat = "%H";
+			    String minuteFormat = ":%M";
+			    String ampmstr = "";
+		    	if (!DateFormat.is24HourFormat(getActivity()))
+		    	{
+		    		hourFormat = "%l";
+		    		minuteFormat = ":%M";
+		    		ampmstr = t.format("%p");
+		    	}
+		    	
+		    	hours.setText(t.format(hourFormat));
+			    minutes.setText(t.format(minuteFormat));
+			    ampm.setText(ampmstr);		    
+			    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
+			    date.setText(datestr.toUpperCase(Locale.getDefault()));
+			    
+			    // set clock text color
+			    int bgColor = ((ColorDrawable) bgColorView.getBackground()).getColor();			    
+			    v.setBackgroundColor(bgColor);
+			    v.getBackground().setAlpha(bgClockOpacitySlider.getProgress()*255/100);
+			    
+			    hours.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+			    minutes.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+			    ampm.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+			    date.setTextColor(((ColorDrawable)dateColorView.getBackground()).getColor());
+			    alarm.setTextColor(((ColorDrawable)alarmColorView.getBackground()).getColor());
+			    
+			    if (boldHours.isChecked())
+			    {
+			    	hours.setTypeface(null, Typeface.BOLD);
+			    }
+			    else
+			    {
+			    	hours.setTypeface(null, Typeface.NORMAL);
+			    }
+			    
+			    if (boldMinutes.isChecked())
+			    {
+			    	minutes.setTypeface(null, Typeface.BOLD);
+			    }
+			    else
+			    {
+			    	minutes.setTypeface(null, Typeface.NORMAL);
+			    }
+			    // display next alarm if needed
+			    String nextAlarm = Settings.System.getString(getActivity().getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
+			    if (!nextAlarm.equals(""))
+			    {
+			    	alarm.setVisibility(View.VISIBLE);
+			    	alarm.setText("⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
+			    }
+			    else
+			    {
+			    	alarm.setVisibility(View.GONE);
+			    }
+			}
+				
 		}
 
 		public void loadSettings(String widgetMode) 
