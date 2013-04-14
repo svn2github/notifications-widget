@@ -35,6 +35,11 @@ import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
+	public static final String SHOW_CLEAR_BUTTON = "showclearbutton";
+	public static final String CLOCK_IS_CLICKABLE = "clockisclickable";
+	public static final String BOLD_HOURS = "boldhours";
+	public static final String BOLD_MINUTES = "boldminutes";
+	public static final String CLOCK_BG_OPACITY = "clockbgopacity";
 	public static String TURNSCREENON = "turnscreenon";
 	public static String DISABLE_PROXIMITY = "disableproximity";
 	public static String DELAYED_SCREEON = "delayed_screenon";
@@ -50,12 +55,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String TEXT_COLOR = "notification_text_color";
 	public static String TIME_COLOR = "notification_time_color";
 	public static String CLOCK_COLOR = "clock_text_color";
+	public static final String CLOCK_BG_COLOR = "clock_bg_color";	
+	public static final String CLOCK_ALARM_COLOR = "clock_alarm_color";	
+	public static final String CLOCK_DATE_COLOR = "clock_date_color";	
 	public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_ON_LOCK = "clearonlock";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";
 	public static String DISABLE_NOTIFICATION_CLICK = "disable_notification_click";
 	public static String CLEAR_ON_CLEAR = "clearonclear";
 	public static String CLOCK_SMALL = "small";
+	public static String CLOCK_MEDIUM = "medium";
 	public static String CLOCK_LARGE = "large";
 	public static String CLOCK_HIDDEN = "hidden";
 	public static String CLOCK_AUTO = "auto";

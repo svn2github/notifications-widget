@@ -260,4 +260,8 @@
     <string name="collapsed">Collapsed</string>
     <string name="expanded">Expanded</string>
 
+    <string-array name="widget_mode_entries">
+        <item>Collapsed</item>
+        <item>Expanded</item>
+    </string-array>
 </resources>

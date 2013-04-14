@@ -1,8 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/collapsedState"
+        android:id="@+id/widgetMode"
         android:orderInCategory="100"
-        android:showAsAction="collapseActionView"
-        android:title="@string/collapsed"/>
+        android:showAsAction="always"
+        android:actionLayout="@layout/spinner_widget_mode"/>
 </menu>

@@ -4,9 +4,253 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
+    <ViewAnimator
+        android:id="@+id/clockViewAnimator"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_gravity="top"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right" >
+    </ViewAnimator>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/large_clock" />
+        android:orientation="vertical" >
+
+        <RadioGroup
+            android:id="@+id/clockStyleRG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <RadioButton
+                android:id="@+id/radioSmallClock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="onClockStyleChanged"
+                android:text="Small" />
+
+			<RadioButton
+			    android:id="@+id/radioMedium"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="1"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:onClick="onClockStyleChanged"
+			    android:text="Medium" />
+
+			<RadioButton
+			    android:id="@+id/radioLargeClock"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="1"
+			    android:gravity="center_vertical|center"
+			    android:onClick="onClockStyleChanged"
+			    android:text="Large" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/clockBGColorButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.05"
+                android:onClick="onClockBGColorClick" >
+
+                <LinearLayout
+                    android:id="@+id/clockBGColorView"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="@android:color/white"
+                    android:tag="clock_bg_color" >
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="BG Color"
+                    android:textColorLink="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Opacity"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="12sp" />
+
+                <SeekBar
+                    android:id="@+id/clockBGTransparencySeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:tag="clockbgopacity" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/clockColorButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClockColorClick" >
+
+                <LinearLayout
+                    android:id="@+id/clockColorView"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="@android:color/white"
+                    android:tag="clock_text_color" />
+                    
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="Clock Color"
+                    android:textColorLink="@android:color/white" />
+
+            </LinearLayout>
+
+          	<LinearLayout
+          	    android:id="@+id/dateColorButton"
+          	    style="?android:attr/buttonBarButtonStyle"
+          	    android:layout_width="wrap_content"
+          	    android:layout_height="match_parent"
+          	    android:layout_weight="1"
+          	    android:onClick="onDateColorClick" >
+
+          		<LinearLayout
+          		    android:id="@+id/dateColorView"
+          		    android:layout_width="24dp"
+          		    android:layout_height="24dp"
+          		    android:background="@android:color/white"
+          		    android:tag="clock_date_color" >
+
+          		</LinearLayout>
+                    
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="Date Color"
+                    android:textColorLink="@android:color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/alarmColorButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onAlarmColorClick" >
+
+                <LinearLayout
+                    android:id="@+id/alarmColorView"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@android:color/white"
+                    android:tag="clock_alarm_color" >
+
+                </LinearLayout>
+                    
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="Alarm Color"
+                    android:textColorLink="@android:color/white" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ToggleButton
+                android:id="@+id/clockIsClickableToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClockPrefChanged"
+                android:tag="clockisclickable"
+                android:textOff="Clickable"
+                android:textOn="Clickable" />
+
+            <ToggleButton
+                android:id="@+id/boldHoursToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClockPrefChanged"
+                android:tag="boldhours"
+                android:textOff="Bold Hours"
+                android:textOn="Bold Hours" />
+
+            <ToggleButton
+                android:id="@+id/boldMinutesToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClockPrefChanged"
+                android:tag="boldminutes"
+                android:textOff="Bold Minutes"
+                android:textOn="Bold Minutes" />
+
+        </LinearLayout>
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <CheckBox
+                android:id="@+id/autoSizeCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onAutoSwitchChanged"
+                android:text="Auto switch clock size" />
+
+            <CheckBox
+                android:id="@+id/showClearButtonCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClockPrefChanged"
+                android:tag="showclearall"
+                android:text="Show &quot;Clear All&quot; Button" />
+            
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

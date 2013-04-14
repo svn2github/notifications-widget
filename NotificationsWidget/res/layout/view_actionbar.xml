@@ -4,21 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="28dp"
     android:layout_weight="0"
+    style="?android:attr/buttonBarStyle"
     android:orientation="horizontal" >
 
 	    <ImageButton
 	        android:id="@+id/customAction1"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/item_selector"
 	        android:src="@android:drawable/ic_menu_close_clear_cancel" 
+	        style="?android:attr/buttonBarButtonStyle"
 	        />
     
 	    <ImageButton
 	        android:id="@+id/customAction2"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/item_selector"
+	        style="?android:attr/buttonBarButtonStyle"
 	        android:src="@android:drawable/ic_menu_close_clear_cancel" 
 	        />
 	    
@@ -27,7 +28,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="0.5"
-	        android:background="@drawable/item_selector"
+	        style="?android:attr/buttonBarButtonStyle"
 	        android:drawableLeft="@android:drawable/ic_menu_preferences"
 	        android:drawablePadding="4dp"
 	        android:gravity="left|center_vertical"
@@ -36,11 +37,10 @@
 
 	    <Button
 	        android:id="@+id/actionPin"
-	        style="android:buttonStyle"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="0.5"
-	        android:background="@drawable/item_selector"
+	        style="?android:attr/buttonBarButtonStyle"
 	        android:drawableLeft="@drawable/pin"
 	        android:gravity="left|center_vertical"
 	        android:text="@string/pin"
@@ -50,7 +50,7 @@
 	        android:id="@+id/actionClear"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/item_selector"
+	        style="?android:attr/buttonBarButtonStyle"
 	        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
 	</LinearLayout>
