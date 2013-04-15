@@ -14,7 +14,9 @@ public class NotificationData
 		public Bitmap drawable;
 	}
 
-	String 	text;
+	CharSequence 	text;
+	CharSequence	title;
+	CharSequence	content;
 	Bitmap 	icon;
 	Bitmap 	appicon;
 	long	received;

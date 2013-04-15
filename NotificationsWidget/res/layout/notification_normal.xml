@@ -23,53 +23,75 @@
             android:src="@drawable/actionspinner" android:contentDescription="@string/action_bar"/>
     </RelativeLayout>
 
-        <TextView
-            android:id="@+id/notificationText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.46"
-            android:background="@drawable/item_selector"
-            android:gravity="top"
-            android:minLines="0"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:scrollHorizontally="false"
-            android:text="Notification text line 1\nNotification text line 2"
-            android:textColor="#e5e5e1"
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.00"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="4dp"
             android:background="@drawable/item_selector"
             android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/notificationTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="16:39"
-                android:textColor="#ff32b6e6"
-                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
+                <TextView
+                    android:id="@+id/notificationTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/item_selector"
+                    android:gravity="top"
+                    android:minLines="0"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:scrollHorizontally="false"
+                    android:text="Notification Title"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/notificationTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="16:39"
+                    android:textColor="#ff32b6e6"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46" >
+
+                <TextView
+                    android:id="@+id/notificationText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/item_selector"
+                    android:ellipsize="end"
+                    android:gravity="top"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:scrollHorizontally="false"
+                    android:text="Notification text line 1\nNotification text line 2"
+                    android:textColor="#e5e5e1" />
+
                 <ImageView
                     android:id="@+id/pinIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_weight="0.0"
-                    android:src="@drawable/pin" android:contentDescription="@string/pin"/>
+                    android:contentDescription="@string/pin"
+                    android:src="@drawable/pin" />
 
                 <TextView
                     android:id="@+id/notificationCount"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="2"
                     android:textSize="12sp" />
@@ -78,11 +100,10 @@
                     android:id="@+id/appIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_weight="0.0"
                     android:contentDescription="@string/app_icon"
                     android:src="@drawable/appicon" />
-
             </LinearLayout>
+
         </LinearLayout>
 
 </LinearLayout>

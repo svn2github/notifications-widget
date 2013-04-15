@@ -30,13 +30,14 @@
                 android:id="@+id/pinIcon"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_weight="0.0"
-                android:src="@drawable/pin" android:contentDescription="@string/pin"/>
+                android:contentDescription="@string/pin"
+                android:src="@drawable/pin" />
 
             <TextView
                 android:id="@+id/notificationTime"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
-                android:layout_weight="0"
+                android:text="15:49"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </LinearLayout>

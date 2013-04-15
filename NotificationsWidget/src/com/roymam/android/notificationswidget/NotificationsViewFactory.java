@@ -104,11 +104,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				}
 				
 				RemoteViews styleView;
-				int iconId = R.id.notificationIcon;
 				
 				if (notStyle.equals("large"))
 				{
-					if (n.originalNotification != null)
+					styleView = n.largeNotification;
+					/*if (n.originalNotification != null)
 					{
 						styleView = n.largeNotification;
 						
@@ -125,21 +125,21 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					else
 					{
 						styleView = n.normalNotification;
-					}
+					}*/
 				}
 				else if (notStyle.equals("normal"))
 				{
 					styleView = n.normalNotification;
-					int maxLines = Integer.parseInt(preferences.getString(SettingsActivity.MAX_LINES, "2"));
-					styleView.setInt(R.id.notificationText, "setMaxLines", maxLines);			    	
 				}
 				else
 				{
 					styleView = n.smallNotification;
-					int maxLines = Integer.parseInt(preferences.getString(SettingsActivity.MAX_LINES, "1"));
-					styleView.setInt(R.id.notificationText, "setMaxLines", maxLines);					
 				}
-				
+
+				int maxLines = Integer.parseInt(preferences.getString(SettingsActivity.MAX_LINES, "1"));
+				styleView.setInt(R.id.notificationText, "setMaxLines", maxLines);					
+				styleView.setInt(R.id.notificationContent, "setMaxLines", maxLines);					
+
 				// add style view
 				row.removeAllViews(R.id.notificationContainer);
 				row.addView(R.id.notificationContainer, styleView);
@@ -149,6 +149,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.setInt(R.id.notificationBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
 				
 				styleView.setTextColor(R.id.notificationText, textColor);
+				styleView.setTextColor(R.id.notificationTitle, textColor);
+				styleView.setTextColor(R.id.notificationContent, textColor);
 				styleView.setTextColor(R.id.notificationTime, timeColor);
 				styleView.setTextColor(R.id.notificationCount, textColor);	
 				if (n.pinned)
@@ -167,7 +169,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.ACTIONBAR_TOGGLE);
 				editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
 				styleView.setOnClickPendingIntent(
-						iconId, 
+						R.id.notificationIcon, 
 						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE+position*10, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
 				
 		    }
@@ -231,9 +233,9 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		
 		// if it's expanded large notification - don't show buttons in actions bar 
-		if (!(sharedPref.getBoolean(n.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true))
+		if (/*!(sharedPref.getBoolean(n.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true))
 		      && sharedPref.getString(SettingsActivity.NOTIFICATION_STYLE, "normal").equals("large"))		
-			&& n.actions != null)
+			&& */n.actions != null)
 			{
 				if (n.actions.length >= 1)
 				{

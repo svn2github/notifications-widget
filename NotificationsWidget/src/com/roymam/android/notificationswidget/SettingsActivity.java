@@ -396,7 +396,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
 				 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
 			{
-				ns.startProximityMontior();
+				ns.registerProximitySensor();
 			}
 			else 
 			{
