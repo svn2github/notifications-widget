@@ -3,9 +3,7 @@
     android:id="@+id/largeClock"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="0dp"
-    android:layout_marginTop="-24dp"
-    android:background="@drawable/item_selector" 
+    android:background="@drawable/item_selector"
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical" >
@@ -13,6 +11,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-20dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal" >
 
@@ -20,23 +19,22 @@
                     android:id="@+id/hours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
                     android:text="00"
                     android:textColor="@android:color/white"
                     android:textColorLink="@android:color/white"
                     android:textSize="72sp"
-                    android:textStyle="bold"
-                    android:typeface="sans" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/minutes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif-thin"
                     android:text=":00"
                     android:textColor="@android:color/white"
                     android:textColorLink="@android:color/white"
-                    android:textSize="72sp"
-                    android:typeface="sans" />
+                    android:textSize="72sp" />
 
                 <TextView
                     android:id="@+id/ampm"
@@ -68,7 +66,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
-                    android:alpha="50"
                     android:fontFamily="sans-serif-condensed"
                     android:text="WED 07:00"
                     android:textAppearance="?android:attr/textAppearanceSmall"

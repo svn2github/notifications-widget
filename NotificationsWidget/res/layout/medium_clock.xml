@@ -23,13 +23,15 @@
                     android:textColor="@android:color/white"
                     android:textColorLink="@android:color/white"
                     android:textSize="36sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/minutes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=":00"
+                    android:fontFamily="sans-serif-thin"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@android:color/white"
                     android:textColorLink="@android:color/white"
@@ -64,7 +66,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
-                    android:alpha="50"
                     android:fontFamily="sans-serif-condensed"
                     android:text="WED 07:00"
                     android:textAppearance="?android:attr/textAppearanceSmall"

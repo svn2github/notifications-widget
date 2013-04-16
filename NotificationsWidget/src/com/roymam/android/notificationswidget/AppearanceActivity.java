@@ -1,26 +1,18 @@
 package com.roymam.android.notificationswidget;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -30,8 +22,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -62,16 +59,15 @@ public class AppearanceActivity extends FragmentActivity
 	ViewPager mViewPager;
 	
 	// selected widget mode
-	private String 	 widgetMode = COLLAPSED_WIDGET_MODE;
+	private static String 	 widgetMode = COLLAPSED_WIDGET_MODE;
 	
 	// fragements
 	private ClockSectionFragment clockSettingsFragment = null;
 	private NotificationSectionFragment notificationsSettingsFragment = null;
 	private int updateViewId = 0;
 	private DialogFragment colorDialog;
-
 	
-	// form fields
+	// clock form fields
 	private static RadioGroup clockStyleRG;
 	private static CheckBox autoSwitch;
 	private static CheckBox showClearAll;
@@ -88,7 +84,28 @@ public class AppearanceActivity extends FragmentActivity
 	public static ViewGroup dateColorButton;
 	public static ViewGroup alarmColorButton;
 	public static SeekBar bgClockOpacitySlider;
+
+	// notification fields
+	public static ViewAnimator notificationStyleView;
+	public static RadioGroup notificationStyleRG;
+	public static RadioButton notificationStyleCompact;
+	public static RadioButton notificationStyleNormal;
+	public static RadioButton notificationStyleLarge;
+	public static ToggleButton notificationClickable;
+	public static ToggleButton useExpandedText;
+	public static ToggleButton iconClickable;
+	public static View notificationBgColorView;
+	public static View titleColorView;
+	public static View textColorView;
+	public static View contentColorView;
+	public static ViewGroup notificationBgColorButton;
+	public static ViewGroup titleColorButton;
+	public static ViewGroup textColorButton;
+	public static ViewGroup contentColorButton;
+	public static SeekBar notificationBgClockOpacitySlider;
+	public static Spinner maxLinesSpinner;
 	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -131,8 +148,13 @@ public class AppearanceActivity extends FragmentActivity
 				}
 				if (clockSettingsFragment!=null)
 				{					
-					clockSettingsFragment.loadSettings(widgetMode);
+					clockSettingsFragment.loadSettings();
 					clockSettingsFragment.refreshPreview();
+				}
+				if (notificationsSettingsFragment!=null)
+				{
+					notificationsSettingsFragment.loadSettings();
+					notificationsSettingsFragment.refreshPreview();
 				}
 			}
 
@@ -189,6 +211,37 @@ public class AppearanceActivity extends FragmentActivity
 		}
 	}
 	
+	public void onNotificationStyleChanged(View v) 
+	{
+		boolean checked = ((RadioButton)v).isChecked();
+		if (checked)
+		{
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			
+			String notificationStyle = null;
+			int position = 0;
+			
+			switch(v.getId())
+			{
+			case R.id.notificationStyleCompactRadio:
+				notificationStyle = "compact";
+				position = 0;
+				break;
+			case R.id.notificationStyleNormalRadio:
+				notificationStyle = "normal";
+				position = 1;
+				break;
+			case R.id.notificationStyleOriginal:
+				notificationStyle = "large";
+				position = 2;
+				break;
+			}
+			notificationStyleView.setDisplayedChild(position);
+			prefs.edit().putString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, notificationStyle).commit();
+			notificationsSettingsFragment.refreshPreview();
+		}
+	}
+	
 	public void onAutoSwitchChanged(View v)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -225,6 +278,15 @@ public class AppearanceActivity extends FragmentActivity
 		clockSettingsFragment.refreshPreview();
 	}
 	
+	public void onNotificationPrefChanged(View v)
+	{
+		boolean checked = ((CompoundButton)v).isChecked();
+		String settings = (String) v.getTag();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.edit().putBoolean(widgetMode + "." + settings, checked).commit();
+		notificationsSettingsFragment.refreshPreview();
+	}
+
 	public void onColorChoose(View v)
 	{
 		if (updateViewId != 0)
@@ -245,10 +307,32 @@ public class AppearanceActivity extends FragmentActivity
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			prefs.edit().putInt(widgetMode + "." + settings, colorId).commit();
 			clockSettingsFragment.refreshPreview();
+			notificationsSettingsFragment.refreshPreview();
 			
 			colorDialog.dismiss();
 		}
 	}
+
+	public void onNotificationkBGColorClick(View v)
+	{
+		showColorDialog(R.id.bgColorView);
+	}
+	
+	public void onTitleColorClick(View v)
+	{
+		showColorDialog(R.id.titleColorView);
+	}
+	
+	public void onTextColorClick(View v)
+	{
+		showColorDialog(R.id.textColorView);
+	}
+	
+	public void onContentColorClick(View v)
+	{
+		showColorDialog(R.id.contentColorView);
+	}
+	
 	public void onClockBGColorClick(View v)
 	{
 		showColorDialog(R.id.clockBGColorView);
@@ -268,7 +352,7 @@ public class AppearanceActivity extends FragmentActivity
 	{
 		showColorDialog(R.id.alarmColorView);
 	}
-	
+
 	private void showColorDialog(int viewId) 
 	{
 		updateViewId = viewId;
@@ -343,15 +427,12 @@ public class AppearanceActivity extends FragmentActivity
 
 	public static class ClockSectionFragment extends Fragment implements OnSeekBarChangeListener
 	{
-		private String widgetMode = AppearanceActivity.COLLAPSED_WIDGET_MODE;
-		
 		public ClockSectionFragment() 
 		{
 		}
 
 		public void refreshPreview() 
 		{			
-			//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 			List<View> clockPreviews = Arrays.asList(getView().findViewById(R.id.smallClock),
 													 getView().findViewById(R.id.mediumClock),
 													 getView().findViewById(R.id.largeClock));
@@ -383,34 +464,6 @@ public class AppearanceActivity extends FragmentActivity
 			    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
 			    date.setText(datestr.toUpperCase(Locale.getDefault()));
 			    
-			    // set clock text color
-			    int bgColor = ((ColorDrawable) bgColorView.getBackground()).getColor();			    
-			    v.setBackgroundColor(bgColor);
-			    v.getBackground().setAlpha(bgClockOpacitySlider.getProgress()*255/100);
-			    
-			    hours.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
-			    minutes.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
-			    ampm.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
-			    date.setTextColor(((ColorDrawable)dateColorView.getBackground()).getColor());
-			    alarm.setTextColor(((ColorDrawable)alarmColorView.getBackground()).getColor());
-			    
-			    if (boldHours.isChecked())
-			    {
-			    	hours.setTypeface(null, Typeface.BOLD);
-			    }
-			    else
-			    {
-			    	hours.setTypeface(null, Typeface.NORMAL);
-			    }
-			    
-			    if (boldMinutes.isChecked())
-			    {
-			    	minutes.setTypeface(null, Typeface.BOLD);
-			    }
-			    else
-			    {
-			    	minutes.setTypeface(null, Typeface.NORMAL);
-			    }
 			    // display next alarm if needed
 			    String nextAlarm = Settings.System.getString(getActivity().getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
 			    if (!nextAlarm.equals(""))
@@ -422,16 +475,50 @@ public class AppearanceActivity extends FragmentActivity
 			    {
 			    	alarm.setVisibility(View.GONE);
 			    }
+			    // set clock text color
+			    int bgColor = ((ColorDrawable) bgColorView.getBackground()).getColor();			    
+			    v.setBackgroundColor(bgColor);
+			    v.getBackground().setAlpha(bgClockOpacitySlider.getProgress()*255/100);
+			    
+			    hours.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+			    minutes.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+			    ampm.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+			    date.setTextColor(((ColorDrawable)dateColorView.getBackground()).getColor());
+			    alarm.setTextColor(((ColorDrawable)alarmColorView.getBackground()).getColor());
+			    if (((ColorDrawable)dateColorView.getBackground()).getColor() == Color.TRANSPARENT)
+			    	date.setVisibility(View.GONE);
+			    else
+			    	date.setVisibility(View.VISIBLE);
+			    
+			    if (((ColorDrawable)alarmColorView.getBackground()).getColor() == Color.TRANSPARENT)
+			    	alarm.setVisibility(View.GONE);
+			    
+			    if (boldHours.isChecked())
+			    {
+			    	hours.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
+			    }
+			    else
+			    {
+			    	hours.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+			    }
+			    
+			    if (boldMinutes.isChecked())
+			    {
+			    	minutes.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
+			    }
+			    else
+			    {
+			    	minutes.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+			    }
 			}
 				
 		}
 
-		public void loadSettings(String widgetMode) 
+		public void loadSettings() 
 		{
 			Context ctx = getActivity();
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 			
-			this.widgetMode = widgetMode;
 			// setup clock
 			setupClockStyle();
 			
@@ -563,15 +650,184 @@ public class AppearanceActivity extends FragmentActivity
 		}
 	}
 	
-	public static class NotificationSectionFragment extends Fragment 
+	public static class NotificationSectionFragment extends Fragment implements OnSeekBarChangeListener, OnItemSelectedListener
 	{	
 		public NotificationSectionFragment()
 		{
 		}
 		
+		public void loadSettings() 
+		{
+			Context ctx = getActivity();
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+			
+			setupNotificationStyle();
+			
+			// setup toggles
+			notificationClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true));
+			useExpandedText.setChecked(prefs.getBoolean(widgetMode + "." + AppSettingsActivity.USE_EXPANDED_TEXT, true));
+			iconClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_ICON_IS_CLICKABLE, true));
+
+			// setup opacity slider
+			int defaultOpacity = widgetMode.equals(COLLAPSED_WIDGET_MODE)?0:50;
+			int opacity = prefs.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_OPACITY, defaultOpacity);
+			notificationBgClockOpacitySlider.setProgress(opacity);
+			
+			// setup color buttons
+			int bgColor = prefs.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_COLOR, Color.BLACK);
+			int titleColor = prefs.getInt(widgetMode + "." + SettingsActivity.TITLE_COLOR, Color.WHITE);
+			int textColor = prefs.getInt(widgetMode + "." + SettingsActivity.TEXT_COLOR, Color.LTGRAY);
+			int contentColor = prefs.getInt(widgetMode + "." + SettingsActivity.CONTENT_COLOR, Color.DKGRAY);
+			notificationBgColorView.setBackgroundColor(bgColor);
+			titleColorView.setBackgroundColor(titleColor);
+			textColorView.setBackgroundColor(textColor);
+			contentColorView.setBackgroundColor(contentColor);
+			
+			// setup number of lines
+			int maxLines = prefs.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
+			if (maxLines < 6) 
+				maxLinesSpinner.setSelection(maxLines-1);
+			else
+				maxLinesSpinner.setSelection(6);
+		}
+
+		private void setupNotificationStyle() 
+		{
+			Context ctx = getActivity();
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+			
+			// clock style
+			String defaultNotificationStyle = widgetMode.equals(AppearanceActivity.COLLAPSED_WIDGET_MODE)?
+					"compact" : "normal";
+			
+			String notificationStyle = prefs.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, defaultNotificationStyle);
+						
+			if (notificationStyle.equals("compact"))
+			{
+				notificationStyleRG.check(R.id.notificationStyleCompactRadio);
+				notificationStyleView.setDisplayedChild(0);
+			}
+			else if (notificationStyle.equals("normal"))
+			{
+				notificationStyleRG.check(R.id.notificationStyleNormalRadio);
+				notificationStyleView.setDisplayedChild(1);
+			}
+			else if (notificationStyle.equals("large"))
+			{
+				notificationStyleRG.check(R.id.notificationStyleOriginal);
+				notificationStyleView.setDisplayedChild(2);
+			}
+		}
+		
 		public void refreshPreview() 
 		{
-			
+			int bgColor = ((ColorDrawable)AppearanceActivity.notificationBgColorView.getBackground()).getColor();
+			int bgAlpha = AppearanceActivity.notificationBgClockOpacitySlider.getProgress();
+			int titleColor = ((ColorDrawable)AppearanceActivity.titleColorView.getBackground()).getColor();
+			int textColor = ((ColorDrawable)AppearanceActivity.textColorView.getBackground()).getColor();
+			int contentColor = ((ColorDrawable)AppearanceActivity.contentColorView.getBackground()).getColor();
+			boolean expanded = AppearanceActivity.useExpandedText.isChecked();
+			boolean iconClickable = AppearanceActivity.iconClickable.isChecked();
+			int maxLines = AppearanceActivity.maxLinesSpinner.getSelectedItemPosition()+1;
+			if (maxLines > 6) maxLines = 999;
+		
+			List<View> notificationPreviews = Arrays.asList(getView().findViewById(R.id.compactNotification),
+					 getView().findViewById(R.id.normalNotification),
+					 getView().findViewById(R.id.largeNotification));
+
+			for(View v : notificationPreviews)
+			{
+				v.setBackgroundColor(bgColor);
+				v.getBackground().setAlpha(bgAlpha * 255 / 100);
+				
+				TextView title = (TextView) v.findViewById(R.id.notificationTitle);
+				CharSequence titleDemoStr = getActivity().getString(R.string.title_appname_demo_text);
+				CharSequence textDemoStr = getActivity().getString(R.string.text_demo_text);
+				
+				if (expanded)
+				{
+					titleDemoStr =getActivity().getString(R.string.title_demo_text);
+				}
+				if (title != null)
+				{
+					title.setText(titleDemoStr);
+					title.setTextColor(titleColor);
+					if (titleColor == Color.TRANSPARENT)
+						title.setVisibility(View.GONE);
+					else
+						title.setVisibility(View.VISIBLE);
+				}
+				else if (titleColor != Color.TRANSPARENT)
+				{
+					// combine title and text into one string
+					textDemoStr = TextUtils.concat(titleDemoStr," ", textDemoStr);
+					
+					// set colors for title and terxt
+					SpannableStringBuilder ssb = new SpannableStringBuilder(textDemoStr);
+					CharacterStyle titleStyle = new ForegroundColorSpan(titleColor);
+					CharacterStyle textStyle = new ForegroundColorSpan(textColor);
+					ssb.setSpan(titleStyle, 0, titleDemoStr.length(),0);
+					ssb.setSpan(textStyle, titleDemoStr.length()+1, textDemoStr.length(),0);
+					
+					textDemoStr = ssb;
+				}
+				
+				TextView text = (TextView) v.findViewById(R.id.notificationText);
+				if (text != null)
+				{
+					text.setText(textDemoStr);
+					text.setTextColor(textColor);
+					if (textColor == Color.TRANSPARENT && title != null)
+							text.setVisibility(View.GONE);
+					else
+						text.setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					// TODO combine title and text into a single line
+				}
+				
+				TextView content = (TextView) v.findViewById(R.id.notificationContent);
+				if (content != null)
+				{
+					if (expanded)
+						content.setText(R.string.content_expanded_demo_text);
+					else
+						content.setText(R.string.content_demo_text);
+						
+					content.setTextColor(contentColor);
+					content.setMaxLines(maxLines);
+					/*if (contentColor == Color.TRANSPARENT)
+						content.setVisibility(View.GONE);
+					else
+						content.setVisibility(View.VISIBLE);*/
+				}
+				TextView time = (TextView) v.findViewById(R.id.notificationTime);
+				if (time != null)
+				{
+					time.setText(R.string.time_demo_text);
+					time.setTextColor(contentColor);
+				}
+				TextView count = (TextView) v.findViewById(R.id.notificationCount);
+				if (count != null)
+				{
+					count.setText(R.string.count_demo_text);
+					count.setTextColor(contentColor);
+				}
+				
+				View iconSpinner = v.findViewById(R.id.notificationSpinner);
+				if (iconSpinner != null)
+				{
+					if (iconClickable)
+					{
+						iconSpinner.setVisibility(View.VISIBLE);
+					}
+					else
+					{
+						iconSpinner.setVisibility(View.GONE);
+					}
+				}				
+			}
 		}
 
 		@Override
@@ -591,12 +847,78 @@ public class AppearanceActivity extends FragmentActivity
 			nnView.getLayoutParams().height = LayoutParams.WRAP_CONTENT; 
 			nlView.getLayoutParams().height = LayoutParams.WRAP_CONTENT; 
 			
+			notificationStyleRG = (RadioGroup) notificationSettingsView.findViewById(R.id.notificationStyleRG);
+			notificationStyleCompact = (RadioButton) notificationSettingsView.findViewById(R.id.notificationStyleCompactRadio);
+			notificationStyleNormal = (RadioButton) notificationSettingsView.findViewById(R.id.notificationStyleNormalRadio);
+			notificationStyleLarge = (RadioButton) notificationSettingsView.findViewById(R.id.notificationStyleOriginal);
+			notificationStyleView = (ViewAnimator) notificationSettingsView.findViewById(R.id.notificationViewFlipper);
+
+			// toggles
+			notificationClickable = (ToggleButton) notificationSettingsView.findViewById(R.id.notificationClickableToggle);
+			useExpandedText = (ToggleButton) notificationSettingsView.findViewById(R.id.notificationExpandedToggle);
+			iconClickable = (ToggleButton) notificationSettingsView.findViewById(R.id.iconClickableToggle);
+
+			// color buttons
+			notificationBgColorView = notificationSettingsView.findViewById(R.id.bgColorView);
+			titleColorView = notificationSettingsView.findViewById(R.id.titleColorView);
+			textColorView = notificationSettingsView.findViewById(R.id.textColorView);
+			contentColorView = notificationSettingsView.findViewById(R.id.contentColorView);
+			notificationBgColorButton = (ViewGroup) notificationSettingsView.findViewById(R.id.bgColorButton);
+			titleColorButton = (ViewGroup) notificationSettingsView.findViewById(R.id.titleColorButton);
+			textColorButton = (ViewGroup) notificationSettingsView.findViewById(R.id.textColorButton);
+			contentColorButton = (ViewGroup) notificationSettingsView.findViewById(R.id.contentColorButton);
+			
+			// seekbar
+			notificationBgClockOpacitySlider = (SeekBar) notificationSettingsView.findViewById(R.id.bgTransparencySeekBar);
+			notificationBgClockOpacitySlider.setOnSeekBarChangeListener(this);
+			// maxlines spinner
+			maxLinesSpinner = (Spinner) notificationSettingsView.findViewById(R.id.maxLinesSpinner);
+			maxLinesSpinner.setOnItemSelectedListener(this);
 			return notificationSettingsView;
 		}
+		// progress bar events
+		@Override
+		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) 
+		{
+			if (fromUser)
+			{
+				String settings = (String) seekBar.getTag();
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+				prefs.edit().putInt(widgetMode + "." + settings, progress).commit();
+				refreshPreview();
+			}
+		}
+		
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar) 
+		{
+			// do nothing
+		}
+
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar) 
+		{
+			// do nothing
+		}
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) 
+		{
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			
+			if (pos <6) 
+				prefs.edit().putInt(widgetMode + "." + SettingsActivity.MAX_LINES, pos+1).commit();
+			else
+				prefs.edit().putInt(widgetMode + "." + SettingsActivity.MAX_LINES, 999).commit();
+				
+			refreshPreview();
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> arg0) 
+		{
+			// do nothing
+		}
+
 	}
-
-	
-
-	
-
 }

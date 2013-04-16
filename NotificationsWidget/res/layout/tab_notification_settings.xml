@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="true"
+            android:onClick="onNotificationStyleChanged"
             android:text="Compact" />
 
         <RadioButton
@@ -32,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onNotificationStyleChanged"
             android:text="Normal" />
 
         <RadioButton
@@ -39,7 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Original" />
+            android:onClick="onNotificationStyleChanged"
+            android:text="Large" />
 
     </RadioGroup>
 
@@ -52,14 +55,17 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.05" >
+            android:layout_weight="0.05"
+            android:onClick="onNotificationkBGColorClick" >
 
             <LinearLayout
                 android:id="@+id/bgColorView"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@android:color/white" >
+                android:background="@android:color/white"
+                android:tag="notification_bg_color" >
+
             </LinearLayout>
 
             <TextView
@@ -87,7 +93,8 @@
                 android:id="@+id/bgTransparencySeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="100" />
+                android:max="100"
+                android:tag="notification_bg_opacity" />
 
         </LinearLayout>
 
@@ -102,14 +109,17 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:onClick="onTitleColorClick" >
 
             <LinearLayout
                 android:id="@+id/titleColorView"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@android:color/white" >
+                android:background="@android:color/white"
+                android:tag="notification_title_color" >
+
             </LinearLayout>
 
             <TextView
@@ -125,14 +135,17 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:onClick="onTextColorClick" >
 
             <LinearLayout
                 android:id="@+id/textColorView"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@android:color/white" >
+                android:background="@android:color/white"
+                android:tag="notification_text_color" >
+
             </LinearLayout>
 
             <TextView
@@ -144,25 +157,28 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/timeColorButton"
+            android:id="@+id/contentColorButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:onClick="onContentColorClick" >
 
             <LinearLayout
-                android:id="@+id/timeColorView"
+                android:id="@+id/contentColorView"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@android:color/white" >
+                android:background="@android:color/white"
+                android:tag="notification_content_color" >
+
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="Time Color"
+                android:text="Content Color"
                 android:textColorLink="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
@@ -178,6 +194,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="notificationis_is_clickable"
             android:text="ToggleButton"
             android:textOff="Clickable"
             android:textOn="Clickable" />
@@ -188,6 +206,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="useexpandedtext"
             android:text="ToggleButton"
             android:textOff="Expanded"
             android:textOn="Expanded" />
@@ -198,6 +218,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="notificationiconclickable"
             android:text="ToggleButton"
             android:textOff="Icon Menu"
             android:textOn="Icon Menu" />

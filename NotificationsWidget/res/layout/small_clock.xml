@@ -13,6 +13,7 @@
 	    android:layout_gravity="center_vertical"
 	    android:text="00"
 	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:fontFamily="sans-serif"
 	    android:textStyle="bold" />
 	
 	<TextView
@@ -21,6 +22,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center_vertical"
 	    android:text=":00"
+	    android:fontFamily="sans-serif-thin"
 	    android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	<TextView

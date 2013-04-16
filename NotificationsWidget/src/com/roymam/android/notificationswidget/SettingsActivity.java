@@ -57,7 +57,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String CLOCK_COLOR = "clock_text_color";
 	public static final String CLOCK_BG_COLOR = "clock_bg_color";	
 	public static final String CLOCK_ALARM_COLOR = "clock_alarm_color";	
-	public static final String CLOCK_DATE_COLOR = "clock_date_color";	
+	public static final String CLOCK_DATE_COLOR = "clock_date_color";
+	public static final String NOTIFICATION_IS_CLICKABLE = "notification_is_clickable";	
+	public static final String NOTIFICATION_ICON_IS_CLICKABLE = "notificationicon_is_clickable";
+	public static final String TITLE_COLOR = "notification_title_color";	
+	public static final String CONTENT_COLOR = "notification_content_color";
+	public static final String NOTIFICATION_BG_COLOR = "notification_bg_color";	
 	public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_ON_LOCK = "clearonlock";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";

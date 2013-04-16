@@ -264,4 +264,13 @@
         <item>Collapsed</item>
         <item>Expanded</item>
     </string-array>
+    
+    <!-- Appearance demo strings -->
+    <string name="title_demo_text">Notification Title</string>
+    <string name="title_appname_demo_text">Application Name</string>
+    <string name="text_demo_text">This is the notification text, it might get long and be truncated.</string>
+    <string name="content_demo_text">Notification Content</string>
+    <string name="content_expanded_demo_text">Notification Content Line 1\nNotification Content Line 2\nNotification Content Line 3\nNotification Content Line 4\nNotification Content Line 5\nNotification Content Line 6\nNotification Content Line 7\nNotification Content Line 8\n</string>
+    <string name="time_demo_text">9:21</string> 
+    <string name="count_demo_text">2</string>       
 </resources>

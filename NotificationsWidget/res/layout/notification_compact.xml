@@ -24,6 +24,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
+                android:text="Notification title Notification text"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ImageView
