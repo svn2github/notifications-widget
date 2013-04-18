@@ -49,17 +49,13 @@ import android.widget.ToggleButton;
 import android.widget.ViewAnimator;
 
 public class AppearanceActivity extends FragmentActivity
-{
-	// constants
-	public static String COLLAPSED_WIDGET_MODE = "collapsed";
-	public static String EXPANDED_WIDGET_MODE = "expanded";
-	
+{		
 	// page scroll stuff
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
 	
 	// selected widget mode
-	private static String 	 widgetMode = COLLAPSED_WIDGET_MODE;
+	private static String 	 widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
 	
 	// fragements
 	private ClockSectionFragment clockSettingsFragment = null;
@@ -140,10 +136,10 @@ public class AppearanceActivity extends FragmentActivity
 				switch (position)
 				{
 				case 0:
-					widgetMode = COLLAPSED_WIDGET_MODE;
+					widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
 					break;
 				case 1:
-					widgetMode = EXPANDED_WIDGET_MODE;
+					widgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
 					break;
 				}
 				if (clockSettingsFragment!=null)
@@ -552,7 +548,7 @@ public class AppearanceActivity extends FragmentActivity
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 			
 			// clock style
-			String defaultClockStyle = widgetMode.equals(AppearanceActivity.COLLAPSED_WIDGET_MODE)?
+			String defaultClockStyle = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?
 					SettingsActivity.CLOCK_AUTO :
 					prefs.getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_STYLE);
 			
@@ -669,7 +665,7 @@ public class AppearanceActivity extends FragmentActivity
 			iconClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_ICON_IS_CLICKABLE, true));
 
 			// setup opacity slider
-			int defaultOpacity = widgetMode.equals(COLLAPSED_WIDGET_MODE)?0:50;
+			int defaultOpacity = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?0:50;
 			int opacity = prefs.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_OPACITY, defaultOpacity);
 			notificationBgClockOpacitySlider.setProgress(opacity);
 			
@@ -697,7 +693,7 @@ public class AppearanceActivity extends FragmentActivity
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 			
 			// clock style
-			String defaultNotificationStyle = widgetMode.equals(AppearanceActivity.COLLAPSED_WIDGET_MODE)?
+			String defaultNotificationStyle = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?
 					"compact" : "normal";
 			
 			String notificationStyle = prefs.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, defaultNotificationStyle);
@@ -741,6 +737,7 @@ public class AppearanceActivity extends FragmentActivity
 				v.getBackground().setAlpha(bgAlpha * 255 / 100);
 				
 				TextView title = (TextView) v.findViewById(R.id.notificationTitle);
+				TextView text = (TextView) v.findViewById(R.id.notificationText);
 				CharSequence titleDemoStr = getActivity().getString(R.string.title_appname_demo_text);
 				CharSequence textDemoStr = getActivity().getString(R.string.text_demo_text);
 				
@@ -772,7 +769,6 @@ public class AppearanceActivity extends FragmentActivity
 					textDemoStr = ssb;
 				}
 				
-				TextView text = (TextView) v.findViewById(R.id.notificationText);
 				if (text != null)
 				{
 					text.setText(textDemoStr);
@@ -781,10 +777,6 @@ public class AppearanceActivity extends FragmentActivity
 							text.setVisibility(View.GONE);
 					else
 						text.setVisibility(View.VISIBLE);
-				}
-				else
-				{
-					// TODO combine title and text into a single line
 				}
 				
 				TextView content = (TextView) v.findViewById(R.id.notificationContent);

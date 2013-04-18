@@ -18,6 +18,7 @@ import android.text.format.Time;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.Toast;
 
 public class NotificationsWidgetService extends RemoteViewsService 
 {	
@@ -159,7 +160,8 @@ public class NotificationsWidgetService extends RemoteViewsService
 		// hide clock if required
 	    String clockstyle = prefs.getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);					
 	    String notificationsStyle = getNotificationStyle();
-	    int notificationsCount = ns.getNotificationsCount();
+	    int notificationsCount = 0;
+	    if (ns != null) ns.getNotificationsCount();
 	    
 	    if (clockstyle.equals(SettingsActivity.CLOCK_SMALL) ||
 		    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 

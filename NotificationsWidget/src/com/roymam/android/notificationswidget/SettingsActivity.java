@@ -35,26 +35,29 @@ import com.roymam.android.notificationswidget.WizardActivity.AboutDialogFragment
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
+	public static final String WIDGET_MODE = "widgetmode";  
+	public static final String COLLAPSED_WIDGET_MODE = "collapsed";
+	public static final String EXPANDED_WIDGET_MODE = "expanded";
 	public static final String SHOW_CLEAR_BUTTON = "showclearbutton";
 	public static final String CLOCK_IS_CLICKABLE = "clockisclickable";
 	public static final String BOLD_HOURS = "boldhours";
 	public static final String BOLD_MINUTES = "boldminutes";
 	public static final String CLOCK_BG_OPACITY = "clockbgopacity";
-	public static String TURNSCREENON = "turnscreenon";
-	public static String DISABLE_PROXIMITY = "disableproximity";
-	public static String DELAYED_SCREEON = "delayed_screenon";
-	public static String NOTIFICATIONS_ORDER = "order_notifications_by";
-	public static String KEEP_ON_FOREGROUND = "keep_on_foreground";
-	public static String CLOCK_STYLE = "clockstyle";
-	public static String CLEAR_BUTTON_MODE = "clearbuttonmode";
-	public static String SHOW_EDIT_BUTTON= "showeditbutton";
-	public static String NOTIFICATION_STYLE="notification_style";
-	public static String AUTO_COMPACT_STYLE="auto_compact_style";
-	public static String MAX_LINES="max_lines";
-	public static String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
-	public static String TEXT_COLOR = "notification_text_color";
-	public static String TIME_COLOR = "notification_time_color";
-	public static String CLOCK_COLOR = "clock_text_color";
+	public static final String TURNSCREENON = "turnscreenon";
+	public static final String DISABLE_PROXIMITY = "disableproximity";
+	public static final String DELAYED_SCREEON = "delayed_screenon";
+	public static final String NOTIFICATIONS_ORDER = "order_notifications_by";
+	public static final String KEEP_ON_FOREGROUND = "keep_on_foreground";
+	public static final String CLOCK_STYLE = "clockstyle";
+	public static final String CLEAR_BUTTON_MODE = "clearbuttonmode";
+	public static final String SHOW_EDIT_BUTTON= "showeditbutton";
+	public static final String NOTIFICATION_STYLE="notification_style";
+	public static final String AUTO_COMPACT_STYLE="auto_compact_style";
+	public static final String MAX_LINES="max_lines";
+	public static final String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
+	public static final String TEXT_COLOR = "notification_text_color";
+	public static final String TIME_COLOR = "notification_time_color";
+	public static final String CLOCK_COLOR = "clock_text_color";
 	public static final String CLOCK_BG_COLOR = "clock_bg_color";	
 	public static final String CLOCK_ALARM_COLOR = "clock_alarm_color";	
 	public static final String CLOCK_DATE_COLOR = "clock_date_color";

@@ -35,9 +35,12 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -287,42 +290,10 @@ public class NotificationsService extends AccessibilityService
 						nd.action = n.contentIntent;
 						nd.count = 1;
 						nd.packageName = packageName;
-						nd.originalNotification = n.contentView;
 						
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) 
 						{
 							nd.actions = getActionsFromNotification(n, packageName);
-						}
-				        
-						// parse notification remoteview
-						try
-						{							
-							LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);						
-							ViewGroup localView = (ViewGroup) inflater.inflate(nd.originalNotification.getLayoutId(), null);
-							nd.originalNotification.reapply(getApplicationContext(), localView);
-							nd.layoutId = localView.getId();
-							View time = localView.findViewById(16908388);
-							View title = localView.findViewById(notification_title_id);
-							View subtitle = localView.findViewById(notification_subtext_id);
-							View text = localView.findViewById(notification_text_id);
-							View bigtext = localView.findViewById(big_notification_content_text);
-							View image = localView.findViewById(notification_image_id);
-							
-							nd.hasTime = (time != null && time instanceof TextView);
-							nd.hasTitle = (title != null && title instanceof TextView);
-							nd.hasSubtitle = (subtitle != null && subtitle instanceof TextView);
-							nd.hasText = (text != null && text instanceof TextView);
-							nd.hasBigText = (bigtext != null && bigtext instanceof TextView);
-							nd.hasImage = (image != null && image instanceof ImageView);
-							if (!nd.hasImage)
-							{
-								// try to find an image
-								nd.customImageId = recursiveFindFirstImage(localView);
-							}														
-						}
-						catch (Exception exp)
-						{
-							nd.layoutId = 0;
 						}
 						
 						if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
@@ -336,7 +307,8 @@ public class NotificationsService extends AccessibilityService
 						for(int i=0;i<notifications.size();i++)
 						{
 							if (nd.packageName.equals(notifications.get(i).packageName) &&
-								(nd.text.equals(notifications.get(i).text) || keepOnlyLastNotification))
+								(nd.text != null && notifications.get(i).text != null && 
+								 nd.text.equals(notifications.get(i).text) || keepOnlyLastNotification))
 								{
 									duplicated = i;
 								}
@@ -359,10 +331,6 @@ public class NotificationsService extends AccessibilityService
 						int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));						
 						if (apppriority != -9) nd.priority = apppriority;
 						
-						nd.normalNotification = createNormalNotification(nd);
-						nd.smallNotification = createSmallNotification(nd);
-						nd.largeNotification = createLargeNotification(nd);
-
 						notifications.add(0,nd);						
 					    if (selectedIndex >= 0) selectedIndex++;
 						
@@ -547,7 +515,17 @@ public class NotificationsService extends AccessibilityService
 		RemoteViews n = new RemoteViews(getPackageName(), R.layout.notification_compact);
 		
 		n.setImageViewBitmap(R.id.notificationIcon, nd.appicon);
-		n.setTextViewText(R.id.notificationText, nd.title + " " + nd.text);
+		
+		// build single line with title and text
+		CharSequence text;
+		if (nd.text == null)
+			text = nd.title;
+		else if (nd.title == null)
+			text = nd.text;
+		else
+			text = TextUtils.concat(nd.title," ", nd.text);
+		
+		n.setTextViewText(R.id.notificationText, text);
 		Time t = new Time();
     	t.set(nd.received);
     	String timeFormat = "%H:%M";
@@ -710,19 +688,25 @@ public class NotificationsService extends AccessibilityService
 		{
 			return n.bigContentView;
 		}
-		
 	}
+	
 	private void getExpandedText(Notification n, NotificationData nd)
 	{
 		RemoteViews view = n.contentView;
 		
+		// first get information from the original content view
+		extractTextFromView(view, nd);
+		
+		// then try get information from the expanded view
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 		{		
 			view = getBigContentView(n);
+			extractTextFromView(view, nd);
 		}
-		
-		nd.originalNotification = view;
-		
+	}
+
+	private void extractTextFromView(RemoteViews view, NotificationData nd) 
+	{
 		CharSequence title = null;
 		CharSequence text = null;
 		CharSequence content = null;

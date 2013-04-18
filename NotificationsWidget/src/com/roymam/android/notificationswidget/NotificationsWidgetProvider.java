@@ -22,17 +22,20 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
-    public static String NOTIFICATION_INDEX = "com.roymam.android.notificationswidget.notification_index";
+	public static String NOTIFICATION_INDEX = "com.roymam.android.notificationswidget.notification_index";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
     public static String PERFORM_ACTION = "com.roymam.android.notificationswidget.performaction";
@@ -83,19 +86,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
 	    // Update the widgets via the service
 	    ctx.startService(intent);
-		    
-		/*AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
-		ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
-		int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-		
-		if (refreshList)
-		{
-			for (int i=0; i<widgetIds.length; i++) 
-	        {
-				AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-	        }
-		}
-		onUpdate(ctx, widgetManager, widgetIds);*/
 	}
 	
 	@Override
@@ -207,22 +197,36 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     }
 	
 	@Override
-	public void onAppWidgetOptionsChanged(Context context,
-			AppWidgetManager appWidgetManager, int appWidgetId,
-			Bundle newOptions) 
+	public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) 
 	{
 		int currHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+		int hostCategory = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
-		if (currHeight < 140)
+		// if the widget is collapsed on lock screen
+		if (currHeight <=134 && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
 		{
-			widgetExpanded = false;
+			// store this app widget id as collapsed mode
+			prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.COLLAPSED_WIDGET_MODE).commit();
+			
+			// refresh view if state changed
+			if (widgetExpanded)
+			{
+				widgetExpanded = false;
+				updateWidget(context, appWidgetManager, true);
+			}
 		}
-		else
+		else if (hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
 		{
-			widgetExpanded = true;
+			// store this app widget id as expanded mode			
+			prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.EXPANDED_WIDGET_MODE).commit();
+			// refresh view if state changed
+			if (!widgetExpanded)
+			{
+				widgetExpanded = true;
+				updateWidget(context, appWidgetManager, true);
+			}
 		}
-		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false))
-			updateWidget(context, appWidgetManager, true);
 	}
 
 	

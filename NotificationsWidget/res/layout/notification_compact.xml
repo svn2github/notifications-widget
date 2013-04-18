@@ -6,11 +6,12 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/notificationIcon"
+                android:id="@+id/appIcon"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
+                android:contentDescription="@string/app_icon"
                 android:scaleType="fitCenter"
-                android:src="@drawable/appicon" android:contentDescription="@string/app_icon"/>
+                android:src="@drawable/appicon" />
 
             <TextView
                 android:id="@+id/notificationText"

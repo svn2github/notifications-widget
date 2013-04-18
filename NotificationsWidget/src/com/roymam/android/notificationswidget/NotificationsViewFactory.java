@@ -14,18 +14,21 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.Toast;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
 	private Context ctxt=null;
+	private int widgetId;
 	public NotificationsViewFactory(Context ctxt, Intent intent) 
 	{
 		this.ctxt=ctxt;
-		intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-					AppWidgetManager.INVALID_APPWIDGET_ID);
+		widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 	}
 	
 	@Override
@@ -46,8 +49,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		NotificationsService s = NotificationsService.getSharedInstance();
 		if (s != null) 
 		{
-		        // The service is running and connected.
-		        return(s.getNotificationsCount());		        
+	        // The service is running and connected.
+	        return(s.getNotificationsCount());		        
 		}
 		else
 		{
@@ -75,6 +78,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.listitem_notification);	
 		NotificationsService s = NotificationsService.getSharedInstance();
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctxt);
+		String widgetMode = preferences.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+
 		if (s != null) 
 		{		   
 		    if (s.getNotificationsCount() >0 && position < s.getNotificationsCount())
@@ -92,67 +97,35 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				createActionBar(row,position,n);
 				
 				// set notification style
-				int textColor = Resources.getSystem().getColor(Integer.parseInt(preferences.getString("notification_text_color", String.valueOf(android.R.color.white))));
-				int timeColor = Resources.getSystem().getColor(Integer.parseInt(preferences.getString("notification_time_color", String.valueOf(android.R.color.holo_blue_dark))));				
-				
-				String notStyle = preferences.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
-				
-				boolean autoCompact = preferences.getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false);
-				if (autoCompact && !NotificationsWidgetProvider.widgetExpanded)
-				{
-					notStyle = "compact";
-				}
-				
+				String notStyle = preferences.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, "normal");
 				RemoteViews styleView;
 				
 				if (notStyle.equals("large"))
 				{
-					styleView = n.largeNotification;
-					/*if (n.originalNotification != null)
-					{
-						styleView = n.largeNotification;
-						
-						// change style for large notification
-						// set background to transparent (the item background will be shown instead)						
-						if (n.layoutId != 0) n.originalNotification.setInt(n.layoutId , "setBackgroundColor", Color.TRANSPARENT);
-						if (n.hasTime) n.originalNotification.setTextColor(16908388, timeColor);
-						if (n.hasTitle) n.originalNotification.setTextColor(s.notification_title_id, textColor); 
-						if (n.hasSubtitle) n.originalNotification.setTextColor(s.notification_subtext_id, textColor);
-						if (n.hasText) n.originalNotification.setTextColor(s.notification_text_id, textColor);
-						if (n.hasBigText) n.originalNotification.setTextColor(s.big_notification_content_text, textColor);
-					//if (n.hasImage) iconId = s.notification_image_id;	
-					}
-					else
-					{
-						styleView = n.normalNotification;
-					}*/
+					styleView = new RemoteViews(ctxt.getPackageName(), R.layout.notification_large);
 				}
 				else if (notStyle.equals("normal"))
 				{
-					styleView = n.normalNotification;
+					styleView = new RemoteViews(ctxt.getPackageName(), R.layout.notification_normal);
 				}
 				else
 				{
-					styleView = n.smallNotification;
+					styleView = new RemoteViews(ctxt.getPackageName(), R.layout.notification_compact);
 				}
 
-				int maxLines = Integer.parseInt(preferences.getString(SettingsActivity.MAX_LINES, "1"));
-				styleView.setInt(R.id.notificationText, "setMaxLines", maxLines);					
-				styleView.setInt(R.id.notificationContent, "setMaxLines", maxLines);					
+				// fill notification with text
+				int maxLines = preferences.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
 
-				// add style view
-				row.removeAllViews(R.id.notificationContainer);
-				row.addView(R.id.notificationContainer, styleView);
+				fillNotificationWithText(styleView, n, maxLines);
+
+				int bgColor = preferences.getInt(widgetMode + "." +SettingsActivity.NOTIFICATION_BG_COLOR, Color.BLACK);			
+				int defaultOpacity = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?0:50;
+				int opacity = preferences.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_OPACITY, defaultOpacity);				
+				row.setInt(R.id.notificationBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, Color.red(bgColor), Color.green(bgColor), Color.blue(bgColor)));
+
+				customizeNotificationView(styleView, n);
 				
-				// customize style
-				int opacity = preferences.getInt(SettingsActivity.NOTIFICATION_BG_OPACITY, 75);				
-				row.setInt(R.id.notificationBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, 20, 20, 20));
-				
-				styleView.setTextColor(R.id.notificationText, textColor);
-				styleView.setTextColor(R.id.notificationTitle, textColor);
-				styleView.setTextColor(R.id.notificationContent, textColor);
-				styleView.setTextColor(R.id.notificationTime, timeColor);
-				styleView.setTextColor(R.id.notificationCount, textColor);	
+				// add pinned icon (if needed)
 				if (n.pinned)
 				{
 					styleView.setViewVisibility(R.id.pinIcon, View.VISIBLE);
@@ -163,6 +136,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					styleView.setViewVisibility(R.id.pinIcon, View.GONE);	
 					styleView.setViewVisibility(R.id.notificationCount, View.VISIBLE);
 				}
+				
+				// add style view
+				row.removeAllViews(R.id.notificationContainer);
+				row.addView(R.id.notificationContainer, styleView);
 								
 				// set action bar intent
 				Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
@@ -171,12 +148,50 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				styleView.setOnClickPendingIntent(
 						R.id.notificationIcon, 
 						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE+position*10, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-				
 		    }
 		}	
 		return(row);
 	}
 	
+	private void customizeNotificationView(RemoteViews styleView, NotificationData n) 
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+		int titleColor = prefs.getInt(widgetMode + "." +SettingsActivity.TITLE_COLOR, Color.WHITE);
+		int textColor = prefs.getInt(widgetMode + "." +SettingsActivity.TEXT_COLOR, Color.LTGRAY);
+		int contentColor = prefs.getInt(widgetMode + "." +SettingsActivity.CONTENT_COLOR, Color.DKGRAY);
+		
+		styleView.setTextColor(R.id.notificationText, textColor);
+		styleView.setTextColor(R.id.notificationTitle, titleColor);
+		styleView.setTextColor(R.id.notificationContent, contentColor);
+		styleView.setTextColor(R.id.notificationTime, contentColor);
+		styleView.setTextColor(R.id.notificationCount, contentColor);	
+	}
+
+	private void fillNotificationWithText(RemoteViews n, NotificationData nd, int maxLines) 
+	{
+		n.setImageViewBitmap(R.id.notificationIcon, nd.icon);
+		n.setImageViewBitmap(R.id.appIcon, nd.appicon);
+		n.setTextViewText(R.id.notificationTitle, nd.title);
+		n.setTextViewText(R.id.notificationText, nd.text);
+		n.setTextViewText(R.id.notificationContent, nd.content);
+		
+		if (nd.count > 1)
+			n.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));
+    	else
+    		n.setTextViewText(R.id.notificationCount, null);
+		
+		// set time
+		Time t = new Time();
+    	t.set(nd.received);
+    	String timeFormat = "%H:%M";
+    	if (!DateFormat.is24HourFormat(ctxt)) timeFormat = "%l:%M%P";
+    		n.setTextViewText(R.id.notificationTime, t.format(timeFormat));	
+
+    	// limit number of lines
+		n.setInt(R.id.notificationContent, "setMaxLines", maxLines);					
+	}
+
 	private void createActionBar(RemoteViews row, int position, NotificationData n) 
 	{
 		row.removeAllViews(R.id.actionbarContainer);

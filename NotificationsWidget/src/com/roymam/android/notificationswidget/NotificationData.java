@@ -23,23 +23,7 @@ public class NotificationData
 	String	packageName;
 	PendingIntent action;
 	int 	count;
-	boolean pinned = false;
-	
-	// indicator for content view
-	boolean hasTime = false;
-	boolean hasTitle = false;
-	boolean hasSubtitle = false;
-	boolean hasText = false;
-	boolean hasBigText = false;
-	boolean hasImage = false;
-	
-	// data from notification remoteviews
-	RemoteViews smallNotification;
-	RemoteViews normalNotification;
-	RemoteViews largeNotification;
-	RemoteViews originalNotification;
-	int layoutId;
-	int customImageId = -1;
+	boolean pinned = false;	
 	public Action[] actions = null;
 	public int priority;
 }
