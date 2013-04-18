@@ -219,7 +219,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onNotificationPrefChanged"
-            android:tag="notificationiconclickable"
+            android:tag="notificationicon_is_clickable"
             android:text="ToggleButton"
             android:textOff="Icon Menu"
             android:textOn="Icon Menu" />

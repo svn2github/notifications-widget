@@ -142,12 +142,20 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.addView(R.id.notificationContainer, styleView);
 								
 				// set action bar intent
-				Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-				editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.ACTIONBAR_TOGGLE);
-				editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-				styleView.setOnClickPendingIntent(
-						R.id.notificationIcon, 
-						PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE+position*10, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+				if (preferences.getBoolean(widgetMode + "." +SettingsActivity.NOTIFICATION_ICON_IS_CLICKABLE, true))
+				{
+					styleView.setViewVisibility(R.id.notificationSpinner, View.VISIBLE);
+					Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+					editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.ACTIONBAR_TOGGLE);
+					editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+					styleView.setOnClickPendingIntent(
+							R.id.notificationIcon, 
+							PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE+position*10, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+				}
+				else
+				{
+					styleView.setViewVisibility(R.id.notificationSpinner, View.GONE);
+				}
 		    }
 		}	
 		return(row);
