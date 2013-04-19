@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="false"
+            android:clickable="true"
             android:orientation="vertical" >
 
         </LinearLayout>
@@ -47,28 +48,36 @@
                     android:src="@android:drawable/ic_dialog_alert"
                     android:visibility="gone" android:contentDescription="@string/service_inactive_text"/>
 
-                <ImageButton
+                <RelativeLayout
                     android:id="@+id/clearButton"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
                     android:background="@drawable/item_selector"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/clear"
-                    android:visibility="gone" android:contentDescription="@string/clear_all_notifications"/>
+                    android:visibility="gone" >
+
+                    <ImageView
+                        android:id="@+id/clearButtonImage"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="8dp"
+                        android:contentDescription="@string/clear_all_notifications"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/clear" />
+
+                </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
 
         
 
     </RelativeLayout>
- 
+
     <LinearLayout
         android:id="@+id/persistentNotificationsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
     </LinearLayout>
  
     <ListView
@@ -76,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"
-        tools:listitem="@layout/dark_widget_item" >
+        tools:listitem="@layout/listitem_notification" >
 
     </ListView>
 

@@ -87,12 +87,14 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    	NotificationData n = s.getNotification(position);		    		    
 				
 		    	// set on click intent 
-				Intent i=new Intent();
-				Bundle extras=new Bundle();			
-				extras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
-				i.putExtras(extras);
-				row.setOnClickFillInIntent(R.id.notificationContainer, i);							
-								
+		    	if (preferences.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true))
+		    	{
+					Intent i=new Intent();
+					Bundle extras=new Bundle();			
+					extras.putInt(NotificationsWidgetProvider.NOTIFICATION_INDEX,position);
+					i.putExtras(extras);
+					row.setOnClickFillInIntent(R.id.notificationContainer, i);							
+		    	}
 				// prepare action bar
 				createActionBar(row,position,n);
 				
@@ -148,9 +150,18 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
 					editModeIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.ACTIONBAR_TOGGLE);
 					editModeIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-					styleView.setOnClickPendingIntent(
+					if (notStyle.equals("compact"))
+					{
+						styleView.setOnClickPendingIntent(
+								R.id.appIcon, 
+								PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE+position*10, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+					}
+					else
+					{
+						styleView.setOnClickPendingIntent(
 							R.id.notificationIcon, 
 							PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.ACTIONBAR_TOGGLE+position*10, editModeIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+					}
 				}
 				else
 				{

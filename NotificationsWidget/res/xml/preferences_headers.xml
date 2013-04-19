@@ -6,10 +6,6 @@
             android:icon="@android:drawable/ic_menu_preferences"
             android:title="@string/generalsettings" />
     
-    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAppearanceFragment"
-            android:icon="@drawable/hardware_phone"
-            android:title="@string/appearance" />
-      
     <header 
             android:icon="@drawable/hardware_phone"
             android:title="@string/appearance">

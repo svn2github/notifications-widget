@@ -248,6 +248,15 @@
                 android:onClick="onClockPrefChanged"
                 android:tag="showclearall"
                 android:text="Show &quot;Clear All&quot; Button" />
+
+            <CheckBox
+                android:id="@+id/hideClockCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClockPrefChanged"
+                android:tag="clockhidden"
+                android:text="Hide Clock" />
             
         </LinearLayout>
 

@@ -67,6 +67,7 @@ public class AppearanceActivity extends FragmentActivity
 	private static RadioGroup clockStyleRG;
 	private static CheckBox autoSwitch;
 	private static CheckBox showClearAll;
+	private static CheckBox hideClock;
 	private static ViewAnimator clockStyleView;
 	private static ToggleButton clockClickable;
 	private static ToggleButton boldHours;
@@ -435,79 +436,86 @@ public class AppearanceActivity extends FragmentActivity
 			
 			for(View v : clockPreviews)
 			{
-				TextView hours = (TextView) v.findViewById(R.id.hours);
-				TextView minutes = (TextView) v.findViewById(R.id.minutes);
-				TextView ampm = (TextView) v.findViewById(R.id.ampm);
-				TextView date = (TextView) v.findViewById(R.id.date);
-				TextView alarm = (TextView) v.findViewById(R.id.alarmtime);
-				
-				// get current time
-				Time t = new Time();
-			    t.setToNow();
-			    String hourFormat = "%H";
-			    String minuteFormat = ":%M";
-			    String ampmstr = "";
-		    	if (!DateFormat.is24HourFormat(getActivity()))
-		    	{
-		    		hourFormat = "%l";
-		    		minuteFormat = ":%M";
-		    		ampmstr = t.format("%p");
-		    	}
-		    	
-		    	hours.setText(t.format(hourFormat));
-			    minutes.setText(t.format(minuteFormat));
-			    ampm.setText(ampmstr);		    
-			    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
-			    date.setText(datestr.toUpperCase(Locale.getDefault()));
-			    
-			    // display next alarm if needed
-			    String nextAlarm = Settings.System.getString(getActivity().getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
-			    if (!nextAlarm.equals(""))
-			    {
-			    	alarm.setVisibility(View.VISIBLE);
-			    	alarm.setText("⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
-			    }
-			    else
-			    {
-			    	alarm.setVisibility(View.GONE);
-			    }
-			    // set clock text color
-			    int bgColor = ((ColorDrawable) bgColorView.getBackground()).getColor();			    
-			    v.setBackgroundColor(bgColor);
-			    v.getBackground().setAlpha(bgClockOpacitySlider.getProgress()*255/100);
-			    
-			    hours.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
-			    minutes.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
-			    ampm.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
-			    date.setTextColor(((ColorDrawable)dateColorView.getBackground()).getColor());
-			    alarm.setTextColor(((ColorDrawable)alarmColorView.getBackground()).getColor());
-			    if (((ColorDrawable)dateColorView.getBackground()).getColor() == Color.TRANSPARENT)
-			    	date.setVisibility(View.GONE);
-			    else
-			    	date.setVisibility(View.VISIBLE);
-			    
-			    if (((ColorDrawable)alarmColorView.getBackground()).getColor() == Color.TRANSPARENT)
-			    	alarm.setVisibility(View.GONE);
-			    
-			    if (boldHours.isChecked())
-			    {
-			    	hours.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
-			    }
-			    else
-			    {
-			    	hours.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
-			    }
-			    
-			    if (boldMinutes.isChecked())
-			    {
-			    	minutes.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
-			    }
-			    else
-			    {
-			    	minutes.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
-			    }
+				if (hideClock.isChecked())
+				{
+					getView().findViewById(R.id.clockViewAnimator).setVisibility(View.INVISIBLE);
+				}
+				else
+				{
+					getView().findViewById(R.id.clockViewAnimator).setVisibility(View.VISIBLE);
+					TextView hours = (TextView) v.findViewById(R.id.hours);
+					TextView minutes = (TextView) v.findViewById(R.id.minutes);
+					TextView ampm = (TextView) v.findViewById(R.id.ampm);
+					TextView date = (TextView) v.findViewById(R.id.date);
+					TextView alarm = (TextView) v.findViewById(R.id.alarmtime);
+					
+					// get current time
+					Time t = new Time();
+				    t.setToNow();
+				    String hourFormat = "%H";
+				    String minuteFormat = ":%M";
+				    String ampmstr = "";
+			    	if (!DateFormat.is24HourFormat(getActivity()))
+			    	{
+			    		hourFormat = "%l";
+			    		minuteFormat = ":%M";
+			    		ampmstr = t.format("%p");
+			    	}
+			    	
+			    	hours.setText(t.format(hourFormat));
+				    minutes.setText(t.format(minuteFormat));
+				    ampm.setText(ampmstr);		    
+				    String datestr = DateFormat.getLongDateFormat(getActivity()).format(t.toMillis(true));
+				    date.setText(datestr.toUpperCase(Locale.getDefault()));
+				    
+				    // display next alarm if needed
+				    String nextAlarm = Settings.System.getString(getActivity().getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
+				    if (!nextAlarm.equals(""))
+				    {
+				    	alarm.setVisibility(View.VISIBLE);
+				    	alarm.setText("⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
+				    }
+				    else
+				    {
+				    	alarm.setVisibility(View.GONE);
+				    }
+				    // set clock text color
+				    int bgColor = ((ColorDrawable) bgColorView.getBackground()).getColor();			    
+				    v.setBackgroundColor(bgColor);
+				    v.getBackground().setAlpha(bgClockOpacitySlider.getProgress()*255/100);
+				    
+				    hours.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+				    minutes.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+				    ampm.setTextColor(((ColorDrawable)clockColorView.getBackground()).getColor());
+				    date.setTextColor(((ColorDrawable)dateColorView.getBackground()).getColor());
+				    alarm.setTextColor(((ColorDrawable)alarmColorView.getBackground()).getColor());
+				    if (((ColorDrawable)dateColorView.getBackground()).getColor() == Color.TRANSPARENT)
+				    	date.setVisibility(View.GONE);
+				    else
+				    	date.setVisibility(View.VISIBLE);
+				    
+				    if (((ColorDrawable)alarmColorView.getBackground()).getColor() == Color.TRANSPARENT)
+				    	alarm.setVisibility(View.GONE);
+				    
+				    if (boldHours.isChecked())
+				    {
+				    	hours.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
+				    }
+				    else
+				    {
+				    	hours.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+				    }
+				    
+				    if (boldMinutes.isChecked())
+				    {
+				    	minutes.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
+				    }
+				    else
+				    {
+				    	minutes.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+				    }
+				}
 			}
-				
 		}
 
 		public void loadSettings() 
@@ -520,6 +528,7 @@ public class AppearanceActivity extends FragmentActivity
 			
 			// setup checkboxes
 			showClearAll.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, true));			
+			hideClock.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false));
 			
 			// setup toggles
 			clockClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_IS_CLICKABLE, true));
@@ -601,6 +610,7 @@ public class AppearanceActivity extends FragmentActivity
 			clockStyleRG = (RadioGroup) clockSettingsView.findViewById(R.id.clockStyleRG);
 			autoSwitch = (CheckBox)clockSettingsView.findViewById(R.id.autoSizeCheckbox);
 			showClearAll = (CheckBox)clockSettingsView.findViewById(R.id.showClearButtonCheckbox);
+			hideClock = (CheckBox) clockSettingsView.findViewById(R.id.hideClockCheckbox);
 			clockClickable = (ToggleButton)clockSettingsView.findViewById(R.id.clockIsClickableToggle);
 			boldHours = (ToggleButton)clockSettingsView.findViewById(R.id.boldHoursToggle);
 			boldMinutes = (ToggleButton)clockSettingsView.findViewById(R.id.boldMinutesToggle);
@@ -614,7 +624,6 @@ public class AppearanceActivity extends FragmentActivity
 			clockColorView = clockSettingsView.findViewById(R.id.clockColorView);
 			dateColorView = clockSettingsView.findViewById(R.id.dateColorView);
 			alarmColorView = clockSettingsView.findViewById(R.id.alarmColorView);
-			
 			
 			
 			return clockSettingsView;

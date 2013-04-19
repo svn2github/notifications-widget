@@ -195,7 +195,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onNotificationPrefChanged"
-            android:tag="notificationis_is_clickable"
+            android:tag="notification_is_clickable"
             android:text="ToggleButton"
             android:textOff="Clickable"
             android:textOn="Clickable" />

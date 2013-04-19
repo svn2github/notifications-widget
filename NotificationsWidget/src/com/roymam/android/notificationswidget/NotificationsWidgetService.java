@@ -10,19 +10,25 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NotificationsWidgetService extends RemoteViewsService 
 {	
-	
 	public static final String REFRESH_LIST = "com.roymam.android.notificationswidget.REFRESH_LIST";
 
 	@Override
@@ -46,6 +52,9 @@ public class NotificationsWidgetService extends RemoteViewsService
 
 	private void updateWidget(int widgetId) 
 	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
 		RemoteViews widget=new RemoteViews(this.getPackageName(), R.layout.widget_layout);
 		
@@ -54,10 +63,18 @@ public class NotificationsWidgetService extends RemoteViewsService
 		
 		// update clock
 		widget.removeAllViews(R.id.clockContainer);
-		String clockStyle = getClockStyle();
-		if (!clockStyle.equals(SettingsActivity.CLOCK_HIDDEN))
-			widget.addView(R.id.clockContainer, createClock(clockStyle));
+		String clockStyle = getClockStyle(widgetId);
+		if (!prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false))
+		{
+			widget.addView(R.id.clockContainer, createClock(clockStyle, widgetId));
+		}
 		
+		// set clock bg color
+	    int bgColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_COLOR, Color.BLACK);		    
+	    int alpha = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_OPACITY, 0);
+	    bgColor = Color.argb(alpha * 255 / 100, Color.red(bgColor), Color.green(bgColor), Color.blue(bgColor));
+	    widget.setInt(R.id.clockContainer, "setBackgroundColor", bgColor);
+
 		// persistent notifications
 		widget.removeAllViews(R.id.persistentNotificationsView);
 		RemoteViews[] persistentNotifications = getPersistentNotifications();
@@ -72,6 +89,49 @@ public class NotificationsWidgetService extends RemoteViewsService
 		appWidgetManager.updateAppWidget(widgetId, widget);
 	}
 	
+	private PendingIntent getClockAppIntent() 
+	{
+		// add alarm clock intent
+	    PackageManager packageManager = this.getPackageManager();
+	    Intent alarmClockIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
+
+	    // Verify clock implementation
+	    String clockImpls[][] = 
+	    {
+	            {"HTC Alarm Clock", "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl" },
+	            {"Standar Alarm Clock", "com.android.deskclock", "com.android.deskclock.AlarmClock"},
+	            {"Moto Blur Alarm Clock", "com.motorola.blur.alarmclock",  "com.motorola.blur.alarmclock.AlarmClock"},
+	            {"Samsung Galaxy Clock", "com.sec.android.app.clockpackage","com.sec.android.app.clockpackage.ClockPackage"},
+	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"}
+	    };
+
+	    boolean foundClockImpl = false;
+
+	    for(int i=0; i<clockImpls.length; i++) 
+	    {
+	        String packageName = clockImpls[i][1];
+	        String className = clockImpls[i][2];
+	        try 
+	        {
+	            ComponentName cn = new ComponentName(packageName, className);
+	            packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
+	            alarmClockIntent.setComponent(cn);
+	            foundClockImpl = true;
+	        } catch (NameNotFoundException e) 
+	        {	            
+	        }
+	    }
+
+	    if (foundClockImpl) 
+	    {
+	        return PendingIntent.getActivity(this, 0, alarmClockIntent, 0);
+	    }
+	    else
+	    {
+	    	return null;
+	    }
+	}
+
 	private void setupNotificationsList(RemoteViews widget, int appWidgetId) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -102,7 +162,8 @@ public class NotificationsWidgetService extends RemoteViewsService
 	    	notificationsCount = ns.getNotificationsCount();    	    	
 	    }
 	    
-	    if (!prefs.getBoolean(SettingsActivity.DISABLE_NOTIFICATION_CLICK, false))
+	    String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+	    if (prefs.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true))
 	    {
 	    	Intent clickIntent=new Intent(this, NotificationActivity.class);
 	    	PendingIntent clickPI=PendingIntent.getActivity(this, 0,
@@ -138,52 +199,60 @@ public class NotificationsWidgetService extends RemoteViewsService
 			}
 	}
 	
-	private String getNotificationStyle() 
+	private String getNotificationStyle(int widgetId) 
 	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		String notificationsStyle = prefs.getString(SettingsActivity.NOTIFICATION_STYLE, "normal");
-	    boolean autoCompact = prefs.getBoolean(SettingsActivity.AUTO_COMPACT_STYLE, false);
-		if (autoCompact && !NotificationsWidgetProvider.widgetExpanded)
-		{
-			notificationsStyle = "compact";
-		}
-		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);		
+		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+		String notificationsStyle = prefs.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, "normal");
 		return notificationsStyle;
 	}
 
-	private String getClockStyle()
+	private String getClockStyle(int widgetId)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		NotificationsService ns = NotificationsService.getSharedInstance();
+		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 		
 		// hide clock if required
-	    String clockstyle = prefs.getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);					
-	    String notificationsStyle = getNotificationStyle();
+	    String clockstyle = prefs.getString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);
+	    String notificationsStyle = getNotificationStyle(widgetId);
 	    int notificationsCount = 0;
-	    if (ns != null) ns.getNotificationsCount();
-	    
-	    if (clockstyle.equals(SettingsActivity.CLOCK_SMALL) ||
-		    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
-		    		(notificationsStyle.equals("large") && notificationsCount > 0 ||
-		    		 notificationsStyle.equals("normal") && notificationsCount > 1 || 
-		    				notificationsCount > 2 || 
-		    				ns != null && ns.getSelectedIndex() >= 0))
-		    {
-		    	clockstyle = SettingsActivity.CLOCK_SMALL;    	    	
-		    } else if (clockstyle.equals(SettingsActivity.CLOCK_LARGE) ||
-	    	    	clockstyle.equals(SettingsActivity.CLOCK_AUTO) && 
-	    	    	(notificationsStyle.equals("large") && notificationsCount == 0 || 
-	    	    	 notificationsStyle.equals("normal") && notificationsCount <= 1 ||
-	    	    	 notificationsCount <= 2 ))
-		    {
-		    	clockstyle = SettingsActivity.CLOCK_LARGE;
-		    }
-		    else
-		    {
-		    	clockstyle = SettingsActivity.CLOCK_HIDDEN;
-		    }
-	    
+	    if (ns != null) notificationsCount  = ns.getNotificationsCount();
+
+	    if (clockstyle.equals(SettingsActivity.CLOCK_AUTO))
+	    {
+	    	int largeClockLimit;
+	    	int mediumClockLimit;
+	    	
+	    	boolean actionBarVisible = (ns != null && ns.getSelectedIndex() >= 0);
+	    	
+	    	if (notificationsStyle.equals("compact"))
+	    	{
+	    		largeClockLimit = 3;
+	    		mediumClockLimit = 4;
+	    	}
+	    	else if (notificationsStyle.equals("normal"))
+	    	{
+	    		largeClockLimit = 2;
+	    		mediumClockLimit = 3;
+	    	}
+	    	else
+	    	{
+	    		largeClockLimit = 1;
+	    		mediumClockLimit = 2;
+	    	}
+	    	if (actionBarVisible)
+    		{
+    			largeClockLimit--;
+    			mediumClockLimit--;
+    		}
+	    	if (notificationsCount < largeClockLimit )
+	    		clockstyle = SettingsActivity.CLOCK_LARGE;
+	    	else if (notificationsCount < mediumClockLimit)
+	    		clockstyle = SettingsActivity.CLOCK_MEDIUM;
+	    	else
+	    		clockstyle = SettingsActivity.CLOCK_SMALL;
+	    }
 	    return clockstyle;
 	}
 
@@ -254,23 +323,31 @@ public class NotificationsWidgetService extends RemoteViewsService
 		return rvs;
 	}
 
-	private RemoteViews createClock(String type)
+	private RemoteViews createClock(String type, int widgetId)
 	{		
 		NotificationsService ns = NotificationsService.getSharedInstance();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		RemoteViews clock;
+		int clockId; 
 		if (type.equals(SettingsActivity.CLOCK_SMALL))
 		{
 			clock = new RemoteViews(this.getPackageName(), R.layout.small_clock);
+			clockId = R.id.smallClock;
 		}
-		else 
+		else if (type.equals(SettingsActivity.CLOCK_MEDIUM))
 		{
-			clock = new RemoteViews(this.getPackageName(), R.layout.large_clock);		
+			clock = new RemoteViews(this.getPackageName(), R.layout.medium_clock);	
+			clockId = R.id.mediumClock;
+		}
+		else
+		{
+			clock = new RemoteViews(this.getPackageName(), R.layout.large_clock);
+			clockId = R.id.largeClock;
 		}
 		
-	    // set up clock
-	    Time t = new Time();
+		// get current time
+		Time t = new Time();
 	    t.setToNow();
 	    String hourFormat = "%H";
 	    String minuteFormat = ":%M";
@@ -282,22 +359,15 @@ public class NotificationsWidgetService extends RemoteViewsService
     		ampmstr = t.format("%p");
     	}
     	
-	    clock.setTextViewText(R.id.hours, t.format(hourFormat));
-	    clock.setTextViewText(R.id.minutes, t.format(minuteFormat));
-	    clock.setTextViewText(R.id.ampm, ampmstr);		    
-	    String datestr = DateFormat.format("EEE, MMMM dd", t.toMillis(true)).toString();
+    	clock.setTextViewText(R.id.hours, t.format(hourFormat));
+    	clock.setTextViewText(R.id.minutes, t.format(minuteFormat));
+	    clock.setTextViewText(R.id.ampm, ampmstr);	
+	    
+	    String datestr = DateFormat.getLongDateFormat(this).format(t.toMillis(true));
 	    clock.setTextViewText(R.id.date, datestr.toUpperCase(Locale.getDefault()));
 	    
-	    // set clock text color
-	    int color = Resources.getSystem().getColor(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.CLOCK_COLOR, String.valueOf(android.R.color.white))));
-	    clock.setTextColor(R.id.hours, color);
-	    clock.setTextColor(R.id.minutes, color);
-	    clock.setTextColor(R.id.ampm, color);
-	    clock.setTextColor(R.id.date, color);
-	    clock.setTextColor(R.id.alarmtime, color);
-	    
 	    // display next alarm if needed
-	    String nextAlarm = Settings.System.getString(this.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
+	    String nextAlarm = Settings.System.getString(getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
 	    if (!nextAlarm.equals(""))
 	    {
 	    	clock.setViewVisibility(R.id.alarmtime, View.VISIBLE);
@@ -308,43 +378,58 @@ public class NotificationsWidgetService extends RemoteViewsService
 	    	clock.setViewVisibility(R.id.alarmtime, View.GONE);
 	    }
 	    
-	    // add alarm clock intent
-	    PackageManager packageManager = this.getPackageManager();
-	    Intent alarmClockIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
-
-	    // Verify clock implementation
-	    String clockImpls[][] = 
-	    {
-	            {"HTC Alarm Clock", "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl" },
-	            {"Standar Alarm Clock", "com.android.deskclock", "com.android.deskclock.AlarmClock"},
-	            {"Moto Blur Alarm Clock", "com.motorola.blur.alarmclock",  "com.motorola.blur.alarmclock.AlarmClock"},
-	            {"Samsung Galaxy Clock", "com.sec.android.app.clockpackage","com.sec.android.app.clockpackage.ClockPackage"},
-	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"}
-	    };
-
-	    boolean foundClockImpl = false;
-
-	    for(int i=0; i<clockImpls.length; i++) 
-	    {
-	        String packageName = clockImpls[i][1];
-	        String className = clockImpls[i][2];
-	        try 
-	        {
-	            ComponentName cn = new ComponentName(packageName, className);
-	            packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
-	            alarmClockIntent.setComponent(cn);
-	            foundClockImpl = true;
-	        } catch (NameNotFoundException e) 
-	        {	            
-	        }
-	    }
-
-	    if (foundClockImpl) 
-	    {
-	        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, alarmClockIntent, 0);
-	        clock.setOnClickPendingIntent(clock.getLayoutId(), pendingIntent);	       
-	    }
+	    String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+		
+	    int clockColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_COLOR, Color.WHITE);
+	    int dateColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_DATE_COLOR, Color.WHITE);
+	    int alarmColor  = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.WHITE);
+	    clock.setTextColor(R.id.hours, clockColor);
+	    clock.setTextColor(R.id.minutes, clockColor);
+	    clock.setTextColor(R.id.ampm, clockColor);
+	    clock.setTextColor(R.id.date, dateColor);
+	    clock.setTextColor(R.id.alarmtime, alarmColor);
+	   
+	    if (dateColor == Color.TRANSPARENT)
+	    	clock.setViewVisibility(R.id.date, View.GONE);
+	    else
+	    	clock.setViewVisibility(R.id.date, View.VISIBLE);
 	    
+	    if (alarmColor == Color.TRANSPARENT)
+	    	clock.setViewVisibility(R.id.alarmtime, View.GONE);
+	    
+	    boolean boldHours = prefs.getBoolean(widgetMode + "." + SettingsActivity.BOLD_HOURS, true);
+	    boolean boldMinutes = prefs.getBoolean(widgetMode + "." + SettingsActivity.BOLD_MINUTES, false);
+	    
+	    String hoursStr = t.format(hourFormat);
+    	SpannableString s = new SpannableString(hoursStr); 
+    	
+	    if (boldHours)
+	    {
+            s.setSpan(new StyleSpan(Typeface.BOLD), 0, hoursStr.length(), 0); 
+            s.setSpan(new TypefaceSpan("sans-serif"), 0, hoursStr.length(), 0);
+	    }
+	    else
+	    {
+	    	s.setSpan(new StyleSpan(Typeface.NORMAL), 0, hoursStr.length(), 0); 
+            s.setSpan(new TypefaceSpan("sans-serif-thin"), 0, hoursStr.length(), 0);
+	    }
+	    clock.setTextViewText(R.id.hours, s); 
+	    
+	    String minutesStr = t.format(minuteFormat);
+    	SpannableString s2 = new SpannableString(minutesStr); 
+    	
+	    if (boldMinutes)
+	    {
+            s2.setSpan(new StyleSpan(Typeface.BOLD), 0, minutesStr.length(), 0); 
+            s2.setSpan(new TypefaceSpan("sans-serif"), 0, minutesStr.length(), 0);
+	    }
+	    else
+	    {
+	    	s2.setSpan(new StyleSpan(Typeface.NORMAL), 0, minutesStr.length(), 0); 
+            s2.setSpan(new TypefaceSpan("sans-serif-thin"), 0, minutesStr.length(), 0);
+	    }
+	    clock.setTextViewText(R.id.minutes, s2);
+	   
 	    // set up filler for clear button
 	    if (ns != null &&
 	    	ns.getNotificationsCount() > 0 &&
@@ -353,6 +438,10 @@ public class NotificationsWidgetService extends RemoteViewsService
 	    else
 	    	clock.setViewVisibility(R.id.clearButtonFiller, View.GONE);
 	    
+	    if (prefs.getBoolean(widgetMode +"." + SettingsActivity.CLOCK_IS_CLICKABLE, true))
+	    {
+	    	clock.setOnClickPendingIntent(clockId, getClockAppIntent());
+	    }
 	    return clock;
 	}
 
