@@ -69,8 +69,10 @@ public class NotificationsService extends AccessibilityService
 	public int notification_info_id = 0;
 	public int notification_subtext_id = 0;
 	public int big_notification_summary_id = 0;
+	public int big_notification_title_id = 0;
 	public int big_notification_content_title = 0;
 	public int big_notification_content_text = 0;
+	public int inbox_notification_title_id = 0;
 	public int inbox_notification_event_1_id = 0;
 	public int inbox_notification_event_2_id = 0;
 	public int inbox_notification_event_3_id = 0;
@@ -220,14 +222,14 @@ public class NotificationsService extends AccessibilityService
 				{
 					PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 					isScreenOn = powerManager.isScreenOn();
-					if (!isScreenOn && deviceIsUnlocked)
+					if (!isScreenOn && isDeviceIsUnlocked())
 					{
 						setDeviceIsLocked();
 					}
 				}
 
 				// collect only on two sceneries: 1. the screen is off. 2. the screen is on but the device is unlocked.  
-				if (!isScreenOn || (isScreenOn && !deviceIsUnlocked))
+				if (!isScreenOn || (isScreenOn && !isDeviceIsUnlocked()))
 				{			
 					boolean ignoreApp = sharedPref.getBoolean(packageName+"."+AppSettingsActivity.IGNORE_APP, false);
 					if (!ignoreApp)
@@ -306,9 +308,23 @@ public class NotificationsService extends AccessibilityService
 						int duplicated = -1;
 						for(int i=0;i<notifications.size();i++)
 						{
+							CharSequence title1 = nd.title;
+							CharSequence title2 = notifications.get(i).title;
+							CharSequence text1 = nd.text;
+							CharSequence text2 = notifications.get(i).text;
+							CharSequence content1 = nd.content;
+							CharSequence content2 = notifications.get(i).content;
+							
 							if (nd.packageName.equals(notifications.get(i).packageName) &&
-								(nd.text != null && notifications.get(i).text != null && 
-								 nd.text.equals(notifications.get(i).text) || keepOnlyLastNotification))
+									(
+									(title1 != null && title2 != null && title1.equals(title2) ||
+								     title1 == null && title2 == null) &&
+								     (text1 != null && text2!= null && text1.equals(text2) ||
+								     text1 == null && text2 == null) &&
+								     (content1 != null && content2!= null && content1.equals(content2) ||
+								     content1 == null && content2 == null)
+								    ) 
+								    || keepOnlyLastNotification)
 								{
 									duplicated = i;
 								}
@@ -316,8 +332,8 @@ public class NotificationsService extends AccessibilityService
 						if (duplicated >= 0)
 						{
 							NotificationData dup = notifications.get(duplicated);
-							notifications.remove(duplicated);
-							nd.count = dup.count+1;						
+							if (dup.pinned) nd.pinned = true;
+							notifications.remove(duplicated);			
 						}
 						
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
@@ -394,12 +410,12 @@ public class NotificationsService extends AccessibilityService
     	        {
     	        	if (n1.priority < n2.priority)
     	        		return 1;
-    	        	if (n2.priority > n2.priority)
+    	        	if (n1.priority > n2.priority)
     	        		return -1;
     	        	// if we reached here, the priorities are equal - sory by time
     	        	if (n1.received < n2.received)
     	        		return 1;
-    	        	if (n2.received > n2.received)
+    	        	if (n1.received > n2.received)
     	        		return -1;
     	        	return 0;
     	        }
@@ -602,16 +618,18 @@ public class NotificationsService extends AccessibilityService
 				else if (text.equals("5")) big_notification_summary_id = id;
 				else if (text.equals("6")) big_notification_content_title = id;
 				else if (text.equals("7")) big_notification_content_text = id;
-				else if (text.equals("8")) inbox_notification_event_1_id = id;
-				else if (text.equals("9")) inbox_notification_event_2_id = id;
-				else if (text.equals("10")) inbox_notification_event_3_id = id;				
-				else if (text.equals("11")) inbox_notification_event_4_id = id;
-				else if (text.equals("12")) inbox_notification_event_5_id = id;
-				else if (text.equals("13")) inbox_notification_event_6_id = id;				
-				else if (text.equals("14")) inbox_notification_event_7_id = id;
-				else if (text.equals("15")) inbox_notification_event_8_id = id;
-				else if (text.equals("16")) inbox_notification_event_9_id = id;				
-				else if (text.equals("17")) inbox_notification_event_10_id = id;
+				else if (text.equals("8")) big_notification_title_id = id;
+				else if (text.equals("9")) inbox_notification_title_id = id;
+				else if (text.equals("10")) inbox_notification_event_1_id = id;
+				else if (text.equals("11")) inbox_notification_event_2_id = id;
+				else if (text.equals("12")) inbox_notification_event_3_id = id;				
+				else if (text.equals("13")) inbox_notification_event_4_id = id;
+				else if (text.equals("14")) inbox_notification_event_5_id = id;
+				else if (text.equals("15")) inbox_notification_event_6_id = id;				
+				else if (text.equals("16")) inbox_notification_event_7_id = id;
+				else if (text.equals("17")) inbox_notification_event_8_id = id;
+				else if (text.equals("18")) inbox_notification_event_9_id = id;				
+				else if (text.equals("19")) inbox_notification_event_10_id = id;
 			}
 			else if (child instanceof ImageView)
 			{
@@ -649,15 +667,16 @@ public class NotificationsService extends AccessibilityService
 			NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
 			bigtextstyle.setSummaryText("5");
 			bigtextstyle.setBigContentTitle("6");
-			bigtextstyle.bigText("7");			
-					
+			bigtextstyle.bigText("7");								
+			mBuilder.setContentTitle("8");
 			mBuilder.setStyle(bigtextstyle);
 			detectExpandedNotificationsIds(mBuilder.build());
 			
 			NotificationCompat.InboxStyle inboxStyle =
 			        new NotificationCompat.InboxStyle();
-			String[] events = {"8","9","10","11","12","13","14","15","16","17"};
+			String[] events = {"10","11","12","13","14","15","16","17","18","19"};
 			inboxStyle.setBigContentTitle("6");
+			mBuilder.setContentTitle("9");
 			inboxStyle.setSummaryText("5");
 			
 			for (int i=0; i < events.length; i++) 
@@ -733,8 +752,16 @@ public class NotificationsService extends AccessibilityService
 			}
 			
 			// get title string if available
-			View titleView = localView.findViewById(android.R.id.title);
-			if (v != null && v instanceof TextView)
+			View titleView = localView.findViewById(notification_title_id );
+			View bigTitleView = localView.findViewById(big_notification_title_id );
+			View inboxTitleView = localView.findViewById(inbox_notification_title_id );
+			if (titleView  != null && titleView  instanceof TextView)
+			{
+				title = ((TextView)titleView).getText();
+			} else if (bigTitleView != null && bigTitleView instanceof TextView)
+			{
+				title = ((TextView)titleView).getText();
+			} else if  (inboxTitleView != null && inboxTitleView instanceof TextView)
 			{
 				title = ((TextView)titleView).getText();
 			}
@@ -962,7 +989,7 @@ public class NotificationsService extends AccessibilityService
 	
 	public void setDeviceIsLocked()
 	{
-		deviceIsUnlocked = false;
+		setDeviceIsUnlocked(false);
 	}
 	
 	@Override
@@ -1044,6 +1071,14 @@ public class NotificationsService extends AccessibilityService
 	public void setSelectedIndex(int selectedIndex) 
 	{
 		this.selectedIndex = selectedIndex;
+	}
+
+	public boolean isDeviceIsUnlocked() {
+		return deviceIsUnlocked;
+	}
+
+	public void setDeviceIsUnlocked(boolean deviceIsUnlocked) {
+		this.deviceIsUnlocked = deviceIsUnlocked;
 	}
 	
 	

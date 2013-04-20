@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.SpannableString;
@@ -46,8 +47,28 @@ public class NotificationsWidgetService extends RemoteViewsService
 				AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetId, R.id.notificationsListView);
 			}
 		}
+		
+		updateClearOnUnlockState();
 		stopSelf();
 		//super.onStart(intent, startId);
+	}
+
+	private void updateClearOnUnlockState() 
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		NotificationsService ns = NotificationsService.getSharedInstance();
+		
+	    // check if the screen has been turned on to start collecting
+	    if (!prefs.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true) && ns != null)
+		{
+			PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+			boolean isScreenOn = powerManager.isScreenOn();
+			if (!isScreenOn && ns.isDeviceIsUnlocked())
+			{
+				ns.setDeviceIsLocked();
+			}
+		}
+	
 	}
 
 	private void updateWidget(int widgetId) 
@@ -153,8 +174,6 @@ public class NotificationsWidgetService extends RemoteViewsService
     	widget.setOnClickPendingIntent(R.id.serviceInactiveButton, 
     			  PendingIntent.getActivity(this, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 	     	    	
-	    String clearButtonMode = prefs.getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible");					
-	   
 	    int notificationsCount = 0;
 	    
 	    if (ns!=null)
@@ -178,7 +197,8 @@ public class NotificationsWidgetService extends RemoteViewsService
 	    	widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);    	   
 	    }
 	    
-	    widget.setViewVisibility(R.id.clearButton, (clearButtonMode.equals("visible"))?View.VISIBLE:View.GONE); 
+	    boolean showClearButton = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?false:true);
+	    widget.setViewVisibility(R.id.clearButton, showClearButton?View.VISIBLE:View.GONE); 
 	    
 	    // hide clear button if no notifications are displayed
 	    if (notificationsCount == 0)
@@ -203,7 +223,7 @@ public class NotificationsWidgetService extends RemoteViewsService
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);		
 		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
-		String notificationsStyle = prefs.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, "normal");
+		String notificationsStyle = prefs.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?"compact":"normal");
 		return notificationsStyle;
 	}
 
@@ -382,7 +402,7 @@ public class NotificationsWidgetService extends RemoteViewsService
 		
 	    int clockColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_COLOR, Color.WHITE);
 	    int dateColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_DATE_COLOR, Color.WHITE);
-	    int alarmColor  = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.WHITE);
+	    int alarmColor  = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.GRAY);
 	    clock.setTextColor(R.id.hours, clockColor);
 	    clock.setTextColor(R.id.minutes, clockColor);
 	    clock.setTextColor(R.id.ampm, clockColor);

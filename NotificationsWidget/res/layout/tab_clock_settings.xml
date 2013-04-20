@@ -246,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="onClockPrefChanged"
-                android:tag="showclearall"
+                android:tag="showclearbutton"
                 android:text="Show &quot;Clear All&quot; Button" />
 
             <CheckBox

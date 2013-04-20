@@ -42,12 +42,6 @@
                 android:enabled="true" 
                 android:defaultValue="true" 
                 android:summary="@string/collectonunlock_summary"/>        
-            <CheckBoxPreference 
-                android:title="@string/disable_notification_click" 
-                android:key="disable_notification_click" 
-                android:enabled="true" 
-                android:defaultValue="false" 
-                android:summary="@string/disable_notification_click_summary"/>                  
             <ListPreference android:dialogTitle="@string/order_notifications_by" 
     	    			android:entries="@array/settings_orderby_entries" 
     	    			android:entryValues="@array/settings_orderby_values" 

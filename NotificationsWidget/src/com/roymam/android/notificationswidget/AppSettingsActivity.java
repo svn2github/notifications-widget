@@ -75,7 +75,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         overrideAppPriority.setKey(packageName + "." + APP_PRIORITY);
         overrideAppPriority.setTitle(R.string.set_app_priority);
         overrideAppPriority.setSummary(R.string.set_app_priority_summary);
-        overrideAppPriority.setDefaultValue("-3");
+        overrideAppPriority.setDefaultValue("-9");
         overrideAppPriority.setEntries(R.array.settings_app_priority_entries);
         overrideAppPriority.setEntryValues(R.array.settings_app_priority_values);
         root.addPreference(overrideAppPriority);

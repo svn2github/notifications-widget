@@ -527,7 +527,7 @@ public class AppearanceActivity extends FragmentActivity
 			setupClockStyle();
 			
 			// setup checkboxes
-			showClearAll.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, true));			
+			showClearAll.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?false:true));			
 			hideClock.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false));
 			
 			// setup toggles
@@ -543,7 +543,7 @@ public class AppearanceActivity extends FragmentActivity
 			int bgColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_COLOR, Color.BLACK);
 			int clockColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_COLOR, Color.WHITE);
 			int dateColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_DATE_COLOR, Color.WHITE);
-			int alarmColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.DKGRAY);
+			int alarmColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.GRAY);
 			bgColorView.setBackgroundColor(bgColor);
 			clockColorView.setBackgroundColor(clockColor);
 			dateColorView.setBackgroundColor(dateColor);
@@ -797,6 +797,8 @@ public class AppearanceActivity extends FragmentActivity
 						content.setText(R.string.content_demo_text);
 						
 					content.setTextColor(contentColor);
+					// set max lines
+					text.setMaxLines(maxLines);
 					content.setMaxLines(maxLines);
 					/*if (contentColor == Color.TRANSPARENT)
 						content.setVisibility(View.GONE);
