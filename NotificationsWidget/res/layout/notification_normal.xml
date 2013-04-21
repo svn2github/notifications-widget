@@ -50,7 +50,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:scrollHorizontally="false"
-                    android:text="Notification Title"
+                    android:text="@string/title_demo_text"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@android:color/white" />
 
@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="16:39"
+                    android:text="@string/time_demo_text"
                     android:textColor="#ff32b6e6"
                     android:textSize="14sp" />
 
@@ -82,7 +82,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:scrollHorizontally="false"
-                    android:text="Notification text line 1\nNotification text line 2"
+                    android:text="@string/text_demo_text"
                     android:textColor="#e5e5e1" />
 
                 <ImageView
@@ -95,11 +95,11 @@
                 <TextView
                     android:id="@+id/notificationCount"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="2"
+                    android:text="@string/count_demo_text"
                     android:textSize="12sp" />
 
                 <ImageView

@@ -25,7 +25,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
-                android:text="Notification title Notification text"
+                android:text="@string/title_demo_text"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ImageView
@@ -39,7 +39,7 @@
                 android:id="@+id/notificationTime"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
-                android:text="15:49"
+                android:text="@string/time_demo_text"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

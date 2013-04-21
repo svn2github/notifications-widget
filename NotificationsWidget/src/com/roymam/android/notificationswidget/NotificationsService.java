@@ -234,74 +234,89 @@ public class NotificationsService extends AccessibilityService
 					boolean ignoreApp = sharedPref.getBoolean(packageName+"."+AppSettingsActivity.IGNORE_APP, false);
 					if (!ignoreApp)
 					{
-						newNotificationsAvailable = true;
+						// set new notification flag (for delayed auto screen on feature)
+						newNotificationsAvailable = true;					
 						
+						// turn the screen on
 						turnScreenOn();
 						
 						// build notification data object
 						NotificationData nd = new NotificationData();
 						
-						// extract app icons
+						// extract notification & app icons
 						Resources res;
-						try {
-							res = getPackageManager().getResourcesForApplication(packageName);
-							PackageInfo info = getPackageManager().getPackageInfo(packageName,0);
-							nd.appicon = BitmapFactory.decodeResource(res, n.icon);
-							if (nd.appicon == null)
-							{
-								nd.appicon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
-							}
-						} catch (NameNotFoundException e) 
+						PackageInfo info;
+						ApplicationInfo ai;
+						try 
 						{
-							nd.appicon = null;
+							res = getPackageManager().getResourcesForApplication(packageName);
+							info = getPackageManager().getPackageInfo(packageName,0);
+							ai = getPackageManager().getApplicationInfo(packageName,0);
+						}
+						catch(NameNotFoundException e)
+						{
+							info = null;
+							res = null;
+							ai = null;
 						}
 						
+						if (res != null && info != null)
+						{
+							nd.appicon = BitmapFactory.decodeResource(res, n.icon);
+							nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);							
+							if (nd.appicon == null)
+							{
+								nd.appicon = nd.icon;
+							}							
+						}						
 						if (n.largeIcon != null)
 						{
 							nd.icon = n.largeIcon;
 						}
-						else
-						{
-							try {
-								res = getPackageManager().getResourcesForApplication(packageName);
-								PackageInfo info = getPackageManager().getPackageInfo(packageName,0);
-								nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
-							} catch (NameNotFoundException e) 
-							{
-								nd.icon = null;
-							}
-						}
-						
-						// default notification text & title
-						nd.text = n.tickerText;
-						
-						ApplicationInfo ai;
-						try 
-						{
-							ai = getPackageManager().getApplicationInfo(packageName, 0);
-							nd.title = getPackageManager().getApplicationLabel(ai).toString();
-						} catch (NameNotFoundException e) 
-						{
-							nd.title = packageName;
-						}	
-						
+														
+						// get time of the event
 						if (n.when != 0)
 							nd.received = n.when;
 						else
 							nd.received = System.currentTimeMillis();
+						
 						nd.action = n.contentIntent;
 						nd.count = 1;
 						nd.packageName = packageName;
 						
+						// if possible - try to extract actions from expanded notification
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) 
 						{
 							nd.actions = getActionsFromNotification(n, packageName);
 						}
 						
+						// extract expanded text
+						nd.text = null;
+						nd.title = null;
 						if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
 						{
-							getExpandedText(n,nd);							
+							getExpandedText(n,nd);
+							// replace text with content if no text
+							if (nd.text == null || nd.text.equals("") &&
+								nd.content != null && !nd.content.equals(""))
+							{
+								nd.text = nd.content;
+								nd.content = null;
+							}
 						}
+						
+						// use default notification text & title - if no info found on expanded notification
+						if (nd.text == null)
+						{							
+							nd.text = n.tickerText;							
+						}
+						if (nd.title == null)
+						{
+							if (info != null)
+								nd.title = getPackageManager().getApplicationLabel(ai);
+							else
+								nd.title = packageName;
+						}											
 						
 						// check for duplicated notification
 						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);

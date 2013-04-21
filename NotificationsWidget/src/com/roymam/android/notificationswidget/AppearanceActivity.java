@@ -772,13 +772,22 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				}
 				
 				if (text != null)
-				{
-					text.setText(textDemoStr);
+				{		
 					text.setTextColor(textColor);
-					if (textColor == Color.TRANSPARENT && title != null)
-							text.setVisibility(View.GONE);
-					else
+					if (textColor == Color.TRANSPARENT && title != null && v.getId() == R.id.largeNotification)
+					{
+						text.setVisibility(View.GONE);
+					}
+					else if (textColor != Color.TRANSPARENT)
+					{
 						text.setVisibility(View.VISIBLE);
+						text.setText(textDemoStr);						
+						text.setMaxLines(maxLines);
+					}
+					else
+					{
+						text.setVisibility(View.VISIBLE);
+					}
 				}
 				
 				TextView content = (TextView) v.findViewById(R.id.notificationContent);
@@ -790,13 +799,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 						content.setText(R.string.content_demo_text);
 						
 					content.setTextColor(contentColor);
-					// set max lines
-					text.setMaxLines(maxLines);
-					content.setMaxLines(maxLines);
-					/*if (contentColor == Color.TRANSPARENT)
-						content.setVisibility(View.GONE);
-					else
-						content.setVisibility(View.VISIBLE);*/
+					
+					// set max lines					
+					content.setMaxLines(maxLines);					
 				}
 				TextView time = (TextView) v.findViewById(R.id.notificationTime);
 				if (time != null)

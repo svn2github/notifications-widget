@@ -209,9 +209,26 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 			if (nd.text != null) ssb.setSpan(textStyle, nd.title.length()+1, text.length(),0);
 			
 			text = ssb;
+		}		
+		// if user choose to hide text and keep content (why would he??) hide the text on large style 
+		if (textColor == Color.TRANSPARENT && type.equals("large"))
+		{
+			n.setViewVisibility(R.id.notificationText, View.GONE);
 		}
-		n.setTextViewText(R.id.notificationText, text);
-		n.setTextViewText(R.id.notificationContent, nd.content);
+		else if (textColor != Color.TRANSPARENT)
+		{
+			n.setViewVisibility(R.id.notificationText, View.VISIBLE);
+			n.setTextViewText(R.id.notificationText, text);
+		}
+		else
+		{
+			n.setViewVisibility(R.id.notificationText, View.VISIBLE);
+		}
+		
+		if (contentColor != Color.TRANSPARENT)
+			n.setTextViewText(R.id.notificationContent, nd.content);
+		else
+			n.setTextViewText(R.id.notificationContent, null);
 		
 		if (nd.count > 1)
 			n.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));

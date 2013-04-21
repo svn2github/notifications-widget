@@ -43,14 +43,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:minLines="1"
-                    android:text="xda-developers"
+                    android:text="@string/title_demo_text"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
                     android:id="@+id/notificationTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15:04"
+                    android:text="@string/time_demo_text"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Reply to thread &apos;[App] [4.2] Lock Screen Notification Widget&apos;"
+                android:text="@string/text_demo_text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/white" />
 
@@ -74,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="admin@roymam.com"
+                    android:text="@string/content_demo_text"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <ImageView
@@ -87,7 +87,7 @@
                     android:id="@+id/notificationCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2"
+                    android:text="@string/count_demo_text"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <ImageView
