@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -37,6 +39,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -48,7 +51,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewAnimator;
 
-public class AppearanceActivity extends FragmentActivity
+public class AppearanceActivity extends FragmentActivity implements OnNavigationListener
 {		
 	// page scroll stuff
 	SectionsPagerAdapter mSectionsPagerAdapter;
@@ -111,6 +114,15 @@ public class AppearanceActivity extends FragmentActivity
 
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		CharSequence[] modes = getResources().getStringArray(R.array.widget_mode_entries);
+		
+		ArrayAdapter<CharSequence> list = new ArrayAdapter<CharSequence> (this, R.layout.spinner_widget_mode, android.R.id.text1, modes);
+		list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						
+	    getActionBar().setListNavigationCallbacks(list, this);
+	    getActionBar().setDisplayShowTitleEnabled(false);
 
 		// Create the adapter that will return a fragment for each of the two
 		// primary sections of the app.
@@ -120,12 +132,12 @@ public class AppearanceActivity extends FragmentActivity
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 	}
-
+/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_appearance, menu);
+		/*getMenuInflater().inflate(R.menu.activity_appearance, menu);
 		
 		Spinner widgetModeSpinner = (Spinner) menu.getItem(0).getActionView();
 		widgetModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -134,26 +146,7 @@ public class AppearanceActivity extends FragmentActivity
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int position, long id) 
 			{
-				switch (position)
-				{
-				case 0:
-					widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
-					break;
-				case 1:
-					widgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
-					break;
 				}
-				if (clockSettingsFragment!=null)
-				{					
-					clockSettingsFragment.loadSettings();
-					clockSettingsFragment.refreshPreview();
-				}
-				if (notificationsSettingsFragment!=null)
-				{
-					notificationsSettingsFragment.loadSettings();
-					notificationsSettingsFragment.refreshPreview();
-				}
-			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) 
@@ -163,7 +156,7 @@ public class AppearanceActivity extends FragmentActivity
 		});
 		return true;
 	}
-
+*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 
 	{
@@ -923,5 +916,39 @@ public class AppearanceActivity extends FragmentActivity
 			// do nothing
 		}
 
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(int position, long id) 
+	{
+		int descId = 0; 
+		
+		switch (position)
+		{
+		case 0:
+			widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
+			descId = R.string.widget_mode_collapsed_desc;
+			break;
+		case 1:
+			widgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
+			descId = R.string.widget_mode_expanded_desc;
+			break;
+		case 2:
+			widgetMode = SettingsActivity.HOME_WIDGET_MODE;
+			descId = R.string.widget_mode_home_desc;
+			break;
+		}
+		((TextView) findViewById(R.id.widgetmode_desc)).setText(descId);
+		if (clockSettingsFragment!=null)
+		{					
+			clockSettingsFragment.loadSettings();
+			clockSettingsFragment.refreshPreview();
+		}
+		if (notificationsSettingsFragment!=null)
+		{
+			notificationsSettingsFragment.loadSettings();
+			notificationsSettingsFragment.refreshPreview();
+		}
+		return true;
 	}
 }

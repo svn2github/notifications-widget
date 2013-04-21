@@ -38,6 +38,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String WIDGET_MODE = "widgetmode";  
 	public static final String COLLAPSED_WIDGET_MODE = "collapsed";
 	public static final String EXPANDED_WIDGET_MODE = "expanded";
+	public static final String HOME_WIDGET_MODE = "home";
 	public static final String SHOW_CLEAR_BUTTON = "showclearbutton";
 	public static final String CLOCK_IS_CLICKABLE = "clockisclickable";
 	public static final String BOLD_HOURS = "boldhours";

@@ -261,9 +261,14 @@
     <string name="expanded">Expanded</string>
 
     <string-array name="widget_mode_entries">
-        <item>Collapsed</item>
-        <item>Expanded</item>
-    </string-array>
+        <item>LS Collapsed</item>
+        <item>LS Expanded</item>
+        <item>Home</item>
+        </string-array>
+    
+    <string name="widget_mode_collapsed_desc">On lockscreen when collapsed (4.2+)</string>
+    <string name="widget_mode_expanded_desc">On lockscreen when expanded (4.2+)</string>
+    <string name="widget_mode_home_desc">On home screen or on WidgetLocker</string>
     
     <!-- Appearance demo strings -->
     <string name="title_demo_text">Notification Title</string>

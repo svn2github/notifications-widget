@@ -228,6 +228,11 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 				updateWidget(context, appWidgetManager, true);
 			}
 		}
+		else
+		{
+			prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.HOME_WIDGET_MODE).commit();
+			updateWidget(context, appWidgetManager, true);
+		}
 	}
 
 	
