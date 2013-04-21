@@ -105,6 +105,13 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 	public static SeekBar notificationBgClockOpacitySlider;
 	public static Spinner maxLinesSpinner;
 	
+    @Override
+    protected void onSaveInstanceState(Bundle outState) 
+    {
+    	super.onSaveInstanceState(outState);
+    	getSupportFragmentManager().putFragment(outState, ClockSectionFragment.class.getName(), clockSettingsFragment);
+    	getSupportFragmentManager().putFragment(outState, NotificationSectionFragment.class.getName(), notificationsSettingsFragment);
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -124,39 +131,21 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 	    getActionBar().setListNavigationCallbacks(list, this);
 	    getActionBar().setDisplayShowTitleEnabled(false);
 
-		// Create the adapter that will return a fragment for each of the two
+	    // Create the adapter that will return a fragment for each of the two
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
+		
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-	}
-/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) 
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		/*getMenuInflater().inflate(R.menu.activity_appearance, menu);
 		
-		Spinner widgetModeSpinner = (Spinner) menu.getItem(0).getActionView();
-		widgetModeSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
-		{
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int position, long id) 
-			{
-				}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) 
-			{
-			}
-			
-		});
-		return true;
+		if (savedInstanceState != null) 
+	    {
+	        clockSettingsFragment = (ClockSectionFragment) getSupportFragmentManager().getFragment(savedInstanceState, ClockSectionFragment.class.getName());
+	        notificationsSettingsFragment = (NotificationSectionFragment) getSupportFragmentManager().getFragment(savedInstanceState, NotificationSectionFragment.class.getName());
+	    }
 	}
-*/
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 
 	{
