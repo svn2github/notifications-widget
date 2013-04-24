@@ -98,6 +98,8 @@ public class NotificationsWidgetService extends RemoteViewsService
 
 		// persistent notifications
 		widget.removeAllViews(R.id.persistentNotificationsView);
+		widget.setInt(R.id.persistentNotificationsView, "setBackgroundColor", bgColor);
+
 		RemoteViews[] persistentNotifications = getPersistentNotifications();
 		for(RemoteViews pn : persistentNotifications)
 		{

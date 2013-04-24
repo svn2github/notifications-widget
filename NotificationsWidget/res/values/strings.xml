@@ -181,9 +181,10 @@
     <string name="show_only_last_notification_summary">Keep only the last notification that was received from this app</string>
     <string name="extract_expanded_text">Use expanded notification</string>
     <string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>
+    <string name="show_only_last_event">Show only last event</string>
+    <string name="show_only_last_event_summary">Show only last event when expanded notification has multiple events (e.g multiple emails in one notification)</string>
     <string name="set_app_priority">Set priority</string>
     <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
-
     <string-array name="settings_app_priority_entries">
         <item>Default</item>
         <item>Min</item>
@@ -200,7 +201,7 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-
+    
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Clear app specific settings for this app</string>
     <string name="no_apps">There are no apps with specific settings - To modify specific settings for an app, tap the app icon on the notification and choose \"Settings\"</string>
@@ -267,8 +268,8 @@
         </string-array>
     
     <string name="widget_mode_collapsed_desc">On lockscreen when collapsed (4.2+)</string>
-    <string name="widget_mode_expanded_desc">On lockscreen when expanded (4.2+)</string>
-    <string name="widget_mode_home_desc">On home screen or WidgetLocker</string>
+    <string name="widget_mode_expanded_desc">On lockscreen when expanded</string>
+    <string name="widget_mode_home_desc">On home screen</string>
     
     <!-- Appearance demo strings -->
     <string name="title_demo_text">Notification Title</string>

@@ -20,6 +20,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String EXTRA_PACKAGE_NAME = "com.roymam.android.notificationswidget.packagename";
 	public static final String IGNORE_APP = "ignoreapp";
 	public static final String KEEP_ONLY_LAST = "showlast";
+	public static final String SHOW_ONLY_LAST_EVENT = "showlastevent";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String APP_PRIORITY = "apppriority";
 	
@@ -70,7 +71,15 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 		useExpandedTextPref.setDefaultValue(prefs.getBoolean(USE_EXPANDED_TEXT, true));
         useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
         root.addPreference(useExpandedTextPref);  
-        
+
+        // Show last event preference
+        CheckBoxPreference showlastEventPref = new CheckBoxPreference(this);
+        showlastEventPref.setKey(packageName+"."+SHOW_ONLY_LAST_EVENT);
+        showlastEventPref.setTitle(R.string.show_only_last_event);
+        showlastEventPref.setSummary(R.string.show_only_last_event_summary);
+        //showlastEventPref.setDependency(packageName+"."+USE_EXPANDED_TEXT);
+        root.addPreference(showlastEventPref);
+
         ListPreference overrideAppPriority = new ListPreference(this);
         overrideAppPriority.setKey(packageName + "." + APP_PRIORITY);
         overrideAppPriority.setTitle(R.string.set_app_priority);

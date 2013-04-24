@@ -672,7 +672,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			
 			// setup number of lines
 			int maxLines = prefs.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
-			if (maxLines < 6) 
+			if (maxLines <= 6) 
 				maxLinesSpinner.setSelection(maxLines-1);
 			else
 				maxLinesSpinner.setSelection(6);

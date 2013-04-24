@@ -278,6 +278,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		actionBar.setOnClickPendingIntent(
 				R.id.actionSettings, 
 				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION+position*10, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+		actionBar.setTextViewText(R.id.actionSettings, ctxt.getText(R.string.settings));
 
 		// set pin notification intent
 		Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
@@ -294,7 +295,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		actionBar.setOnClickPendingIntent(
 				R.id.actionClear, 
 				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-		
+				
 		// hide clear button for pinned notifications
 		if (NotificationsService.getSharedInstance().getNotification(position).pinned)
 		{
@@ -320,10 +321,12 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					actionBar.setImageViewBitmap(R.id.customAction1, n.actions[0].drawable);
 					actionBar.setOnClickPendingIntent(R.id.customAction1, n.actions[0].actionIntent);
 					actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
+					actionBar.setTextViewText(R.id.actionPin, null);
+					actionBar.setTextViewText(R.id.actionSettings, null);
 				}
 				else
 				{
-					actionBar.setViewVisibility(R.id.customAction1, View.GONE);
+					actionBar.setViewVisibility(R.id.customAction1, View.GONE);					
 				}
 				
 				if (n.actions.length >= 2)
@@ -331,10 +334,12 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					actionBar.setImageViewBitmap(R.id.customAction2, n.actions[1].drawable);
 					actionBar.setOnClickPendingIntent(R.id.customAction2, n.actions[1].actionIntent);
 					actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
+					actionBar.setTextViewText(R.id.actionPin, null);
+					actionBar.setTextViewText(R.id.actionSettings, null);
 				}
 				else
 				{
-					actionBar.setViewVisibility(R.id.customAction2, View.GONE);
+					actionBar.setViewVisibility(R.id.customAction2, View.GONE);									
 				}
 			}
 			else
