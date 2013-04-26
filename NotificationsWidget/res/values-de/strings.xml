@@ -13,7 +13,6 @@
     <string name="behavior">Verhalten</string>
     <string name="appearance">Darstellung</string>
     <string name="advanced">Erweitert</string>
-    <string name="clock">Uhr</string>
     <string name="notifications">Benachrichtigungen</string>
     
      <!--  Action Bar -->
@@ -27,8 +26,6 @@
     <string name="no">Nein</string>
     <string name="delayed_screenon">Verzögerte automatische Displayaktivierung</string>
     <string name="delayed_screenon_summary">Aktiviert das Display bei neuer Benachrichtgung erst, wenn Sie das Gerät aus der Tasche nehmen</string>
-    <string name="disable_notification_click">Deaktiviere klickbare Benachrichtigungen</string>
-    <string name="disable_notification_click_summary">Verhindert, dass sich die Benachrichtigungen beim darauf Tippen öffnen</string>
     <string name="extract_expanded_text">Verwende erweiterte Benachrichtigungen</string>
 	<string name="extract_expanded_text_summary">Nur Android 4.1+: Verwende erweiterte Benachrichtigungen, wenn verfügbar</string>		
     
@@ -43,20 +40,13 @@
     <string name="clearonlock_summary">Löscht alle Benachrichtigungen wenn das Gerät gesperrt wird</string>
     <string name="collectonunlock">entsperrtes Sammeln</string>
     <string name="collectonunlock_summary">Benachrichtigungen sammeln während das Gerät entsperrt ist</string>
-    <string name="clockstyle">Uhr-Design</string>
-    <string name="clockstyle_summary">Kleine, große oder versteckte Uhr</string>
-    <string name="showclearbutton">Zeige Lösch-Icon</string>
-    <string name="showclearbutton_summary">Zeigt ein Icon auf dem Widget, mit dem man alle Benachrichtigungen löschen kann</string>
-    <string name="notification_bg_opacity">Hintergrundtransparenz</string>
-    <string name="notification_bg_opacity_summary">Transparenz des Hintergrunds der Benachrichtigungen einstellen</string>
-    <string name="notification_text_color">Farbe des Benachrichtigungstexts</string>
-    <string name="clock_text_color">Clock text color</string>
-    <string name="notification_time_color">Farbe der Zeit</string>
-    <string name="notification_style">Darstellungstyp</string>
-    <string name="auto_compact_style">Auto Compact Style</string>
-    <string name="auto_compact_style_summary">Auto switch to compact style when widget is collapsed (Android 4.2+)</string>
+    <string name="order_notifications_by">Order notifications by</string>
+    <string-array name="settings_orderby_entries">
+        <item>Time</item>
+        <item>Priority</item>
+    </string-array>
+    
     <string name="max_lines">Maximum text lines</string>
-    <string name="max_lines_summary">When \"Normal\" or \"Compact\" notification style is selected, set the maximum number of text lines for a single notification</string>
     <string name="show_full_notification">Zeige vollständige Benachrichtigung</string>
     <string name="show_full_notification_summary">Zeige die Benachrichtigung, wie in der Benachrichtigungsleiste im System</string>
     <string name="clearonclear">Überwachen von \"Alle löschen\"</string>
@@ -74,29 +64,6 @@
         <item>Unbegrenzt</item>
     </string-array>
     
-    <string-array name="settings_colors_entries">
-            <item>Weiß</item>
-            <item>Schwarz</item>
-            <item>Grau</item>
-            <item>Rot</item>    
-            <item>Grün</item> 
-            <item>Blau</item>                  
-        </string-array>
-    <string-array name="settings_clock_entries">
-            <item>kompakt (klein)</item>
-            <item>Android 4.2 (groß)</item>
-            <item>automatisch</item>
-            <item>versteckt</item>
-        </string-array>           
-    <string-array name="settings_buttons_entries">
-        <item>immer</item>
-        <item>nie</item>        
-    </string-array>
-        <string-array name="settings_notifications_entries">
-            <item>kompakt</item>
-            <item>normal</item>
-            <item>groß (Original Android)</item>
-        </string-array>
     <string name="service_inactive_text">Dienst inaktiv. Bitte aktivieren sie \"Notifications Widget\" in den Bendienungshilfen.</string>
     
     <!--  Wizard Strings -->
@@ -105,6 +72,7 @@
     <string name="title_activity_main">Notifications Widget</string>
     <string name="tutorial_help_1">Wenn sich die Bedienungshilfen öffnen, wählen Sie \"Notifications Widget\" und ziehen Sie den Schieberegler von \"Aus\" auf \"Ein\".  Bestätigen Sie die Warnung mit \"OK\".</string>
     <string name="tutorial_help_2">Nachdem Sie das Gerät gesperrt haben, fügen Sie dem Lockscreen das \"Notifications Widget\" hinzu und löschen ggf. das Bisherige.</string>
+    <string name="tutorial_help_2_widgetlocker">Add the widget to your home screen. If you have WidgetLocker installed - launch it and long touch an empty area to add the widget</string>
     <string name="tutorial_help_3">Das war es schon! Falls Sie noch Fragen oder Anregungen haben sollten, dann schicken Sie eine Email an admin@roymam.com</string>
     <string name="tutorial_step_1">Aktivieren Sie den \"Notifications Widget\" Dienst in den Bedienungshilfen</string>
     <string name="tutorial_step_2">Sperren Sie den Bildschirm und fügen Sie dem Sperrbildschirm das \"Notifications Widget\" hinzu</string>
@@ -129,7 +97,6 @@
     <string name="widget_locker_not_installed">WidgetLocker ist nicht installiert</string>
     <string name="widget_locker_not_installed_summary">Ihre Android-Version ist älter als 4.2. Daher können Sie diese Software nur in Verbindung mit der kostenpflichtigen Sperrbildschirm-Ersatz-App \"WidgetLocker\" nutzen. Einige Funktionen können im Zusammenspiel mit WidgetLocker nicht funktionieren. Sie können das Widget auch auf dem Homescreen ohne Zusatzsoftware verwenden.</string>
     <string name="widget_locker_purchase">WidgetLocker kaufen</string>
-    <string name="widget_locker_add_widget">Aktiviere WidgetLocker und füge Notifications Widget als Widget Ihrem Sperrbildschirm hinzu</string>
     <string name="no_widget_locker_add_widget">Füge Notifications Widget als Widget dem Homescreen hinzu</string>
     
     <!--  Error Messages -->
@@ -142,7 +109,20 @@
     <string name="show_only_last_notification_summary">Behält nur die neueste Benachrichtigung der Anwendung</string>
             <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Alle Einstellungen dieser Anwendung zurücksetzen</string>
-    <string name="no_apps">Es gibt keine Apps mit speziellen Einstellungen - Um Anpassungen für eine App vorzunehmen, tippen sie auf das App-Icon in der Benachrichtigung und wählen sie \"Einstellungen\"</string>
+    <string name="app_specific_help">How To Add App Specific Settings?</string>
+    <string name="app_specific_help_details">App specific settings allow you to set some settings specificly for different apps - like hiding notifications from the app, setting priorities, etc...\n\nTo add app specific settings, click on the app icon of the notification when it appears on the widget, an action menu will popup below the notification, then click the \"Settings\" button. (the one with the wrench icon)</string>
+    <string name="show_only_last_event">Show only last event</string>
+    <string name="show_only_last_event_summary">Show only last event when expanded notification has multiple events (e.g multiple emails in one notification)</string>
+    <string name="set_app_priority">Set priority</string>
+    <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
+    <string-array name="settings_app_priority_entries">
+        <item>Default</item>
+        <item>Min</item>
+        <item>Low</item>
+        <item>Normal</item>
+        <item>High</item>
+        <item>Max</item>
+    </string-array>
     
     <!--  Persistent Notifications -->
     <string name="persistent_notifications">Persistent Notifications</string>
@@ -154,9 +134,87 @@
         <item>Normal</item>
         <item>Maximum</item>
     </string-array>
-    <string-array name="settings_notification_height_values" translatable="false">
-        <item>small</item>
-        <item>normal</item>
-        <item>max</item>
+        <string name="hide_when_notifications">Hide when notifications appear</string>
+    <string name="hide_when_notifications_summary">Hide this persistent notification when normal notifications appear</string>
+    <string name="auto_hide_persistent_notification">Hide when inactive</string>
+    <string name="auto_hide_persistent_notification_summary">Hide when the persistent notification wasn\'t updated for selected period</string>
+    <string-array name="settings_auto_hide_persistent_notifications_entries">
+        <item>Never Hide</item>
+        <item>After 5 Minutes</item>
+        <item>After 15 Minutes</item>
+        <item>After 30 Minutes</item>
+        <item>After 1 Hour</item>
+        <item>After 4 Hours</item>
+        <item>After 24 Hours</item>
     </string-array>
+    
+        <string name="how_to_use">How To Use?</string>
+    <string name="persistent_notifications_help">How To Use Persistent Notifications?</string>
+    <string name="persistent_notifications_help_details">Persistent notifications are notifications that appear on the status bar and cannot be dismissed (e.g running apps, playing music, etc...)\n\nThis list will be filled with the apps that created persistent notifications, to add a persistent notification to the widget check the box near the app name.\n\nIf there are no apps in the list, run this settings screen later after the persistent notification is refreshed by the app that created it.</string>
+    
+    <!-- strings for accessibility -->
+    <string name="clear_all_notifications">Clear All Notifications</string>
+    <string name="action_bar">Action Bar</string>
+    <string name="notification_icon">Notification Icon</string>
+    <string name="app_icon">App Icon</string>
+  
+       <!--  Contact Us Menu -->
+    <string name="contact_summary">Contact us to ask a question, request a feature or report a bug</string>
+    <string name="contact_ask">Ask a question</string>
+    <string name="contact_request">Request a Feature</string>
+    <string name="contact_report">Report a Bug</string>
+    <string name="contact_request_link">http://code.google.com/p/notifications-widget/issues/entry?template=Feature%20Request</string>
+    <string name="contact_report_link">http://code.google.com/p/notifications-widget/issues/entry?template=Bug%20Report</string>
+    
+    <string name="version">Version</string>
+ 
+    <!-- Appearance new activity -->
+    <string name="title_section2">Notification</string>
+    <string name="title_section1">Clock</string>
+    <string name="title_activity_appearance">Appearance</string>
+    <string name="collapsed">Collapsed</string>
+    <string name="expanded">Expanded</string>
+
+    <string-array name="widget_mode_entries">
+        <item>LS Collapsed</item>
+        <item>LS Expanded</item>
+        <item>Home</item>
+        </string-array>
+    
+    <string name="widget_mode_collapsed_desc">On lockscreen when collapsed (4.2+)</string>
+    <string name="widget_mode_expanded_desc">On lockscreen when expanded</string>
+    <string name="widget_mode_home_desc">On home screen</string>
+    
+    <!-- Appearance settings strings -->
+    <string name="title_demo_text">Notification Title</string>
+    <string name="title_appname_demo_text">Application Name</string>
+    <string name="text_demo_text">This is the notification text, it might get long and be truncated.</string>
+    <string name="content_demo_text">Notification Content</string>
+    <string name="content_expanded_demo_text">Notification Content Line 1\nNotification Content Line 2\nNotification Content Line 3\nNotification Content Line 4\nNotification Content Line 5\nNotification Content Line 6\nNotification Content Line 7\nNotification Content Line 8\n</string>
+    <string name="time_demo_text">9:21</string> 
+    <string name="count_demo_text">2</string> 
+    <string name="small">Small</string> 
+    <string name="medium">Medium</string> 
+    <string name="large">Large</string> 
+    <string name="bg_color">BG Color</string> 
+    <string name="opacity">Opacity</string> 
+    <string name="clock_color">Clock Color</string> 
+    <string name="date_color">Date Color</string> 
+    <string name="alarm_color">Alarm Color</string> 
+    <string name="clickable">Clickable</string> 
+    <string name="bold_hours">Bold Hours</string> 
+    <string name="bold_minutes">Bold Minutes</string> 
+    <string name="auto_switch_clock_size">Auto switch clock size</string> 
+    <string name="show_clear_all_button">Show &amp;quot;Clear All&amp;quot; Button</string> 
+    <string name="hide_clock">Hide Clock</string> 
+    <string name="compact">Compact</string> 
+    <string name="normal">Normal</string> 
+    <string name="title_color">Title Color</string> 
+    <string name="text_color">Text Color</string> 
+    <string name="content_color">Content Color</string> 
+    <string name="icon_menu">Icon Menu</string> 
+    <string name="max_lines_">Max Lines:</string> 
+    <string name="notification_action_1">Notification Action 1</string> 
+    <string name="notification_action_2">Notification Action 2</string> 
+    <string name="clear_notification">Clear Notification</string>        
 </resources>

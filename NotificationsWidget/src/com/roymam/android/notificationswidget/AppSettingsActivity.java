@@ -100,6 +100,10 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 			{	
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
 				prefs.edit().remove(packageName+"."+IGNORE_APP).commit();
+				prefs.edit().remove(packageName+"."+KEEP_ONLY_LAST).commit();
+				prefs.edit().remove(packageName+"."+SHOW_ONLY_LAST_EVENT).commit();
+				prefs.edit().remove(packageName+"."+USE_EXPANDED_TEXT).commit();
+				prefs.edit().remove(packageName+"."+APP_PRIORITY).commit();
 				
 				removeAppFromAppSpecificSettings(packageName, AppSettingsActivity.this);
 				

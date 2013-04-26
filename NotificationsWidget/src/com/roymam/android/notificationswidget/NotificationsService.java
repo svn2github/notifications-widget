@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import com.roymam.android.notificationswidget.NotificationData.Action;
+
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.TargetApi;
@@ -35,12 +35,8 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.text.format.Time;
-import android.text.style.CharacterStyle;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +45,8 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.roymam.android.notificationswidget.NotificationData.Action;
 
 public class NotificationsService extends AccessibilityService 
 {
@@ -499,76 +497,6 @@ public class NotificationsService extends AccessibilityService
 		return returnArray;
 	}
 	
-	private RemoteViews createNormalNotification(NotificationData nd) 
-	{
-		// create remoteview for normal notification
-		RemoteViews n = new RemoteViews(getPackageName(), R.layout.notification_normal);
-		
-		n.setImageViewBitmap(R.id.notificationIcon, nd.icon);
-		n.setImageViewBitmap(R.id.appIcon, nd.appicon);
-		n.setTextViewText(R.id.notificationTitle, nd.title);
-		n.setTextViewText(R.id.notificationText, nd.text + "\n" + nd.content);
-		if (nd.count > 1)
-			n.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));
-    	else
-    		n.setTextViewText(R.id.notificationCount, null);
-		Time t = new Time();
-    	t.set(nd.received);
-    	String timeFormat = "%H:%M";
-    	if (!DateFormat.is24HourFormat(this)) timeFormat = "%l:%M%P";
-    	n.setTextViewText(R.id.notificationTime, t.format(timeFormat));	
-    	return n;
-	}
-	
-	private RemoteViews createLargeNotification(NotificationData nd) 
-	{
-		// create remoteview for normal notification
-		RemoteViews n = new RemoteViews(getPackageName(), R.layout.notification_large);
-		
-		// if notification data available
-		n.setImageViewBitmap(R.id.notificationIcon, nd.icon);
-		n.setImageViewBitmap(R.id.appIcon, nd.appicon);
-		n.setTextViewText(R.id.notificationTitle, nd.title);
-		n.setTextViewText(R.id.notificationText, nd.text);
-		n.setTextViewText(R.id.notificationContent, nd.content);
-		if (nd.count > 1)
-			n.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));
-    	else
-    		n.setTextViewText(R.id.notificationCount, null);
-		Time t = new Time();
-    	t.set(nd.received);
-    	String timeFormat = "%H:%M";
-    	if (!DateFormat.is24HourFormat(this)) timeFormat = "%l:%M%P";
-    	n.setTextViewText(R.id.notificationTime, t.format(timeFormat));	
-    	
-    	return n;
-	}
-	
-	private RemoteViews createSmallNotification(NotificationData nd) 
-	{
-		// create remoteview for small notification
-		RemoteViews n = new RemoteViews(getPackageName(), R.layout.notification_compact);
-		
-		n.setImageViewBitmap(R.id.notificationIcon, nd.appicon);
-		
-		// build single line with title and text
-		CharSequence text;
-		if (nd.text == null)
-			text = nd.title;
-		else if (nd.title == null)
-			text = nd.text;
-		else
-			text = TextUtils.concat(nd.title," ", nd.text);
-		
-		n.setTextViewText(R.id.notificationText, text);
-		Time t = new Time();
-    	t.set(nd.received);
-    	String timeFormat = "%H:%M";
-    	if (!DateFormat.is24HourFormat(this)) timeFormat = "%l:%M%P";
-    	n.setTextViewText(R.id.notificationTime, t.format(timeFormat));	    	
-    	return n;
-	}
-
 	private void turnScreenOn() 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -600,6 +528,7 @@ public class NotificationsService extends AccessibilityService
 		}	
 	}
 
+	@SuppressWarnings("unused")
 	private int recursiveFindFirstImage(ViewGroup v)
 	{
 		for(int i=0; i<v.getChildCount(); i++)

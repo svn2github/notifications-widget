@@ -24,5 +24,10 @@
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAdvancedFragment"
         	android:icon="@drawable/advanced"
             android:title="@string/advancedsettings" />
-
+    
+    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsContactFragment"
+        	android:icon="@android:drawable/ic_dialog_email"
+            android:title="@string/about_contactus_title" 
+            android:summary="@string/contact_summary"/>
+    
 </preference-headers>

@@ -11,6 +11,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -31,13 +32,11 @@ import android.text.format.Time;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -187,6 +186,8 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			autoSwitch.setChecked(false);
 			prefs.edit().putString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, clockStyle).commit();
 			clockSettingsFragment.refreshPreview();
+			// refresh widget
+			sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 		}
 	}
 	
@@ -218,6 +219,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			notificationStyleView.setDisplayedChild(position);
 			prefs.edit().putString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, notificationStyle).commit();
 			notificationsSettingsFragment.refreshPreview();
+			// refresh widget
+			sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+
 		}
 	}
 	
@@ -246,6 +250,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		
 		prefs.edit().putString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, clockStyle).commit();
 		clockSettingsFragment.refreshPreview();
+		// refresh widget
+		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+
 	}	
 	
 	public void onClockPrefChanged(View v)
@@ -255,6 +262,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.edit().putBoolean(widgetMode + "." + settings, checked).commit();
 		clockSettingsFragment.refreshPreview();
+		// refresh widget
+		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+
 	}
 	
 	public void onNotificationPrefChanged(View v)
@@ -264,6 +274,8 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.edit().putBoolean(widgetMode + "." + settings, checked).commit();
 		notificationsSettingsFragment.refreshPreview();
+		// refresh widget
+		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 	}
 
 	public void onColorChoose(View v)
@@ -287,6 +299,8 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			prefs.edit().putInt(widgetMode + "." + settings, colorId).commit();
 			clockSettingsFragment.refreshPreview();
 			notificationsSettingsFragment.refreshPreview();
+			// refresh widget
+			sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 			
 			colorDialog.dismiss();
 		}
@@ -497,7 +511,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				    	minutes.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
 				    }
 				}
-			}
+			}			
 		}
 
 		public void loadSettings() 
@@ -621,6 +635,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 				prefs.edit().putInt(widgetMode + "." + settings, progress).commit();
 				refreshPreview();
+				// refresh widget
+				getActivity().sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+
 			}
 		}
 		
@@ -876,6 +893,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 				prefs.edit().putInt(widgetMode + "." + settings, progress).commit();
 				refreshPreview();
+				// refresh widget
+				getActivity().sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+
 			}
 		}
 		
@@ -902,6 +922,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				prefs.edit().putInt(widgetMode + "." + SettingsActivity.MAX_LINES, 999).commit();
 				
 			refreshPreview();
+			// refresh widget
+			getActivity().sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+
 		}
 
 		@Override

@@ -14,7 +14,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:clickable="true"
-            android:src="@drawable/appicon" />
+            android:src="@drawable/appicon" android:contentDescription="@string/notification_icon"/>
 
         <ImageView
             android:id="@+id/notificationSpinner"
@@ -24,7 +24,7 @@
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:scaleType="fitXY"
-            android:src="@drawable/actionspinner" />
+            android:src="@drawable/actionspinner" android:contentDescription="@string/notification_icon"/>
 	</RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                     android:id="@+id/pinIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/pin" />
+                    android:src="@drawable/pin" android:contentDescription="@string/pin"/>
 
                 <TextView
                     android:id="@+id/notificationCount"
@@ -94,7 +94,7 @@
                     android:id="@+id/appIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/appicon" />
+                    android:src="@drawable/appicon" android:contentDescription="@string/app_icon"/>
 
             </LinearLayout>
 

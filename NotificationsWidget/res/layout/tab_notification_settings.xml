@@ -26,7 +26,7 @@
             android:layout_weight="1"
             android:checked="true"
             android:onClick="onNotificationStyleChanged"
-            android:text="Compact" />
+            android:text="@string/compact" />
 
         <RadioButton
             android:id="@+id/notificationStyleNormalRadio"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onNotificationStyleChanged"
-            android:text="Normal" />
+            android:text="@string/normal" />
 
         <RadioButton
             android:id="@+id/notificationStyleOriginal"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onNotificationStyleChanged"
-            android:text="Large" />
+            android:text="@string/large" />
 
     </RadioGroup>
 
@@ -85,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Opacity"
+                android:text="@string/opacity"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="12sp" />
             
@@ -126,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="Title Color"
+                android:text="@string/title_color"
                 android:textColorLink="@android:color/white" />
         </LinearLayout>
 
@@ -152,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="Text Color"
+                android:text="@string/text_color"
                 android:textColorLink="@android:color/white" />
         </LinearLayout>
 
@@ -178,7 +178,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="Content Color"
+                android:text="@string/content_color"
                 android:textColorLink="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
@@ -197,8 +197,8 @@
             android:onClick="onNotificationPrefChanged"
             android:tag="notification_is_clickable"
             android:text="ToggleButton"
-            android:textOff="Clickable"
-            android:textOn="Clickable" />
+            android:textOff="@string/clickable"
+            android:textOn="@string/clickable" />
 
         <ToggleButton
             android:id="@+id/notificationExpandedToggle"
@@ -208,9 +208,8 @@
             android:layout_weight="1"
             android:onClick="onNotificationPrefChanged"
             android:tag="useexpandedtext"
-            android:text="ToggleButton"
-            android:textOff="Expanded"
-            android:textOn="Expanded" />
+            android:textOff="@string/expanded"
+            android:textOn="@string/expanded" />
 
         <ToggleButton
             android:id="@+id/iconClickableToggle"
@@ -220,9 +219,8 @@
             android:layout_weight="1"
             android:onClick="onNotificationPrefChanged"
             android:tag="notificationicon_is_clickable"
-            android:text="ToggleButton"
-            android:textOff="Icon Menu"
-            android:textOn="Icon Menu" />
+            android:textOff="@string/icon_menu"
+            android:textOn="@string/icon_menu" />
 
     </LinearLayout>
 
@@ -233,13 +231,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max Lines:"
+            android:text="@string/max_lines_"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/maxLinesSpinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:entries="@array/max_lines_entries" />

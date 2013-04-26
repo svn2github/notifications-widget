@@ -1,6 +1,5 @@
 package com.roymam.android.notificationswidget;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-//import android.app.DialogFragment;
 
 public class WizardActivity extends Activity 
 {
@@ -114,7 +112,7 @@ public class WizardActivity extends Activity
 				getPackageManager().getPackageInfo("com.teslacoilsw.widgetlocker", 0);
 
 				// if yes - change step 2 description
-				step2desc = R.string.widget_locker_add_widget;
+				step2desc = R.string.tutorial_help_2_widgetlocker;
 				
 			} catch (NameNotFoundException e) 
 			{				

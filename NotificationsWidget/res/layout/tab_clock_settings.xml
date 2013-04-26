@@ -33,7 +33,7 @@
                 android:checked="true"
                 android:gravity="center_vertical|center_horizontal"
                 android:onClick="onClockStyleChanged"
-                android:text="Small" />
+                android:text="@string/small" />
 
 			<RadioButton
 			    android:id="@+id/radioMedium"
@@ -42,7 +42,7 @@
 			    android:layout_weight="1"
 			    android:gravity="center_vertical|center_horizontal"
 			    android:onClick="onClockStyleChanged"
-			    android:text="Medium" />
+			    android:text="@string/medium" />
 
 			<RadioButton
 			    android:id="@+id/radioLargeClock"
@@ -51,7 +51,7 @@
 			    android:layout_weight="1"
 			    android:gravity="center_vertical|center"
 			    android:onClick="onClockStyleChanged"
-			    android:text="Large" />
+			    android:text="@string/large" />
 
         </RadioGroup>
 
@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="BG Color"
+                    android:text="@string/bg_color"
                     android:textColorLink="@android:color/white" />
             </LinearLayout>
 
@@ -94,7 +94,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Opacity"
+                    android:text="@string/opacity"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textSize="12sp" />
 
@@ -133,7 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="Clock Color"
+                    android:text="@string/clock_color"
                     android:textColorLink="@android:color/white" />
 
             </LinearLayout>
@@ -159,7 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="Date Color"
+                    android:text="@string/date_color"
                     android:textColorLink="@android:color/white" />
 
             </LinearLayout>
@@ -185,7 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="Alarm Color"
+                    android:text="@string/alarm_color"
                     android:textColorLink="@android:color/white" />
 
             </LinearLayout>
@@ -203,8 +203,8 @@
                 android:layout_weight="1"
                 android:onClick="onClockPrefChanged"
                 android:tag="clockisclickable"
-                android:textOff="Clickable"
-                android:textOn="Clickable" />
+                android:textOff="@string/clickable"
+                android:textOn="@string/clickable" />
 
             <ToggleButton
                 android:id="@+id/boldHoursToggle"
@@ -213,8 +213,8 @@
                 android:layout_weight="1"
                 android:onClick="onClockPrefChanged"
                 android:tag="boldhours"
-                android:textOff="Bold Hours"
-                android:textOn="Bold Hours" />
+                android:textOff="@string/bold_hours"
+                android:textOn="@string/bold_hours" />
 
             <ToggleButton
                 android:id="@+id/boldMinutesToggle"
@@ -223,8 +223,8 @@
                 android:layout_weight="1"
                 android:onClick="onClockPrefChanged"
                 android:tag="boldminutes"
-                android:textOff="Bold Minutes"
-                android:textOn="Bold Minutes" />
+                android:textOff="@string/bold_minutes"
+                android:textOn="@string/bold_minutes" />
 
         </LinearLayout>
         <LinearLayout 
@@ -238,7 +238,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="onAutoSwitchChanged"
-                android:text="Auto switch clock size" />
+                android:text="@string/auto_switch_clock_size" />
 
             <CheckBox
                 android:id="@+id/showClearButtonCheckbox"
@@ -247,7 +247,7 @@
                 android:layout_weight="1"
                 android:onClick="onClockPrefChanged"
                 android:tag="showclearbutton"
-                android:text="Show &quot;Clear All&quot; Button" />
+                android:text="@string/show_clear_all_button" />
 
             <CheckBox
                 android:id="@+id/hideClockCheckbox"
@@ -256,7 +256,7 @@
                 android:layout_weight="1"
                 android:onClick="onClockPrefChanged"
                 android:tag="clockhidden"
-                android:text="Hide Clock" />
+                android:text="@string/hide_clock" />
             
         </LinearLayout>
 

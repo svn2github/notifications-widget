@@ -13,7 +13,7 @@
 	        android:layout_height="wrap_content"
 	        android:src="@android:drawable/ic_menu_close_clear_cancel" 
 	        style="?android:attr/buttonBarButtonStyle"
-	        />
+	        android:contentDescription="@string/notification_action_1"/>
     
 	    <ImageButton
 	        android:id="@+id/customAction2"
@@ -21,7 +21,7 @@
 	        android:layout_height="wrap_content"
 	        style="?android:attr/buttonBarButtonStyle"
 	        android:src="@android:drawable/ic_menu_close_clear_cancel" 
-	        />
+	        android:contentDescription="@string/notification_action_2"/>
 	    
 	    <Button
 	        android:id="@+id/actionSettings"
@@ -51,6 +51,6 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        style="?android:attr/buttonBarButtonStyle"
-	        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+	        android:src="@android:drawable/ic_menu_close_clear_cancel" android:contentDescription="@string/clear_notification"/>
 
 	</LinearLayout>

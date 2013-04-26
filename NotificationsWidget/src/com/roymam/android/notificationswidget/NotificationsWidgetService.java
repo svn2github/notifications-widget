@@ -9,10 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -25,8 +23,6 @@ import android.text.style.TypefaceSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class NotificationsWidgetService extends RemoteViewsService 
 {	

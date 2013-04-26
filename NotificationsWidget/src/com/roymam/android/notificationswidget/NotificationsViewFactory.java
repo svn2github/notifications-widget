@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,7 +22,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.widget.Toast;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
@@ -307,9 +305,6 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 			actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
 			actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));			
 		}
-		
-		// add custom app action
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		
 		// if it's expanded large notification - don't show buttons in actions bar 
 		if (/*!(sharedPref.getBoolean(n.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true))
