@@ -31,14 +31,14 @@ public final class R {
     }
     public static final class drawable {
         public static final int actionspinner=0x7f020000;
-        public static final int advanced=0x7f020001;
-        public static final int appicon=0x7f020002;
-        public static final int apps=0x7f020003;
-        public static final int clear=0x7f020004;
-        public static final int content_edit=0x7f020005;
-        public static final int hardware_phone=0x7f020006;
-        public static final int item_selector=0x7f020007;
-        public static final int item_selector_transparent=0x7f020008;
+        public static final int appicon=0x7f020001;
+        public static final int apps=0x7f020002;
+        public static final int clear=0x7f020003;
+        public static final int content_edit=0x7f020004;
+        public static final int hardware_phone=0x7f020005;
+        public static final int item_selector=0x7f020006;
+        public static final int item_selector_transparent=0x7f020007;
+        public static final int persistent=0x7f020008;
         public static final int pin=0x7f020009;
         public static final int preview=0x7f02000a;
         public static final int rollypolyad=0x7f02000b;

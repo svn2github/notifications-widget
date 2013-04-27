@@ -126,9 +126,22 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		
 		ArrayAdapter<CharSequence> list = new ArrayAdapter<CharSequence> (this, R.layout.spinner_widget_mode, android.R.id.text1, modes);
 		list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-						
+		
 	    getActionBar().setListNavigationCallbacks(list, this);
 	    getActionBar().setDisplayShowTitleEnabled(false);
+
+	    // select the last widget mode that was changed
+	    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+	    String widgetMode = prefs.getString(SettingsActivity.LAST_WIDGET_MODE, SettingsActivity.COLLAPSED_WIDGET_MODE);
+	    int itemPosition;
+	    if (widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE))
+	    	itemPosition = 0;
+	    else if (widgetMode.equals(SettingsActivity.EXPANDED_WIDGET_MODE))
+	    	itemPosition =1 ;
+	    else
+	    	itemPosition = 2;
+	    
+	    getActionBar().setSelectedNavigationItem(itemPosition);
 
 	    // Create the adapter that will return a fragment for each of the two
 		// primary sections of the app.

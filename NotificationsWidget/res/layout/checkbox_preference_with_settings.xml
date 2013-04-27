@@ -6,9 +6,11 @@ android:gravity="center_vertical" android:paddingRight="?android:attr/scrollbarS
 
     <ImageView
         android:id="@+android:id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/appicon" android:contentDescription="@string/app_icon"/>
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="@string/app_icon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/appicon" />
 
 <RelativeLayout android:layout_width="0dp"
     android:layout_height="wrap_content" android:layout_marginLeft="15dip"

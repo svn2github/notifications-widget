@@ -66,7 +66,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String NOTIFICATION_ICON_IS_CLICKABLE = "notificationicon_is_clickable";
 	public static final String TITLE_COLOR = "notification_title_color";	
 	public static final String CONTENT_COLOR = "notification_content_color";
-	public static final String NOTIFICATION_BG_COLOR = "notification_bg_color";	
+	public static final String NOTIFICATION_BG_COLOR = "notification_bg_color";
+	public static final String LAST_WIDGET_MODE = "last_widget_mode";	
 	public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_ON_LOCK = "clearonlock";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";

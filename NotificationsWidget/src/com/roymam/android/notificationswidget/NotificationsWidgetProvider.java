@@ -43,7 +43,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static int SETTINGS_ACTION = 2;
     
     public static boolean widgetActive = false;
-	public static boolean widgetExpanded = false;
 	
     public NotificationsWidgetProvider() 
     {
@@ -56,7 +55,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	   //notifyReady(context);
 	   super.onEnabled(context);
        // register clock for tick events
-	   context.getApplicationContext().registerReceiver(this, new IntentFilter(Intent.ACTION_TIME_TICK));
+	   //context.getApplicationContext().registerReceiver(this, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
     
     @Override
@@ -200,39 +199,35 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		int currHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 		int hostCategory = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String widgetMode;
 		
 		// if the widget is collapsed on lock screen
 		if (currHeight <=134 && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
 		{
 			// store this app widget id as collapsed mode
-			prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.COLLAPSED_WIDGET_MODE).commit();
-			
-			// refresh view if state changed
-			if (widgetExpanded)
-			{
-				widgetExpanded = false;
-				updateWidget(context, appWidgetManager, true);
-			}
+			widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
 		}
 		else if (hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
 		{
-			// store this app widget id as expanded mode			
-			prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.EXPANDED_WIDGET_MODE).commit();
-			// refresh view if state changed
-			if (!widgetExpanded)
-			{
-				widgetExpanded = true;
-				updateWidget(context, appWidgetManager, true);
-			}
+			// store this app widget id as expanded mode
+			widgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
 		}
 		else
 		{
-			prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.HOME_WIDGET_MODE).commit();
-			updateWidget(context, appWidgetManager, true);
+			widgetMode = SettingsActivity.HOME_WIDGET_MODE;
 		}
+		
+		prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, widgetMode).commit();
+		
+		// refresh view if state changed
+		String lastWidgetMode = prefs.getString(SettingsActivity.LAST_WIDGET_MODE, SettingsActivity.EXPANDED_WIDGET_MODE);
+		
+		if (!widgetMode.equals(lastWidgetMode))
+		{
+			prefs.edit().putString(SettingsActivity.LAST_WIDGET_MODE, widgetMode).commit();
+		}
+		updateWidget(context, appWidgetManager, true);
 	}
-
-	
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 

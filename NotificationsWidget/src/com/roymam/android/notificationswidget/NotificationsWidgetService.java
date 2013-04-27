@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.PendingIntent;
+import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -23,17 +25,20 @@ import android.text.style.TypefaceSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.RemoteViewsService.RemoteViewsFactory;
 
 public class NotificationsWidgetService extends RemoteViewsService 
 {	
 	public static final String REFRESH_LIST = "com.roymam.android.notificationswidget.REFRESH_LIST";
-
+	private static RemoteViews widget = null;
+	
 	@Override
 	public void onStart(Intent intent, int startId) 
 	{
 		int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 		boolean refreshList = intent.getBooleanExtra(REFRESH_LIST, false);
-		    
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		   
 		for (int widgetId : allWidgetIds) 
 		{
 			updateWidget(widgetId);
@@ -73,7 +78,8 @@ public class NotificationsWidgetService extends RemoteViewsService
 		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
-		RemoteViews widget=new RemoteViews(this.getPackageName(), R.layout.widget_layout);
+		if (widget == null)
+			widget=new RemoteViews(this.getPackageName(), R.layout.widget_layout);
 		
 		// hide loading spinner
 		widget.setViewVisibility(R.id.loadingSpinner, View.GONE);
@@ -462,18 +468,10 @@ public class NotificationsWidgetService extends RemoteViewsService
 	    }
 	    return clock;
 	}
-
-	/*@Override
-	public int onStartCommand(Intent intent, int flags, int startId) 
-	{
-		return START_STICKY;
-	}*/
-
-	@Override
-	  public RemoteViewsFactory onGetViewFactory(Intent intent) 
-	  {  
-		  return(new NotificationsViewFactory(this.getApplicationContext(), intent));
-	  }
-
 	
+	@Override
+	public RemoteViewsFactory onGetViewFactory(Intent intent) 
+	{
+		return new NotificationsViewFactory(this.getApplicationContext(), intent);
+	}
 }

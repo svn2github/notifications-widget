@@ -2,10 +2,10 @@
 <resources>
 
     <!-- General Strings -->
-    <string name="title">Notifications Widget</string>
-    <string name="settingstitle">Notifications Widget Settings</string>
+    <string name="title">NiLS</string>
+    <string name="settingstitle">NiLS Settings</string>
     <string name="accessibility_service_description">Enable to allow NotificationsWidget receive all incoming notifications. The disclaimer displayed when enabling the accessibility service is a standard Android message. This app DOES NOT collect any of your data. Please note that this app doesn\'t have internet access permission so it actually cannot send the data anywhere.</string>
-    <string name="notifications_service">Notifications Widget</string>
+    <string name="notifications_service">NiLS Service</string>
 
     <!-- Settings Page -->
     <string name="generalsettings">General Settings</string>
@@ -65,29 +65,29 @@
         <item>6</item>
         <item>999</item>
     </string-array>
-    <string name="service_inactive_text">Service is inactive. please enable \"Notifications Widget\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>
+    <string name="service_inactive_text">Service is inactive. please enable \"NiLS Service\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>
 
     <!-- Wizard Strings -->
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
-    <string name="title_activity_main">Notifications Widget</string>
-    <string name="tutorial_help_1">When Accessibility Settings opens, select \"Notifications Widget\" and switch it from \"Off\" to \"On\".  Touch \"OK\" in the warning dialog</string>
-    <string name="tutorial_help_2">After locking the screen, remove the standard Android clock widget by swiping it down to expanded the widget and drag it to the top to remove it, then click the + icon, choose \"Notifications Widget\" from the widget list</string>
+    <string name="title_activity_main">NiLS</string>
+    <string name="tutorial_help_1">When Accessibility Settings opens, select \"NiLS Service\" and switch it from \"Off\" to \"On\".  Touch \"OK\" in the warning dialog</string>
+    <string name="tutorial_help_2">After locking the screen, remove the standard Android clock widget by swiping it down to expanded the widget and drag it to the top to remove it, then click the + icon, choose \"NiLS Widget\" from the widget list</string>
     <string name="tutorial_help_2_widgetlocker">Add the widget to your home screen. If you have WidgetLocker installed - launch it and long touch an empty area to add the widget</string>
     <string name="tutorial_help_3">That\'s all. if you have any questions or issues - don\'t hesitate to contact us at support@roymam.com</string>
-    <string name="tutorial_step_1">Enable \"Notifications Widget\" service on Accessibility Settings</string>
-    <string name="tutorial_step_2">Add \"Notifications Widget\" widget</string>
-    <string name="tutorial_step_3">Customize \"Notifications Widget\" in \"Settings\" page</string>
-    <string name="tutorial_toast_1">Enable \"Notifications Widget\" service and hit back to return to the wizard</string>
+    <string name="tutorial_step_1">Enable \"NiLS Service\" on Accessibility Settings</string>
+    <string name="tutorial_step_2">Add \"NiLS\" widget</string>
+    <string name="tutorial_step_3">Customize \"NiLS\" in \"Settings\" page</string>
+    <string name="tutorial_toast_1">Enable \"NiLS Service\" and hit back to return to the wizard</string>
     <string name="tutorial_toast_2">You should lock the screen manually and then add the widget</string>
-    <string name="welcome_text">Welcome to Notifications Widget, Let\'s get started.</string>
+    <string name="welcome_text">Welcome to NiLS - Notifications widget, Let\'s get started.</string>
     <string name="tutorial_step_1_title">Enable Service</string>
     <string name="tutorial_step_2_title">Add Widget</string>
     <string name="tutorial_step_3_title">Customize</string>
 
     <!-- About Dialog -->
-    <string name="about_title">NotificationsWidget</string>
-    <string name="about_subtitle">NotificationsWidget is developed by Roymam</string>
+    <string name="about_title">NןLS</string>
+    <string name="about_subtitle">NןLS is developed by Roymam</string>
     <string name="about_content">The project is hosted on:\nhttp://code.google.com/p/notifications-widget/\nFell free to open issues for any bug report or feature request\n\nIf you would like to support the development of this app you may want to try our game below:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
     <string name="about_contactus_title">Contact us</string>
@@ -237,7 +237,7 @@
     <string name="bold_hours">Bold Hours</string> 
     <string name="bold_minutes">Bold Minutes</string> 
     <string name="auto_switch_clock_size">Auto switch clock size</string> 
-    <string name="show_clear_all_button">Show &amp;quot;Clear All&amp;quot; Button</string> 
+    <string name="show_clear_all_button">Show &quot;Clear All&quot; Button</string> 
     <string name="hide_clock">Hide Clock</string> 
     <string name="compact">Compact</string> 
     <string name="normal">Normal</string> 
