@@ -26,11 +26,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
@@ -44,6 +44,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static int SETTINGS_ACTION = 2;
     
     public static boolean widgetActive = false;
+    public static boolean widgetExpanded = false;
+	private static String lasttime = "";
 	
     public NotificationsWidgetProvider() 
     {
@@ -54,6 +56,9 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     {    
 	   widgetActive = true;
 	   super.onEnabled(context);
+	   
+	   IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
+	   context.getApplicationContext().registerReceiver(this, intentFilter);
     }
     
     @Override
@@ -69,8 +74,9 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		super.onDisabled(context);
 	}
 
-	public void updateWidget(Context ctx, AppWidgetManager appWidgetManager, boolean refreshList)
+	public void updateWidget(Context ctx, boolean refreshList)
 	{
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ctx.getApplicationContext());
 		ComponentName thisWidget = new ComponentName(ctx, NotificationsWidgetProvider.class);
 		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
@@ -86,26 +92,34 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	
 	@Override
     public void onReceive(Context ctx, Intent intent) 
-    {  
-		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ctx.getApplicationContext());
-		NotificationsService ns = NotificationsService.getSharedInstance();
-	    
+    {  	    
     	if (intent.getAction().equals(CLEAR_ALL))
     	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
+
     		if (ns != null)
     	    {
     	    	ns.clearAllNotifications();
     	    	ns.setSelectedIndex(-1);
-    	    	updateWidget(ctx,appWidgetManager, true);
+    	    	updateWidget(ctx, true);
     	    }
     	}
     	else if (intent.getAction().equals(Intent.ACTION_TIME_TICK) ||
     			 intent.getAction().equals(UPDATE_CLOCK))
     	{
-    		updateWidget(ctx, appWidgetManager, false);			
+    		Time t = new Time();
+    	    t.setToNow();    	    
+    		String s = t.format("%H%M");
+        	// update widget only if time has been changed
+    		if (!s.equals(lasttime))
+    		{
+    			lasttime = s;
+        		updateWidget(ctx, false);			
+    		}
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.LOCKED"))
     	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
     		if (ns!=null)
     		{
     			ns.setDeviceIsLocked();
@@ -114,6 +128,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.UNLOCKED"))
     	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
     		if (ns != null)
     		{
     			ns.setDeviceIsUnlocked();
@@ -123,6 +138,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	}
     	else if (intent.getAction().equals("android.intent.action.SCREEN_ON"))
     	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
     		if (ns != null)
     		{
     			// if the screen is on, so the device is currently ocked (until USER_PRESENT will trigger)
@@ -131,6 +147,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.DISABLED"))
     	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
     		if (ns != null)
     		{
     			ns.setWidgetLockerEnabled(false);
@@ -138,6 +155,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.ENABLED"))
     	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
     		if (ns != null)
     		{
     			ns.setWidgetLockerEnabled(true);
@@ -145,6 +163,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	}
     	else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT))
     	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
     		if (ns != null)
     		{
     			if (!ns.isWidgetLockerEnabled())
@@ -155,7 +174,8 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		}
     	}
     	else if (intent.getAction().equals(PERFORM_ACTION))
-    	{   
+    	{
+    		NotificationsService ns = NotificationsService.getSharedInstance();
     		int pos = intent.getIntExtra(NOTIFICATION_INDEX, -1);
     		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,-1);
     		    		
@@ -186,7 +206,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    		{
 	    			ns.togglePinNotification(pos);
 	    		}	    		
-	    		updateWidget(ctx, appWidgetManager, true);
+	    		updateWidget(ctx, true);
     		}
     	}    	
     	super.onReceive(ctx, intent);
@@ -201,21 +221,27 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
                 res.getDisplayMetrics().density);
 		int hostCategory = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY);
 	
-		// Build the intent to call the service
-	    Intent intent = new Intent(context.getApplicationContext(), NotificationsWidgetService.class);
-	    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-	    intent.putExtra(NotificationsWidgetService.IS_EXPANDED, isExpanded);
-	    intent.putExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, hostCategory);
-	    intent.putExtra(NotificationsWidgetService.ACTION, NotificationsWidgetService.ACTION_OPTIONS_CHANGED);
-
-	    // Update the widgets via the service
-	    context.startService(intent);
+		if ((isExpanded && !widgetExpanded || !isExpanded && widgetExpanded) && 
+				hostCategory==AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD ||
+				hostCategory==AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN )
+		{
+			widgetExpanded = isExpanded;			
+			// Build the intent to call the service
+		    Intent intent = new Intent(context.getApplicationContext(), NotificationsWidgetService.class);
+		    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+		    intent.putExtra(NotificationsWidgetService.IS_EXPANDED, isExpanded);
+		    intent.putExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, hostCategory);
+		    intent.putExtra(NotificationsWidgetService.ACTION, NotificationsWidgetService.ACTION_OPTIONS_CHANGED);
+	
+		    // Update the widgets via the service
+		    context.startService(intent);
+		}
 	}
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
     {   
-    	updateWidget(ctxt, appWidgetManager, false);
+    	updateWidget(ctxt, false);
     	widgetActive = true;
     	super.onUpdate(ctxt, appWidgetManager, appWidgetIds);    		
     }
