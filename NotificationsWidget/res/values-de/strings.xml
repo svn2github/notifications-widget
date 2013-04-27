@@ -27,9 +27,7 @@
     <string name="delayed_screenon">Verzögerte automatische Displayaktivierung</string>
     <string name="delayed_screenon_summary">Aktiviert das Display bei neuer Benachrichtgung erst, wenn Sie das Gerät aus der Tasche nehmen</string>
     <string name="extract_expanded_text">Verwende erweiterte Benachrichtigungen</string>
-	<string name="extract_expanded_text_summary">Nur Android 4.1+: Verwende erweiterte Benachrichtigungen, wenn verfügbar</string>		
-    
-        
+	<string name="extract_expanded_text_summary">Nur Android 4.1+: Verwende erweiterte Benachrichtigungen, wenn verfügbar</string>		            
     <string name="turnscreenon">Automatische Displayaktivierung</string>
     <string name="turnscreenon_summary">Schaltet das Display bei neuer Benachrichtigung ein</string>
     <string name="disableproximity">Näherungssensor deaktivieren</string>

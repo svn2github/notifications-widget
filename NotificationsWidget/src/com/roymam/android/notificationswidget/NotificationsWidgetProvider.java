@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -52,10 +53,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public void onEnabled(Context context) 
     {    
 	   widgetActive = true;
-	   //notifyReady(context);
 	   super.onEnabled(context);
-       // register clock for tick events
-	   //context.getApplicationContext().registerReceiver(this, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
     
     @Override
@@ -80,6 +78,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    Intent intent = new Intent(ctx.getApplicationContext(), NotificationsWidgetService.class);
 	    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
 	    intent.putExtra(NotificationsWidgetService.REFRESH_LIST, refreshList);
+	    intent.putExtra(NotificationsWidgetService.ACTION, NotificationsWidgetService.ACTION_RENDER_WIDGETS);
 
 	    // Update the widgets via the service
 	    ctx.startService(intent);
@@ -196,37 +195,21 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	@Override
 	public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) 
 	{
-		int currHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+		Resources res = context.getResources();
+		boolean isExpanded = (newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+                >= res.getDimensionPixelSize(R.dimen.min_expanded_height) /
+                res.getDisplayMetrics().density);
 		int hostCategory = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		String widgetMode;
-		
-		// if the widget is collapsed on lock screen
-		if (currHeight <=134 && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
-		{
-			// store this app widget id as collapsed mode
-			widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
-		}
-		else if (hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
-		{
-			// store this app widget id as expanded mode
-			widgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
-		}
-		else
-		{
-			widgetMode = SettingsActivity.HOME_WIDGET_MODE;
-		}
-		
-		prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, widgetMode).commit();
-		
-		// refresh view if state changed
-		String lastWidgetMode = prefs.getString(SettingsActivity.LAST_WIDGET_MODE, SettingsActivity.EXPANDED_WIDGET_MODE);
-		
-		if (!widgetMode.equals(lastWidgetMode))
-		{
-			prefs.edit().putString(SettingsActivity.LAST_WIDGET_MODE, widgetMode).commit();
-		}
-		updateWidget(context, appWidgetManager, true);
+	
+		// Build the intent to call the service
+	    Intent intent = new Intent(context.getApplicationContext(), NotificationsWidgetService.class);
+	    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+	    intent.putExtra(NotificationsWidgetService.IS_EXPANDED, isExpanded);
+	    intent.putExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, hostCategory);
+	    intent.putExtra(NotificationsWidgetService.ACTION, NotificationsWidgetService.ACTION_OPTIONS_CHANGED);
+
+	    // Update the widgets via the service
+	    context.startService(intent);
 	}
 
     @Override

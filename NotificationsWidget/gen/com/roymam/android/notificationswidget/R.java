@@ -24,6 +24,7 @@ public final class R {
     public static final class attr {
     }
     public static final class dimen {
+        public static final int min_expanded_height=0x7f050004;
         public static final int widget_margin_bottom=0x7f050001;
         public static final int widget_margin_left=0x7f050002;
         public static final int widget_margin_right=0x7f050003;
