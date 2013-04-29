@@ -132,7 +132,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 
 	    // select the last widget mode that was changed
 	    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-	    String widgetMode = prefs.getString(SettingsActivity.LAST_WIDGET_MODE, SettingsActivity.COLLAPSED_WIDGET_MODE);
+	    String widgetMode = prefs.getString(SettingsActivity.LAST_WIDGET_MODE, SettingsActivity.EXPANDED_WIDGET_MODE);
 	    int itemPosition;
 	    if (widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE))
 	    	itemPosition = 0;

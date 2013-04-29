@@ -16,8 +16,9 @@
 
 package com.roymam.android.notificationswidget;
 
-import android.app.Notification;
-import android.app.NotificationManager;
+import java.util.Calendar;
+
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -25,15 +26,14 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.widget.Toast;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
+	private static final String TAG = "NiLS";
 	public static String NOTIFICATION_INDEX = "com.roymam.android.notificationswidget.notification_index";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
@@ -54,17 +54,48 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     @Override
     public void onEnabled(Context context) 
     {    
+       super.onEnabled(context);
 	   widgetActive = true;
-	   super.onEnabled(context);
 	   
-	   IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
-	   context.getApplicationContext().registerReceiver(this, intentFilter);
+	   int[] remainingIds = AppWidgetManager.getInstance(context).getAppWidgetIds(
+			   				new ComponentName(context, NotificationsWidgetProvider.class));
+	   // start the clock timer only if it's the first widget
+	   if (remainingIds == null || remainingIds.length == 1) 
+	   {
+	    	Intent intent = new Intent(NotificationsWidgetProvider.UPDATE_CLOCK);
+	    	PendingIntent clockPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, 0);
+	        AlarmManager alarmManager = (AlarmManager)context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.setTimeInMillis(System.currentTimeMillis());
+	        calendar.add(Calendar.SECOND, 10);
+	        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 10*1000, clockPendingIntent);
+	 	   // register with ACTION_TIME_TICK - Currently disabled, using normal alarm
+	 	   // IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);	    	
+	 	   // context.getApplicationContext().registerReceiver(this, intentFilter);
+	       // Toast.makeText(context, "Timer started!", Toast.LENGTH_SHORT).show();
+	   }
+	   else
+	   {
+		   //Toast.makeText(context, "Timer already started!", Toast.LENGTH_SHORT).show();
+	   }
     }
     
     @Override
 	public void onDeleted(Context context, int[] appWidgetIds) 
     {
 		super.onDeleted(context, appWidgetIds);
+		int[] remainingIds = AppWidgetManager.getInstance(context).getAppWidgetIds(
+                new ComponentName(context, NotificationsWidgetProvider.class));
+        if (remainingIds == null || remainingIds.length == 0) 
+        {
+            context.stopService(new Intent(context, NotificationsWidgetService.class));
+            // stop timer
+	    	Intent intent = new Intent(NotificationsWidgetProvider.UPDATE_CLOCK);
+	    	PendingIntent clockPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, 0);
+	        AlarmManager alarmManager = (AlarmManager)context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+	        alarmManager.cancel(clockPendingIntent);
+	        //Toast.makeText(context, "Timer stopped!!", Toast.LENGTH_SHORT).show();
+        }
 	}
 
 	@Override
@@ -72,6 +103,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	{
 		widgetActive = false;
 		super.onDisabled(context);
+		context.stopService(new Intent(context, NotificationsWidgetService.class));
 	}
 
 	public void updateWidget(Context ctx, boolean refreshList)
@@ -245,34 +277,5 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	widgetActive = true;
     	super.onUpdate(ctxt, appWidgetManager, appWidgetIds);    		
     }
-    
-    public void notifyReady(Context ctx)
-    {
-		NotificationsService ns = NotificationsService.getSharedInstance();
-
-    	NotificationCompat.Builder mBuilder =
-    	        new NotificationCompat.Builder(ctx)
-    	        .setSmallIcon(R.drawable.appicon)
-    	        .setContentTitle("Congratulations!")
-    	        .setContentText("You have successfully added NotificationsWidget")
-    	        .setTicker("You have successfully added NotificationsWidget");
-
-    	Intent resultIntent = new Intent(ctx, MainActivity.class);    	
-    	PendingIntent resultPendingIntent =
-    			PendingIntent.getActivity(ctx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    	mBuilder.setContentIntent(resultPendingIntent);
-
-    	// mId allows you to update the notification later on.
-    	Notification n = mBuilder.build();
-    	if (ns!=null)
-    	{
-    		ns.handleNotification(n, ctx.getPackageName());
-    	}
-    	else
-    	{
-        	NotificationManager mNotificationManager =
-            	    (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-    		mNotificationManager.notify(0, mBuilder.build());
-    	}
-    }
+      
 }

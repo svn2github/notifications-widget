@@ -31,12 +31,13 @@ public class NotificationsWidgetService extends RemoteViewsService
 	public static final String IS_EXPANDED = "com.roymam.android.notificationswidget.IS_EXPANDED";
 	public static final String ACTION = "com.roymam.android.notificationswidget.ACTION";
 	public static final int ACTION_RENDER_WIDGETS = 0;
-	public static final int ACTION_OPTIONS_CHANGED = 1;
-	
+	public static final int ACTION_OPTIONS_CHANGED = 1;	
 	private static RemoteViews widget = null;
 	
+	
+
 	@Override
-	public void onStart(Intent intent, int startId) 
+	public int onStartCommand(Intent intent, int flags, int startId) 
 	{
 		int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 		boolean refreshList = intent.getBooleanExtra(REFRESH_LIST, false);
@@ -85,7 +86,7 @@ public class NotificationsWidgetService extends RemoteViewsService
 				AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(appWidgetId, R.id.notificationsListView);
 			}
 		}
-		stopSelf();
+		return START_STICKY;
 	}
 
 	private void updateClearOnUnlockState() 

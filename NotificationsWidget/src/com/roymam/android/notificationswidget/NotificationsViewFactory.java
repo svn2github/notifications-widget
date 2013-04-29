@@ -226,12 +226,12 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		if (contentColor != Color.TRANSPARENT)
 			n.setTextViewText(R.id.notificationContent, nd.content);
 		else
-			n.setTextViewText(R.id.notificationContent, null);
+			n.setTextViewText(R.id.notificationContent, "");
 		
 		if (nd.count > 1)
 			n.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));
     	else
-    		n.setTextViewText(R.id.notificationCount, null);
+    		n.setTextViewText(R.id.notificationCount, "");
 		
 		// set time
 		Time t = new Time();
@@ -316,8 +316,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					actionBar.setImageViewBitmap(R.id.customAction1, n.actions[0].drawable);
 					actionBar.setOnClickPendingIntent(R.id.customAction1, n.actions[0].actionIntent);
 					actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
-					actionBar.setTextViewText(R.id.actionPin, null);
-					actionBar.setTextViewText(R.id.actionSettings, null);
+					actionBar.setTextViewText(R.id.actionPin, "");
+					actionBar.setTextViewText(R.id.actionSettings, "");
 				}
 				else
 				{
@@ -329,8 +329,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 					actionBar.setImageViewBitmap(R.id.customAction2, n.actions[1].drawable);
 					actionBar.setOnClickPendingIntent(R.id.customAction2, n.actions[1].actionIntent);
 					actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
-					actionBar.setTextViewText(R.id.actionPin, null);
-					actionBar.setTextViewText(R.id.actionSettings, null);
+					actionBar.setTextViewText(R.id.actionPin, "");
+					actionBar.setTextViewText(R.id.actionSettings, "");
 				}
 				else
 				{
