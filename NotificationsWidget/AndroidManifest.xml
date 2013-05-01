@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="136"
-    android:versionName="1.0.4" >
+    android:versionCode="138"
+    android:versionName="1.0.4.2" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -87,9 +87,11 @@
 
         <!-- <service android:name="com.roymam.android.notificationswidget.ClockService"/>-->
         <service
-            android:name="com.roymam.android.notificationswidget.NotificationsWidgetService"
+            android:name="com.roymam.android.notificationswidget.NotificationsRemoteViewsFactoryService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:launchMode="singleTask"/>
+            android:exported="false"/>
+        
+        <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService"/>        
         
         <service
             android:name="com.roymam.android.notificationswidget.NotificationsService"

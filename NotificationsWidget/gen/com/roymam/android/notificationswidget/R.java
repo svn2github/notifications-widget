@@ -178,186 +178,188 @@ public final class R {
         public static final int settings_menu=0x7f090003;
     }
     public static final class string {
-        public static final int about_ad_url=0x7f060036;
-        public static final int about_close=0x7f060039;
-        public static final int about_contactus_email=0x7f060038;
-        public static final int about_contactus_title=0x7f060037;
-        public static final int about_content=0x7f060035;
-        public static final int about_subtitle=0x7f060034;
+        public static final int about_ad_url=0x7f060038;
+        public static final int about_close=0x7f06003b;
+        public static final int about_contactus_email=0x7f06003a;
+        public static final int about_contactus_title=0x7f060039;
+        public static final int about_content=0x7f060037;
+        public static final int about_subtitle=0x7f060036;
         /**  About Dialog 
   About Dialog 
          */
-        public static final int about_title=0x7f060033;
+        public static final int about_title=0x7f060035;
         public static final int accessibility_service_description=0x7f060002;
-        public static final int action_bar=0x7f060064;
+        public static final int action_bar=0x7f060066;
         public static final int advanced=0x7f060008;
         public static final int advancedsettings=0x7f060005;
-        public static final int alarm_color=0x7f06007d;
-        public static final int app_icon=0x7f060066;
-        public static final int app_specific_help=0x7f060056;
-        public static final int app_specific_help_details=0x7f060057;
+        public static final int alarm_color=0x7f06007f;
+        public static final int app_icon=0x7f060068;
+        public static final int app_specific_help=0x7f060058;
+        public static final int app_specific_help_details=0x7f060059;
         /**  App specific settings 
  App specific settings 
          */
-        public static final int app_specific_settings_title=0x7f060049;
+        public static final int app_specific_settings_title=0x7f06004b;
         public static final int appearance=0x7f060007;
-        public static final int auto_hide_persistent_notification=0x7f06005e;
-        public static final int auto_hide_persistent_notification_summary=0x7f06005f;
-        public static final int auto_switch_clock_size=0x7f060081;
+        public static final int auto_hide_persistent_notification=0x7f060060;
+        public static final int auto_hide_persistent_notification_summary=0x7f060061;
+        public static final int auto_switch_clock_size=0x7f060083;
         public static final int behavior=0x7f060006;
-        public static final int bg_color=0x7f060079;
-        public static final int bold_hours=0x7f06007f;
-        public static final int bold_minutes=0x7f060080;
+        public static final int bg_color=0x7f06007b;
+        public static final int bold_hours=0x7f060081;
+        public static final int bold_minutes=0x7f060082;
         /**  strings for accessibility 
  strings for accessibility 
          */
-        public static final int clear_all_notifications=0x7f060063;
-        public static final int clear_app_settings=0x7f060054;
-        public static final int clear_app_summary=0x7f060055;
-        public static final int clear_notification=0x7f06008d;
+        public static final int clear_all_notifications=0x7f060065;
+        public static final int clear_app_settings=0x7f060056;
+        public static final int clear_app_summary=0x7f060057;
+        public static final int clear_notification=0x7f06008f;
         public static final int clearonclear=0x7f06001e;
         public static final int clearonclear_summary=0x7f06001f;
         public static final int clearonlock=0x7f060016;
         public static final int clearonlock_summary=0x7f060017;
         public static final int clearonunlock=0x7f060014;
         public static final int clearonunlock_summary=0x7f060015;
-        public static final int clickable=0x7f06007e;
-        public static final int clock_color=0x7f06007b;
-        public static final int collapsed=0x7f06006a;
+        public static final int clickable=0x7f060080;
+        public static final int clock_color=0x7f06007d;
+        public static final int collapsed=0x7f06006c;
         public static final int collectonunlock=0x7f060018;
         public static final int collectonunlock_summary=0x7f060019;
-        public static final int compact=0x7f060084;
-        public static final int contact_ask=0x7f06003b;
-        public static final int contact_report=0x7f06003d;
-        public static final int contact_report_link=0x7f06003f;
-        public static final int contact_request=0x7f06003c;
-        public static final int contact_request_link=0x7f06003e;
+        public static final int compact=0x7f060086;
+        public static final int contact_ask=0x7f06003d;
+        public static final int contact_report=0x7f06003f;
+        public static final int contact_report_link=0x7f060041;
+        public static final int contact_request=0x7f06003e;
+        public static final int contact_request_link=0x7f060040;
         /**   Contact Us Menu 
   Contact Us Menu 
          */
-        public static final int contact_summary=0x7f06003a;
-        public static final int content_color=0x7f060088;
-        public static final int content_demo_text=0x7f060072;
-        public static final int content_expanded_demo_text=0x7f060073;
-        public static final int count_demo_text=0x7f060075;
-        public static final int date_color=0x7f06007c;
+        public static final int contact_summary=0x7f06003c;
+        public static final int content_color=0x7f06008a;
+        public static final int content_demo_text=0x7f060074;
+        public static final int content_expanded_demo_text=0x7f060075;
+        public static final int count_demo_text=0x7f060077;
+        public static final int date_color=0x7f06007e;
         public static final int delayed_screenon=0x7f060012;
         public static final int delayed_screenon_summary=0x7f060013;
+        public static final int disable_auto_switch=0x7f060023;
+        public static final int disable_auto_switch_summary=0x7f060022;
         public static final int disableproximity=0x7f06000c;
         public static final int disableproximity_nexus4_warning=0x7f06000e;
         public static final int disableproximity_nexus4_warning_title=0x7f06000f;
         public static final int disableproximity_summary=0x7f06000d;
-        public static final int expanded=0x7f06006b;
-        public static final int extract_expanded_text=0x7f06004e;
-        public static final int extract_expanded_text_summary=0x7f06004f;
+        public static final int expanded=0x7f06006d;
+        public static final int extract_expanded_text=0x7f060050;
+        public static final int extract_expanded_text_summary=0x7f060051;
         /**  Error Messages 
   Error Messages 
          */
-        public static final int failed_to_monitor_clear_button=0x7f060045;
+        public static final int failed_to_monitor_clear_button=0x7f060047;
         /**  Settings Page 
  Settings Page 
          */
         public static final int generalsettings=0x7f060004;
-        public static final int hide_clock=0x7f060083;
-        public static final int hide_when_notifications=0x7f06005c;
-        public static final int hide_when_notifications_summary=0x7f06005d;
-        public static final int how_to_use=0x7f060060;
-        public static final int icon_menu=0x7f060089;
-        public static final int ignore_notifications=0x7f06004a;
-        public static final int ignore_notifications_summary=0x7f06004b;
+        public static final int hide_clock=0x7f060085;
+        public static final int hide_when_notifications=0x7f06005e;
+        public static final int hide_when_notifications_summary=0x7f06005f;
+        public static final int how_to_use=0x7f060062;
+        public static final int icon_menu=0x7f06008b;
+        public static final int ignore_notifications=0x7f06004c;
+        public static final int ignore_notifications_summary=0x7f06004d;
         public static final int keep_on_foreground=0x7f060020;
         public static final int keep_on_foreground_summary=0x7f060021;
-        public static final int large=0x7f060078;
+        public static final int large=0x7f06007a;
         public static final int max_lines=0x7f06001b;
-        public static final int max_lines_=0x7f06008a;
-        public static final int medium=0x7f060077;
-        public static final int menu_about=0x7f060024;
+        public static final int max_lines_=0x7f06008c;
+        public static final int medium=0x7f060079;
+        public static final int menu_about=0x7f060026;
         /**  Wizard Strings 
   Wizard Strings 
          */
-        public static final int menu_settings=0x7f060023;
+        public static final int menu_settings=0x7f060025;
         public static final int no=0x7f060011;
-        public static final int no_widget_locker_add_widget=0x7f060044;
-        public static final int normal=0x7f060085;
-        public static final int notification_action_1=0x7f06008b;
-        public static final int notification_action_2=0x7f06008c;
-        public static final int notification_height=0x7f06005b;
-        public static final int notification_icon=0x7f060065;
+        public static final int no_widget_locker_add_widget=0x7f060046;
+        public static final int normal=0x7f060087;
+        public static final int notification_action_1=0x7f06008d;
+        public static final int notification_action_2=0x7f06008e;
+        public static final int notification_height=0x7f06005d;
+        public static final int notification_icon=0x7f060067;
         public static final int notifications=0x7f060009;
         public static final int notifications_service=0x7f060003;
-        public static final int opacity=0x7f06007a;
+        public static final int opacity=0x7f06007c;
         public static final int order_notifications_by=0x7f06001a;
         /**  Persistent Notifications 
   Persistent Notifications 
          */
-        public static final int persistent_notifications=0x7f060058;
-        public static final int persistent_notifications_help=0x7f060061;
-        public static final int persistent_notifications_help_details=0x7f060062;
-        public static final int pin=0x7f060047;
-        public static final int service_inactive_text=0x7f060022;
-        public static final int set_app_priority=0x7f060052;
-        public static final int set_app_priority_summary=0x7f060053;
+        public static final int persistent_notifications=0x7f06005a;
+        public static final int persistent_notifications_help=0x7f060063;
+        public static final int persistent_notifications_help_details=0x7f060064;
+        public static final int pin=0x7f060049;
+        public static final int service_inactive_text=0x7f060024;
+        public static final int set_app_priority=0x7f060054;
+        public static final int set_app_priority_summary=0x7f060055;
         /**  Action Bar 
   Action Bar 
          */
-        public static final int settings=0x7f060046;
+        public static final int settings=0x7f060048;
         public static final int settingstitle=0x7f060001;
-        public static final int show_clear_all_button=0x7f060082;
+        public static final int show_clear_all_button=0x7f060084;
         public static final int show_full_notification=0x7f06001c;
         public static final int show_full_notification_summary=0x7f06001d;
-        public static final int show_only_last_event=0x7f060050;
-        public static final int show_only_last_event_summary=0x7f060051;
-        public static final int show_only_last_notification=0x7f06004c;
-        public static final int show_only_last_notification_summary=0x7f06004d;
-        public static final int show_persistent_notifications=0x7f060059;
-        public static final int show_persistent_notifications_summary=0x7f06005a;
-        public static final int small=0x7f060076;
-        public static final int text_color=0x7f060087;
-        public static final int text_demo_text=0x7f060071;
-        public static final int time_demo_text=0x7f060074;
+        public static final int show_only_last_event=0x7f060052;
+        public static final int show_only_last_event_summary=0x7f060053;
+        public static final int show_only_last_notification=0x7f06004e;
+        public static final int show_only_last_notification_summary=0x7f06004f;
+        public static final int show_persistent_notifications=0x7f06005b;
+        public static final int show_persistent_notifications_summary=0x7f06005c;
+        public static final int small=0x7f060078;
+        public static final int text_color=0x7f060089;
+        public static final int text_demo_text=0x7f060073;
+        public static final int time_demo_text=0x7f060076;
         /**  General Strings 
  General Strings 
          */
         public static final int title=0x7f060000;
-        public static final int title_activity_appearance=0x7f060069;
-        public static final int title_activity_main=0x7f060025;
-        public static final int title_appname_demo_text=0x7f060070;
-        public static final int title_color=0x7f060086;
+        public static final int title_activity_appearance=0x7f06006b;
+        public static final int title_activity_main=0x7f060027;
+        public static final int title_appname_demo_text=0x7f060072;
+        public static final int title_color=0x7f060088;
         /**  Appearance settings strings 
  Appearance settings strings 
          */
-        public static final int title_demo_text=0x7f06006f;
-        public static final int title_section1=0x7f060068;
+        public static final int title_demo_text=0x7f060071;
+        public static final int title_section1=0x7f06006a;
         /**  Appearance new activity 
  Appearance new activity 
          */
-        public static final int title_section2=0x7f060067;
+        public static final int title_section2=0x7f060069;
         public static final int turnscreenon=0x7f06000a;
         public static final int turnscreenon_summary=0x7f06000b;
-        public static final int tutorial_help_1=0x7f060026;
-        public static final int tutorial_help_2=0x7f060027;
-        public static final int tutorial_help_2_widgetlocker=0x7f060028;
-        public static final int tutorial_help_3=0x7f060029;
-        public static final int tutorial_step_1=0x7f06002a;
-        public static final int tutorial_step_1_title=0x7f060030;
-        public static final int tutorial_step_2=0x7f06002b;
-        public static final int tutorial_step_2_title=0x7f060031;
-        public static final int tutorial_step_3=0x7f06002c;
-        public static final int tutorial_step_3_title=0x7f060032;
-        public static final int tutorial_toast_1=0x7f06002d;
-        public static final int tutorial_toast_2=0x7f06002e;
-        public static final int unpin=0x7f060048;
-        public static final int version=0x7f060040;
-        public static final int welcome_text=0x7f06002f;
+        public static final int tutorial_help_1=0x7f060028;
+        public static final int tutorial_help_2=0x7f060029;
+        public static final int tutorial_help_2_widgetlocker=0x7f06002a;
+        public static final int tutorial_help_3=0x7f06002b;
+        public static final int tutorial_step_1=0x7f06002c;
+        public static final int tutorial_step_1_title=0x7f060032;
+        public static final int tutorial_step_2=0x7f06002d;
+        public static final int tutorial_step_2_title=0x7f060033;
+        public static final int tutorial_step_3=0x7f06002e;
+        public static final int tutorial_step_3_title=0x7f060034;
+        public static final int tutorial_toast_1=0x7f06002f;
+        public static final int tutorial_toast_2=0x7f060030;
+        public static final int unpin=0x7f06004a;
+        public static final int version=0x7f060042;
+        public static final int welcome_text=0x7f060031;
         /**  WidgetLocker 
  WidgetLocker 
          */
-        public static final int widget_locker_not_installed=0x7f060041;
-        public static final int widget_locker_not_installed_summary=0x7f060042;
-        public static final int widget_locker_purchase=0x7f060043;
-        public static final int widget_mode_collapsed_desc=0x7f06006c;
-        public static final int widget_mode_expanded_desc=0x7f06006d;
-        public static final int widget_mode_home_desc=0x7f06006e;
+        public static final int widget_locker_not_installed=0x7f060043;
+        public static final int widget_locker_not_installed_summary=0x7f060044;
+        public static final int widget_locker_purchase=0x7f060045;
+        public static final int widget_mode_collapsed_desc=0x7f06006e;
+        public static final int widget_mode_expanded_desc=0x7f06006f;
+        public static final int widget_mode_home_desc=0x7f060070;
         public static final int yes=0x7f060010;
     }
     public static final class style {

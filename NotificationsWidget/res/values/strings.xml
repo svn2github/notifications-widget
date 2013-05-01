@@ -47,6 +47,9 @@
     <string name="clearonclear_summary">Experimental - Clear notifications when clear button is clicked on android notifications bar. (requires accessibility service restart)</string>
     <string name="keep_on_foreground">Keep on foreground</string>
     <string name="keep_on_foreground_summary">Keeps NotificiationsWidget service on foreground to prevent other apps from killing it</string>
+    <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string> 
+    <string name="disable_auto_switch">Disable auto switch preset</string>       
+    
     <string-array name="max_lines_entries">
         <item>1</item>
         <item>2</item>
@@ -248,5 +251,5 @@
     <string name="max_lines_">Max Lines:</string> 
     <string name="notification_action_1">Notification Action 1</string> 
     <string name="notification_action_2">Notification Action 2</string> 
-    <string name="clear_notification">Clear Notification</string>       
+    <string name="clear_notification">Clear Notification</string> 
 </resources>

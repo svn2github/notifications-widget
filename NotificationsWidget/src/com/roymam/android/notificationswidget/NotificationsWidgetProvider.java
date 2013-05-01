@@ -26,6 +26,7 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -61,22 +62,11 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 			   				new ComponentName(context, NotificationsWidgetProvider.class));
 	   // start the clock timer only if it's the first widget
 	   if (remainingIds == null || remainingIds.length == 1) 
-	   {
-	    	Intent intent = new Intent(NotificationsWidgetProvider.UPDATE_CLOCK);
-	    	PendingIntent clockPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, 0);
-	        AlarmManager alarmManager = (AlarmManager)context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-	        Calendar calendar = Calendar.getInstance();
-	        calendar.setTimeInMillis(System.currentTimeMillis());
-	        calendar.add(Calendar.SECOND, 10);
-	        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 10*1000, clockPendingIntent);
+	   {	    	
 	 	   // register with ACTION_TIME_TICK - Currently disabled, using normal alarm
-	 	   // IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);	    	
-	 	   // context.getApplicationContext().registerReceiver(this, intentFilter);
+	 	   IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);	    	
+	 	   context.getApplicationContext().registerReceiver(this, intentFilter);
 	       // Toast.makeText(context, "Timer started!", Toast.LENGTH_SHORT).show();
-	   }
-	   else
-	   {
-		   //Toast.makeText(context, "Timer already started!", Toast.LENGTH_SHORT).show();
 	   }
     }
     
@@ -89,12 +79,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
         if (remainingIds == null || remainingIds.length == 0) 
         {
             context.stopService(new Intent(context, NotificationsWidgetService.class));
-            // stop timer
-	    	Intent intent = new Intent(NotificationsWidgetProvider.UPDATE_CLOCK);
-	    	PendingIntent clockPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, 0);
-	        AlarmManager alarmManager = (AlarmManager)context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-	        alarmManager.cancel(clockPendingIntent);
-	        //Toast.makeText(context, "Timer stopped!!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Timer stopped!!", Toast.LENGTH_SHORT).show();
         }
 	}
 
@@ -272,7 +257,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
     @Override
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
-    {   
+    {       	
     	updateWidget(ctxt, false);
     	widgetActive = true;
     	super.onUpdate(ctxt, appWidgetManager, appWidgetIds);    		

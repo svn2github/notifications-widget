@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.PendingIntent;
+import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
@@ -10,9 +11,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -23,67 +26,83 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
 
-public class NotificationsWidgetService extends RemoteViewsService 
+public class NotificationsWidgetService extends Service 
 {	
 	public static final String REFRESH_LIST = "com.roymam.android.notificationswidget.REFRESH_LIST";
 	public static final String IS_EXPANDED = "com.roymam.android.notificationswidget.IS_EXPANDED";
 	public static final String ACTION = "com.roymam.android.notificationswidget.ACTION";
 	public static final int ACTION_RENDER_WIDGETS = 0;
 	public static final int ACTION_OPTIONS_CHANGED = 1;	
-	private static RemoteViews widget = null;
+	private static boolean widgetExpanded;
 	
 	
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) 
 	{
-		int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-		boolean refreshList = intent.getBooleanExtra(REFRESH_LIST, false);
-		int action = intent.getIntExtra(ACTION, ACTION_RENDER_WIDGETS);
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (action == ACTION_RENDER_WIDGETS)   
+		if (intent != null)
 		{
-			for (int widgetId : allWidgetIds) 
+			int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+			boolean refreshList = intent.getBooleanExtra(REFRESH_LIST, false);
+			int action = intent.getIntExtra(ACTION, ACTION_RENDER_WIDGETS);
+			
+			if (action == ACTION_RENDER_WIDGETS)   
 			{
-				updateWidget(widgetId);
-				
-				if (refreshList)
+				for (int widgetId : allWidgetIds) 
 				{
-					AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetId, R.id.notificationsListView);
+					updateWidget(widgetId);
+					
+					if (refreshList)
+					{
+						AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetId, R.id.notificationsListView);
+					}
 				}
-			}
-			
-			updateClearOnUnlockState();
-		}
-		else if (action == ACTION_OPTIONS_CHANGED)
-		{
-			int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,AppWidgetManager.INVALID_APPWIDGET_ID);			
-			int hostCategory = intent.getIntExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD);
-			boolean isExpanded = intent.getBooleanExtra(IS_EXPANDED, true);
-			String lastWidgetMode = prefs.getString(SettingsActivity.WIDGET_MODE +"." + appWidgetId, "");
-			String newWidgetMode = SettingsActivity.HOME_WIDGET_MODE;
-			
-			if (isExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
-			{
-				newWidgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
-			}
-			else if (!isExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
-			{
-				newWidgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
-			}
-			
-			// if mode has been changed
-			if (!lastWidgetMode.equals(newWidgetMode))
-			{
-				prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, newWidgetMode)
-							.putString(SettingsActivity.LAST_WIDGET_MODE, newWidgetMode).commit();												
 				
-				updateWidget(appWidgetId);
-				// notify widget that it should be refreshed
-				AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(appWidgetId, R.id.notificationsListView);
+				updateClearOnUnlockState();
+			}
+			else if (action == ACTION_OPTIONS_CHANGED)
+			{
+				int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+				if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID)
+				{
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+					if (!prefs.getBoolean(SettingsActivity.DISABLE_AUTO_SWITCH, false))
+					{
+						boolean isExpanded = intent.getBooleanExtra(NotificationsWidgetService.IS_EXPANDED, true);
+					    int hostCategory = intent.getIntExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD);
+
+					    if ((isExpanded && !widgetExpanded || !isExpanded && widgetExpanded) && 
+								hostCategory==AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD ||
+								hostCategory==AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN )
+						{
+							widgetExpanded = isExpanded;			
+						}
+					    
+					    String lastWidgetMode = prefs.getString(SettingsActivity.WIDGET_MODE +"." + appWidgetId, "");
+						String newWidgetMode = SettingsActivity.HOME_WIDGET_MODE;
+						
+						if (isExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
+						{
+							newWidgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
+						}
+						else if (!isExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
+						{
+							newWidgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
+						}
+						
+						// if mode has been changed
+						if (!lastWidgetMode.equals(newWidgetMode))
+						{
+							prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, newWidgetMode)
+										.putString(SettingsActivity.LAST_WIDGET_MODE, newWidgetMode).commit();												
+							
+							updateWidget(appWidgetId);
+							// notify widget that it should be refreshed
+							AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(appWidgetId, R.id.notificationsListView);
+						}
+					}				
+				}			
 			}
 		}
 		return START_STICKY;
@@ -113,8 +132,7 @@ public class NotificationsWidgetService extends RemoteViewsService
 		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
-		if (widget == null)
-			widget=new RemoteViews(this.getPackageName(), R.layout.widget_layout);
+		RemoteViews widget=new RemoteViews(this.getPackageName(), R.layout.widget_layout);
 		
 		// hide loading spinner
 		widget.setViewVisibility(R.id.loadingSpinner, View.GONE);
@@ -198,7 +216,7 @@ public class NotificationsWidgetService extends RemoteViewsService
 		NotificationsService ns = NotificationsService.getSharedInstance();
 		
 		// set up notifications list
-		Intent svcIntent=new Intent(this, NotificationsWidgetService.class);
+		Intent svcIntent=new Intent(this, NotificationsRemoteViewsFactoryService.class);
 	    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 	    svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
 	    widget.setRemoteAdapter(R.id.notificationsListView, svcIntent);
@@ -503,10 +521,11 @@ public class NotificationsWidgetService extends RemoteViewsService
 	    }
 	    return clock;
 	}
-	
+
 	@Override
-	public RemoteViewsFactory onGetViewFactory(Intent intent) 
+	public IBinder onBind(Intent arg0) 
 	{
-		return new NotificationsViewFactory(this.getApplicationContext(), intent);
+		return null;
 	}
+	
 }

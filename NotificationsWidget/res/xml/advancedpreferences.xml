@@ -10,4 +10,8 @@
         				android:title="@string/keep_on_foreground"
         				android:summary="@string/keep_on_foreground_summary"
         				android:defaultValue="false"/>
+    <CheckBoxPreference android:key="disable_auto_switch"
+        				android:title="@string/disable_auto_switch"
+        				android:summary="@string/disable_auto_switch_summary"
+        				android:defaultValue="false"/>
 </PreferenceScreen>
