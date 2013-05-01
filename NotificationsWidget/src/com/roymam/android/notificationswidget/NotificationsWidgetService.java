@@ -41,6 +41,8 @@ public class NotificationsWidgetService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) 
 	{
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		if (intent != null)
 		{
 			int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
@@ -49,6 +51,11 @@ public class NotificationsWidgetService extends Service
 			
 			if (action == ACTION_RENDER_WIDGETS)   
 			{
+				if (prefs.getBoolean(SettingsActivity.DISABLE_AUTO_SWITCH, false))
+				{
+					widgetExpanded = true;
+				}
+				
 				for (int widgetId : allWidgetIds) 
 				{
 					updateWidget(widgetId);
@@ -65,43 +72,47 @@ public class NotificationsWidgetService extends Service
 			{
 				int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 				if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID)
-				{
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+				{					
+					int hostCategory = intent.getIntExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD);
+					
 					if (!prefs.getBoolean(SettingsActivity.DISABLE_AUTO_SWITCH, false))
 					{
 						boolean isExpanded = intent.getBooleanExtra(NotificationsWidgetService.IS_EXPANDED, true);
-					    int hostCategory = intent.getIntExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD);
-
+					    
 					    if ((isExpanded && !widgetExpanded || !isExpanded && widgetExpanded) && 
 								hostCategory==AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD ||
 								hostCategory==AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN )
 						{
 							widgetExpanded = isExpanded;			
 						}
+					}
+					else
+					{
+						widgetExpanded = true;
+					}
 					    
-					    String lastWidgetMode = prefs.getString(SettingsActivity.WIDGET_MODE +"." + appWidgetId, "");
-						String newWidgetMode = SettingsActivity.HOME_WIDGET_MODE;
+					String lastWidgetMode = prefs.getString(SettingsActivity.WIDGET_MODE +"." + appWidgetId, "");
+					String newWidgetMode = SettingsActivity.HOME_WIDGET_MODE;
+					
+					if (widgetExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
+					{
+						newWidgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
+					}
+					else if (!widgetExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
+					{
+						newWidgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
+					}
+					
+					// if mode has been changed
+					if (!lastWidgetMode.equals(newWidgetMode))
+					{
+						prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, newWidgetMode)
+									.putString(SettingsActivity.LAST_WIDGET_MODE, newWidgetMode).commit();												
 						
-						if (isExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
-						{
-							newWidgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
-						}
-						else if (!isExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
-						{
-							newWidgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
-						}
-						
-						// if mode has been changed
-						if (!lastWidgetMode.equals(newWidgetMode))
-						{
-							prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, newWidgetMode)
-										.putString(SettingsActivity.LAST_WIDGET_MODE, newWidgetMode).commit();												
-							
-							updateWidget(appWidgetId);
-							// notify widget that it should be refreshed
-							AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(appWidgetId, R.id.notificationsListView);
-						}
-					}				
+						updateWidget(appWidgetId);
+						// notify widget that it should be refreshed
+						AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(appWidgetId, R.id.notificationsListView);
+					}					
 				}			
 			}
 		}
