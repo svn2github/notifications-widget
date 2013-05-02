@@ -314,7 +314,7 @@ public class NotificationsService extends AccessibilityService
 						}
 						
 						// if still no text ignore it
-						if (nd.text == null)
+						if (nd.title == null && nd.text == null)
 							return;
 						else
 							// turn the screen on
