@@ -25,11 +25,11 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_gravity="left"
+            android:layout_weight="1"
+            android:background="#ffffffff"
             android:onClick="onColorChoose"
-            android:tag="@android:color/white"
-            android:background="@android:color/white" />
+            android:tag="#ffffffff" />
 
         <Button
             android:id="@+id/color3btn"
@@ -124,9 +124,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#ff90EE90"
+            android:background="#ff800080"
             android:onClick="onColorChoose"
-            android:tag="#ff90EE90" />
+            android:tag="#ff800080" />
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
