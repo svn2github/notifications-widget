@@ -384,21 +384,24 @@ public class NotificationsWidgetService extends Service
     						rv.setViewVisibility(R.id.smallLayout, View.VISIBLE);
     						rv.setViewVisibility(R.id.normalLayout, View.GONE);
     						rv.setViewVisibility(R.id.maxLayout, View.GONE);
-    						rv.setOnClickPendingIntent(R.id.smallLayout, pn.contentIntent);
+    						if (pn.contentIntent != null)
+    							rv.setOnClickPendingIntent(R.id.smallLayout, pn.contentIntent);
     					} else if (layout.equals("normal"))
     					{
     						rv.addView(R.id.normalLayout, content);
     						rv.setViewVisibility(R.id.smallLayout, View.GONE);
     						rv.setViewVisibility(R.id.normalLayout, View.VISIBLE);
     						rv.setViewVisibility(R.id.maxLayout, View.GONE);
-    						rv.setOnClickPendingIntent(R.id.normalLayout, pn.contentIntent);
+    						if (pn.contentIntent != null)
+    							rv.setOnClickPendingIntent(R.id.normalLayout, pn.contentIntent);
     					} else 
     					{
     						rv.addView(R.id.maxLayout, content);
     						rv.setViewVisibility(R.id.smallLayout, View.GONE);
     						rv.setViewVisibility(R.id.normalLayout, View.GONE);
     						rv.setViewVisibility(R.id.maxLayout, View.VISIBLE);
-    						rv.setOnClickPendingIntent(R.id.maxLayout, pn.contentIntent);
+    						if (pn.contentIntent != null)
+    							rv.setOnClickPendingIntent(R.id.maxLayout, pn.contentIntent);
     					}        					
     					pns.add(rv);
     				}
@@ -456,7 +459,7 @@ public class NotificationsWidgetService extends Service
 	    
 	    // display next alarm if needed
 	    String nextAlarm = Settings.System.getString(getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
-	    if (!nextAlarm.equals(""))
+	    if (nextAlarm != null && !nextAlarm.equals(""))
 	    {
 	    	clock.setViewVisibility(R.id.alarmtime, View.VISIBLE);
 	    	clock.setTextViewText(R.id.alarmtime, "⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
