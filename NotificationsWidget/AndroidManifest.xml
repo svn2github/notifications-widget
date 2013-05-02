@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="139"
+    android:versionCode="140"
     android:versionName="1.0.5" >
 
     <uses-sdk
@@ -53,6 +53,19 @@
             android:label="@string/persistent_notifications"
             android:theme="@android:style/Theme.Holo" >
         </activity>
+        <activity
+            android:name="com.roymam.android.notificationswidget.AppearanceActivity"
+            android:label="@string/title_activity_appearance"
+            android:parentActivityName="com.roymam.android.notificationswidget.SettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.roymam.android.notificationswidget.SettingsActivity" />
+        </activity>
+        <activity
+            android:name="com.roymam.android.notificationswidget.AboutActivity"
+            android:label="@string/menu_about" 
+            android:theme="@android:style/Theme.Holo.Dialog">
+        </activity>
 
         <!-- The widget provider -->
         <receiver android:name="com.roymam.android.notificationswidget.NotificationsWidgetProvider" >
@@ -85,14 +98,12 @@
                 android:resource="@xml/widgetinfo" />
         </receiver>
 
-        <!-- <service android:name="com.roymam.android.notificationswidget.ClockService"/>-->
+        <!-- <service android:name="com.roymam.android.notificationswidget.ClockService"/> -->
         <service
             android:name="com.roymam.android.notificationswidget.NotificationsRemoteViewsFactoryService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:exported="false"/>
-        
-        <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService"/>        
-        
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService" />
         <service
             android:name="com.roymam.android.notificationswidget.NotificationsService"
             android:label="@string/notifications_service"
@@ -106,14 +117,7 @@
                 android:resource="@xml/notifications_service_config" />
         </service>
 
-        <activity
-            android:name="com.roymam.android.notificationswidget.AppearanceActivity"
-            android:label="@string/title_activity_appearance"
-            android:parentActivityName="com.roymam.android.notificationswidget.SettingsActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.roymam.android.notificationswidget.SettingsActivity" />
-        </activity>
+        
     </application>
 
 </manifest>

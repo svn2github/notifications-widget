@@ -298,7 +298,18 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@Override
     public void onBuildHeaders(List<Header> target) 
 	{
-        loadHeadersFromResource(R.xml.preferences_headers, target); 
+        loadHeadersFromResource(R.xml.preferences_headers, target);
+        
+        // setting last "about" button summary
+        String versionString = "";
+    	try 
+    	{
+    		versionString = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+	        target.get(target.size()-1).summary = getText(R.string.version) + " " + versionString;
+	        		
+		} catch (NameNotFoundException e) 
+		{
+		}               
     }
 	
 	@Override
@@ -307,13 +318,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         super.onCreate(savedInstanceState);        
     }
 	
-	private void showAbout() 
+	/*private void showAbout() 
 	{	
 		AboutDialogFragment dialog = new WizardActivity.AboutDialogFragment();
 		//TBD - find a way to show about dialog
 		dialog.show(getFragmentManager(), "AboutDialogFragment");	
-	}
+	}*/
 	
+	/*
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -337,7 +349,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    	menu.getItem(i).setOnMenuItemClickListener(menuListener);
 	    
 	    return super.onCreateOptionsMenu(menu);
-	}
+	}*/
 	
 	@Override
 	protected void onResume() 

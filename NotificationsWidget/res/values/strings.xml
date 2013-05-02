@@ -31,6 +31,7 @@
     <string name="collectonunlock">Collect when unlocked</string>
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
     <string name="order_notifications_by">Order notifications by</string>
+
     <string-array name="settings_orderby_entries">
         <item>Time</item>
         <item>Priority</item>
@@ -47,9 +48,9 @@
     <string name="clearonclear_summary">Experimental - Clear notifications when clear button is clicked on android notifications bar. (requires accessibility service restart)</string>
     <string name="keep_on_foreground">Keep on foreground</string>
     <string name="keep_on_foreground_summary">Keeps NotificiationsWidget service on foreground to prevent other apps from killing it</string>
-    <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string> 
-    <string name="disable_auto_switch">Disable auto switch preset</string>       
-    
+    <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string>
+    <string name="disable_auto_switch">Disable auto switch preset</string>
+
     <string-array name="max_lines_entries">
         <item>1</item>
         <item>2</item>
@@ -68,6 +69,7 @@
         <item>6</item>
         <item>999</item>
     </string-array>
+
     <string name="service_inactive_text">Service is inactive. please enable \"NiLS Service\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>
 
     <!-- Wizard Strings -->
@@ -89,24 +91,23 @@
     <string name="tutorial_step_3_title">Customize</string>
 
     <!-- About Dialog -->
-    <string name="about_title">NןLS</string>
-    <string name="about_subtitle">NןLS is developed by Roymam</string>
+    <string name="about_title">NiLS</string>
+    <string name="about_subtitle">NiLS is developed by Roymam</string>
     <string name="about_content">The project is hosted on:\nhttp://code.google.com/p/notifications-widget/\nFell free to open issues for any bug report or feature request\n\nIf you would like to support the development of this app you may want to try our game below:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
     <string name="about_contactus_title">Contact us</string>
     <string name="about_contactus_email">mailto:support@roymam.com</string>
     <string name="about_close">Close</string>
-    
-    <!--  Contact Us Menu -->
+
+    <!-- Contact Us Menu -->
     <string name="contact_summary">Contact us to ask a question, request a feature or report a bug</string>
     <string name="contact_ask">Ask a question</string>
     <string name="contact_request">Request a Feature</string>
     <string name="contact_report">Report a Bug</string>
     <string name="contact_request_link">http://code.google.com/p/notifications-widget/issues/entry?template=Feature%20Request</string>
     <string name="contact_report_link">http://code.google.com/p/notifications-widget/issues/entry?template=Bug%20Report</string>
-    
     <string name="version">Version</string>
-    
+
     <!-- WidgetLocker -->
     <string name="widget_locker_not_installed">WidgetLocker is not installed</string>
     <string name="widget_locker_not_installed_summary">Your Android version is lower than 4.2, therefore you cannot add widgets to your standard lockscreen.\n\nHowever, there is a paid app called \"WidgetLocker\" that enables adding widgets to a lockscreen.\n\nNiLS is known to work relatively well with WidgetLocker, but some features may not be working.\n\nPlease note that you can still use NiLS as a standard widget for you home screen without purchasing WidgetLocker</string>
@@ -133,6 +134,7 @@
     <string name="show_only_last_event_summary">Show only last event when expanded notification has multiple events (e.g multiple emails in one notification)</string>
     <string name="set_app_priority">Set priority</string>
     <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
+
     <string-array name="settings_app_priority_entries">
         <item>Default</item>
         <item>Min</item>
@@ -149,17 +151,18 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-    
+
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Clear app specific settings for this app</string>
     <string name="app_specific_help">How To Add App Specific Settings?</string>
     <string name="app_specific_help_details">App specific settings allow you to set some settings specificly for different apps - like hiding notifications from the app, setting priorities, etc...\n\nTo add app specific settings, click on the app icon of the notification when it appears on the widget, an action menu will popup below the notification, then click the \"Settings\" button. (the one with the wrench icon)</string>
-    
+
     <!-- Persistent Notifications -->
     <string name="persistent_notifications">Persistent Notifications</string>
     <string name="show_persistent_notifications">Show persistent notification</string>
     <string name="show_persistent_notifications_summary">Show persistent notification from this app</string>
     <string name="notification_height">Persistent notification size</string>
+
     <string-array name="settings_notification_height_entries">
         <item>Small</item>
         <item>Normal</item>
@@ -170,10 +173,12 @@
         <item>normal</item>
         <item>max</item>
     </string-array>
+
     <string name="hide_when_notifications">Hide when notifications appear</string>
     <string name="hide_when_notifications_summary">Hide this persistent notification when normal notifications appear</string>
     <string name="auto_hide_persistent_notification">Hide when inactive</string>
     <string name="auto_hide_persistent_notification_summary">Hide when the persistent notification wasn\'t updated for selected period</string>
+
     <string-array name="settings_auto_hide_persistent_notifications_entries">
         <item>Never Hide</item>
         <item>After 5 Minutes</item>
@@ -192,17 +197,18 @@
         <item>60</item>
         <item>240</item>
         <item>1440</item>
-    </string-array> 
+    </string-array>
+
     <string name="how_to_use">How To Use?</string>
     <string name="persistent_notifications_help">How To Use Persistent Notifications?</string>
     <string name="persistent_notifications_help_details">Persistent notifications are notifications that appear on the status bar and cannot be dismissed (e.g running apps, playing music, etc...)\n\nThis list will be filled with the apps that created persistent notifications, to add a persistent notification to the widget check the box near the app name.\n\nIf there are no apps in the list, run this settings screen later after the persistent notification is refreshed by the app that created it.</string>
-    
+
     <!-- strings for accessibility -->
     <string name="clear_all_notifications">Clear All Notifications</string>
     <string name="action_bar">Action Bar</string>
     <string name="notification_icon">Notification Icon</string>
     <string name="app_icon">App Icon</string>
-    
+
     <!-- Appearance new activity -->
     <string name="title_section2">Notification</string>
     <string name="title_section1">Clock</string>
@@ -214,42 +220,43 @@
         <item>LS Collapsed</item>
         <item>LS Expanded</item>
         <item>Home</item>
-        </string-array>
-    
+    </string-array>
+
     <string name="widget_mode_collapsed_desc">On lockscreen when collapsed (4.2+)</string>
     <string name="widget_mode_expanded_desc">On lockscreen when expanded</string>
     <string name="widget_mode_home_desc">On home screen</string>
-    
+
     <!-- Appearance settings strings -->
     <string name="title_demo_text">Notification Title</string>
     <string name="title_appname_demo_text">Application Name</string>
     <string name="text_demo_text">This is the notification text, it might get long and be truncated.</string>
     <string name="content_demo_text">Notification Content</string>
     <string name="content_expanded_demo_text">Notification Content Line 1\nNotification Content Line 2\nNotification Content Line 3\nNotification Content Line 4\nNotification Content Line 5\nNotification Content Line 6\nNotification Content Line 7\nNotification Content Line 8\n</string>
-    <string name="time_demo_text">9:21</string> 
-    <string name="count_demo_text">2</string> 
-    <string name="small">Small</string> 
-    <string name="medium">Medium</string> 
-    <string name="large">Large</string> 
-    <string name="bg_color">BG Color</string> 
-    <string name="opacity">Opacity</string> 
-    <string name="clock_color">Clock Color</string> 
-    <string name="date_color">Date Color</string> 
-    <string name="alarm_color">Alarm Color</string> 
-    <string name="clickable">Clickable</string> 
-    <string name="bold_hours">Bold Hours</string> 
-    <string name="bold_minutes">Bold Minutes</string> 
-    <string name="auto_switch_clock_size">Auto switch clock size</string> 
-    <string name="show_clear_all_button">Show &quot;Clear All&quot; Button</string> 
-    <string name="hide_clock">Hide Clock</string> 
-    <string name="compact">Compact</string> 
-    <string name="normal">Normal</string> 
-    <string name="title_color">Title Color</string> 
-    <string name="text_color">Text Color</string> 
-    <string name="content_color">Content Color</string> 
-    <string name="icon_menu">Icon Menu</string> 
-    <string name="max_lines_">Max Lines:</string> 
-    <string name="notification_action_1">Notification Action 1</string> 
-    <string name="notification_action_2">Notification Action 2</string> 
-    <string name="clear_notification">Clear Notification</string> 
+    <string name="time_demo_text">9:21</string>
+    <string name="count_demo_text">2</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    <string name="bg_color">BG Color</string>
+    <string name="opacity">Opacity</string>
+    <string name="clock_color">Clock Color</string>
+    <string name="date_color">Date Color</string>
+    <string name="alarm_color">Alarm Color</string>
+    <string name="clickable">Clickable</string>
+    <string name="bold_hours">Bold Hours</string>
+    <string name="bold_minutes">Bold Minutes</string>
+    <string name="auto_switch_clock_size">Auto switch clock size</string>
+    <string name="show_clear_all_button">Show &quot;Clear All&quot; Button</string>
+    <string name="hide_clock">Hide Clock</string>
+    <string name="compact">Compact</string>
+    <string name="normal">Normal</string>
+    <string name="title_color">Title Color</string>
+    <string name="text_color">Text Color</string>
+    <string name="content_color">Content Color</string>
+    <string name="icon_menu">Icon Menu</string>
+    <string name="max_lines_">Max Lines:</string>
+    <string name="notification_action_1">Notification Action 1</string>
+    <string name="notification_action_2">Notification Action 2</string>
+    <string name="clear_notification">Clear Notification</string>
+
 </resources>

@@ -232,7 +232,7 @@ public final class R {
         public static final int contact_report_link=0x7f060041;
         public static final int contact_request=0x7f06003e;
         public static final int contact_request_link=0x7f060040;
-        /**   Contact Us Menu 
+        /**  Contact Us Menu 
   Contact Us Menu 
          */
         public static final int contact_summary=0x7f06003c;

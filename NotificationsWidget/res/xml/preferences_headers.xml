@@ -30,4 +30,9 @@
             android:title="@string/about_contactus_title" 
             android:summary="@string/contact_summary"/>
     
+    <header android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/menu_about">
+            <intent android:targetPackage="com.roymam.android.notificationswidget"
+        		    android:targetClass="com.roymam.android.notificationswidget.AboutActivity" />
+    </header>   
 </preference-headers>
