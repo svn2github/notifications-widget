@@ -46,7 +46,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     
     public static boolean widgetActive = false;
     public static boolean widgetExpanded = false;
-	private static String lasttime = "";
 	
     public NotificationsWidgetProvider() 
     {
@@ -124,15 +123,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	else if (intent.getAction().equals(Intent.ACTION_TIME_TICK) ||
     			 intent.getAction().equals(UPDATE_CLOCK))
     	{
-    		Time t = new Time();
-    	    t.setToNow();    	    
-    		String s = t.format("%H%M");
-        	// update widget only if time has been changed
-    		if (!s.equals(lasttime))
-    		{
-    			lasttime = s;
-        		updateWidget(ctx, false);			
-    		}
+    		updateWidget(ctx, false);
     	}
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.LOCKED"))
     	{
