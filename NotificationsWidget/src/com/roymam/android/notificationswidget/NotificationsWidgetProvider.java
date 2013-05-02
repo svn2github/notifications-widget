@@ -16,10 +16,6 @@
 
 package com.roymam.android.notificationswidget;
 
-import java.util.Calendar;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetProviderInfo;
@@ -29,12 +25,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.format.Time;
-import android.widget.Toast;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
-	private static final String TAG = "NiLS";
 	public static String NOTIFICATION_INDEX = "com.roymam.android.notificationswidget.notification_index";
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";

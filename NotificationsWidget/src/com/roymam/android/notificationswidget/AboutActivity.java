@@ -1,11 +1,11 @@
 package com.roymam.android.notificationswidget;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.view.LayoutInflater;
-import android.view.Menu;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
 
 public class AboutActivity extends Activity 
 {
@@ -28,4 +28,10 @@ public class AboutActivity extends Activity
         
         setTitle(title + " v" + versionString);
 	}
+	
+	public void openAd(View v)
+    {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.about_ad_url)));
+		startActivity(browserIntent);
+    }
 }

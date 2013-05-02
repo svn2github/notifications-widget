@@ -13,8 +13,7 @@
 	    android:layout_gravity="center_vertical"
 	    android:text="00"
 	    android:textAppearance="?android:attr/textAppearanceLarge"
-	    android:fontFamily="sans-serif"
-	    android:textStyle="bold" />
+	    android:fontFamily="sans-serif-thin" />
 	
 	<TextView
 	    android:id="@+id/minutes"

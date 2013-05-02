@@ -21,12 +21,11 @@
             android:id="@+id/hours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-thin"
             android:text="00"
             android:textColor="@android:color/white"
             android:textColorLink="@android:color/white"
             android:textSize="72sp"
-            android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
         <TextView

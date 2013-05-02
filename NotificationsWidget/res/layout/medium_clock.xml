@@ -23,8 +23,7 @@
                     android:textColor="@android:color/white"
                     android:textColorLink="@android:color/white"
                     android:textSize="36sp"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif" />
+                    android:fontFamily="sans-serif-thin" />
 
                 <TextView
                     android:id="@+id/minutes"
