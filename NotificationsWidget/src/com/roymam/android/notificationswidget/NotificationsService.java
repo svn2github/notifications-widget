@@ -233,10 +233,7 @@ public class NotificationsService extends AccessibilityService
 					if (!ignoreApp)
 					{
 						// set new notification flag (for delayed auto screen on feature)
-						newNotificationsAvailable = true;					
-						
-						// turn the screen on
-						turnScreenOn();
+						newNotificationsAvailable = true;																
 						
 						// build notification data object
 						NotificationData nd = new NotificationData();
@@ -319,6 +316,9 @@ public class NotificationsService extends AccessibilityService
 						// if still no text ignore it
 						if (nd.text == null)
 							return;
+						else
+							// turn the screen on
+							turnScreenOn();
 						
 						// check for duplicated notification
 						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
@@ -331,17 +331,13 @@ public class NotificationsService extends AccessibilityService
 							CharSequence text2 = notifications.get(i).text;
 							CharSequence content1 = nd.content;
 							CharSequence content2 = notifications.get(i).content;
+							boolean titlesdup = (title1 != null && title2 != null && title1.toString().equals(title2.toString()) || title1 == null && title2 == null);
+							boolean textdup = (text1 != null && text2 != null && text1.toString().equals(text2.toString()) || text1 == null && text2 == null);
+							boolean contentsdup = (content1 != null && content2 != null && content1.toString().equals(content2.toString())  || content1 == null && content2 == null);
+							boolean allDup = titlesdup && textdup && contentsdup;
 							
 							if (nd.packageName.equals(notifications.get(i).packageName) &&
-									((
-									(title1 != null && title2 != null && title1.equals(title2) ||
-								     title1 == null && title2 == null) &&
-								     (text1 != null && text2!= null && text1.equals(text2) ||
-								     text1 == null && text2 == null) &&
-								     (content1 != null && content2!= null && content1.equals(content2) ||
-								     content1 == null && content2 == null)
-								    ) 
-								    || keepOnlyLastNotification))
+							   (allDup || keepOnlyLastNotification))
 								{
 									duplicated = i;
 								}
