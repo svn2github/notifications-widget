@@ -36,8 +36,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static int CLEAR_ACTION = 1;
     public static int PIN_ACTION = 3;
     public static int SETTINGS_ACTION = 2;
-    
-    public static boolean widgetActive = false;
     public static boolean widgetExpanded = false;
 	
     public NotificationsWidgetProvider() 
@@ -48,18 +46,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public void onEnabled(Context context) 
     {    
        super.onEnabled(context);
-	   widgetActive = true;
-	   
-	   int[] remainingIds = AppWidgetManager.getInstance(context).getAppWidgetIds(
-			   				new ComponentName(context, NotificationsWidgetProvider.class));
-	   // start the clock timer only if it's the first widget
-	   if (remainingIds == null || remainingIds.length == 1) 
-	   {	    	
-	 	   // register with ACTION_TIME_TICK - Currently disabled, using normal alarm
-	 	   IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);	    	
-	 	   context.getApplicationContext().registerReceiver(this, intentFilter);
-	       // Toast.makeText(context, "Timer started!", Toast.LENGTH_SHORT).show();
-	   }
+	   NotificationsWidgetService.widgetActive = true;
     }
     
     @Override
@@ -78,7 +65,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	@Override
 	public void onDisabled(Context context) 
 	{
-		widgetActive = false;
+		NotificationsWidgetService.widgetActive = false;
 		super.onDisabled(context);
 		context.stopService(new Intent(context, NotificationsWidgetService.class));
 	}
@@ -243,7 +230,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public void onUpdate(Context ctxt, AppWidgetManager appWidgetManager, int[] appWidgetIds) 
     {       	
     	updateWidget(ctxt, false);
-    	widgetActive = true;
+    	NotificationsWidgetService.widgetActive = true;
     	super.onUpdate(ctxt, appWidgetManager, appWidgetIds);    		
     }
       

@@ -204,7 +204,7 @@ public class WizardActivity extends Activity
 			else
 			{
 				// check if a widget has been added				
-				if (!NotificationsWidgetProvider.widgetActive)
+				if (!NotificationsWidgetService.widgetActive)
 					currentStep = 2;
 				else
 					currentStep = 3;

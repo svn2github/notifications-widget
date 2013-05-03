@@ -11,7 +11,7 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		boolean serviceEnabled = NotificationsService.getSharedInstance()!=null;
-		boolean widgetEnabled = NotificationsWidgetProvider.widgetActive;
+		boolean widgetEnabled = NotificationsWidgetService.widgetActive;
 		if (serviceEnabled & widgetEnabled)
 		{
 			Intent launchSettings = new Intent(this, SettingsActivity.class);

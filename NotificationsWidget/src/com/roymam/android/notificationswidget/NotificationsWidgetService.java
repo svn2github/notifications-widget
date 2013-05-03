@@ -6,8 +6,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -34,14 +37,29 @@ public class NotificationsWidgetService extends Service
 	public static final int ACTION_RENDER_WIDGETS = 0;
 	public static final int ACTION_OPTIONS_CHANGED = 1;	
 	private static boolean widgetExpanded;
+	private static boolean clockStarted = false;
+	public static boolean widgetActive = false;
 	
-	
-
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) 
 	{
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+		if (!clockStarted)
+		{
+			clockStarted = true;
+			// start the clock timer only if it's the first widget
+			// register with ACTION_TIME_TICK - Currently disabled, using normal alarm
+			IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);	    	
+			getApplicationContext().registerReceiver(new BroadcastReceiver()
+			{
+				@Override
+				public void onReceive(Context arg0, Intent arg1) 
+				{
+					Intent intent = new Intent(NotificationsWidgetProvider.UPDATE_CLOCK);
+					getApplicationContext().sendBroadcast(intent);
+				}				
+			}, intentFilter);
+		}
 		if (intent != null)
 		{
 			int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
