@@ -61,7 +61,8 @@
             android:text="TUE, APRIL 09"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/alarmtime"
@@ -72,6 +73,8 @@
             android:text="WED 07:00"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/darker_gray"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 </LinearLayout>

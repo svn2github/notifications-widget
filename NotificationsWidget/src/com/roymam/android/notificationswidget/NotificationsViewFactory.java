@@ -295,7 +295,9 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 				
 		// hide clear button for pinned notifications
-		if (NotificationsService.getSharedInstance().getNotification(position).pinned)
+		if (NotificationsService.getSharedInstance() != null && 
+			NotificationsService.getSharedInstance().getNotification(position) != null &&
+			NotificationsService.getSharedInstance().getNotification(position).pinned)
 		{
 			actionBar.setViewVisibility(R.id.actionClear, View.GONE);	
 			actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.unpin));			
