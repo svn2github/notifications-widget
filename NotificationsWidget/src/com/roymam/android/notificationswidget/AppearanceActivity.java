@@ -479,7 +479,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				    
 				    // display next alarm if needed
 				    String nextAlarm = Settings.System.getString(getActivity().getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
-				    if (!nextAlarm.equals(""))
+				    if (nextAlarm != null && !nextAlarm.equals(""))
 				    {
 				    	alarm.setVisibility(View.VISIBLE);
 				    	alarm.setText("⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
