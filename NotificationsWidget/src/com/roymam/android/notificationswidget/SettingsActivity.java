@@ -49,6 +49,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String SHOW_EDIT_BUTTON= "showeditbutton";
 	public static final String NOTIFICATION_STYLE="notification_style";
 	public static final String MAX_LINES="max_lines";
+	public static final String SHOW_ACTIONBAR="show_actionbar";
 	public static final String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
 	public static final String TEXT_COLOR = "notification_text_color";
 	public static final String TIME_COLOR = "notification_time_color";

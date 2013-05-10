@@ -224,6 +224,14 @@
 
     </LinearLayout>
 
+    <CheckBox
+        android:id="@+id/showActionBarCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onNotificationPrefChanged"
+        android:tag="show_actionbar"
+        android:text="@string/show_actionbar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >

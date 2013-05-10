@@ -706,6 +706,8 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				maxLinesSpinner.setSelection(maxLines-1);
 			else
 				maxLinesSpinner.setSelection(6);
+			
+			((CheckBox)getView().findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false));
 		}
 
 		private void setupNotificationStyle() 
@@ -894,6 +896,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			// maxlines spinner
 			maxLinesSpinner = (Spinner) notificationSettingsView.findViewById(R.id.maxLinesSpinner);
 			maxLinesSpinner.setOnItemSelectedListener(this);
+
 			return notificationSettingsView;
 		}
 		// progress bar events

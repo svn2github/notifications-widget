@@ -45,6 +45,7 @@
     </string-array>
     
     <string name="max_lines">Maximum text lines</string>
+    <string name="show_actionbar">Always Show App Action Buttons</string>    
     <string name="show_full_notification">Zeige vollständige Benachrichtigung</string>
     <string name="show_full_notification_summary">Zeige die Benachrichtigung, wie in der Benachrichtigungsleiste im System</string>
     <string name="clearonclear">Überwachen von \"Alle löschen\"</string>

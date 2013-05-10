@@ -41,6 +41,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -58,6 +59,9 @@ public class NotificationsService extends AccessibilityService
 	private boolean newNotificationsAvailable = false;
 	private boolean widgetLockerEnabled = false;
 
+	// Proximity Sensor Monitoring
+	SensorEventListener sensorListener = null;
+	
 	private int 	selectedIndex = -1;
 	private String clearButtonName = "Clear all notifications.";
 	
@@ -153,8 +157,6 @@ public class NotificationsService extends AccessibilityService
 		detectNotificationIds();		
 	}	
 	
-	// Proximity Sensor Monitoring
-	SensorEventListener sensorListener = null;
 	
 	public void registerProximitySensor()
 	{
@@ -844,10 +846,10 @@ public class NotificationsService extends AccessibilityService
 							 event.getContentDescription().equals(clearButtonName))
 							{
 								// clear notifications button clicked
-								SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+								final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 				
 								if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
-								{
+								{	
 									clearAllNotifications();
 								}
 							}

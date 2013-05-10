@@ -192,6 +192,7 @@ public class NotificationsWidgetService extends Service
 		// set up notifications list 
 		setupNotificationsList(widget, widgetId);
 		
+
 		appWidgetManager.updateAppWidget(widgetId, widget);
 	}
 	

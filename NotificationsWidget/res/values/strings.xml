@@ -255,6 +255,7 @@
     <string name="content_color">Content Color</string>
     <string name="icon_menu">Icon Menu</string>
     <string name="max_lines_">Max Lines:</string>
+    <string name="show_actionbar">Always Show App Action Buttons</string>
     <string name="notification_action_1">Notification Action 1</string>
     <string name="notification_action_2">Notification Action 2</string>
     <string name="clear_notification">Clear Notification</string>

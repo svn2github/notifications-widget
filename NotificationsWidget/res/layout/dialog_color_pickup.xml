@@ -108,7 +108,7 @@
             android:layout_weight="1"
             android:background="@android:color/holo_green_dark"
             android:onClick="onColorChoose"
-            android:tag="@android:color/holo_orange_dark" />
+            android:tag="@android:color/holo_green_dark" />
 
         <Button
             style="?android:attr/buttonBarButtonStyle"

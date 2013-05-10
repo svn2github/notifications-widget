@@ -1,5 +1,7 @@
 package com.roymam.android.notificationswidget;
 
+import com.roymam.android.notificationswidget.NotificationData.Action;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -255,94 +257,97 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 
 	private void createActionBar(RemoteViews row, int position, NotificationData n) 
 	{
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+
 		row.removeAllViews(R.id.actionbarContainer);
-		RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.view_actionbar);
-		row.addView(R.id.actionbarContainer, actionBar);	
+		boolean alwaysShowActionBar = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false);
 		
-		if (NotificationsService.getSharedInstance().getSelectedIndex() == position)
-		{
+		if (NotificationsService.getSharedInstance().getSelectedIndex() == position ||
+			alwaysShowActionBar && n.actions != null && n.actions.length > 0)
+		{		
+			RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.view_actionbar);
+			row.addView(R.id.actionbarContainer, actionBar);			
 			row.setViewVisibility(R.id.actionbarContainer, View.VISIBLE);
-		}
-		else
-		{
-			row.setViewVisibility(R.id.actionbarContainer, View.GONE);
-		}
 		
-		// set app settings intent
-		Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-		appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
-		appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
-		appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-		actionBar.setOnClickPendingIntent(
-				R.id.actionSettings, 
-				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION+position*10, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-		actionBar.setTextViewText(R.id.actionSettings, ctxt.getText(R.string.settings));
-
-		// set pin notification intent
-		Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-		pinIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.PIN_ACTION);
-		pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-		actionBar.setOnClickPendingIntent(
-				R.id.actionPin, 
-				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION+position*10, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-
-		// set clear notification intent
-		Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-		clearIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.CLEAR_ACTION);
-		clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-		actionBar.setOnClickPendingIntent(
-				R.id.actionClear, 
-				PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-				
-		// hide clear button for pinned notifications
-		if (NotificationsService.getSharedInstance() != null && 
-			NotificationsService.getSharedInstance().getNotification(position) != null &&
-			NotificationsService.getSharedInstance().getNotification(position).pinned)
-		{
-			actionBar.setViewVisibility(R.id.actionClear, View.GONE);	
-			actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.unpin));			
-		}
-		else
-		{
-			actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
-			actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));			
-		}
-		
-		// if it's expanded large notification - don't show buttons in actions bar 
-		if (/*!(sharedPref.getBoolean(n.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true))
-		      && sharedPref.getString(SettingsActivity.NOTIFICATION_STYLE, "normal").equals("large"))		
-			&& */n.actions != null)
+			// set app settings intent
+			Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+			appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
+			appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
+			appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+			actionBar.setOnClickPendingIntent(
+					R.id.actionSettings, 
+					PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION+position*10, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+			actionBar.setTextViewText(R.id.actionSettings, ctxt.getText(R.string.settings));
+	
+			// set pin notification intent
+			Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+			pinIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.PIN_ACTION);
+			pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+			actionBar.setOnClickPendingIntent(
+					R.id.actionPin, 
+					PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION+position*10, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
+	
+			// set clear notification intent
+			Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
+			clearIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.CLEAR_ACTION);
+			clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+			actionBar.setOnClickPendingIntent(
+					R.id.actionClear, 
+					PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+					
+			// hide clear button for pinned notifications
+			if (NotificationsService.getSharedInstance() != null && 
+				NotificationsService.getSharedInstance().getNotification(position) != null &&
+				NotificationsService.getSharedInstance().getNotification(position).pinned)
 			{
-				if (n.actions.length >= 1)
-				{
-					actionBar.setImageViewBitmap(R.id.customAction1, n.actions[0].drawable);
-					actionBar.setOnClickPendingIntent(R.id.customAction1, n.actions[0].actionIntent);
-					actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
-					actionBar.setTextViewText(R.id.actionPin, "");
-					actionBar.setTextViewText(R.id.actionSettings, "");
-				}
-				else
-				{
-					actionBar.setViewVisibility(R.id.customAction1, View.GONE);					
-				}
-				
-				if (n.actions.length >= 2)
-				{
-					actionBar.setImageViewBitmap(R.id.customAction2, n.actions[1].drawable);
-					actionBar.setOnClickPendingIntent(R.id.customAction2, n.actions[1].actionIntent);
-					actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
-					actionBar.setTextViewText(R.id.actionPin, "");
-					actionBar.setTextViewText(R.id.actionSettings, "");
-				}
-				else
-				{
-					actionBar.setViewVisibility(R.id.customAction2, View.GONE);									
-				}
+				actionBar.setViewVisibility(R.id.actionClear, View.GONE);	
+				actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.unpin));			
 			}
+			else
+			{
+				actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
+				actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));			
+			}
+			
+			if (n.actions != null)
+				populateAppActions(actionBar, n.actions);
 			else
 			{
 				actionBar.setViewVisibility(R.id.customAction1, View.GONE);
 				actionBar.setViewVisibility(R.id.customAction2, View.GONE);
+			}
+		}
+	}
+
+	private void populateAppActions(RemoteViews actionBar, Action[] actions) 
+	{
+			if (actions.length >= 1)
+			{
+				actionBar.setImageViewBitmap(R.id.customAction1Image, actions[0].drawable);
+				actionBar.setOnClickPendingIntent(R.id.customAction1, actions[0].actionIntent);
+				actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
+				actionBar.setTextViewText(R.id.customAction1Text, actions[0].title);
+				actionBar.setTextViewText(R.id.actionPin, "");
+				actionBar.setTextViewText(R.id.actionSettings, "");
+			}
+			else
+			{
+				actionBar.setViewVisibility(R.id.customAction1, View.GONE);					
+			}
+			
+			if (actions.length >= 2)
+			{
+				actionBar.setImageViewBitmap(R.id.customAction2Image, actions[1].drawable);
+				actionBar.setOnClickPendingIntent(R.id.customAction2, actions[1].actionIntent);
+				actionBar.setTextViewText(R.id.customAction2Text, actions[1].title);
+				actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
+				actionBar.setTextViewText(R.id.actionPin, "");
+				actionBar.setTextViewText(R.id.actionSettings, "");
+			}
+			else
+			{
+				actionBar.setViewVisibility(R.id.customAction2, View.GONE);									
 			}
 	}
 
