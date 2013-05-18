@@ -65,7 +65,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String LAST_WIDGET_MODE = "last_widget_mode";
 	public static final String DISABLE_AUTO_SWITCH = "disable_auto_switch";	
 	public static String CLEAR_ON_UNLOCK = "clearonunlock";
-	public static String CLEAR_ON_LOCK = "clearonlock";
+	public static String CLEAR_FROM_SAME_APP = "clear_all_from_same_app";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";
 	public static String CLEAR_ON_CLEAR = "clearonclear";
 	public static String CLOCK_SMALL = "small";

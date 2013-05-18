@@ -1,16 +1,5 @@
 package com.roymam.android.notificationswidget;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.TargetApi;
@@ -41,13 +30,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roymam.android.notificationswidget.NotificationData.Action;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class NotificationsService extends AccessibilityService 
 {
@@ -375,11 +375,10 @@ public class NotificationsService extends AccessibilityService
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
 						ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
 						int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-						
-						for (int i=0; i<widgetIds.length; i++) 
-			            {
-			            	AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-			            }	
+
+                        for (int widgetId : widgetIds) {
+                            AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetId, R.id.notificationsListView);
+                        }
 						sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
 					}
 				}
@@ -988,7 +987,7 @@ public class NotificationsService extends AccessibilityService
 				try
 				{
 					Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(notifications.get(pos).packageName);
-					startActivity(LaunchIntent);					
+					startActivity(LaunchIntent);
 				}
 				catch(Exception e2)
 				{
@@ -997,7 +996,22 @@ public class NotificationsService extends AccessibilityService
 					Toast.makeText(this, "Error - cannot launch app", Toast.LENGTH_SHORT).show();
 				}
 			}
-			removeNotification(pos);
+            // clear all notifications from the same app
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            boolean clear = prefs.getBoolean(SettingsActivity.CLEAR_FROM_SAME_APP, false);
+
+            String packageName = notifications.get(pos).packageName;
+            removeNotification(pos);
+            if (clear)
+            {
+                Iterator<NotificationData> iter = notifications.iterator();
+                while(iter.hasNext())
+                {
+                    NotificationData nd = iter.next();
+                    if (nd.packageName.equals(packageName))
+                        iter.remove();
+                }
+            }
 			updateWidget();
 		}
 	}

@@ -21,7 +21,8 @@ public class AboutActivity extends Activity
     	try 
     	{
     		title = getString(R.string.about_title);
-			versionString = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            //noinspection ConstantConditions
+            versionString = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 		} catch (NameNotFoundException ignored)
 		{
 		}
