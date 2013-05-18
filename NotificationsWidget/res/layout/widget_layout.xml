@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
     </LinearLayout>
- 
+
     <ListView
         android:id="@+id/notificationsListView"
         android:layout_width="match_parent"

@@ -196,7 +196,7 @@ public class NotificationsWidgetService extends Service
 		appWidgetManager.updateAppWidget(widgetId, widget);
 	}
 	
-	private PendingIntent getClockAppIntent() 
+	private PendingIntent getClockAppIntent()
 	{
 		// add alarm clock intent
 	    PackageManager packageManager = this.getPackageManager();
@@ -549,7 +549,9 @@ public class NotificationsWidgetService extends Service
 	    
 	    if (prefs.getBoolean(widgetMode +"." + SettingsActivity.CLOCK_IS_CLICKABLE, true))
 	    {
-	    	clock.setOnClickPendingIntent(clockId, getClockAppIntent());
+            PendingIntent pi = getClockAppIntent();
+            if (pi != null)
+	    	    clock.setOnClickPendingIntent(clockId, getClockAppIntent());
 	    }
 	    return clock;
 	}

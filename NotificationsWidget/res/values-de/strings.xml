@@ -40,7 +40,8 @@
     <string name="collectonunlock_summary">Benachrichtigungen sammeln während das Gerät entsperrt ist</string>
     <string name="order_notifications_by">Order notifications by</string>
     <string-array name="settings_orderby_entries">
-        <item>Time</item>
+        <item>Time (Newest first)</item>
+        <item>Time (Oldest first)</item>
         <item>Priority</item>
     </string-array>
     

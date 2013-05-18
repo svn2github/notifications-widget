@@ -361,8 +361,12 @@ public class NotificationsService extends AccessibilityService
 						}
 						int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));						
 						if (apppriority != -9) nd.priority = apppriority;
-						
-						notifications.add(0,nd);						
+
+                        String sortBy = sharedPref.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
+                        if (sortBy.equals("timeasc"))
+                            notifications.add(nd);
+                        else
+						    notifications.add(0,nd);
 					    if (selectedIndex >= 0) selectedIndex++;
 						
 						sortNotificationsList();

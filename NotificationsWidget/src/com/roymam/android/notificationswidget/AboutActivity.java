@@ -22,7 +22,7 @@ public class AboutActivity extends Activity
     	{
     		title = getString(R.string.about_title);
 			versionString = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) 
+		} catch (NameNotFoundException ignored)
 		{
 		}
         
