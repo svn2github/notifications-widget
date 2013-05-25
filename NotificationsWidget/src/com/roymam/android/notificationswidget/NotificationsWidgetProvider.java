@@ -96,8 +96,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		if (ns != null)
     	    {
     	    	ns.clearAllNotifications();
-    	    	ns.setSelectedIndex(-1);
-    	    	updateWidget(ctx, true);
     	    }
     	}
     	else if (intent.getAction().equals(Intent.ACTION_TIME_TICK) ||
@@ -175,11 +173,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     					ns.setSelectedIndex(pos);
     				else
     					ns.setSelectedIndex(-1);
+                    updateWidget(ctx,true);
     			}
 	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
 	    		{	    			
-	    				ns.removeNotification(pos);
-	    				ns.setSelectedIndex(-1);
+	    			ns.removeNotification(pos);
+                    updateWidget(ctx, true);
 	    		}
 	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
 	    		{
@@ -194,7 +193,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    		{
 	    			ns.togglePinNotification(pos);
 	    		}	    		
-	    		updateWidget(ctx, true);
     		}
     	}    	
     	super.onReceive(ctx, intent);

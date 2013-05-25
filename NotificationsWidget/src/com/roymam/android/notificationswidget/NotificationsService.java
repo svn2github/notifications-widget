@@ -403,7 +403,7 @@ public class NotificationsService extends AccessibilityService
 				pn.packageName = packageName;
 				pn.contentIntent = n.contentIntent;
 				persistentNotifications.put(packageName, pn);
-				updateWidget();
+				updateWidget(false);
 			}
 		}
 	}
@@ -902,7 +902,11 @@ public class NotificationsService extends AccessibilityService
 		if (i>=0 && i<notifications.size())
 		{
 			if (!notifications.get(i).pinned)
+            {
 				notifications.remove(i);
+                if (selectedIndex > i) selectedIndex--;
+                else if (selectedIndex ==i) selectedIndex=-1;
+            }
 		}
 	}
 	
@@ -914,19 +918,23 @@ public class NotificationsService extends AccessibilityService
 			NotificationData nd = i.next(); 
 			if (!nd.pinned) i.remove();
 		}
-		updateWidget();			
+        setSelectedIndex(-1);
+        updateWidget(true);
 	}
 	
-	private void updateWidget() 
+	private void updateWidget(boolean refreshList)
 	{
 		Context ctx = getApplicationContext();
 		AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
 		ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
 		int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-		
-		for (int i=0; i<widgetIds.length; i++) 
+
+        if (refreshList)
         {
-        	AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+            for (int i=0; i<widgetIds.length; i++)
+            {
+                AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
+            }
         }
 		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));		
 	}
@@ -971,6 +979,7 @@ public class NotificationsService extends AccessibilityService
 			{
 				n.pinned = false;
 			}
+            updateWidget(true);
 		}
 	}
 
@@ -1012,7 +1021,7 @@ public class NotificationsService extends AccessibilityService
                         iter.remove();
                 }
             }
-			updateWidget();
+			updateWidget(true);
 		}
 	}
 	
