@@ -6,15 +6,18 @@
     android:background="@drawable/item_selector" >
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="#ff1d3741"
+        android:id="@+id/notificationIconBG">
 
         <ImageView
             android:id="@+id/notificationIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:clickable="true"
-            android:src="@drawable/appicon" android:contentDescription="@string/notification_icon"/>
+            android:src="@drawable/appicon" android:contentDescription="@string/notification_icon"
+            android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/notificationSpinner"

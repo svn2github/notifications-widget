@@ -836,6 +836,12 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 					count.setText(R.string.count_demo_text);
 					count.setTextColor(contentColor);
 				}
+
+                View iconBg = v.findViewById(R.id.notificationIconBG);
+                if (iconBg != null)
+                {
+                    iconBg.getBackground().setAlpha(bgAlpha * 255 / 100);
+                }
 				
 				View iconSpinner = v.findViewById(R.id.notificationSpinner);
 				if (iconSpinner != null)

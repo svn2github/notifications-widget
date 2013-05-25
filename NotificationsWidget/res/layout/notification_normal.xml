@@ -6,17 +6,17 @@
     android:visibility="visible" >
 
     <RelativeLayout
-        android:layout_width="36dp"
-        android:layout_height="wrap_content" >
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="#ff1d3741" android:id="@+id/notificationIconBG">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/notificationIcon"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="#801d3741"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/notification_icon"
             android:scaleType="fitCenter"
-            android:src="@drawable/appicon" />
+            android:src="@drawable/appicon" android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/notificationSpinner"

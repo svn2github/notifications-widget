@@ -22,7 +22,7 @@ public class NotificationData
 	String	packageName;
 	PendingIntent action;
 	int 	count;
-	boolean pinned = false;	
+	boolean pinned = false;
 	public Action[] actions = null;
 	public int priority;
 }

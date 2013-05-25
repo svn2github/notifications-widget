@@ -126,8 +126,14 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 
 				int bgColor = preferences.getInt(widgetMode + "." +SettingsActivity.NOTIFICATION_BG_COLOR, Color.BLACK);			
 				int defaultOpacity = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?0:50;
-				int opacity = preferences.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_OPACITY, defaultOpacity);				
+				int opacity = preferences.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_OPACITY, defaultOpacity);
 				row.setInt(R.id.notificationBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, Color.red(bgColor), Color.green(bgColor), Color.blue(bgColor)));
+
+                if (!notStyle.equals("compact"))
+                {
+                    int iconBgColor = preferences.getInt(widgetMode + "." +SettingsActivity.NOTIFICATION_ICON_BG_COLOR, Color.argb(255, 29, 55, 65));
+                    styleView.setInt(R.id.notificationIconBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, Color.red(iconBgColor), Color.green(iconBgColor), Color.blue(iconBgColor)));
+                }
 
 				customizeNotificationView(styleView, n);
 				
