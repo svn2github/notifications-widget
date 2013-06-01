@@ -2,6 +2,7 @@ package com.roymam.android.notificationswidget;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -17,6 +18,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -39,27 +41,15 @@ public class NotificationsWidgetService extends Service
 	private static boolean widgetExpanded;
 	private static boolean clockStarted = false;
 	public static boolean widgetActive = false;
-	
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) 
+
+    @Override
+	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (!clockStarted)
-		{
-			clockStarted = true;
-			// start the clock timer only if it's the first widget
-			// register with ACTION_TIME_TICK - Currently disabled, using normal alarm
-			IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);	    	
-			getApplicationContext().registerReceiver(new BroadcastReceiver()
-			{
-				@Override
-				public void onReceive(Context arg0, Intent arg1) 
-				{
-					Intent intent = new Intent(NotificationsWidgetProvider.UPDATE_CLOCK);
-					getApplicationContext().sendBroadcast(intent);
-				}				
-			}, intentFilter);
-		}
+
+		// start clock service (if hasn't started yet)
+        startService(new Intent(getApplicationContext(), ClockService.class));
+
 		if (intent != null)
 		{
 			int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
@@ -133,7 +123,8 @@ public class NotificationsWidgetService extends Service
 				}			
 			}
 		}
-		return START_STICKY;
+        stopSelf(startId);
+        return super.onStartCommand(intent, flags, startId);
 	}
 
 	private void updateClearOnUnlockState() 
@@ -239,7 +230,8 @@ public class NotificationsWidgetService extends Service
 	    }
 	}
 
-	private void setupNotificationsList(RemoteViews widget, int appWidgetId) 
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private void setupNotificationsList(RemoteViews widget, int appWidgetId)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		NotificationsService ns = NotificationsService.getSharedInstance();
