@@ -118,6 +118,8 @@
     <string name="app_specific_help_details">App specific settings allow you to set some settings specificly for different apps - like hiding notifications from the app, setting priorities, etc...\n\nTo add app specific settings, click on the app icon of the notification when it appears on the widget, an action menu will popup below the notification, then click the \"Settings\" button. (the one with the wrench icon)</string>
     <string name="show_only_last_event">Show only last event</string>
     <string name="show_only_last_event_summary">Show only last event when expanded notification has multiple events (e.g multiple emails in one notification)</string>
+    <string name="multiple_events_handling">Multiple events handling</string>
+    <string name="multiple_events_handling_summary">Set how to handle multiple events when the expanded notification has more than one (e.g multiple emails in one notification)</string>
     <string name="set_app_priority">Set priority</string>
     <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
     <string-array name="settings_app_priority_entries">
@@ -128,7 +130,17 @@
         <item>High</item>
         <item>Max</item>
     </string-array>
-    
+    <string-array name="settings_multiple_events_entries">
+        <item>Show All</item>
+        <item>Show First Event</item>
+        <item>Show Last Event</item>
+    </string-array>
+    <string-array name="settings_multiple_events_values" translatable="false">
+        <item>all</item>
+        <item>first</item>
+        <item>last</item>
+    </string-array>
+
     <!--  Persistent Notifications -->
     <string name="persistent_notifications">Persistent Notifications</string>
     <string name="show_persistent_notifications">Show persistent notification</string>

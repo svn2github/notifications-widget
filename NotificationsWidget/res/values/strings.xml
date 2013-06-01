@@ -136,6 +136,8 @@
     <string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>
     <string name="show_only_last_event">Show only last event</string>
     <string name="show_only_last_event_summary">Show only last event when expanded notification has multiple events (e.g multiple emails in one notification)</string>
+    <string name="multiple_events_handling">Multiple events handling</string>
+    <string name="multiple_events_handling_summary">Set how to handle multiple events when the expanded notification has more than one (e.g multiple emails in one notification)</string>
     <string name="set_app_priority">Set priority</string>
     <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
 
@@ -154,6 +156,17 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array name="settings_multiple_events_entries">
+        <item>Show All</item>
+        <item>Show First Event</item>
+        <item>Show Last Event</item>
+    </string-array>
+    <string-array name="settings_multiple_events_values" translatable="false">
+        <item>all</item>
+        <item>first</item>
+        <item>last</item>
     </string-array>
 
     <string name="clear_app_settings">Reset</string>

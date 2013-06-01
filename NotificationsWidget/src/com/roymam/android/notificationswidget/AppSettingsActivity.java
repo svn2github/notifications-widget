@@ -20,7 +20,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String EXTRA_PACKAGE_NAME = "com.roymam.android.notificationswidget.packagename";
 	public static final String IGNORE_APP = "ignoreapp";
 	public static final String KEEP_ONLY_LAST = "showlast";
-	public static final String SHOW_ONLY_LAST_EVENT = "showlastevent";
+	public static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String APP_PRIORITY = "apppriority";
 	
@@ -70,15 +70,16 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
 		useExpandedTextPref.setDefaultValue(prefs.getBoolean(USE_EXPANDED_TEXT, true));
         useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
-        root.addPreference(useExpandedTextPref);  
+        root.addPreference(useExpandedTextPref);
 
-        // Show last event preference
-        CheckBoxPreference showlastEventPref = new CheckBoxPreference(this);
-        showlastEventPref.setKey(packageName+"."+SHOW_ONLY_LAST_EVENT);
-        showlastEventPref.setTitle(R.string.show_only_last_event);
-        showlastEventPref.setSummary(R.string.show_only_last_event_summary);
-        //showlastEventPref.setDependency(packageName+"."+USE_EXPANDED_TEXT);
-        root.addPreference(showlastEventPref);
+        ListPreference multipleEvents = new ListPreference(this);
+        multipleEvents.setKey(packageName + "." + MULTIPLE_EVENTS_HANDLING);
+        multipleEvents.setTitle(R.string.multiple_events_handling);
+        multipleEvents.setSummary(R.string.multiple_events_handling_summary);
+        multipleEvents.setDefaultValue("all");
+        multipleEvents.setEntries(R.array.settings_multiple_events_entries);
+        multipleEvents.setEntryValues(R.array.settings_multiple_events_values);
+        root.addPreference(multipleEvents);
 
         ListPreference overrideAppPriority = new ListPreference(this);
         overrideAppPriority.setKey(packageName + "." + APP_PRIORITY);
@@ -101,7 +102,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
 				prefs.edit().remove(packageName+"."+IGNORE_APP).commit();
 				prefs.edit().remove(packageName+"."+KEEP_ONLY_LAST).commit();
-				prefs.edit().remove(packageName+"."+SHOW_ONLY_LAST_EVENT).commit();
+				prefs.edit().remove(packageName+"."+MULTIPLE_EVENTS_HANDLING).commit();
 				prefs.edit().remove(packageName+"."+USE_EXPANDED_TEXT).commit();
 				prefs.edit().remove(packageName+"."+APP_PRIORITY).commit();
 				

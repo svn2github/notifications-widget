@@ -1,17 +1,12 @@
 package com.roymam.android.notificationswidget;
-import java.util.ArrayList;
-import java.util.Locale;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -30,6 +25,9 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.view.View;
 import android.widget.RemoteViews;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class NotificationsWidgetService extends Service 
 {	
@@ -276,8 +274,7 @@ public class NotificationsWidgetService extends Service
 	    }
 	    
 	    boolean showClearButton = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?false:true);
-	    widget.setViewVisibility(R.id.clearButton, showClearButton?View.VISIBLE:View.GONE); 
-	    
+	    widget.setViewVisibility(R.id.clearButton, showClearButton?View.VISIBLE:View.GONE);
 	    // hide clear button if no notifications are displayed
 	    if (notificationsCount == 0)
 	    	{
@@ -545,7 +542,12 @@ public class NotificationsWidgetService extends Service
             if (pi != null)
 	    	    clock.setOnClickPendingIntent(clockId, getClockAppIntent());
 	    }
-	    return clock;
+
+        // hide filler for clear button
+        boolean showClearButton = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?false:true);
+        clock.setViewVisibility(R.id.clearButtonFiller, showClearButton?View.VISIBLE:View.GONE);
+
+        return clock;
 	}
 
 	@Override

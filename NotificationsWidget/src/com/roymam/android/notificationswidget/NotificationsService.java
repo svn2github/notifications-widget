@@ -44,7 +44,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -149,8 +148,8 @@ public class NotificationsService extends AccessibilityService
 	    
 	    // register proximity change sensor
 		registerProximitySensor();
-			
-		// keep app on foreground if requested
+
+        // keep app on foreground if requested
 		keepOnForeground();
 		
 		// detect expanded notification id's 
@@ -292,7 +291,7 @@ public class NotificationsService extends AccessibilityService
 						nd.title = null;
 						if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
 						{							
-							getExpandedText(n,nd, sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.SHOW_ONLY_LAST_EVENT, false));
+							getExpandedText(n,nd, sharedPref.getString(nd.packageName + "." + AppSettingsActivity.MULTIPLE_EVENTS_HANDLING, "all"));
 							// replace text with content if no text
 							if (nd.text == null || nd.text.equals("") &&
 								nd.content != null && !nd.content.equals(""))
@@ -523,7 +522,7 @@ public class NotificationsService extends AccessibilityService
 				    	wl.release();
 				    }
 				};
-				worker.schedule(task, 10, TimeUnit.SECONDS);
+                worker.schedule(task, 10, TimeUnit.SECONDS);
 			}		
 			newNotificationsAvailable = false;
 		}	
@@ -658,22 +657,22 @@ public class NotificationsService extends AccessibilityService
 		}
 	}
 	
-	private void getExpandedText(Notification n, NotificationData nd, boolean showFirstEventOnly)
+	private void getExpandedText(Notification n, NotificationData nd, String multipleEventsHandling)
 	{
 		RemoteViews view = n.contentView;
 		
 		// first get information from the original content view
-		extractTextFromView(view, nd, showFirstEventOnly);
+		extractTextFromView(view, nd, multipleEventsHandling);
 		
 		// then try get information from the expanded view
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 		{		
 			view = getBigContentView(n);
-			extractTextFromView(view, nd, showFirstEventOnly);
+			extractTextFromView(view, nd, multipleEventsHandling);
 		}
 	}
 
-	private void extractTextFromView(RemoteViews view, NotificationData nd, boolean useFirstEvent) 
+	private void extractTextFromView(RemoteViews view, NotificationData nd, String multipleEventsHandling)
 	{
 		CharSequence title = null;
 		CharSequence text = null;
@@ -718,88 +717,121 @@ public class NotificationsService extends AccessibilityService
 			// try to extract details lines 
 			content = null;
 			v = localView.findViewById(inbox_notification_event_1_id);
+            CharSequence firstEventStr = null;
+            CharSequence lastEventStr = null;
+
 			if (v != null && v instanceof TextView) 
 			{
 				CharSequence s = ((TextView)v).getText();
 				if (!s.equals(""))
+                {
+                    firstEventStr = s;
 					content = s;
+                }
 			}
 			
-			if (!useFirstEvent)
-			{
-				v = localView.findViewById(inbox_notification_event_2_id);
-				if (v != null && v instanceof TextView) 
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_3_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_4_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_5_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_6_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_7_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_8_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_9_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-				
-				v = localView.findViewById(inbox_notification_event_10_id);
-				if (v != null && v instanceof TextView)  
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals("")) 
-						content = TextUtils.concat(content,"\n",s);
-				}
-			}
-			
+            v = localView.findViewById(inbox_notification_event_2_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_3_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_4_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_5_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_6_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_7_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_8_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_9_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_10_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            if (multipleEventsHandling.equals("first")) content = firstEventStr;
+            else if (multipleEventsHandling.equals("last")) content = lastEventStr;
+
 			// if no content lines, try to get subtext
 			if (content == null)
 			{

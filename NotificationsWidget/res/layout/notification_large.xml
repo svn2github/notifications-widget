@@ -47,7 +47,9 @@
                     android:layout_weight="1"
                     android:minLines="1"
                     android:text="@string/title_demo_text"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"/>
 
                 <TextView
                     android:id="@+id/notificationTime"
@@ -66,7 +68,11 @@
                 android:maxLines="1"
                 android:text="@string/text_demo_text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:linksClickable="true"
+                android:editable="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -78,26 +84,37 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/content_demo_text"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:linksClickable="true"
+                    android:ellipsize="end"/>
 
                 <ImageView
                     android:id="@+id/pinIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/pin" android:contentDescription="@string/pin"/>
+                    android:src="@drawable/pin" android:contentDescription="@string/pin"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
 
                 <TextView
                     android:id="@+id/notificationCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/count_demo_text"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
 
                 <ImageView
                     android:id="@+id/appIcon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/appicon" android:contentDescription="@string/app_icon"/>
+                    android:src="@drawable/appicon" android:contentDescription="@string/app_icon"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
 
             </LinearLayout>
 
