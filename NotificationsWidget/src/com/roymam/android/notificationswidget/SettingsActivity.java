@@ -1,10 +1,5 @@
 package com.roymam.android.notificationswidget;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +22,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.roymam.android.common.ListPreferenceChangeListener;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
@@ -65,6 +65,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String LAST_WIDGET_MODE = "last_widget_mode";
 	public static final String DISABLE_AUTO_SWITCH = "disable_auto_switch";
     public static final String NOTIFICATION_ICON_BG_COLOR = "notification_icon_bg_color";
+    public static final String SHOW_PERSISTENT_NOTIFICATIONS = "show_persistent";
     public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_FROM_SAME_APP = "clear_all_from_same_app";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";

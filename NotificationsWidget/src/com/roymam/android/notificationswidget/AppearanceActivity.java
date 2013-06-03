@@ -1,9 +1,5 @@
 package com.roymam.android.notificationswidget;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
@@ -50,6 +46,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewAnimator;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
 public class AppearanceActivity extends FragmentActivity implements OnNavigationListener
 {		
 	// page scroll stuff
@@ -70,6 +70,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 	private static CheckBox autoSwitch;
 	private static CheckBox showClearAll;
 	private static CheckBox hideClock;
+    private static CheckBox showPersistent;
 	private static ViewAnimator clockStyleView;
 	private static ToggleButton clockClickable;
 	private static ToggleButton boldHours;
@@ -538,6 +539,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			// setup checkboxes
 			showClearAll.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?false:true));			
 			hideClock.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false));
+            showPersistent.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true));
 			
 			// setup toggles
 			clockClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_IS_CLICKABLE, true));
@@ -619,7 +621,8 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			clockStyleRG = (RadioGroup) clockSettingsView.findViewById(R.id.clockStyleRG);
 			autoSwitch = (CheckBox)clockSettingsView.findViewById(R.id.autoSizeCheckbox);
 			showClearAll = (CheckBox)clockSettingsView.findViewById(R.id.showClearButtonCheckbox);
-			hideClock = (CheckBox) clockSettingsView.findViewById(R.id.hideClockCheckbox);
+            hideClock = (CheckBox) clockSettingsView.findViewById(R.id.hideClockCheckbox);
+            showPersistent = (CheckBox) clockSettingsView.findViewById(R.id.showPersistentCheckbox);
 			clockClickable = (ToggleButton)clockSettingsView.findViewById(R.id.clockIsClickableToggle);
 			boldHours = (ToggleButton)clockSettingsView.findViewById(R.id.boldHoursToggle);
 			boldMinutes = (ToggleButton)clockSettingsView.findViewById(R.id.boldMinutesToggle);

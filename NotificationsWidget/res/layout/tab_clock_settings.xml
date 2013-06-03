@@ -257,6 +257,15 @@
                 android:onClick="onClockPrefChanged"
                 android:tag="clockhidden"
                 android:text="@string/hide_clock" />
+
+            <CheckBox
+                    android:id="@+id/showPersistentCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClockPrefChanged"
+                    android:tag="show_persistent"
+                    android:text="@string/show_persistent" />
             
         </LinearLayout>
 

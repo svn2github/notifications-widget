@@ -172,11 +172,14 @@ public class NotificationsWidgetService extends Service
 		widget.removeAllViews(R.id.persistentNotificationsView);
 		widget.setInt(R.id.persistentNotificationsView, "setBackgroundColor", bgColor);
 
-		RemoteViews[] persistentNotifications = getPersistentNotifications();
-		for(RemoteViews pn : persistentNotifications)
-		{
-			widget.addView(R.id.persistentNotificationsView, pn);
-		}
+        if (prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true))
+        {
+            RemoteViews[] persistentNotifications = getPersistentNotifications();
+            for(RemoteViews pn : persistentNotifications)
+            {
+                widget.addView(R.id.persistentNotificationsView, pn);
+            }
+        }
 		
 		// set up notifications list 
 		setupNotificationsList(widget, widgetId);
@@ -351,12 +354,12 @@ public class NotificationsWidgetService extends Service
 	    return clockstyle;
 	}
 
-	private RemoteViews[] getPersistentNotifications() 
+	private RemoteViews[] getPersistentNotifications()
 	{
 		ArrayList<RemoteViews> pns = new ArrayList<RemoteViews>();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		NotificationsService ns = NotificationsService.getSharedInstance();
-		
+
 		if (ns != null)
 		{
 			String persistentApps = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
