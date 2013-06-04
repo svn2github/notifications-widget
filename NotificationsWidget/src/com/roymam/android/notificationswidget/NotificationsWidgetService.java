@@ -1,6 +1,7 @@
 package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -27,7 +28,11 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+
+import static android.app.ActivityManager.RunningAppProcessInfo;
 
 public class NotificationsWidgetService extends Service 
 {	
@@ -35,7 +40,8 @@ public class NotificationsWidgetService extends Service
 	public static final String IS_EXPANDED = "com.roymam.android.notificationswidget.IS_EXPANDED";
 	public static final String ACTION = "com.roymam.android.notificationswidget.ACTION";
 	public static final int ACTION_RENDER_WIDGETS = 0;
-	public static final int ACTION_OPTIONS_CHANGED = 1;	
+	public static final int ACTION_OPTIONS_CHANGED = 1;
+    public static final int ACTION_MONITOR_APPS = 9;
 	private static boolean widgetExpanded;
 	private static boolean clockStarted = false;
 	public static boolean widgetActive = false;
@@ -120,12 +126,53 @@ public class NotificationsWidgetService extends Service
 					}					
 				}			
 			}
+            else if (action == ACTION_MONITOR_APPS && prefs.getBoolean(SettingsActivity.MONITOR_APPS, false))
+            {
+                monitorRunningApps();
+            }
 		}
         stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);
 	}
 
-	private void updateClearOnUnlockState() 
+    private void monitorRunningApps() 
+    {
+        NotificationsService ns = NotificationsService.getSharedInstance();
+        if (ns!=null)
+        {
+            ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            List<RunningAppProcessInfo> l = am.getRunningAppProcesses();
+            Iterator<RunningAppProcessInfo> i = l.iterator();
+            while(i.hasNext()){
+                RunningAppProcessInfo info = i.next();
+                if(info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
+                {
+                    // clear all notifications from foreground app
+                    ns.clearNotificationsForApps(info.pkgList);
+                }
+            }
+        }
+    }
+
+    private boolean isRunningService(ActivityManager am, String processname)
+    {
+        if(processname==null || processname.isEmpty())
+            return false;
+
+        ActivityManager.RunningServiceInfo service;
+
+        List <ActivityManager.RunningServiceInfo> l = am.getRunningServices(9999);
+        Iterator <ActivityManager.RunningServiceInfo> i = l.iterator();
+        while(i.hasNext()){
+            service = i.next();
+            if(service.process.equals(processname))
+                return true;
+        }
+
+        return false;
+    }
+
+    private void updateClearOnUnlockState() 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		NotificationsService ns = NotificationsService.getSharedInstance();
@@ -534,7 +581,7 @@ public class NotificationsWidgetService extends Service
 	    // set up filler for clear button
 	    if (ns != null &&
 	    	ns.getNotificationsCount() > 0 &&
-	    	prefs.getString(SettingsActivity.CLEAR_BUTTON_MODE, "visible").equals("visible"))
+                prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE) ? false : true))
 	    	clock.setViewVisibility(R.id.clearButtonFiller, View.VISIBLE);
 	    else
 	    	clock.setViewVisibility(R.id.clearButtonFiller, View.GONE);
@@ -545,10 +592,6 @@ public class NotificationsWidgetService extends Service
             if (pi != null)
 	    	    clock.setOnClickPendingIntent(clockId, getClockAppIntent());
 	    }
-
-        // hide filler for clear button
-        boolean showClearButton = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?false:true);
-        clock.setViewVisibility(R.id.clearButtonFiller, showClearButton?View.VISIBLE:View.GONE);
 
         return clock;
 	}

@@ -47,13 +47,16 @@
         <item>Time (Oldest first)</item>
         <item>Priority</item>
     </string-array>
-    
+
+    <string name="experimental">Experimentell </string>
     <string name="max_lines">Maximum text lines</string>
     <string name="show_actionbar">Always Show App Action Buttons</string>    
     <string name="show_full_notification">Zeige vollständige Benachrichtigung</string>
     <string name="show_full_notification_summary">Zeige die Benachrichtigung, wie in der Benachrichtigungsleiste im System</string>
     <string name="clearonclear">Überwachen von \"Alle löschen\"</string>
-    <string name="clearonclear_summary">Experimentell – Alle Benachrichtigungen löschen, wenn der Löschknopf in der Android-Benachrichtigungsleiste gedrückt wurde (Erfordert einen Neustart der Bedienungshilfe)</string>
+    <string name="clearonclear_summary">Alle Benachrichtigungen löschen, wenn der Löschknopf in der Android-Benachrichtigungsleiste gedrückt wurde (Erfordert einen Neustart der Bedienungshilfe)</string>
+    <string name="monitor_apps">Monitor running apps</string>
+    <string name="monitor_apps_summary">Clear app notifications when it launches</string>
     <string name="keep_on_foreground">Immer im Vordergrund halten</string>
     <string name="keep_on_foreground_summary">Bewahrt Notificiations Widget davor beendet zu werden, wenn alle Programme vom Benutzer über den Taskmanager beendet werden</string>
     <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string> 

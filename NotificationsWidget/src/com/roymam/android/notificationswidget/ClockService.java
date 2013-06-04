@@ -1,5 +1,7 @@
 package com.roymam.android.notificationswidget;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +12,7 @@ import android.os.IBinder;
 public class ClockService extends Service
 {
     private BroadcastReceiver clockReceiver;
+    private PendingIntent runningAppsPendingIntent;
 
     public IBinder onBind(Intent intent)
     {
@@ -27,6 +30,7 @@ public class ClockService extends Service
     @Override
     public void onCreate()
     {
+        // register clock update
         clockReceiver = new BroadcastReceiver()
         {
             @Override
@@ -38,6 +42,14 @@ public class ClockService extends Service
         };
         
         getApplicationContext().registerReceiver(clockReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+
+        // register process monitoring
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent runningAppsService =new Intent(this, NotificationsWidgetService.class);
+        runningAppsService.putExtra(NotificationsWidgetService.ACTION, NotificationsWidgetService.ACTION_MONITOR_APPS);
+        runningAppsPendingIntent = PendingIntent.getService(this,0, runningAppsService, PendingIntent.FLAG_UPDATE_CURRENT);
+        am.setRepeating(AlarmManager.RTC, 0, 2000, runningAppsPendingIntent);
+
         activated = true;
         super.onCreate();
     }
@@ -47,6 +59,12 @@ public class ClockService extends Service
     {
         getApplicationContext().unregisterReceiver(clockReceiver);
         activated = false;
+        if (runningAppsPendingIntent != null)
+        {
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            am.cancel(runningAppsPendingIntent);
+            runningAppsPendingIntent = null;
+        }
         super.onDestroy();
     }
 

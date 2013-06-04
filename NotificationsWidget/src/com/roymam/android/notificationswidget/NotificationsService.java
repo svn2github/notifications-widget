@@ -1089,6 +1089,28 @@ public class NotificationsService extends AccessibilityService
 	public void setDeviceIsUnlocked(boolean deviceIsUnlocked) {
 		this.deviceIsUnlocked = deviceIsUnlocked;
 	}
-	
-	
+
+
+    public void clearNotificationsForApps(String[] pkgList)
+    {
+        boolean changed = false;
+        for(String packageName : pkgList)
+        {
+            Iterator<NotificationData> i = notifications.iterator();
+            while (i.hasNext())
+            {
+                NotificationData nd = i.next();
+                if (!nd.pinned && nd.packageName.equals(packageName))
+                {
+                    i.remove();
+                    changed = true;
+                }
+            }
+        }
+        if (changed)
+        {
+            setSelectedIndex(-1);
+            updateWidget(true);
+        }
+    }
 }

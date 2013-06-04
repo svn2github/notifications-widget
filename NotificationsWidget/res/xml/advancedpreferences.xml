@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <CheckBoxPreference 
+    <PreferenceCategory android:key="experimental" android:title="@string/experimental">
+        <CheckBoxPreference
+                android:title="@string/monitor_apps"
+                android:key="monitor_apps"
+                android:enabled="true"
+                android:defaultValue="false"
+                android:summary="@string/monitor_apps_summary"/>
+        <CheckBoxPreference
             android:title="@string/clearonclear" 
             android:key="clearonclear" 
             android:enabled="true" 
             android:defaultValue="false" 
-            android:summary="@string/clearonclear_summary"/>            
+            android:summary="@string/clearonclear_summary"/>
+    </PreferenceCategory>
     <CheckBoxPreference android:key="keep_on_foreground"
         				android:title="@string/keep_on_foreground"
         				android:summary="@string/keep_on_foreground_summary"
@@ -14,4 +22,5 @@
         				android:title="@string/disable_auto_switch"
         				android:summary="@string/disable_auto_switch_summary"
         				android:defaultValue="false"/>
+
 </PreferenceScreen>
