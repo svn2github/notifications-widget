@@ -150,8 +150,9 @@ public class NotificationsWidgetService extends Service
             ArrayList<String> runningApps = new ArrayList<String>();
             while(i.hasNext()){
                 RunningAppProcessInfo info = i.next();
-                for(String packageName : info.pkgList)
-                    runningApps.add(packageName);
+                if (info.importance <= RunningAppProcessInfo.IMPORTANCE_SERVICE)
+                    for(String packageName : info.pkgList)
+                        runningApps.add(packageName);
                 if(info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
                 {
                     // clear all notifications from foreground app
