@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="150"
+    android:versionCode="154"
     android:versionName="1.0.9" >
 
     <uses-sdk
@@ -118,7 +118,49 @@
         </service>
         <service android:name=".ClockService"/>
 
-
+        <!-- TTS Silent (workaround for Samsung Talkback issue)
+        <service
+                android:name=".ttssilent.TTSSilentService"
+                android:label="NiLS - Silent TTS" >
+            <intent-filter>
+                <action android:name="android.intent.action.TTS_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                    android:name="android.speech.tts"
+                    android:resource="@xml/tts_engine" />
+        </service>
+        <activity
+        android:name=".ttssilent.TTSSilentSettings"
+        android:enabled="true"
+        android:label="NiLS TTS Silent"
+        android:launchMode="standard">
+            <intent-filter>
+            <action android:name="android.speech.tts.engine.CONFIGURE_ENGINE" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+        <activity android:name=".ttssilent.TTSSilentInstallData"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.speech.tts.engine.INSTALL_TTS_DATA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ttssilent.TTSSilentCheckData"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.speech.tts.engine.CHECK_TTS_DATA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ttssilent.TTSSilentGetSampleText"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.speech.tts.engine.GET_SAMPLE_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>-->
     </application>
 
 </manifest>

@@ -2,11 +2,13 @@ package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -126,7 +128,7 @@ public class NotificationsWidgetService extends Service
 					}					
 				}			
 			}
-            else if (action == ACTION_MONITOR_APPS && prefs.getBoolean(SettingsActivity.MONITOR_APPS, false))
+            else if (action == ACTION_MONITOR_APPS)
             {
                 monitorRunningApps();
             }
@@ -138,19 +140,25 @@ public class NotificationsWidgetService extends Service
     private void monitorRunningApps() 
     {
         NotificationsService ns = NotificationsService.getSharedInstance();
-        if (ns!=null)
+        KeyguardManager kgMgr = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        boolean onLockScreen = kgMgr.inKeyguardRestrictedInputMode();
+        if (ns!=null && !onLockScreen)
         {
             ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             List<RunningAppProcessInfo> l = am.getRunningAppProcesses();
             Iterator<RunningAppProcessInfo> i = l.iterator();
+            ArrayList<String> runningApps = new ArrayList<String>();
             while(i.hasNext()){
                 RunningAppProcessInfo info = i.next();
+                for(String packageName : info.pkgList)
+                    runningApps.add(packageName);
                 if(info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
                 {
                     // clear all notifications from foreground app
                     ns.clearNotificationsForApps(info.pkgList);
                 }
             }
+            ns.purgePersistentNotifications(runningApps);
         }
     }
 

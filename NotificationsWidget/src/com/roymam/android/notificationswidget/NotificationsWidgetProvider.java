@@ -122,15 +122,15 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 				ns.setWidgetLockerEnabled(true);
     		}
     	}
-    	else if (intent.getAction().equals("android.intent.action.SCREEN_ON"))
+    	/*else if (intent.getAction().equals("android.intent.action.SCREEN_ON"))
     	{
     		NotificationsService ns = NotificationsService.getSharedInstance();
     		if (ns != null)
     		{
-    			// if the screen is on, so the device is currently ocked (until USER_PRESENT will trigger)
+    			// if the screen is on, so the device is currently locked (until USER_PRESENT will trigger)
     			ns.setDeviceIsLocked();
     		}
-    	}
+    	}*/
     	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.DISABLED"))
     	{
     		NotificationsService ns = NotificationsService.getSharedInstance();

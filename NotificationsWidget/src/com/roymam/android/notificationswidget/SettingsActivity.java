@@ -71,6 +71,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";
 	public static String CLEAR_ON_CLEAR = "clearonclear";
     public static String MONITOR_APPS = "monitor_apps";
+    public static String MONITOR_APPS_INTERVAL = "monitor_apps_interval";
 	public static String CLOCK_SMALL = "small";
 	public static String CLOCK_MEDIUM = "medium";
 	public static String CLOCK_LARGE = "large";
@@ -145,6 +146,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.advancedpreferences);
+
+            // monitor apps interval
+            ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
+                    getResources().getStringArray(R.array.monitor_apps_interval_entries),
+                    getResources().getStringArray(R.array.monitor_apps_interval_values));
+
+            Preference miPref = findPreference(MONITOR_APPS_INTERVAL);
+            String currValue = getPreferenceScreen().getSharedPreferences().getString(MONITOR_APPS_INTERVAL, "5");
+            listener.setPrefSummary(miPref, currValue);
+            miPref.setOnPreferenceChangeListener(listener);
 	    }
 	}
 	

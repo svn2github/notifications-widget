@@ -52,7 +52,8 @@
     <string name="clearonclear">Monitor \"Clear All\"</string>
     <string name="clearonclear_summary">Clear notifications when clear button is clicked on android notifications bar. (requires accessibility service restart)</string>
     <string name="monitor_apps">Monitor running apps</string>
-    <string name="monitor_apps_summary">Clear app notifications when it launches</string>
+    <string name="monitor_apps_summary">Clear app notifications when it launches, may increase battery usage. (requires accessibility service restart)</string>
+    <string name="monitor_apps_interval">Monitor apps interval</string>
     <string name="keep_on_foreground">Keep on foreground</string>
     <string name="keep_on_foreground_summary">Keeps NotificiationsWidget service on foreground to prevent other apps from killing it</string>
     <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string>
@@ -75,6 +76,19 @@
         <item>5</item>
         <item>6</item>
         <item>999</item>
+    </string-array>
+
+    <string-array name="monitor_apps_interval_entries">
+        <item>2 seconds</item>
+        <item>5 seconds</item>
+        <item>10 seconds</item>
+        <item>30 seconds</item>
+    </string-array>
+    <string-array name="monitor_apps_interval_values" translatable="false">
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>30</item>
     </string-array>
 
     <string name="service_inactive_text">Service is inactive. please enable \"NiLS Service\" service on Accessibility Settings, touch alert icon to open Accessibility Settings</string>
@@ -280,5 +294,6 @@
     <string name="notification_action_1">Notification Action 1</string>
     <string name="notification_action_2">Notification Action 2</string>
     <string name="clear_notification">Clear Notification</string>
+    <string name="open_accessibility_settings">Open Accessibility Settings</string>
 
 </resources>

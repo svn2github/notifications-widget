@@ -133,7 +133,7 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>
-        
+
         <TextView
             android:id="@+id/TutorialDescription"
             android:layout_width="match_parent"

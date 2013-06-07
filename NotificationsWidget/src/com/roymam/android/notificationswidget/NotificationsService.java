@@ -3,6 +3,8 @@ package com.roymam.android.notificationswidget;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -53,7 +55,6 @@ public class NotificationsService extends AccessibilityService
 	private static NotificationsService sSharedInstance;
 	private List<NotificationData> notifications;
 	private HashMap<String, PersistentNotification> persistentNotifications;
-	private boolean deviceIsUnlocked = true;
 	private boolean deviceCovered = false;
 	private boolean newNotificationsAvailable = false;
 	private boolean widgetLockerEnabled = false;
@@ -84,8 +85,10 @@ public class NotificationsService extends AccessibilityService
 	public int inbox_notification_event_8_id = 0;
 	public int inbox_notification_event_9_id = 0;
 	public int inbox_notification_event_10_id = 0;
-	
-	public static NotificationsService getSharedInstance() { return sSharedInstance; }
+    private PendingIntent runningAppsPendingIntent = null;
+    private boolean overrideLocked = false;
+
+    public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) 
@@ -153,11 +156,40 @@ public class NotificationsService extends AccessibilityService
 		keepOnForeground();
 		
 		// detect expanded notification id's 
-		detectNotificationIds();		
-	}	
-	
-	
-	public void registerProximitySensor()
+		detectNotificationIds();
+
+        // start monitor apps timer
+        startMonitorApps();
+	}
+
+    private void startMonitorApps()
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getBoolean(SettingsActivity.MONITOR_APPS, false))
+        {
+            // register process monitoring
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent runningAppsService =new Intent(this, NotificationsWidgetService.class);
+            runningAppsService.putExtra(NotificationsWidgetService.ACTION, NotificationsWidgetService.ACTION_MONITOR_APPS);
+            runningAppsPendingIntent = PendingIntent.getService(this,0, runningAppsService, PendingIntent.FLAG_UPDATE_CURRENT);
+            int interval = Integer.parseInt(prefs.getString(SettingsActivity.MONITOR_APPS_INTERVAL, "5"));
+            am.setRepeating(AlarmManager.RTC, 0, interval*1000, runningAppsPendingIntent);
+        };
+    }
+
+    private void stopMonitorApps()
+    {
+        if (runningAppsPendingIntent != null)
+        {
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            am.cancel(runningAppsPendingIntent);
+            runningAppsPendingIntent = null;
+        }
+    }
+
+
+    public void registerProximitySensor()
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -221,14 +253,10 @@ public class NotificationsService extends AccessibilityService
 				{
 					PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 					isScreenOn = powerManager.isScreenOn();
-					if (!isScreenOn && isDeviceIsUnlocked())
-					{
-						setDeviceIsLocked();
-					}
 				}
 
 				// collect only on two sceneries: 1. the screen is off. 2. the screen is on but the device is unlocked.  
-				if (!isScreenOn || (isScreenOn && !isDeviceIsUnlocked()))
+				if (!isScreenOn || !isDeviceIsUnlocked())
 				{			
 					boolean ignoreApp = sharedPref.getBoolean(packageName+"."+AppSettingsActivity.IGNORE_APP, false);
 					if (!ignoreApp)
@@ -333,8 +361,8 @@ public class NotificationsService extends AccessibilityService
 							CharSequence content1 = nd.content;
 							CharSequence content2 = notifications.get(i).content;
 							boolean titlesdup = (title1 != null && title2 != null && title1.toString().equals(title2.toString()) || title1 == null && title2 == null);
-							boolean textdup = (text1 != null && text2 != null && text1.toString().equals(text2.toString()) || text1 == null && text2 == null);
-							boolean contentsdup = (content1 != null && content2 != null && content1.toString().equals(content2.toString())  || content1 == null && content2 == null);
+							boolean textdup = (text1 != null && text2 != null && text1.toString().startsWith(text2.toString()) || text1 == null && text2 == null);
+							boolean contentsdup = (content1 != null && content2 != null && content1.toString().startsWith(content2.toString())  || content1 == null && content2 == null);
 							boolean allDup = titlesdup && textdup && contentsdup;
 							
 							if (nd.packageName.equals(notifications.get(i).packageName) &&
@@ -973,18 +1001,13 @@ public class NotificationsService extends AccessibilityService
 
 	public void setDeviceIsUnlocked()
 	{
+        overrideLocked = false;
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false))
 		{
 			clearAllNotifications();
 		}
-		deviceIsUnlocked = true;
 	}
-	
-	public void setDeviceIsLocked()
-	{
-		setDeviceIsUnlocked(false);
-	}
-	
+
 	@Override
 	public void onInterrupt() 
 	{
@@ -992,10 +1015,10 @@ public class NotificationsService extends AccessibilityService
 	
 	public boolean onUnbind(Intent intent) 
 	{
-		//Toast.makeText(this, "Notifications Service Stopped", Toast.LENGTH_LONG).show();
 	    sSharedInstance = null;
 	    stopProximityMontior();
-	    return super.onUnbind(intent);
+        stopMonitorApps();
+        return super.onUnbind(intent);
 	}
 	
 	public void togglePinNotification(int pos)
@@ -1082,14 +1105,15 @@ public class NotificationsService extends AccessibilityService
 		this.selectedIndex = selectedIndex;
 	}
 
-	public boolean isDeviceIsUnlocked() {
-		return deviceIsUnlocked;
-	}
+	public boolean isDeviceIsUnlocked()
+    {
+        if (overrideLocked) return false;
 
-	public void setDeviceIsUnlocked(boolean deviceIsUnlocked) {
-		this.deviceIsUnlocked = deviceIsUnlocked;
-	}
+        KeyguardManager kgMgr = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        boolean onLockScreen = kgMgr.inKeyguardRestrictedInputMode();
 
+        return !onLockScreen;
+	}
 
     public void clearNotificationsForApps(String[] pkgList)
     {
@@ -1112,5 +1136,27 @@ public class NotificationsService extends AccessibilityService
             setSelectedIndex(-1);
             updateWidget(true);
         }
+    }
+
+    public void purgePersistentNotifications(ArrayList<String> runningApps)
+    {
+        HashMap<String,PersistentNotification> newPN = new HashMap<String, PersistentNotification>();
+        for(String packageName : runningApps)
+        {
+            if (persistentNotifications.containsKey(packageName))
+            {
+                newPN.put(packageName, persistentNotifications.get(packageName));
+            }
+        }
+        if (newPN.size()!=persistentNotifications.size())
+        {
+            persistentNotifications = newPN;
+            updateWidget(true);
+        }
+    }
+
+    public void setDeviceIsLocked()
+    {
+        overrideLocked = true;
     }
 }
