@@ -45,14 +45,11 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String NOTIFICATIONS_ORDER = "order_notifications_by";
 	public static final String KEEP_ON_FOREGROUND = "keep_on_foreground";
 	public static final String CLOCK_STYLE = "clockstyle";
-	public static final String CLEAR_BUTTON_MODE = "clearbuttonmode";
-	public static final String SHOW_EDIT_BUTTON= "showeditbutton";
 	public static final String NOTIFICATION_STYLE="notification_style";
 	public static final String MAX_LINES="max_lines";
 	public static final String SHOW_ACTIONBAR="show_actionbar";
 	public static final String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
 	public static final String TEXT_COLOR = "notification_text_color";
-	public static final String TIME_COLOR = "notification_time_color";
 	public static final String CLOCK_COLOR = "clock_text_color";
 	public static final String CLOCK_BG_COLOR = "clock_bg_color";	
 	public static final String CLOCK_ALARM_COLOR = "clock_alarm_color";	
@@ -70,9 +67,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static String CLEAR_FROM_SAME_APP = "clear_all_from_same_app";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";
 	public static String CLEAR_ON_CLEAR = "clearonclear";
-    public static String MONITOR_APPS = "monitor_apps";
+    public static String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
+    public static String AUTO_KILL_PERSISTENT= "auto_kill_persistent";
     public static String MONITOR_APPS_INTERVAL = "monitor_apps_interval";
-	public static String CLOCK_SMALL = "small";
+    public static String CLOCK_SMALL = "small";
 	public static String CLOCK_MEDIUM = "medium";
 	public static String CLOCK_LARGE = "large";
 	public static String CLOCK_HIDDEN = "clockhidden";

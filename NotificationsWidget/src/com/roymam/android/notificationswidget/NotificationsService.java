@@ -116,7 +116,8 @@ public class NotificationsService extends AccessibilityService
 		
 		sSharedInstance = this;		
 		AccessibilityServiceInfo info = new AccessibilityServiceInfo();
-		
+
+        info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;
 		// check if "Clear Notifications Monitor" feature enabled, if so - monitor view clicks
 		if (prefs.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
 		{
@@ -135,16 +136,17 @@ public class NotificationsService extends AccessibilityService
 			{
 				Toast.makeText(this, R.string.failed_to_monitor_clear_button, Toast.LENGTH_LONG).show();
 			}			
-		    info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED | AccessibilityEvent.TYPE_VIEW_CLICKED;		    
+		    info.eventTypes |= AccessibilityEvent.TYPE_VIEW_CLICKED;
 		}
-		else
-		{		
-		    info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;		   
-		}
-		
+
+        if (prefs.getBoolean(SettingsActivity.CLEAR_APP_NOTIFICATIONS, true))
+        {
+            info.eventTypes |= AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+        }
 		info.notificationTimeout = 100;
 	    info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
 	    setServiceInfo(info);
+
 	    	    
 	    notifications = new ArrayList<NotificationData>();
 	    persistentNotifications = new HashMap<String, PersistentNotification>();
@@ -166,7 +168,7 @@ public class NotificationsService extends AccessibilityService
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (prefs.getBoolean(SettingsActivity.MONITOR_APPS, false))
+        if (prefs.getBoolean(SettingsActivity.AUTO_KILL_PERSISTENT, false))
         {
             // register process monitoring
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -900,8 +902,7 @@ public class NotificationsService extends AccessibilityService
 				Notification n = (Notification)event.getParcelableData();
 				handleNotification(n, event.getPackageName().toString());
 			}
-			else 
-				if (event.getPackageName()!= null && event.getClassName() != null && event.getContentDescription() != null)
+			else if (event.getPackageName()!= null && event.getClassName() != null && event.getContentDescription() != null)
 				{
 					if (event.getPackageName().equals("com.android.systemui"))
 						{
@@ -918,6 +919,10 @@ public class NotificationsService extends AccessibilityService
 							}
 						}
 				}
+            else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+            {
+                clearNotificationsForApps(new String[]{event.getPackageName().toString()});
+            }
 		}
 	}
 	

@@ -1,7 +1,5 @@
 package com.roymam.android.notificationswidget;
 
-import com.roymam.android.notificationswidget.NotificationData.Action;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -24,6 +22,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import com.roymam.android.notificationswidget.NotificationData.Action;
 
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
@@ -275,47 +275,55 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 			RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.view_actionbar);
 			row.addView(R.id.actionbarContainer, actionBar);			
 			row.setViewVisibility(R.id.actionbarContainer, View.VISIBLE);
-		
-			// set app settings intent
-			Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-			appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
-			appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
-			appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-			actionBar.setOnClickPendingIntent(
-					R.id.actionSettings, 
-					PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION+position*10, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-			actionBar.setTextViewText(R.id.actionSettings, ctxt.getText(R.string.settings));
-	
-			// set pin notification intent
-			Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-			pinIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.PIN_ACTION);
-			pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-			actionBar.setOnClickPendingIntent(
-					R.id.actionPin, 
-					PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION+position*10, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));			    	
-	
-			// set clear notification intent
-			Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
-			clearIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.CLEAR_ACTION);
-			clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
-			actionBar.setOnClickPendingIntent(
-					R.id.actionClear, 
-					PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-					
-			// hide clear button for pinned notifications
-			if (NotificationsService.getSharedInstance() != null && 
-				NotificationsService.getSharedInstance().getNotification(position) != null &&
-				NotificationsService.getSharedInstance().getNotification(position).pinned)
-			{
-				actionBar.setViewVisibility(R.id.actionClear, View.GONE);	
-				actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.unpin));			
-			}
-			else
-			{
-				actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
-				actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));			
-			}
-			
+
+            if (NotificationsService.getSharedInstance().getSelectedIndex() == position )
+            {
+                // set app settings intent
+                Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);
+                appSettingsIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.SETTINGS_ACTION);
+                appSettingsIntent.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, n.packageName);
+                appSettingsIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+                actionBar.setOnClickPendingIntent(
+                        R.id.actionSettings,
+                        PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION+position*10, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                actionBar.setTextViewText(R.id.actionSettings, ctxt.getText(R.string.settings));
+
+                // set pin notification intent
+                Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);
+                pinIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.PIN_ACTION);
+                pinIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+                actionBar.setOnClickPendingIntent(
+                        R.id.actionPin,
+                        PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.PIN_ACTION+position*10, pinIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                // set clear notification intent
+                Intent clearIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);
+                clearIntent.putExtra(NotificationsWidgetProvider.PERFORM_ACTION,NotificationsWidgetProvider.CLEAR_ACTION);
+                clearIntent.putExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX, position);
+                actionBar.setOnClickPendingIntent(
+                        R.id.actionClear,
+                        PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                // hide clear button for pinned notifications
+                if (NotificationsService.getSharedInstance() != null &&
+                    NotificationsService.getSharedInstance().getNotification(position) != null &&
+                    NotificationsService.getSharedInstance().getNotification(position).pinned)
+                {
+                    actionBar.setViewVisibility(R.id.actionClear, View.GONE);
+                    actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.unpin));
+                }
+                else
+                {
+                    actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
+                    actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));
+                }
+            }
+            else
+            {
+                actionBar.setViewVisibility(R.id.actionSettings, View.GONE);
+                actionBar.setViewVisibility(R.id.actionPin, View.GONE);
+                actionBar.setViewVisibility(R.id.actionClear, View.GONE);
+            }
 			if (n.actions != null)
 				populateAppActions(actionBar, n.actions);
 			else

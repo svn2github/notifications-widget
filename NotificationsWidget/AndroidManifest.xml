@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="157"
-    android:versionName="1.0.9
+    android:versionCode="158"
+    android:versionName="1.0.9.1
     " >
 
     <uses-sdk
@@ -21,7 +21,7 @@
             android:excludeFromRecents="true"
             android:label="@string/title"
             android:launchMode="singleInstance"
-            android:theme="@style/Theme.Transparent" >
+            android:theme="@android:style/Theme.Holo" >
         </activity>
         <activity
             android:name="com.roymam.android.notificationswidget.SettingsActivity"

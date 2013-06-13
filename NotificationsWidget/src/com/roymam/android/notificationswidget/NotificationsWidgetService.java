@@ -2,13 +2,11 @@ package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
-import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -140,45 +138,21 @@ public class NotificationsWidgetService extends Service
     private void monitorRunningApps() 
     {
         NotificationsService ns = NotificationsService.getSharedInstance();
-        KeyguardManager kgMgr = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        boolean onLockScreen = kgMgr.inKeyguardRestrictedInputMode();
-        if (ns!=null && !onLockScreen)
+        if (ns!=null)
         {
             ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             List<RunningAppProcessInfo> l = am.getRunningAppProcesses();
             Iterator<RunningAppProcessInfo> i = l.iterator();
             ArrayList<String> runningApps = new ArrayList<String>();
-            while(i.hasNext()){
+            while(i.hasNext())
+            {
                 RunningAppProcessInfo info = i.next();
                 if (info.importance <= RunningAppProcessInfo.IMPORTANCE_SERVICE)
                     for(String packageName : info.pkgList)
                         runningApps.add(packageName);
-                if(info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
-                {
-                    // clear all notifications from foreground app
-                    ns.clearNotificationsForApps(info.pkgList);
-                }
             }
             ns.purgePersistentNotifications(runningApps);
         }
-    }
-
-    private boolean isRunningService(ActivityManager am, String processname)
-    {
-        if(processname==null || processname.isEmpty())
-            return false;
-
-        ActivityManager.RunningServiceInfo service;
-
-        List <ActivityManager.RunningServiceInfo> l = am.getRunningServices(9999);
-        Iterator <ActivityManager.RunningServiceInfo> i = l.iterator();
-        while(i.hasNext()){
-            service = i.next();
-            if(service.process.equals(processname))
-                return true;
-        }
-
-        return false;
     }
 
     private void updateClearOnUnlockState() 
