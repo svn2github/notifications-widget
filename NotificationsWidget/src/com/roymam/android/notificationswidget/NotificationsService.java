@@ -968,6 +968,12 @@ public class NotificationsService extends AccessibilityService
 		{
 			if (!notifications.get(i).pinned)
             {
+                // notify FloatingNotifications for clearing this notification
+                Intent intent = new Intent();
+                intent.setAction("robj.floating.notifications.dismiss");
+                intent.putExtra("package", notifications.get(i).packageName);
+                sendBroadcast(intent);
+
 				notifications.remove(i);
                 if (selectedIndex > i) selectedIndex--;
                 else if (selectedIndex ==i) selectedIndex=-1;
@@ -981,7 +987,16 @@ public class NotificationsService extends AccessibilityService
 		while (i.hasNext()) 
 		{
 			NotificationData nd = i.next(); 
-			if (!nd.pinned) i.remove();
+			if (!nd.pinned)
+            {
+                i.remove();
+
+                // notify FloatingNotifications for clearing this notification
+                Intent intent = new Intent();
+                intent.setAction("robj.floating.notifications.dismiss");
+                intent.putExtra("package", nd.packageName);
+                sendBroadcast(intent);
+            }
 		}
         setSelectedIndex(-1);
         updateWidget(true);
@@ -1081,6 +1096,13 @@ public class NotificationsService extends AccessibilityService
                         iter.remove();
                 }
             }
+
+            // notify FloatingNotifications for clearing this notification
+            Intent intent = new Intent();
+            intent.setAction("robj.floating.notifications.dismiss");
+            intent.putExtra("package", packageName);
+            sendBroadcast(intent);
+
 			updateWidget(true);
 		}
 	}
@@ -1135,6 +1157,11 @@ public class NotificationsService extends AccessibilityService
                     changed = true;
                 }
             }
+            // notify FloatingNotifications for clearing this notification
+            Intent intent = new Intent();
+            intent.setAction("robj.floating.notifications.dismiss");
+            intent.putExtra("package", packageName);
+            sendBroadcast(intent);
         }
         if (changed)
         {

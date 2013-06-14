@@ -92,6 +92,9 @@
                 <action android:name="com.roymam.android.notificationswidget.update_clock" />
                 <action android:name="com.roymam.android.notificationswidget.switchmode" />
                 <action android:name="com.roymam.android.notificationswidget.performaction" />
+
+                <!-- Floating Notifications Sync -->
+                <action android:name="robj.floating.notifications.dismissed"/>
             </intent-filter>
             <!-- This specifies the widget provider info -->
             <meta-data

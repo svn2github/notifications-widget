@@ -286,7 +286,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
                 actionBar.setOnClickPendingIntent(
                         R.id.actionSettings,
                         PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.SETTINGS_ACTION+position*10, appSettingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-                actionBar.setTextViewText(R.id.actionSettings, ctxt.getText(R.string.settings));
+                actionBar.setTextViewText(R.id.actionSettingsText, ctxt.getText(R.string.settings));
 
                 // set pin notification intent
                 Intent pinIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);
@@ -310,12 +310,12 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
                     NotificationsService.getSharedInstance().getNotification(position).pinned)
                 {
                     actionBar.setViewVisibility(R.id.actionClear, View.GONE);
-                    actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.unpin));
+                    actionBar.setTextViewText(R.id.actionPinText, ctxt.getText(R.string.unpin));
                 }
                 else
                 {
                     actionBar.setViewVisibility(R.id.actionClear, View.VISIBLE);
-                    actionBar.setTextViewText(R.id.actionPin, ctxt.getText(R.string.pin));
+                    actionBar.setTextViewText(R.id.actionPinText, ctxt.getText(R.string.pin));
                 }
             }
             else
@@ -342,8 +342,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				actionBar.setOnClickPendingIntent(R.id.customAction1, actions[0].actionIntent);
 				actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
 				actionBar.setTextViewText(R.id.customAction1Text, actions[0].title);
-				actionBar.setTextViewText(R.id.actionPin, "");
-				actionBar.setTextViewText(R.id.actionSettings, "");
+				actionBar.setTextViewText(R.id.actionPinText, "");
+				actionBar.setTextViewText(R.id.actionSettingsText, "");
 			}
 			else
 			{
@@ -356,8 +356,8 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				actionBar.setOnClickPendingIntent(R.id.customAction2, actions[1].actionIntent);
 				actionBar.setTextViewText(R.id.customAction2Text, actions[1].title);
 				actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
-				actionBar.setTextViewText(R.id.actionPin, "");
-				actionBar.setTextViewText(R.id.actionSettings, "");
+				actionBar.setTextViewText(R.id.actionPinText, "");
+				actionBar.setTextViewText(R.id.actionSettingsText, "");
 			}
 			else
 			{
