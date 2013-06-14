@@ -127,8 +127,8 @@
     <string name="contact_ask">Ask a question</string>
     <string name="contact_request">Request a Feature</string>
     <string name="contact_report">Report a Bug</string>
-    <string name="contact_request_link">http://code.google.com/p/notifications-widget/issues/entry?template=Feature%20Request</string>
-    <string name="contact_report_link">http://code.google.com/p/notifications-widget/issues/entry?template=Bug%20Report</string>
+    <string name="contact_request_link" translatable="false">https://roymam.atlassian.net/secure/CreateIssue.jspa?pid=10000&amp;issuetype=2</string>
+    <string name="contact_report_link" translatable="false">https://roymam.atlassian.net/secure/CreateIssue.jspa?pid=10000&amp;issuetype=1</string>
     <string name="version">Version</string>
 
     <!-- WidgetLocker -->

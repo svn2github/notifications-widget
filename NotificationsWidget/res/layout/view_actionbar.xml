@@ -48,7 +48,6 @@
     	        android:layout_height="wrap_content"
     	        android:text="Action 2"
     	        android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_weight="1"
                 android:maxLines="1"/>
     	</LinearLayout>
 
