@@ -63,6 +63,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String DISABLE_AUTO_SWITCH = "disable_auto_switch";
     public static final String NOTIFICATION_ICON_BG_COLOR = "notification_icon_bg_color";
     public static final String SHOW_PERSISTENT_NOTIFICATIONS = "show_persistent";
+    public static final String MONITOR_NOTIFICATIONS_BAR = "monitor_shade";
     public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_FROM_SAME_APP = "clear_all_from_same_app";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";

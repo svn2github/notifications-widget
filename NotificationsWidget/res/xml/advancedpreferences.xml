@@ -22,6 +22,12 @@
             android:defaultValue="false" 
             android:summary="@string/clearonclear_summary"/>
         <CheckBoxPreference
+                android:title="@string/monitor_shade"
+                android:key="monitor_shade"
+                android:enabled="true"
+                android:defaultValue="false"
+                android:summary="@string/monitor_shade__summary"/>
+        <CheckBoxPreference
                 android:title="@string/auto_kill_persistent"
                 android:key="auto_kill_persistent"
                 android:enabled="true"
@@ -39,6 +45,4 @@
             <intent android:action="android.settings.ACCESSIBILITY_SETTINGS"/>
         </PreferenceScreen>
     </PreferenceCategory>
-
-
 </PreferenceScreen>

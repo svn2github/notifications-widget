@@ -55,6 +55,8 @@
     <string name="show_full_notification_summary">Zeige die Benachrichtigung, wie in der Benachrichtigungsleiste im System</string>
     <string name="clearonclear">Überwachen von \"Alle löschen\"</string>
     <string name="clearonclear_summary">Alle Benachrichtigungen löschen, wenn der Löschknopf in der Android-Benachrichtigungsleiste gedrückt wurde (Erfordert einen Neustart der Bedienungshilfe)</string>
+    <string name="monitor_shade">Monitor notifications bar</string>
+    <string name="monitor_shade__summary">Clear notifications that don\'t appear on android notifications bar. (requires accessibility service restart)</string>
     <string name="clear_app_notifications">Clear when app is opened</string>
     <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched. (requires accessibility service restart)</string>
     <string name="auto_kill_persistent">Auto remove persistent notifications</string>

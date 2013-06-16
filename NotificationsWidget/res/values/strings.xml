@@ -51,6 +51,8 @@
     <string name="show_full_notification_summary">Show full notification content as it appears on notifications bar</string>
     <string name="clearonclear">Monitor \"Clear All\"</string>
     <string name="clearonclear_summary">Clear notifications when clear button is clicked on android notifications bar. (requires accessibility service restart)</string>
+    <string name="monitor_shade">Monitor notifications bar</string>
+    <string name="monitor_shade__summary">Clear notifications that don\'t appear on android notifications bar. (requires accessibility service restart)</string>
     <string name="clear_app_notifications">Clear when app is opened</string>
     <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched. (requires accessibility service restart)</string>
     <string name="auto_kill_persistent">Auto remove persistent notifications</string>

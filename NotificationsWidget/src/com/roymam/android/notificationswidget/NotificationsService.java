@@ -17,6 +17,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -28,10 +29,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -143,6 +146,11 @@ public class NotificationsService extends AccessibilityService
         {
             info.eventTypes |= AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
         }
+        if (prefs.getBoolean(SettingsActivity.MONITOR_NOTIFICATIONS_BAR, false))
+        {
+            info.eventTypes |= AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
+        }
+
 		info.notificationTimeout = 100;
 	    info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
 	    setServiceInfo(info);
@@ -329,6 +337,11 @@ public class NotificationsService extends AccessibilityService
 								nd.text = nd.content;
 								nd.content = null;
 							}
+                            // keep only text if it's duplicated
+                            if (nd.text != null && nd.content != null && nd.text.toString().equals(nd.content.toString()))
+                            {
+                                nd.content = null;
+                            }
 						}
 						
 						// use default notification text & title - if no info found on expanded notification
@@ -923,8 +936,109 @@ public class NotificationsService extends AccessibilityService
             {
                 clearNotificationsForApps(new String[]{event.getPackageName().toString()});
             }
+            else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+            {
+                if (event.getPackageName().equals("com.android.systemui"))
+                {
+                    Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
+                    AccessibilityNodeInfo node = event.getSource();
+
+                    if (node != null)
+                    {
+                        //recursivePrintNodes(node,"  ");
+                        if (hasClickables(node))
+                        {
+                            List<NotificationData> notificationsToKeep = new ArrayList<NotificationData>();
+
+                            List<String> titles = recursiveGetStrings(node);
+                            for(String title: titles)
+                            {
+                                Log.d("NiLS","Notification Title:"+ title);
+                                for (NotificationData nd : notifications)
+                                {
+                                    if (nd.title.toString().equals(title.toString()))
+                                    {
+                                        notificationsToKeep.add(nd);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (notifications.size()!= notificationsToKeep.size())
+                            {
+                                Log.d("NiLS","Notifications List has been changed!");
+                                notifications = notificationsToKeep;
+                                updateWidget(true);
+                            }
+                        }
+                    }
+                    /*if (node != null)
+                    {
+                        if (node.getChildCount()>=1)
+                        {
+                            AccessibilityNodeInfo notificationShade = node.getChild(0);
+                            if (notificationShade.getChildCount() == 3)
+                            {
+                                AccessibilityNodeInfo notificationsPane = notificationShade.getChild(1);
+                                List<NotificationData> notificationsToKeep = new ArrayList<NotificationData>();
+                                for(int i=0;i<notificationsPane.getChildCount();i++)
+                                {
+                                    AccessibilityNodeInfo notification = notificationsPane.getChild(i);
+                                    if (notification.getChildCount() >=1)
+                                    {
+                                        CharSequence title = notification.getChild(0).getText();
+                                        if (title != null)
+                                        {
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }*/
+                }
+            }
 		}
 	}
+
+    private boolean hasClickables(AccessibilityNodeInfo node)
+    {
+        if (node.isClickable())
+            return true;
+        else
+        {
+            boolean hasClickables = false;
+            for(int i=0;i<node.getChildCount();i++)
+            {
+                if (hasClickables(node.getChild(i))) hasClickables = true;
+            }
+            return hasClickables;
+        }
+    }
+    private List<String> recursiveGetStrings(AccessibilityNodeInfo node)
+    {
+       ArrayList<String> strings = new ArrayList<String>();
+       if (node.getText()!=null)
+            strings.add(node.getText().toString());
+
+       for(int i=0;i<node.getChildCount();i++)
+       {
+           strings.addAll(recursiveGetStrings(node.getChild(i)));
+       }
+       return strings;
+    }
+    private void recursivePrintNodes(AccessibilityNodeInfo node, String padding)
+    {
+        Rect bounds = new Rect();
+        node.getBoundsInParent(bounds);
+
+        Log.d("NiLS", "NODE"+padding+"text:"+node.getText()+" desc:"+node.getContentDescription()+" bounds:"+bounds.width()+","+bounds.height()+" childs:"+node.getChildCount());
+        for(int i=0;i<node.getChildCount();i++)
+        {
+            recursivePrintNodes(node.getChild(i), padding+"  ");
+        }
+    }
 	
 	public void keepOnForeground()
 	{
