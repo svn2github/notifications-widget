@@ -1019,7 +1019,7 @@ public class NotificationsService extends AccessibilityService
     private List<String> recursiveGetStrings(AccessibilityNodeInfo node)
     {
        ArrayList<String> strings = new ArrayList<String>();
-       if (node.getText()!=null)
+       if (node!= null && node.getText()!=null)
             strings.add(node.getText().toString());
 
        for(int i=0;i<node.getChildCount();i++)

@@ -89,19 +89,22 @@
                     android:editable="false"
                     android:linksClickable="true"/>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom">
                 <ImageView
                     android:id="@+id/pinIcon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:contentDescription="@string/pin"
                     android:src="@drawable/pin"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"/>
+                        />
 
                 <TextView
                     android:id="@+id/notificationCount"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:gravity="center_vertical|center_horizontal"
@@ -112,12 +115,13 @@
 
                 <ImageView
                     android:id="@+id/appIcon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:contentDescription="@string/app_icon"
                     android:src="@drawable/appicon"
                     android:paddingLeft="2dp"
                     android:paddingRight="2dp"/>
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

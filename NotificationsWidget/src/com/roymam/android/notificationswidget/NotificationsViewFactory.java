@@ -231,10 +231,19 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 			n.setViewVisibility(R.id.notificationText, View.VISIBLE);
 		}
 		
-		if (contentColor != Color.TRANSPARENT)
+		if (contentColor != Color.TRANSPARENT || nd.content == null  || nd.content.equals(""))
+        {
 			n.setTextViewText(R.id.notificationContent, nd.content);
+            n.setViewVisibility(R.id.notificationContent, View.VISIBLE);
+            n.setViewVisibility(R.id.contentArea, View.VISIBLE);
+            n.setViewVisibility(R.id.noContentArea, View.GONE);
+        }
 		else
-			n.setTextViewText(R.id.notificationContent, "");
+        {
+			n.setViewVisibility(R.id.notificationContent, View.GONE);
+            n.setViewVisibility(R.id.contentArea, View.GONE);
+            n.setViewVisibility(R.id.noContentArea, View.VISIBLE);
+        }
 		
 		if (nd.count > 1)
 			n.setTextViewText(R.id.notificationCount, Integer.toString(nd.count));

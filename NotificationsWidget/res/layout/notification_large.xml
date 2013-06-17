@@ -60,23 +60,61 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/notificationText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/text_demo_text"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/white"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:linksClickable="true"
-                android:editable="false"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/notificationText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@string/text_demo_text"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:linksClickable="true"
+                    android:editable="false"
+                    android:layout_weight="1"/>
+                <LinearLayout android:id="@+id/noContentArea"
+                              android:layout_height="match_parent"
+                              android:layout_width="wrap_content"
+                              android:visibility="gone"
+                              android:gravity="bottom">
+                    <ImageView
+                            android:id="@+id/pinIcon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/pin" android:contentDescription="@string/pin"
+                            />
+
+                    <TextView
+                            android:id="@+id/notificationCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:text="@string/count_demo_text"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"
+                            android:gravity="center_vertical"/>
+
+                    <ImageView
+                            android:id="@+id/appIcon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/appicon" android:contentDescription="@string/app_icon"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/contentArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/notificationContent"
@@ -90,33 +128,37 @@
                     android:paddingRight="5dp"
                     android:linksClickable="true"
                     android:ellipsize="end"/>
-
-                <ImageView
-                    android:id="@+id/pinIcon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/pin" android:contentDescription="@string/pin"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"/>
-
-                <TextView
-                    android:id="@+id/notificationCount"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/count_demo_text"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"/>
+                    android:layout_height="match_parent"
+                    android:gravity="bottom">
 
-                <ImageView
-                    android:id="@+id/appIcon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/appicon" android:contentDescription="@string/app_icon"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"/>
+                    <ImageView
+                        android:id="@+id/pinIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/pin" android:contentDescription="@string/pin"
+                            />
 
+                    <TextView
+                        android:id="@+id/notificationCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:text="@string/count_demo_text"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:gravity="center_vertical"/>
+
+                    <ImageView
+                        android:id="@+id/appIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/appicon" android:contentDescription="@string/app_icon"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"/>
+
+                </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 </LinearLayout>
