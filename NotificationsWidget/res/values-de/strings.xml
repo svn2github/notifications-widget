@@ -14,7 +14,7 @@
     <string name="appearance">Darstellung</string>
     <string name="advanced">Erweitert</string>
     <string name="notifications">Benachrichtigungen</string>
-    <string name="turnscreenon">Automatische Displayaktivierung</string>
+    <string name="turnscreenon">Auto Displayaktivierung</string>
     <string name="turnscreenon_summary">Schaltet das Display bei neuer Benachrichtigung ein</string>
     <string name="disableproximity">Näherungssensor deaktivieren</string>
     <string name="disableproximity_summary">Weckt das Gerät auch auf, wenn es in einer Tasche steckt</string>
@@ -28,10 +28,10 @@
     <string name="clearonunlock_summary">Löscht alle Benachrichtigungen, wenn das Gerät ensperrt wird</string>
     <string name="clearonlock">Löschen bei Sperrung</string>
     <string name="clearonlock_summary">Löscht alle Benachrichtigungen, wenn das Gerät gesperrt wird</string>
-    <string name="collectonunlock">entsperrtes Sammeln</string>
+    <string name="collectonunlock">Entsperrtes Sammeln</string>
     <string name="collectonunlock_summary">Benachrichtigungen sammeln, während das Gerät entsperrt ist</string>
     <string name="order_notifications_by">Sortiere Benachrichtigungen nach</string>
-    <string name="clear_all_from_same_app">Lösche alle Benachrichtigungen einer App</string>
+    <string name="clear_all_from_same_app">Lösche App-Benachrichtigungen</string>
     <string name="clear_all_from_same_app_summary">Wenn eine Benachrichtigung geöffnet wird, lösche alle verbleibenden Benachrichtigungen dieser App</string>
 
     <string-array name="settings_orderby_entries">
@@ -46,17 +46,17 @@
     <string name="show_full_notification_summary">Zeigt den vollständigen Benachrichtigungsinhalt, wie er in der Benachrichtigungsleiste auftritt</string>
     <string name="clearonclear">Überwachen von \"Alle löschen\"</string>
     <string name="clearonclear_summary">Alle Benachrichtigungen löschen, wenn der Löschknopf in der Android-Benachrichtigungsleiste gedrückt wurde (Erfordert einen Neustart der Bedienungshilfe)</string>
-    <string name="monitor_shade">Beobachte Benachrichtigungsleiste</string>
+    <string name="monitor_shade">Benachrichtigungsabgleich</string>
     <string name="monitor_shade__summary">Lösche Benachrichtigungen die nicht in der Benachrichtigungsleiste angezeigt werden (Erfordert einen Neustart der Bedienungshilfe)</string>
     <string name="clear_app_notifications">Löschen beim Öffnen der App</string>
     <string name="clear_app_notifications_summary">Automatisches Löschen von App-Benachrichtigungen, wenn die App gestartet wird (Erfordert einen Neustart der Bedienungshilfe)</string>
-    <string name="auto_kill_persistent">Automatisches Entfernen von permanenten Benachrichtigungen</string>
+    <string name="auto_kill_persistent">Auto-Entfernen permanenter Benachrichtigungen</string>
     <string name="auto_kill_persistent_summary">Löscht eine permanente Benachrichtigung automatisch, sobald der App-Dienst nicht mehr läuft, kann den Energiebedarf erhöhen (Erfordert einen Neustart der Bedienungshilfe)</string>
     <string name="monitor_apps_interval">Apps-Überwachungs-Intervall</string>
     <string name="keep_on_foreground">Im Speicher halten</string>
     <string name="keep_on_foreground_summary">Hält den NiLS-Dienst im Vordergrund, um eine Terminierung durch andere Apps zu verhindern</string>
-    <string name="disable_auto_switch_summary">Deaktiviert den automatischen Wechsel zwischen den LS Minimiert und LS Erweitert Voreinstellungen, die auf dem Android 4.2 Sperrbildschirm angezeigt werden</string>
-    <string name="disable_auto_switch">Deaktiviere Darstellungswechsel</string>
+    <string name="disable_auto_switch_summary">Deaktiviert den automatischen Wechsel zwischen den \"LS Minimiert\"- und \"LS Erweitert\"-Voreinstellungen, die auf dem Android 4.2 Sperrbildschirm angezeigt werden und verwendet nur \"LS Erweitert\"</string>
+    <string name="disable_auto_switch">Einheitliche Darstellung</string>
 
     <string-array name="max_lines_entries">
         <item>1</item>
@@ -85,8 +85,8 @@
     <string name="tutorial_help_2_widgetlocker">Füge das Widget deinem Homescreen hinzu. Wenn du WidgetLocker installiert hast - Starte ihn und halte einen freien Bereich kurz gedrückt um das Widget hinzuzufügen</string>
     <string name="tutorial_help_3">Das war\'s. Wenn du irgendwelche Fragen oder Probleme hast - Zögere nicht dich bei support@roymam.com zu melden</string>
     <string name="tutorial_step_1">Aktiviere den  \"NiLS Dienst\" in den Bedienungshilfen</string>
-    <string name="tutorial_step_2">Füge das \"NiLS\" Widget hinzu</string>
-    <string name="tutorial_step_3">Passe \"NiLS\" in den \"Einstellungen\" an</string>
+    <string name="tutorial_step_2">Füge das \"NiLS Widget\" hinzu</string>
+    <string name="tutorial_step_3">Passe NiLS in den Einstellungen an</string>
     <string name="tutorial_toast_1">Aktiviere den \"NiLS Dienst\" und tippe Zurück um mit der Einrichtung fortzufahren</string>
     <string name="tutorial_toast_2">Sperren Sie den Bildschirm und fügen Sie dem Sperrbildschirm das \"NiLS Widget\" hinzu</string>
     <string name="welcome_text">Willkommen bei NiLS!\nLos geht\'s...</string>
@@ -128,14 +128,14 @@
     <string name="app_specific_settings_title">Appspezifische Einstellungen</string>
     <string name="ignore_notifications">Ignoriere diese App</string>
     <string name="ignore_notifications_summary">Ignoriert alle Benachrichtigungen dieser App</string>
-    <string name="show_only_last_notification">Zeige nur die neueste Benachrichtigung</string>
+    <string name="show_only_last_notification">Nur neueste Benachrichtigung</string>
     <string name="show_only_last_notification_summary">Zeigt nur die neueste Benachrichtigung dieser App</string>
-    <string name="extract_expanded_text">Verwende erweiterte Benachrichtigungen</string>
-    <string name="extract_expanded_text_summary">Nur Android 4.1+: Verwende erweiterte Benachrichtigungen, wenn verfügbar</string>
+    <string name="extract_expanded_text">Erweiterte Benachrichtigungen</string>
+    <string name="extract_expanded_text_summary">Nur Android 4.1+: Verwendet erweiterte Benachrichtigungen, wenn verfügbar</string>
     <string name="show_only_last_event">Zeige nur das letzte Event</string>
     <string name="show_only_last_event_summary">Zeigt nur das letzte Event, wenn eine erweiterte Benachrichtigung mehrere Events hat (z.B. mehrere Emails in einer Benachrichtigung)</string>
     <string name="multiple_events_handling">Behandlung mehrerer Events</string>
-    <string name="multiple_events_handling_summary">Bearbeite die Behandlung mehrerer Events, wenn eine Benachrichtigung Mehrere hat (z.B. mehrere Emails in einer Benachrichtigung)</string>
+    <string name="multiple_events_handling_summary">Bearbeite die Behandlung mehrerer Events, wenn eine Benachrichtigung mehrere Events hat (z.B. mehrere Emails in einer Benachrichtigung)</string>
     <string name="set_app_priority">Bearbeite Priorität</string>
     <string name="set_app_priority_summary">Stelle die Priorität der App für die \"Sortiere Benachrichtigungen nach Priorität\"-Option ein</string>
 
@@ -157,13 +157,13 @@
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Lösche die appspezifischen Einstellungen für diese App</string>
     <string name="app_specific_help">Wie fügt man appspezifischen Einstellungen hinzu?</string>
-    <string name="app_specific_help_details">Appspezifischen Einstellungen erlauben einige gesonderte Einstellungen für bestimmte Apps - zum Beispiel Benachrichtigungen verstecken, Prioritäten ändern, usw.\n\nUm appspezifischen Einstellungen vorzunehmen, klicke auf das App-Icon einer Benachrichtigung der App im Widget und wähle \"Einstellungen\" im erscheinenden Menü (Schraubenschlüssel-Symbol)</string>
+    <string name="app_specific_help_details">Appspezifischen Einstellungen erlauben einige gesonderte Einstellungen für bestimmte Apps (z.B. Benachrichtigungen verstecken, Prioritäten )\n\nUm appspezifischen Einstellungen vorzunehmen, klicke auf das App-Icon einer Benachrichtigung der App im Widget und wähle \"Einstellungen\" im erscheinenden Menü (Schraubenschlüssel-Symbol)</string>
 
     <!-- Persistent Notifications -->
     <string name="persistent_notifications">Permanente Benachrichtigungen</string>
-    <string name="show_persistent_notifications">Zeige permanente Benachrichtigung</string>
-    <string name="show_persistent_notifications_summary">Zeigt permanente Benachrichtigung dieser App</string>
-    <string name="notification_height">Größe der permanenten Benachrichtigung</string>
+    <string name="show_persistent_notifications">Aktivieren</string>
+    <string name="show_persistent_notifications_summary">Zeigt permanente Benachrichtigungen dieser App</string>
+    <string name="notification_height">Größe der Benachrichtigung</string>
 
     <string-array name="settings_notification_height_entries">
         <item>Klein</item>
@@ -217,7 +217,7 @@
     <!-- Appearance settings strings -->
     <string name="title_demo_text">Benachrichtigungstitel</string>
     <string name="title_appname_demo_text">App-Bezeichnung</string>
-    <string name="text_demo_text">Dies ist der Benachrichtigungs-Text, er kann lang und abgeschnitten werden</string>
+    <string name="text_demo_text">Dies ist der Benachrichtigungs-Text (kann lang sein und/oder abgeschnitten werden)</string>
     <string name="content_demo_text">Benachrichtigungs-Inhalt</string>
     <string name="content_expanded_demo_text">Benachrichtigungs-Inhalt Zeile 1\nBenachrichtigungs-Inhalt Zeile 2\nBenachrichtigungs-Inhalt Zeile 3\nBenachrichtigungs-Inhalt Zeile 4\nBenachrichtigungs-Inhalt Zeile 5\nBenachrichtigungs-Inhalt Zeile 6\nBenachrichtigungs-Inhalt Zeile 7\nBenachrichtigungs-Inhalt Zeile 8\n</string>
     <string name="time_demo_text">9:21</string>
