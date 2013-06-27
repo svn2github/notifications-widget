@@ -19,6 +19,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 {
 	public static final String EXTRA_PACKAGE_NAME = "com.roymam.android.notificationswidget.packagename";
 	public static final String IGNORE_APP = "ignoreapp";
+    public static final String IGNORE_EMPTY_NOTIFICATIONS = "ignore_empty_notifications";
 	public static final String KEEP_ONLY_LAST = "showlast";
 	public static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
@@ -54,6 +55,13 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         ignoreNotificationsPref.setSummary(R.string.ignore_notifications_summary);
         //ignoreNotificationsPref.setDisableDependentsState(true);
         root.addPreference(ignoreNotificationsPref);
+
+        CheckBoxPreference ignoreEmptyNotificationsPref = new CheckBoxPreference(this);
+        ignoreEmptyNotificationsPref.setKey(packageName+"."+IGNORE_EMPTY_NOTIFICATIONS);
+        ignoreEmptyNotificationsPref.setTitle(R.string.ignore_empty_notifications);
+        ignoreEmptyNotificationsPref.setSummary(R.string.ignore_empty_notifications_summary);
+        ignoreEmptyNotificationsPref.setDefaultValue(false);
+        root.addPreference(ignoreEmptyNotificationsPref);
         
         // Show last preference
         CheckBoxPreference showlastNotificationsPref = new CheckBoxPreference(this);
@@ -100,11 +108,14 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 			public boolean onPreferenceClick(Preference arg0) 
 			{	
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
-				prefs.edit().remove(packageName+"."+IGNORE_APP).commit();
-				prefs.edit().remove(packageName+"."+KEEP_ONLY_LAST).commit();
-				prefs.edit().remove(packageName+"."+MULTIPLE_EVENTS_HANDLING).commit();
-				prefs.edit().remove(packageName+"."+USE_EXPANDED_TEXT).commit();
-				prefs.edit().remove(packageName+"."+APP_PRIORITY).commit();
+				prefs.edit().remove(packageName+"."+IGNORE_APP)
+				            .remove(packageName+"."+KEEP_ONLY_LAST)
+                            .remove(packageName+"."+MULTIPLE_EVENTS_HANDLING)
+                            .remove(packageName+"."+USE_EXPANDED_TEXT)
+                            .remove(packageName+"."+APP_PRIORITY)
+                            .remove(packageName+"."+IGNORE_EMPTY_NOTIFICATIONS)
+                            .remove(packageName+"."+MULTIPLE_EVENTS_HANDLING)
+                        .commit();
 				
 				removeAppFromAppSpecificSettings(packageName, AppSettingsActivity.this);
 				

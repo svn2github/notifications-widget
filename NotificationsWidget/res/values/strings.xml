@@ -190,6 +190,8 @@
         <item>last</item>
     </string-array>
 
+    <string name="ignore_empty_notifications">Ignore empty notifications</string>
+    <string name="ignore_empty_notifications_summary">Ignore notifications without any content</string>
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Clear app specific settings for this app</string>
     <string name="app_specific_help">How To Add App Specific Settings?</string>

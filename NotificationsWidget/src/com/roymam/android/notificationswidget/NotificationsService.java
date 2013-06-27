@@ -360,10 +360,16 @@ public class NotificationsService extends AccessibilityService
 						// if still no text ignore it
 						if (nd.title == null && nd.text == null)
 							return;
-						else
-							// turn the screen on
-							turnScreenOn();
-						
+						else if ((nd.title.equals(packageName) || nd.title.equals(getPackageManager().getApplicationLabel(ai))) &&
+                                 (nd.text == null || nd.text.equals("")))
+                        {
+                            if (sharedPref.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_EMPTY_NOTIFICATIONS,false))
+                                return;
+                        }
+
+                        // turn the screen on
+						turnScreenOn();
+
 						// check for duplicated notification
 						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
 						int duplicated = -1;
@@ -940,7 +946,7 @@ public class NotificationsService extends AccessibilityService
             {
                 if (event.getPackageName().equals("com.android.systemui"))
                 {
-                    Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
+                    //Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
                     AccessibilityNodeInfo node = event.getSource();
 
                     if (node != null)
@@ -953,7 +959,7 @@ public class NotificationsService extends AccessibilityService
                             List<String> titles = recursiveGetStrings(node);
                             for(String title: titles)
                             {
-                                Log.d("NiLS","Notification Title:"+ title);
+                                //Log.d("NiLS","Notification Title:"+ title);
                                 for (NotificationData nd : notifications)
                                 {
                                     if (nd.title.toString().equals(title.toString()))
@@ -966,37 +972,12 @@ public class NotificationsService extends AccessibilityService
 
                             if (notifications.size()!= notificationsToKeep.size())
                             {
-                                Log.d("NiLS","Notifications List has been changed!");
+                                //Log.d("NiLS","Notifications List has been changed!");
                                 notifications = notificationsToKeep;
                                 updateWidget(true);
                             }
                         }
                     }
-                    /*if (node != null)
-                    {
-                        if (node.getChildCount()>=1)
-                        {
-                            AccessibilityNodeInfo notificationShade = node.getChild(0);
-                            if (notificationShade.getChildCount() == 3)
-                            {
-                                AccessibilityNodeInfo notificationsPane = notificationShade.getChild(1);
-                                List<NotificationData> notificationsToKeep = new ArrayList<NotificationData>();
-                                for(int i=0;i<notificationsPane.getChildCount();i++)
-                                {
-                                    AccessibilityNodeInfo notification = notificationsPane.getChild(i);
-                                    if (notification.getChildCount() >=1)
-                                    {
-                                        CharSequence title = notification.getChild(0).getText();
-                                        if (title != null)
-                                        {
-
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                    }*/
                 }
             }
 		}
