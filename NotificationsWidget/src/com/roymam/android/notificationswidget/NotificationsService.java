@@ -293,7 +293,7 @@ public class NotificationsService extends AccessibilityService
 							res = null;
 							ai = null;
 						}
-						
+
 						if (res != null && info != null)
 						{
 							nd.appicon = BitmapFactory.decodeResource(res, n.icon);
@@ -370,7 +370,7 @@ public class NotificationsService extends AccessibilityService
                         // turn the screen on
 						turnScreenOn();
 
-						// check for duplicated notification
+                        // check for duplicated notification
 						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
 						int duplicated = -1;
 						for(int i=0;i<notifications.size();i++)
@@ -418,8 +418,26 @@ public class NotificationsService extends AccessibilityService
 					    if (selectedIndex >= 0) selectedIndex++;
 						
 						sortNotificationsList();
-						
-						// update widgets
+
+                        // send notification to nilsplus
+                        /*Intent npsIntent = new Intent();
+                        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+                        npsIntent.setAction("com.roymam.android.nils.add_notification");
+                        npsIntent.putExtra("title", nd.title);
+                        npsIntent.putExtra("text", nd.text);
+                        npsIntent.putExtra("package", nd.packageName);
+                        npsIntent.putExtra("icon", n.icon);
+
+                        // convert large icon to byte stream
+                        Bitmap bmp = n.largeIcon;
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        npsIntent.putExtra("largeIcon", byteArray);
+
+                        startService(npsIntent);
+*/
+                        // update widgets
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
 						ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
 						int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
@@ -965,7 +983,6 @@ public class NotificationsService extends AccessibilityService
                                     if (nd.title.toString().equals(title.toString()))
                                     {
                                         notificationsToKeep.add(nd);
-                                        break;
                                     }
                                 }
                             }
@@ -985,15 +1002,16 @@ public class NotificationsService extends AccessibilityService
 
     private boolean hasClickables(AccessibilityNodeInfo node)
     {
-        if (node.isClickable())
+        if (node != null && node.isClickable())
             return true;
         else
         {
             boolean hasClickables = false;
-            for(int i=0;i<node.getChildCount();i++)
-            {
-                if (hasClickables(node.getChild(i))) hasClickables = true;
-            }
+            if (node != null)
+                for(int i=0;i<node.getChildCount();i++)
+                {
+                    if (hasClickables(node.getChild(i))) hasClickables = true;
+                }
             return hasClickables;
         }
     }

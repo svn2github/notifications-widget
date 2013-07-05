@@ -175,7 +175,7 @@ public class NotificationsWidgetService extends Service
 
 	private void updateWidget(int widgetId) 
 	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
@@ -213,7 +213,6 @@ public class NotificationsWidgetService extends Service
 		
 		// set up notifications list 
 		setupNotificationsList(widget, widgetId);
-		
 
 		appWidgetManager.updateAppWidget(widgetId, widget);
 	}
