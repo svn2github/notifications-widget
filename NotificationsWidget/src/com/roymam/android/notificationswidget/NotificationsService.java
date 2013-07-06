@@ -8,14 +8,17 @@ import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -42,6 +45,7 @@ import android.widget.Toast;
 
 import com.roymam.android.notificationswidget.NotificationData.Action;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,6 +94,7 @@ public class NotificationsService extends AccessibilityService
 	public int inbox_notification_event_10_id = 0;
     private PendingIntent runningAppsPendingIntent = null;
     private boolean overrideLocked = false;
+    private int notificationId = 0;
 
     public static NotificationsService getSharedInstance() { return sSharedInstance; }
 	
@@ -100,7 +105,16 @@ public class NotificationsService extends AccessibilityService
 		return START_STICKY;
 	}
 
-	@Override
+    @Override
+    public void onDestroy()
+    {
+        if (receiver != null) unregisterReceiver(receiver);
+        if (sensorListener != null) stopProximityMontior();
+        stopMonitorApps();
+        removeFromForeground();
+    }
+
+    @Override
 	protected void onServiceConnected() 
 	{
 		super.onServiceConnected();
@@ -155,7 +169,6 @@ public class NotificationsService extends AccessibilityService
 	    info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
 	    setServiceInfo(info);
 
-	    	    
 	    notifications = new ArrayList<NotificationData>();
 	    persistentNotifications = new HashMap<String, PersistentNotification>();
 	    
@@ -170,7 +183,50 @@ public class NotificationsService extends AccessibilityService
 
         // start monitor apps timer
         startMonitorApps();
+
+        // register receivers
+        registerReceivers();
 	}
+
+    public final static String FN_DISMISS_NOTIFICATIONS = "robj.floating.notifications.dismissed";
+    public final static String DISMISS_NOTIFICATIONS = "com.roymam.android.nils.remove_notification";
+    private BroadcastReceiver receiver = null;
+
+    private void registerReceivers()
+    {
+        receiver = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                if (intent.getAction() != null &&
+                        (intent.getAction().equals(DISMISS_NOTIFICATIONS)) ||
+                         intent.getAction().equals(FN_DISMISS_NOTIFICATIONS))
+                {
+                    String packageName = intent.getStringExtra("package");
+                    int id = intent.getIntExtra("id",-1);
+                    if (id > -1)
+                    {
+                        Log.d("NiLS", "remove notification #" + id);
+                        removeNotificationById(id);
+                    }
+                    else
+                        clearNotificationsForApps(new String[]{packageName});
+                }
+            }
+        };
+        registerReceiver(receiver,new IntentFilter(DISMISS_NOTIFICATIONS));
+    }
+
+    private void removeNotificationById(int id)
+    {
+        for(int i=0; i<notifications.size(); i++)
+            if (notifications.get(i).id == id)
+            {
+                removeNotification(i);
+                break;
+            }
+    }
 
     private void startMonitorApps()
     {
@@ -411,6 +467,7 @@ public class NotificationsService extends AccessibilityService
 						if (apppriority != -9) nd.priority = apppriority;
 
                         String sortBy = sharedPref.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
+                        nd.id = ++notificationId;
                         if (sortBy.equals("timeasc"))
                             notifications.add(nd);
                         else
@@ -419,24 +476,8 @@ public class NotificationsService extends AccessibilityService
 						
 						sortNotificationsList();
 
-                        // send notification to nilsplus
-                        /*Intent npsIntent = new Intent();
-                        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-                        npsIntent.setAction("com.roymam.android.nils.add_notification");
-                        npsIntent.putExtra("title", nd.title);
-                        npsIntent.putExtra("text", nd.text);
-                        npsIntent.putExtra("package", nd.packageName);
-                        npsIntent.putExtra("icon", n.icon);
+                        notifyNotificationAdd(nd);
 
-                        // convert large icon to byte stream
-                        Bitmap bmp = n.largeIcon;
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
-                        npsIntent.putExtra("largeIcon", byteArray);
-
-                        startService(npsIntent);
-*/
                         // update widgets
 						AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
 						ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
@@ -473,8 +514,34 @@ public class NotificationsService extends AccessibilityService
 			}
 		}
 	}
-	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+
+    private void notifyNotificationAdd(NotificationData nd)
+    {
+        Log.d("Nils", "notification add #" + nd.id);
+
+        // send notification to nilsplus
+        Intent npsIntent = new Intent();
+        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+        npsIntent.setAction("com.roymam.android.nils.add_notification");
+        npsIntent.putExtra("title", nd.title);
+        npsIntent.putExtra("text", nd.text);
+        npsIntent.putExtra("package", nd.packageName);
+        npsIntent.putExtra("id", nd.id);
+
+        // convert large icon to byte stream
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        nd.icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        npsIntent.putExtra("icon", stream.toByteArray());
+
+        // convert large icon to byte stream
+        stream = new ByteArrayOutputStream();
+        nd.appicon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        npsIntent.putExtra("appicon", stream.toByteArray());
+
+        startService(npsIntent);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private int getPriority(Notification n)
 	{
 		return n.priority;
@@ -972,7 +1039,8 @@ public class NotificationsService extends AccessibilityService
                         //recursivePrintNodes(node,"  ");
                         if (hasClickables(node))
                         {
-                            List<NotificationData> notificationsToKeep = new ArrayList<NotificationData>();
+                            //List<NotificationData> notificationsToKeep = new ArrayList<NotificationData>();
+                            HashMap<Integer, NotificationData> notificationsToKeep = new HashMap<Integer, NotificationData>();
 
                             List<String> titles = recursiveGetStrings(node);
                             for(String title: titles)
@@ -982,15 +1050,24 @@ public class NotificationsService extends AccessibilityService
                                 {
                                     if (nd.title.toString().equals(title.toString()))
                                     {
-                                        notificationsToKeep.add(nd);
+                                        notificationsToKeep.put(nd.id, nd);
                                     }
                                 }
                             }
 
                             if (notifications.size()!= notificationsToKeep.size())
                             {
-                                //Log.d("NiLS","Notifications List has been changed!");
-                                notifications = notificationsToKeep;
+                                Iterator<NotificationData> iter = notifications.iterator();
+                                while(iter.hasNext())
+                                {
+                                    NotificationData nd = iter.next();
+                                    if (!notificationsToKeep.containsKey(nd.id))
+                                    {
+                                        notifyNotificationRemove(nd);
+                                        iter.remove();
+                                    }
+                                }
+
                                 updateWidget(true);
                             }
                         }
@@ -1084,20 +1161,32 @@ public class NotificationsService extends AccessibilityService
 		{
 			if (!notifications.get(i).pinned)
             {
-                // notify FloatingNotifications for clearing this notification
-                Intent intent = new Intent();
-                intent.setAction("robj.floating.notifications.dismiss");
-                intent.putExtra("package", notifications.get(i).packageName);
-                sendBroadcast(intent);
-
-				notifications.remove(i);
+                notifyNotificationRemove(notifications.get(i));
+                notifications.remove(i);
                 if (selectedIndex > i) selectedIndex--;
                 else if (selectedIndex ==i) selectedIndex=-1;
             }
 		}
 	}
-	
-	public void clearAllNotifications()
+
+    private void notifyNotificationRemove(NotificationData nd)
+    {
+        // send notification to nilsplus
+        Log.d("Nils", "notification remove #" + nd.id);
+        Intent npsIntent = new Intent();
+        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+        npsIntent.setAction("com.roymam.android.nils.remove_notification");
+        npsIntent.putExtra("id", nd.id);
+        startService(npsIntent);
+
+        // notify FloatingNotifications for clearing this notification
+        Intent intent = new Intent();
+        intent.setAction("robj.floating.notifications.dismiss");
+        intent.putExtra("package", nd.packageName);
+        sendBroadcast(intent);
+    }
+
+    public void clearAllNotifications()
 	{
 		Iterator<NotificationData> i = notifications.iterator();
 		while (i.hasNext()) 
@@ -1105,13 +1194,8 @@ public class NotificationsService extends AccessibilityService
 			NotificationData nd = i.next(); 
 			if (!nd.pinned)
             {
+                notifyNotificationRemove(nd);
                 i.remove();
-
-                // notify FloatingNotifications for clearing this notification
-                Intent intent = new Intent();
-                intent.setAction("robj.floating.notifications.dismiss");
-                intent.putExtra("package", nd.packageName);
-                sendBroadcast(intent);
             }
 		}
         setSelectedIndex(-1);
@@ -1208,16 +1292,13 @@ public class NotificationsService extends AccessibilityService
                 while(iter.hasNext())
                 {
                     NotificationData nd = iter.next();
-                    if (nd.packageName.equals(packageName))
+                    if (!nd.pinned && nd.packageName.equals(packageName))
+                    {
+                        notifyNotificationRemove(nd);
                         iter.remove();
+                    }
                 }
             }
-
-            // notify FloatingNotifications for clearing this notification
-            Intent intent = new Intent();
-            intent.setAction("robj.floating.notifications.dismiss");
-            intent.putExtra("package", packageName);
-            sendBroadcast(intent);
 
 			updateWidget(true);
 		}
@@ -1269,15 +1350,11 @@ public class NotificationsService extends AccessibilityService
                 NotificationData nd = i.next();
                 if (!nd.pinned && nd.packageName.equals(packageName))
                 {
+                    notifyNotificationRemove(nd);
                     i.remove();
                     changed = true;
                 }
             }
-            // notify FloatingNotifications for clearing this notification
-            Intent intent = new Intent();
-            intent.setAction("robj.floating.notifications.dismiss");
-            intent.putExtra("package", packageName);
-            sendBroadcast(intent);
         }
         if (changed)
         {

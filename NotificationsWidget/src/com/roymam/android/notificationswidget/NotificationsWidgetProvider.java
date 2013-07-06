@@ -31,7 +31,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static String CLEAR_ALL = "com.roymam.android.notificationswidget.clearall";
     public static String UPDATE_CLOCK = "com.roymam.android.notificationswidget.update_clock";
     public static String PERFORM_ACTION = "com.roymam.android.notificationswidget.performaction";
-    public final static String DISMISS_NOTIFICATIONS = "robj.floating.notifications.dismissed";
 
     public static int ACTIONBAR_TOGGLE = 0;
     public static int CLEAR_ACTION = 1;
@@ -196,15 +195,6 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	    		}	    		
     		}
     	}
-        else if (intent.getAction().equals(DISMISS_NOTIFICATIONS))
-        {
-            NotificationsService ns = NotificationsService.getSharedInstance();
-            if (ns != null)
-            {
-                String packageName = intent.getStringExtra("package");
-                ns.clearNotificationsForApps(new String[]{packageName});
-            }
-        }
     	super.onReceive(ctx, intent);
     }
 	

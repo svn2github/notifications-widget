@@ -3,8 +3,10 @@ import android.app.PendingIntent;
 import android.graphics.Bitmap;
 
 public class NotificationData 
-{	
-	public static class Action
+{
+    public int id;
+
+    public static class Action
 	{
 		public Action() {};
 		public int icon;
