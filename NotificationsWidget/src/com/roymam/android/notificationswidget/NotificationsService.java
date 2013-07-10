@@ -97,8 +97,15 @@ public class NotificationsService extends AccessibilityService
     private int notificationId = 0;
 
     public static NotificationsService getSharedInstance() { return sSharedInstance; }
-	
-	@Override
+
+    // extensions API
+    public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
+    public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
+    public static final String SHOW_NOTIFICATIONS = "com.roymam.android.nils.show_notifications";
+    public static final String HIDE_NOTIFICATIONS = "com.roymam.android.nils.hide_notifications";
+    public static final String RESEND_ALL_NOTIFICATIONS = "com.roymam.android.nils.resend_all_notifications";
+
+    @Override
 	public int onStartCommand(Intent intent, int flags, int startId) 
 	{
 		super.onStartCommand(intent, flags, startId);
@@ -213,9 +220,18 @@ public class NotificationsService extends AccessibilityService
                     else
                         clearNotificationsForApps(new String[]{packageName});
                 }
+                else if (intent.getAction().equals(RESEND_ALL_NOTIFICATIONS))
+                {
+                    for(NotificationData nd : notifications)
+                    {
+                        notifyNotificationAdd(nd);
+                    }
+                }
             }
         };
         registerReceiver(receiver,new IntentFilter(DISMISS_NOTIFICATIONS));
+        registerReceiver(receiver,new IntentFilter(FN_DISMISS_NOTIFICATIONS));
+        registerReceiver(receiver,new IntentFilter(RESEND_ALL_NOTIFICATIONS));
     }
 
     private void removeNotificationById(int id)
@@ -426,6 +442,8 @@ public class NotificationsService extends AccessibilityService
                         // turn the screen on
 						turnScreenOn();
 
+                        nd.id = ++notificationId;
+
                         // check for duplicated notification
 						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
 						int duplicated = -1;
@@ -451,7 +469,8 @@ public class NotificationsService extends AccessibilityService
 						if (duplicated >= 0)
 						{
 							NotificationData dup = notifications.get(duplicated);
-							if (dup.pinned) nd.pinned = true;
+							nd.id = dup.id;
+                            nd.pinned = dup.pinned;
 							notifications.remove(duplicated);			
 						}
 						
@@ -467,7 +486,6 @@ public class NotificationsService extends AccessibilityService
 						if (apppriority != -9) nd.priority = apppriority;
 
                         String sortBy = sharedPref.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
-                        nd.id = ++notificationId;
                         if (sortBy.equals("timeasc"))
                             notifications.add(nd);
                         else
@@ -522,7 +540,7 @@ public class NotificationsService extends AccessibilityService
         // send notification to nilsplus
         Intent npsIntent = new Intent();
         npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction("com.roymam.android.nils.add_notification");
+        npsIntent.setAction(ADD_NOTIFICATION);
         npsIntent.putExtra("title", nd.title);
         npsIntent.putExtra("text", nd.text);
         npsIntent.putExtra("package", nd.packageName);
@@ -1022,10 +1040,22 @@ public class NotificationsService extends AccessibilityService
 								}
 							}
 						}
-				}
+                }
             else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
             {
+                Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED "+event.getPackageName().toString());
                 clearNotificationsForApps(new String[]{event.getPackageName().toString()});
+
+                // request nilsplus to hide/show notifications list
+                KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+                Intent npsIntent = new Intent();
+                npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+                if (event.getPackageName().equals("android") && km.inKeyguardRestrictedInputMode())
+                    npsIntent.setAction(SHOW_NOTIFICATIONS);
+                else
+                    npsIntent.setAction(HIDE_NOTIFICATIONS);
+                startService(npsIntent);
+
             }
             else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
             {
@@ -1175,7 +1205,7 @@ public class NotificationsService extends AccessibilityService
         Log.d("Nils", "notification remove #" + nd.id);
         Intent npsIntent = new Intent();
         npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction("com.roymam.android.nils.remove_notification");
+        npsIntent.setAction(REMOVE_NOTIFICATION);
         npsIntent.putExtra("id", nd.id);
         startService(npsIntent);
 
