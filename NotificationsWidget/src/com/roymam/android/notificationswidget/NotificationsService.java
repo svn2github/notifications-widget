@@ -197,6 +197,7 @@ public class NotificationsService extends AccessibilityService
 
     public final static String FN_DISMISS_NOTIFICATIONS = "robj.floating.notifications.dismissed";
     public final static String DISMISS_NOTIFICATIONS = "com.roymam.android.nils.remove_notification";
+    public final static String OPEN_NOTIFICATION = "com.roymam.android.nils.open_notification";
     private BroadcastReceiver receiver = null;
 
     private void registerReceivers()
@@ -227,11 +228,34 @@ public class NotificationsService extends AccessibilityService
                         notifyNotificationAdd(nd);
                     }
                 }
+                else if (intent.getAction().equals(OPEN_NOTIFICATION))
+                {
+                    int id = intent.getIntExtra("id",-1);
+                    if (id > -1)
+                    {
+                        Log.d("NiLS", "open notification #" + id);
+                        launchNotificationById(id);
+                    }
+                }
             }
         };
         registerReceiver(receiver,new IntentFilter(DISMISS_NOTIFICATIONS));
+        registerReceiver(receiver,new IntentFilter(OPEN_NOTIFICATION));
         registerReceiver(receiver,new IntentFilter(FN_DISMISS_NOTIFICATIONS));
         registerReceiver(receiver,new IntentFilter(RESEND_ALL_NOTIFICATIONS));
+    }
+
+    private void launchNotificationById(int id)
+    {
+        for(int i=0; i< notifications.size(); i++)
+        {
+            NotificationData nd = notifications.get(i);
+
+            if (nd.id == id)
+            {
+                launchNotification(i);
+            }
+        }
     }
 
     private void removeNotificationById(int id)
