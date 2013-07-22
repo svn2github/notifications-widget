@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/largeNotification"
+    android:id="@+id/normalNotification"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/item_selector" >
+    android:visibility="visible" >
 
     <RelativeLayout
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:background="#ff1d3741"
-        android:id="@+id/notificationIconBG">
+        android:background="#ff1d3741" android:id="@+id/notificationIconBG">
 
         <ImageView
             android:id="@+id/notificationIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:src="@drawable/appicon" android:contentDescription="@string/notification_icon"
-            android:layout_centerInParent="true"/>
+            android:contentDescription="@string/notification_icon"
+            android:scaleType="fitCenter"
+            android:src="@drawable/appicon" android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/notificationSpinner"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/actionspinner" android:contentDescription="@string/notification_icon"/>
-	</RelativeLayout>
+            android:contentDescription="@string/action_bar"
+            android:src="@drawable/actionspinner" />
+
+    </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="4dp"
+            android:background="@drawable/item_selector"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -45,120 +44,100 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:minLines="1"
+                    android:background="@drawable/item_selector"
+                    android:gravity="top"
+                    android:minLines="0"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:scrollHorizontally="false"
                     android:text="@string/title_demo_text"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"/>
+                    android:textColor="@android:color/white" />
 
                 <TextView
                     android:id="@+id/notificationTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="@string/time_demo_text"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textColor="#ff32b6e6"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <TextView
+            <TextView
                     android:id="@+id/notificationText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:text="@string/text_demo_text"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/white"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:linksClickable="true"
-                    android:editable="false"
-                    android:layout_weight="1"/>
-                <LinearLayout android:id="@+id/noContentArea"
-                              android:layout_height="match_parent"
-                              android:layout_width="wrap_content"
-                              android:visibility="gone"
-                              android:gravity="bottom">
-                    <ImageView
-                            android:id="@+id/pinIcon"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/pin" android:contentDescription="@string/pin"
-                            />
-
-                    <TextView
-                            android:id="@+id/notificationCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="20dp"
-                            android:text="@string/count_demo_text"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:paddingLeft="2dp"
-                            android:paddingRight="2dp"
-                            android:gravity="center_vertical"/>
-
-                    <ImageView
-                            android:id="@+id/appIcon"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/appicon" android:contentDescription="@string/app_icon"
-                            android:paddingLeft="2dp"
-                            android:paddingRight="2dp"/>
-
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/contentArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
-
-                <TextView
-                    android:id="@+id/notificationContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/content_demo_text"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingBottom="2dp"
+                    android:background="@drawable/item_selector"
+                    android:ellipsize="end"
+                    android:gravity="top"
+                    android:maxLines="1"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:linksClickable="true"
-                    android:ellipsize="end"/>
+                    android:scrollHorizontally="true"
+                    android:text="@string/text_demo_text"
+                    android:textColor="#e5e5e1"
+                    android:enabled="false"
+                    android:paddingBottom="2dp"
+                    android:editable="false"
+                    android:linksClickable="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46" >
+
+                <TextView
+                        android:id="@+id/notificationContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/content_demo_text"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:linksClickable="true"
+                        android:ellipsize="end"/>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="bottom">
+                <ImageView
+                    android:id="@+id/pinIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/pin"
+                    android:src="@drawable/pin"
+                        />
 
-                    <ImageView
-                        android:id="@+id/pinIcon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/pin" android:contentDescription="@string/pin"
-                            />
+                <TextView
+                    android:id="@+id/notificationCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/count_demo_text"
+                    android:textSize="12sp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
 
-                    <TextView
-                        android:id="@+id/notificationCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:text="@string/count_demo_text"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"
-                        android:gravity="center_vertical"/>
-
-                    <ImageView
-                        android:id="@+id/appIcon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/appicon" android:contentDescription="@string/app_icon"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"/>
-
+                <ImageView
+                    android:id="@+id/appIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/app_icon"
+                    android:src="@drawable/appicon"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
+
 </LinearLayout>

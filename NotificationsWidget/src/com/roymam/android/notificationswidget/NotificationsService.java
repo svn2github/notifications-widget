@@ -1068,7 +1068,10 @@ public class NotificationsService extends AccessibilityService
             else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
             {
                 Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED "+event.getPackageName().toString());
-                clearNotificationsForApps(new String[]{event.getPackageName().toString()});
+                if (!event.getPackageName().equals("com.android.systemui"))
+                {
+                    clearNotificationsForApps(new String[]{event.getPackageName().toString()});
+                }
 
                 // request nilsplus to hide/show notifications list
                 KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
@@ -1079,7 +1082,6 @@ public class NotificationsService extends AccessibilityService
                 else
                     npsIntent.setAction(HIDE_NOTIFICATIONS);
                 startService(npsIntent);
-
             }
             else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
             {
