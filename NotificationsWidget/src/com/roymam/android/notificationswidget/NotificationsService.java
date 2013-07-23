@@ -874,7 +874,7 @@ public class NotificationsService extends AccessibilityService
 			{
 				text = ((TextView)v).getText();
 			}
-			
+
 			// get title string if available
 			View titleView = localView.findViewById(notification_title_id );
 			View bigTitleView = localView.findViewById(big_notification_title_id );
@@ -1007,6 +1007,13 @@ public class NotificationsService extends AccessibilityService
 
             if (multipleEventsHandling.equals("first")) content = firstEventStr;
             else if (multipleEventsHandling.equals("last")) content = lastEventStr;
+
+            // if there is no text - make the text to be the content
+            if (text == null || text.equals(""))
+            {
+                text = content;
+                content = null;
+            }
 
 			// if no content lines, try to get subtext
 			if (content == null)
