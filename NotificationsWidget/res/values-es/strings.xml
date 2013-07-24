@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General Strings -->
+    <string name="title">NiLS</string>
+    <string name="settingstitle">NiLS Ajustes</string>
+    <string name="accessibility_service_description">Habilita para permitir a NiLS recibir las notificaciones entrantes. El aviso mostrado cuando se habilita el servicio de accesibilidad es un mensaje estandar de Android. Esta app NO colecta ninguno de tus datos. Por favor ten en cuenta como esta app no tiene permisos de acceso a Internet, por consiguiente no puede enviar datos de ningún modo.</string>
+    <string name="notifications_service">Servicio NiLS</string>
+
+    <!-- Settings Page -->
+    <string name="generalsettings">Ajustes Generales</string>
+    <string name="advancedsettings">Ajustes Avanzados</string>
+    <string name="behavior">Auto Encender</string>
+    <string name="appearance">Apariencia</string>
+    <string name="advanced">Avanzado</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="turnscreenon">Auto Encender</string>
+    <string name="turnscreenon_summary">Despierta el dispositivo y enciende la pantalla cuando hay notificaciones nuevas.</string>
+    <string name="disableproximity">Deshabilitar Sensor de Proximidad</string>
+    <string name="disableproximity_summary">Si está activado, el dispositivo siempre enciende la pantalla para notificaciones, aunque esté la pantalla cubierta.</string>
+    <string name="disableproximity_nexus4_warning">Por favor ten en cuenta que el Nexus 4 tiene problemas conocidos cuando el sensor de prox. se habilita, puede causar mucho gasto de batería, y podrías escuchar sonidos como ticks durante la reproducción de música o una llamada.\nEstás seguro que quieres habilitar esta función?</string>
+    <string name="disableproximity_nexus4_warning_title">Aviso para Nexus 4</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="delayed_screenon">Encendido retrasado</string>
+    <string name="delayed_screenon_summary">Cuando llega una notificación, despierta el dispositivo y enciende la pantalla cuando el mismo es sacado del bolsillo</string>
+    <string name="clearonunlock">Borrar al desbloquear</string>
+    <string name="clearonunlock_summary">Borra todas las notificaciones cuando el dispositivo es desbloqueado</string>
+    <string name="clearonlock">Borrar al bloquear</string>
+    <string name="clearonlock_summary">Borra todas las notificaciones cuando el dispositivo es bloqueado</string>
+    <string name="collectonunlock">Reunir al desbloquear</string>
+    <string name="collectonunlock_summary">Sigue reuniendo notificaciones cuando el disp. es desbloqueado</string>
+    <string name="order_notifications_by">Ordenar notificaciones por</string>
+    <string name="clear_all_from_same_app">Borrar todas de la misma app</string>
+    <string name="clear_all_from_same_app_summary">Cuando una notificación es abierta, borra todas las notificaciones restantes de la misma app</string>
+
+    <string-array name="settings_orderby_entries">
+        <item>Fecha (Nuevos primero)</item>
+        <item>Fecha (Viejos primero)</item>
+        <item>Prioridad</item>
+    </string-array>
+
+    <string name="experimental">Experimental </string>
+    <string name="max_lines">Lineas de texto máximas</string>
+    <string name="show_full_notification">Mostrar el contenido completo de las notificaciones</string>
+    <string name="show_full_notification_summary">Muestra el contenido completo tal cual es visualizado en la barra de notificaciones</string>
+    <string name="clearonclear">Monitorear \"Borrar Todo\"</string>
+    <string name="clearonclear_summary">Limpiar notificaciones cuando el botón de limpiar es clickeado en la barra de notificaciones de Android. (requiere reinicio del servicio de accesibilidad)</string>
+    <string name="monitor_shade">Monitorear barra de notificaciones</string>
+    <string name="monitor_shade__summary">Limpia notificaciones que no aparecen en la barra de notificaciones de Android. (requiere reinicio del servicio de accesibilidad)</string>
+    <string name="clear_app_notifications">Limpiar cuando la app es abierta</string>
+    <string name="clear_app_notifications_summary">Limpiar automáticamente notificaciones de la app cuando ésta es abierta. (requiere reinicio del servicio de accesibilidad)</string>
+    <string name="auto_kill_persistent">Eliminar automáticamente notificaciones persistentes</string>
+    <string name="auto_kill_persistent_summary">Elimina automáticamente notificaciones persistentes cuando el servicio de la app no se está ejecutando, puede incrementar el uso de la batería. (requiere reinicio del servicio de accesibilidad)</string>
+    <string name="monitor_apps_interval">Monitorea el intervalo de apps</string>
+    <string name="keep_on_foreground">Mantener al frente</string>
+    <string name="keep_on_foreground_summary">Mantiene el servicio de Notificaciones del Widget al frente para prevenir que otras apps la cierren</string>
+    <string name="disable_auto_switch_summary">Deshabilitar el cambio automático entre los presets de PB Minimizada y PB Maximizada en pant. bloq. Android 4.2</string>
+    <string name="disable_auto_switch">Deshabilita el cambio automático de presets</string>
+
+    <string-array name="max_lines_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>Ilimitadas</item>
+    </string-array>
+
+    <string-array name="monitor_apps_interval_entries">
+        <item>2 segundos</item>
+        <item>5 segundos</item>
+        <item>10 segundos</item>
+        <item>30 segundos</item>
+    </string-array>
+
+    <string name="service_inactive_text">El Servicio está inactivo. Por favor habilita el servicio \"Servicio NiLS\" en opciones de accesibilidad, toca el icono de alerta para abrir los Ajustes de Accesibilidad</string>
+
+    <!-- Wizard Strings -->
+    <string name="menu_settings">Ajustes</string>
+    <string name="menu_about">Acerca</string>
+    <string name="title_activity_main">NiLS</string>
+    <string name="tutorial_help_1">Cuando los Ajustes de Accesibilidad se abra, elige \"Servicio NiLS\" y cambia de \"No\" a \"Si\".  Toca \"OK\" en el diálogo de aviso</string>
+    <string name="tutorial_help_2">Después de bloquear la pantalla, elimina el widget de reloj estandar de Android deslizándolo hacia abajo para expandirlo y arrástralo hacia arriba para eliminarlo, luego haz click en el icono +, elige \"Widget NiLS\" de la lista</string>
+    <string name="tutorial_help_2_widgetlocker">Agrega el widget a tu pantalla de inicio. Si tienes WidgetLocker instalado - ejecútalo y manten apretada un area vacía para agregar el widget</string>
+    <string name="tutorial_help_3">Esto es todo. Si tienes alguna pregunta o problema - no dudes en contactarnos en support@roymam.com</string>
+    <string name="tutorial_step_1">Habilita \"Servicio NiLS\" en Ajustes de Accesibilidad</string>
+    <string name="tutorial_step_2">Agrega el widget \"NiLS\"</string>
+    <string name="tutorial_step_3">Personaliza \"NiLS\" en la pág. de \"Ajustes\"</string>
+    <string name="tutorial_toast_1">Habilita \"Servicio NiLS\" y luego presiona atrás para volver al Ayudante</string>
+    <string name="tutorial_toast_2">Deberías bloquear la pantalla manualmente y luego agregar el widget</string>
+    <string name="welcome_text">Bienvenido a NiLS - Widget de notificaciones, Empecemos.</string>
+    <string name="tutorial_step_1_title">Habilita el Servicio</string>
+    <string name="tutorial_step_2_title">Agregar Widget</string>
+    <string name="tutorial_step_3_title">Personalizar</string>
+
+    <!-- About Dialog -->
+    <string name="about_title">NiLS</string>
+    <string name="about_subtitle">NiLS es desarrollado por Roymam</string>
+    <string name="about_content">El proyecto es hospedado en:\nhttp://code.google.com/p/notifications-widget/\nSiéntete libre de reportar problemas por cualquier bug o requerimiento de característica\n\nSi deseas apoyar al desarrollo de esta app podrías probar nuestro juego:</string>
+    <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
+    <string name="about_contactus_title">Contacto</string>
+    <string name="about_contactus_email">mailto:support@roymam.com</string>
+    <string name="about_close">Cerrar</string>
+
+    <!-- Contact Us Menu -->
+    <string name="contact_summary">Contáctanos para hacernos una pregunta, reportar un bug o sugerir una característica</string>
+    <string name="contact_ask">Hacer una Pregunta</string>
+    <string name="contact_request">Solicitar Característica</string>
+    <string name="contact_report">Reportar un Bug</string>
+    <string name="version">Version</string>
+
+    <!-- WidgetLocker -->
+    <string name="widget_locker_not_installed">WidgetLocker no está instalado</string>
+    <string name="widget_locker_not_installed_summary">Tu versión de Android es inferior a 4.2, por ende no puedes agregar widgets a tu pant. de bloq. estandar.\n\nSin embargo, hay una app paga llamada \"WidgetLocker\" que habilita agregar widgets a tu pant. de bloq.\n\nNiLS es conocido por funcionar relativamente bien con WidgetLocker, pero algunas características podrían no funcionar.\n\nNota que puede seguir usando NiLS como un widget estandar para tu pantalla de inicio sin tener que comprar WidgetLocker</string>
+    <string name="widget_locker_purchase">Comprar WidgetLocker</string>
+    <string name="no_widget_locker_add_widget">Agregar a NiLS como widget de tu pantalla de inicio (si quieres agregarlo a tu pant. de bloq. tendrás que comprar la app WidgetLocker desde Google Play)</string>
+
+    <!-- Error Messages -->
+    <string name="failed_to_monitor_clear_button">Fallo en Monitorear botón \"Limpiar Notificaciones\"</string>
+
+    <!-- Action Bar -->
+    <string name="settings">Ajustes</string>
+    <string name="pin">Pin</string>
+    <string name="unpin">Quitar Pin</string>
+
+    <!-- App specific settings -->
+    <string name="app_specific_settings_title">Ajustes Específicos de App</string>
+    <string name="ignore_notifications">Ignorar esta app</string>
+    <string name="ignore_notifications_summary">Ignorar todas las notificaciones de esta app</string>
+    <string name="show_only_last_notification">Mantener solamente las últimas notificaciones</string>
+    <string name="show_only_last_notification_summary">Mantener solamente la última notificación que fue recibida de esta app</string>
+    <string name="extract_expanded_text">Usar notificación expandida</string>
+    <string name="extract_expanded_text_summary">Solo Android 4.1+: Usar notificación expandida si está disp.</string>
+    <string name="show_only_last_event">Mostrar solo el último evento</string>
+    <string name="show_only_last_event_summary">Mostrar el último evento cuando la notificación expandida tiene múltiples eventos (ej. multiples emails en una notificación)</string>
+    <string name="multiple_events_handling">Manejo de eventos múltiples</string>
+    <string name="multiple_events_handling_summary">Elige como manejar eventos múltiples cuando la notificación expandida tiene más de uno(ej. multiples emails en una notificación)</string>
+    <string name="set_app_priority">Elige prioridad</string>
+    <string name="set_app_priority_summary">Elegir prioridad de app para usar con la opción \"Orden de Prioridad\"</string>
+
+    <string-array name="settings_app_priority_entries">
+        <item>Defecto</item>
+        <item>Min</item>
+        <item>Baja</item>
+        <item>Normal</item>
+        <item>Alta</item>
+        <item>Máx</item>
+    </string-array>
+
+    <string-array name="settings_multiple_events_entries">
+        <item>Mostrar TodoShow All</item>
+        <item>Mostrar Primer Evento</item>
+        <item>Mostrar Último Evento</item>
+    </string-array>
+
+    <string name="ignore_empty_notifications">Ignoarar notificaciones vacías</string>
+    <string name="ignore_empty_notifications_summary">Ignorar notificaciones sin contenido</string>
+    <string name="clear_app_settings">Reset</string>
+    <string name="clear_app_summary">Limpiar ajustes específicos para esta app</string>
+    <string name="app_specific_help">Cómo agregar Ajustes Específicos de App?</string>
+    <string name="app_specific_help_details">Ajuestes específicos de app permite porder ajustar especificamente para diferentes apps - como ocultar notificaciones de la app, elegir prioridades, etc...\n\nPara agregar ajustes específicos de app, haz click en el ícono de la notificación de la app cuando ésta aparece, un menú de acción va a aparecer por sobre la notificación, entonces haz click en el botón \"Ajustes\". (el que tiene un icono de una herramienta)</string>
+
+    <!-- Persistent Notifications -->
+    <string name="persistent_notifications">Notificaciones Persistentes</string>
+    <string name="show_persistent_notifications">Muestra notificación persistente</string>
+    <string name="show_persistent_notifications_summary">Muestra notificación persistente de esta app</string>
+    <string name="notification_height">Tamaño de la notificación Persistente</string>
+
+    <string-array name="settings_notification_height_entries">
+        <item>Chica</item>
+        <item>Normal</item>
+        <item>Máxima</item>
+    </string-array>
+
+    <string name="hide_when_notifications">Ocultar cuando aparecen notificaciones</string>
+    <string name="hide_when_notifications_summary">Oculta esta notificación persistente cuando notificaciones normales aparecen</string>
+    <string name="auto_hide_persistent_notification">Ocultar al estar inactiva</string>
+    <string name="auto_hide_persistent_notification_summary">Ocultar cuando la notificación persistente no fue actualizada por el período seleccionado</string>
+
+    <string-array name="settings_auto_hide_persistent_notifications_entries">
+        <item>No Ocultar</item>
+        <item>Luego de 5 Min.</item>
+        <item>Luego de 15 Min.</item>
+        <item>Luego de 30 Min.</item>
+        <item>Luego de 1 Min.</item>
+        <item>Luego de 4 Min.</item>
+        <item>Luego de 24 Min.</item>
+    </string-array>
+
+    <string name="how_to_use">Cómo usar?</string>
+    <string name="persistent_notifications_help">Cómo Usar Notificaciones Persistentes?</string>
+    <string name="persistent_notifications_help_details">Notificaciones persistentes son notificaciones que aparecen en la barra de estado y no pueden ser removidas (ej. apps en ejecución, reproduciendo música, etc...)\n\nEsta lista va a ser llenada con las aplicaciones que crearon notificaciones persistentes, para agregar una notificación persistente al widget elige el recuadro cerca del nombre de la app.\n\nSi no hay apps en la lista, ejecuta esta pantalla de ajustes luego de que la notificación persistente es actualizada por la app que la creó.</string>
+
+    <!-- strings for accessibility -->
+    <string name="clear_all_notifications">Limpiar Todas las Notificaciones</string>
+    <string name="action_bar">Barra de Acción</string>
+    <string name="notification_icon">Icono de Notificación</string>
+    <string name="app_icon">Icono de App</string>
+
+    <!-- Appearance new activity -->
+    <string name="title_section2">Notificación</string>
+    <string name="title_section1">Reloj</string>
+    <string name="title_activity_appearance">Apariencia</string>
+    <string name="collapsed">Minimizada</string>
+    <string name="expanded">Maximizada</string>
+
+    <string-array name="widget_mode_entries">
+        <item>PB Minimizada</item>
+        <item>PB Maximizada</item>
+        <item>Inicio</item>
+    </string-array>
+
+    <string name="widget_mode_collapsed_desc">En pant. bloq. cuando minimizada (4.2+)</string>
+    <string name="widget_mode_expanded_desc">En pant. bloq. cuando maximizada</string>
+    <string name="widget_mode_home_desc">En pantalla de inicio</string>
+
+    <!-- Appearance settings strings -->
+    <string name="title_demo_text">Título de Notificación</string>
+    <string name="title_appname_demo_text">Nombre de Aplicación</string>
+    <string name="text_demo_text">Este es el texto de la notificación, podría ser extenso y ser recortado.</string>
+    <string name="content_demo_text">Contenido de Notificación</string>
+    <string name="content_expanded_demo_text">Contenido de Notificación Linea 1\nContenido de Notificación Linea 2\nContenido de Notificación Linea 3\nContenido de Notificación Linea 4\nContenido de Notificación Linea 5\nContenido de Notificación Linea 6\nContenido de Notificación Linea 7\nContenido de Notificación Linea 8\n</string>
+    <string name="time_demo_text">9:21</string>
+    <string name="count_demo_text">2</string>
+    <string name="small">Pequeño</string>
+    <string name="medium">Mediano</string>
+    <string name="large">Grande</string>
+    <string name="bg_color">Color Fondo</string>
+    <string name="opacity">Opacidad</string>
+    <string name="clock_color">Color Reloj</string>
+    <string name="date_color">Color Fecha</string>
+    <string name="alarm_color">Color Alarma</string>
+    <string name="clickable">Clickable</string>
+    <string name="bold_hours">Hora en Negrita</string>
+    <string name="bold_minutes">Minutos en Negrita</string>
+    <string name="auto_switch_clock_size">Tamaño de reloj automático</string>
+    <string name="show_clear_all_button">Mostrar botón &quot;Limpiar todo&quot;</string>
+    <string name="hide_clock">Esconder Reloj</string>
+    <string name="show_persistent">Mostrar Notificaciones Persistentes</string>
+    <string name="compact">Compacto</string>
+    <string name="normal">Normal</string>
+    <string name="title_color">Color de Título</string>
+    <string name="text_color">Color de Texto</string>
+    <string name="content_color">Color de Contenido</string>
+    <string name="icon_menu">Menú de Icono</string>
+    <string name="max_lines_">Líneas Máx:</string>
+    <string name="show_actionbar">Siempre mostrar botones de acción de apps</string>
+    <string name="notification_action_1">Acción de Notificación 1</string>
+    <string name="notification_action_2">Acción de Notificación 2</string>
+    <string name="clear_notification">Limpiar Notificación</string>
+    <string name="open_accessibility_settings">Abrir Ajustes de Accesibilidad</string>
+
+</resources>
