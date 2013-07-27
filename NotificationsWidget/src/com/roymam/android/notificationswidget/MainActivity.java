@@ -10,7 +10,7 @@ public class MainActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		boolean serviceEnabled = NotificationsService.getSharedInstance()!=null;
+		boolean serviceEnabled = NotificationsService.getSharedInstance(this)!=null;
 		boolean widgetEnabled = NotificationsWidgetService.widgetActive;
 		if (serviceEnabled & widgetEnabled)
 		{

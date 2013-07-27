@@ -1,0 +1,593 @@
+package com.roymam.android.notificationswidget;
+
+import android.annotation.TargetApi;
+import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
+import android.text.format.Time;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RemoteViews;
+import android.widget.TextView;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
+public class NotificationParser
+{
+    private final Context context;
+    public int notification_image_id = 0;
+    public int notification_title_id = 0;
+    public int notification_text_id = 0;
+    public int notification_info_id = 0;
+    public int notification_subtext_id = 0;
+    public int big_notification_summary_id = 0;
+    public int big_notification_title_id = 0;
+    public int big_notification_content_title = 0;
+    public int big_notification_content_text = 0;
+    public int inbox_notification_title_id = 0;
+    public int inbox_notification_event_1_id = 0;
+    public int inbox_notification_event_2_id = 0;
+    public int inbox_notification_event_3_id = 0;
+    public int inbox_notification_event_4_id = 0;
+    public int inbox_notification_event_5_id = 0;
+    public int inbox_notification_event_6_id = 0;
+    public int inbox_notification_event_7_id = 0;
+    public int inbox_notification_event_8_id = 0;
+    public int inbox_notification_event_9_id = 0;
+    public int inbox_notification_event_10_id = 0;
+
+    public NotificationParser(Context context)
+    {
+        this.context = context;
+        detectNotificationIds();
+    }
+    
+    public NotificationData parseNotification(Notification n, String packageName, int notificationId)
+    {
+        if (n != null)
+        {
+            // handle only dismissable notifications
+            if (!isPersistent(n) && !shouldIgnore(n, packageName))
+            {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
+                // build notification data object
+                NotificationData nd = new NotificationData();
+
+                // extract notification & app icons
+                Resources res;
+                PackageInfo info;
+                ApplicationInfo ai;
+                try
+                {
+                    res = context.getPackageManager().getResourcesForApplication(packageName);
+                    info = context.getPackageManager().getPackageInfo(packageName,0);
+                    ai = context.getPackageManager().getApplicationInfo(packageName,0);
+                }
+                catch(PackageManager.NameNotFoundException e)
+                {
+                    info = null;
+                    res = null;
+                    ai = null;
+                }
+
+                if (res != null && info != null)
+                {
+                    nd.appicon = BitmapFactory.decodeResource(res, n.icon);
+                    nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+                    if (nd.appicon == null)
+                    {
+                        nd.appicon = nd.icon;
+                    }
+                }
+                if (n.largeIcon != null)
+                {
+                    nd.icon = n.largeIcon;
+                }
+
+                // get time of the event
+                if (n.when != 0)
+                    nd.received = n.when;
+                else
+                    nd.received = System.currentTimeMillis();
+
+                nd.action = n.contentIntent;
+                nd.count = 1;
+                nd.packageName = packageName;
+
+                // if possible - try to extract actions from expanded notification
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                {
+                    nd.actions = getActionsFromNotification(context, n, packageName);
+                }
+
+                // extract expanded text
+                nd.text = null;
+                nd.title = null;
+                if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
+                {
+                    getExpandedText(n,nd, sharedPref.getString(nd.packageName + "." + AppSettingsActivity.MULTIPLE_EVENTS_HANDLING, "all"));
+                    // replace text with content if no text
+                    if (nd.text == null || nd.text.equals("") &&
+                            nd.content != null && !nd.content.equals(""))
+                    {
+                        nd.text = nd.content;
+                        nd.content = null;
+                    }
+                    // keep only text if it's duplicated
+                    if (nd.text != null && nd.content != null && nd.text.toString().equals(nd.content.toString()))
+                    {
+                        nd.content = null;
+                    }
+                }
+
+                    // use default notification text & title - if no info found on expanded notification
+                    if (nd.text == null)
+                    {
+                        nd.text = n.tickerText;
+                    }
+                    if (nd.title == null)
+                    {
+                        if (info != null)
+                            nd.title = context.getPackageManager().getApplicationLabel(ai);
+                        else
+                            nd.title = packageName;
+                    }
+
+                    // if still no text ignore it
+                    if (nd.title == null && nd.text == null)
+                        return null;
+
+                    nd.id = notificationId;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                    {
+                        nd.priority = getPriority(n);
+                    }
+                    else
+                    {
+                        nd.priority = 0;
+                    }
+                    int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));
+                    if (apppriority != -9) nd.priority = apppriority;
+
+                    return nd;
+                }
+        }
+        return null;
+    }
+
+    private boolean shouldIgnore(Notification n, String packageName)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        if (!prefs.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true) && !km.inKeyguardRestrictedInputMode() ||
+             prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false))
+            return true;
+        return false;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private int getPriority(Notification n)
+    {
+        return n.priority;
+    }
+
+    // extract actions from notification
+    private NotificationData.Action[] getActionsFromNotification(Context context, Notification n, String packageName)
+    {
+        ArrayList<NotificationData.Action> returnActions = new ArrayList<NotificationData.Action>();
+        try
+        {
+            Object[] actions = null;
+            Field fs = n.getClass().getDeclaredField("actions");
+            if (fs != null)
+            {
+                fs.setAccessible(true);
+                actions = (Object[]) fs.get(n);
+            }
+            if (actions != null)
+            {
+                for(int i=0; i<actions.length; i++)
+                {
+                    NotificationData.Action a = new NotificationData.Action();
+                    Class<?> actionClass=Class.forName("android.app.Notification$Action");
+                    a.icon = actionClass.getDeclaredField("icon").getInt(actions[i]);
+                    a.title = (CharSequence) actionClass.getDeclaredField("title").get(actions[i]);;
+                    a.actionIntent = (PendingIntent) actionClass.getDeclaredField("actionIntent").get(actions[i]);;
+
+                    // find drawable
+                    // extract app icons
+                    Resources res;
+                    try {
+                        res = context.getPackageManager().getResourcesForApplication(packageName);
+                        a.drawable = BitmapFactory.decodeResource(res, a.icon);
+                    } catch (PackageManager.NameNotFoundException e)
+                    {
+                        a.drawable = null;
+                    }
+                    returnActions.add(a);
+                }
+            }
+        }
+        catch(Exception exp)
+        {
+
+        }
+        NotificationData.Action[] returnArray = new NotificationData.Action[returnActions.size()];
+        returnActions.toArray(returnArray);
+        return returnArray;
+    }
+
+    private void getExpandedText(Notification n, NotificationData nd, String multipleEventsHandling)
+    {
+        RemoteViews view = n.contentView;
+
+        // first get information from the original content view
+        extractTextFromView(view, nd, multipleEventsHandling);
+
+        // then try get information from the expanded view
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        {
+            view = getBigContentView(n);
+            extractTextFromView(view, nd, multipleEventsHandling);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private RemoteViews getBigContentView(Notification n)
+    {
+        if (n.bigContentView == null)
+            return n.contentView;
+        else
+        {
+            return n.bigContentView;
+        }
+    }
+
+    private void extractTextFromView(RemoteViews view, NotificationData nd, String multipleEventsHandling)
+    {
+        CharSequence title = null;
+        CharSequence text = null;
+        CharSequence content = null;
+        boolean hasParsableContent = true;
+        ViewGroup localView = null;
+        try
+        {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            localView = (ViewGroup) inflater.inflate(view.getLayoutId(), null);
+            view.reapply(context.getApplicationContext(), localView);
+        }
+        catch (Exception exp)
+        {
+            hasParsableContent = false;
+        }
+        if (hasParsableContent)
+        {
+            View v;
+            // try to get big text
+            v = localView.findViewById(big_notification_content_text);
+            if (v != null && v instanceof TextView)
+            {
+                text = ((TextView)v).getText();
+            }
+
+            // get title string if available
+            View titleView = localView.findViewById(notification_title_id );
+            View bigTitleView = localView.findViewById(big_notification_title_id );
+            View inboxTitleView = localView.findViewById(inbox_notification_title_id );
+            if (titleView  != null && titleView  instanceof TextView)
+            {
+                title = ((TextView)titleView).getText();
+            } else if (bigTitleView != null && bigTitleView instanceof TextView)
+            {
+                title = ((TextView)titleView).getText();
+            } else if  (inboxTitleView != null && inboxTitleView instanceof TextView)
+            {
+                title = ((TextView)titleView).getText();
+            }
+
+            // try to extract details lines
+            content = null;
+            v = localView.findViewById(inbox_notification_event_1_id);
+            CharSequence firstEventStr = null;
+            CharSequence lastEventStr = null;
+
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    firstEventStr = s;
+                    content = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_2_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content, "\n", s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_3_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_4_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_5_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_6_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_7_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_8_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_9_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            v = localView.findViewById(inbox_notification_event_10_id);
+            if (v != null && v instanceof TextView)
+            {
+                CharSequence s = ((TextView)v).getText();
+                if (!s.equals(""))
+                {
+                    content = TextUtils.concat(content,"\n",s);
+                    lastEventStr = s;
+                }
+            }
+
+            if (multipleEventsHandling.equals("first")) content = firstEventStr;
+            else if (multipleEventsHandling.equals("last")) content = lastEventStr;
+
+            // if there is no text - make the text to be the content
+            if (text == null || text.equals(""))
+            {
+                text = content;
+                content = null;
+            }
+
+            // if no content lines, try to get subtext
+            if (content == null)
+            {
+                v = localView.findViewById(notification_subtext_id);
+                if (v != null && v instanceof TextView)
+                {
+                    CharSequence s = ((TextView)v).getText();
+                    if (!s.equals(""))
+                    {
+                        content = s;
+                    }
+                }
+            }
+        }
+
+        if (title!=null)
+        {
+            nd.title = title;
+        }
+        if (text != null)
+        {
+            nd.text = text;
+        }
+        if (content != null)
+        {
+            nd.content = content;
+        }
+    }
+
+    private void detectNotificationIds()
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.appicon)
+                .setContentTitle("1")
+                .setContentText("2")
+                .setContentInfo("3")
+                .setSubText("4");
+
+        Notification n = mBuilder.build();
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup localView;
+
+        // detect id's from normal view
+        localView = (ViewGroup) inflater.inflate(n.contentView.getLayoutId(), null);
+        n.contentView.reapply(context, localView);
+        recursiveDetectNotificationsIds(localView);
+
+        // detect id's from expanded views
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        {
+            NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+            bigtextstyle.setSummaryText("5");
+            bigtextstyle.setBigContentTitle("6");
+            bigtextstyle.bigText("7");
+            mBuilder.setContentTitle("8");
+            mBuilder.setStyle(bigtextstyle);
+            detectExpandedNotificationsIds(mBuilder.build());
+
+            NotificationCompat.InboxStyle inboxStyle =
+                    new NotificationCompat.InboxStyle();
+            String[] events = {"10","11","12","13","14","15","16","17","18","19"};
+            inboxStyle.setBigContentTitle("6");
+            mBuilder.setContentTitle("9");
+            inboxStyle.setSummaryText("5");
+
+            for (int i=0; i < events.length; i++)
+            {
+                inboxStyle.addLine(events[i]);
+            }
+            mBuilder.setStyle(inboxStyle);
+
+            detectExpandedNotificationsIds(mBuilder.build());
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void detectExpandedNotificationsIds(Notification n)
+    {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
+        n.bigContentView.reapply(context, localView);
+        recursiveDetectNotificationsIds(localView);
+    }
+
+    private void recursiveDetectNotificationsIds(ViewGroup v)
+    {
+        for(int i=0; i<v.getChildCount(); i++)
+        {
+            View child = v.getChildAt(i);
+            if (child instanceof ViewGroup)
+                recursiveDetectNotificationsIds((ViewGroup)child);
+            else if (child instanceof TextView)
+            {
+                String text = ((TextView)child).getText().toString();
+                int id = child.getId();
+                if (text.equals("1")) notification_title_id = id;
+                else if (text.equals("2")) notification_text_id = id;
+                else if (text.equals("3")) notification_info_id = id;
+                else if (text.equals("4")) notification_subtext_id = id;
+                else if (text.equals("5")) big_notification_summary_id = id;
+                else if (text.equals("6")) big_notification_content_title = id;
+                else if (text.equals("7")) big_notification_content_text = id;
+                else if (text.equals("8")) big_notification_title_id = id;
+                else if (text.equals("9")) inbox_notification_title_id = id;
+                else if (text.equals("10")) inbox_notification_event_1_id = id;
+                else if (text.equals("11")) inbox_notification_event_2_id = id;
+                else if (text.equals("12")) inbox_notification_event_3_id = id;
+                else if (text.equals("13")) inbox_notification_event_4_id = id;
+                else if (text.equals("14")) inbox_notification_event_5_id = id;
+                else if (text.equals("15")) inbox_notification_event_6_id = id;
+                else if (text.equals("16")) inbox_notification_event_7_id = id;
+                else if (text.equals("17")) inbox_notification_event_8_id = id;
+                else if (text.equals("18")) inbox_notification_event_9_id = id;
+                else if (text.equals("19")) inbox_notification_event_10_id = id;
+            }
+            else if (child instanceof ImageView)
+            {
+                Drawable d = ((ImageView)child).getDrawable();
+                if (d!=null)
+                {
+                    this.notification_image_id = child.getId();
+                }
+            }
+        }
+    }
+
+    public boolean isPersistent(Notification n)
+    {
+        return (((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) ||
+                ((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT));
+    }
+
+    public PersistentNotification parsePersistentNotification(Notification n, String packageName, int notificationId)
+    {
+        // keep only the last persistent notification for the app
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean useExpanded = (sharedPref.getBoolean(packageName + "." + AppSettingsActivity.USE_EXPANDED_TEXT,
+                               sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)));
+
+        PersistentNotification pn = new PersistentNotification();
+        if (useExpanded && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        {
+            pn.expandedContent = getExpandedContent(n);
+        }
+        pn.content = n.contentView;
+        Time now = new Time();
+        now.setToNow();
+        pn.received = now.toMillis(true);
+        pn.packageName = packageName;
+        pn.contentIntent = n.contentIntent;
+        pn.id = notificationId;
+        return pn;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private RemoteViews getExpandedContent(Notification n)
+    {
+        if (n.bigContentView != null)
+            return n.bigContentView;
+        else
+            return n.contentView;
+    }
+}

@@ -50,11 +50,11 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	@Override
 	public int getCount() 
 	{
-		NotificationsService s = NotificationsService.getSharedInstance();
+		NotificationsProvider s = NotificationsService.getSharedInstance(ctxt);
 		if (s != null) 
 		{
 	        // The service is running and connected.
-	        return(s.getNotificationsCount());		        
+	        return(s.getNotifications().size());
 		}
 		else
 		{
@@ -80,15 +80,15 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	public RemoteViews getViewAt(int position) 
 	{
 		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.listitem_notification);	
-		NotificationsService s = NotificationsService.getSharedInstance();
+		NotificationsProvider s = NotificationsService.getSharedInstance(ctxt);
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		String widgetMode = preferences.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 
 		if (s != null) 
 		{		   
-		    if (s.getNotificationsCount() >0 && position < s.getNotificationsCount())
+		    if (s.getNotifications().size() >0 && position < s.getNotifications().size())
 		    {
-		    	NotificationData n = s.getNotification(position);		    		    
+		    	NotificationData n = s.getNotifications().get(position);
 				
 		    	// set on click intent 
 		    	if (preferences.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true))
@@ -277,15 +277,15 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 
 		row.removeAllViews(R.id.actionbarContainer);
 		boolean alwaysShowActionBar = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false);
-		
-		if (NotificationsService.getSharedInstance().getSelectedIndex() == position ||
+
+        if (n.selected ||
 			alwaysShowActionBar && n.actions != null && n.actions.length > 0)
 		{		
 			RemoteViews actionBar = new RemoteViews(ctxt.getPackageName(),R.layout.view_actionbar);
 			row.addView(R.id.actionbarContainer, actionBar);			
 			row.setViewVisibility(R.id.actionbarContainer, View.VISIBLE);
 
-            if (NotificationsService.getSharedInstance().getSelectedIndex() == position )
+            if (n.selected)
             {
                 // set app settings intent
                 Intent appSettingsIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);
@@ -314,9 +314,9 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
                         PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
                 // hide clear button for pinned notifications
-                if (NotificationsService.getSharedInstance() != null &&
-                    NotificationsService.getSharedInstance().getNotification(position) != null &&
-                    NotificationsService.getSharedInstance().getNotification(position).pinned)
+                if (NotificationsService.getSharedInstance(ctxt) != null &&
+                    NotificationsService.getSharedInstance(ctxt).getNotifications().get(position) != null &&
+                    NotificationsService.getSharedInstance(ctxt).getNotifications().get(position).pinned)
                 {
                     actionBar.setViewVisibility(R.id.actionClear, View.GONE);
                     actionBar.setTextViewText(R.id.actionPinText, ctxt.getText(R.string.unpin));

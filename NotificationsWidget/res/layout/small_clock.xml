@@ -49,10 +49,20 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         tools:ignore="HardcodedText" />
 
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="2dp"
+            android:id="@+id/alarm_clock_image"
+            android:src="@android:drawable/ic_lock_idle_alarm"/>
+
     <TextView
         android:id="@+id/alarmtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="0.05"
         android:gravity="center_horizontal"
         android:text="TUE 07:00"
@@ -61,6 +71,7 @@
         tools:ignore="HardcodedText" />
 
     <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/clearButtonFiller"
         android:layout_width="32dp"
         android:layout_height="24dp"

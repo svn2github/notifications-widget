@@ -43,7 +43,6 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String DISABLE_PROXIMITY = "disableproximity";
 	public static final String DELAYED_SCREEON = "delayed_screenon";
 	public static final String NOTIFICATIONS_ORDER = "order_notifications_by";
-	public static final String KEEP_ON_FOREGROUND = "keep_on_foreground";
 	public static final String CLOCK_STYLE = "clockstyle";
 	public static final String NOTIFICATION_STYLE="notification_style";
 	public static final String MAX_LINES="max_lines";
@@ -230,7 +229,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 			
 			// Persistent notifications list
-			NotificationsService ns = NotificationsService.getSharedInstance();
+			NotificationsProvider ns = NotificationsService.getSharedInstance(getActivity());
 			if (ns != null)
     		{    			
     			List<String> apps = new ArrayList<String>();
@@ -376,9 +375,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	
 	@Override
 	public void onSharedPreferenceChanged(final SharedPreferences prefs, String key) 
-	{		
-		NotificationsService ns = NotificationsService.getSharedInstance();
-		if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null) 
+	{
+        //TODO: stop and start service after changing proximity settings
+		/*NotificationsProvider ns = NotificationsService.getSharedInstance(this);
+		if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null)
         {
 			if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
 				 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
@@ -387,20 +387,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			}
 			else 
 			{
-				ns.stopProximityMontior();
+                ns.stopProximityMontior();
 			}
-        }
-		else if (key.equals(KEEP_ON_FOREGROUND))
-		{
-			if (prefs.getBoolean(SettingsActivity.KEEP_ON_FOREGROUND, false))
-			{
-				NotificationsService.getSharedInstance().keepOnForeground();
-			}
-			else
-			{
-				NotificationsService.getSharedInstance().removeFromForeground();
-			}
-		}		
+        }*/
 	}
 	
 	// openSettings is launched from the custom checkbox in persistent notifications settings 

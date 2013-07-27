@@ -10,6 +10,8 @@
 
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- FN integration -->
+    <uses-permission android:name="robj.floating.notifications.DISMISS"/>
 
     <application
         android:allowBackup="true"
@@ -77,12 +79,6 @@
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
 
-                <!-- locking/unlocking device -->
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.intent.action.SCREEN_ON" />
-                <action android:name="com.teslacoilsw.widgetlocker.intent.LOCKED" />
-                <action android:name="com.teslacoilsw.widgetlocker.intent.UNLOCKED" />
-
                 <!-- WidgetLocker integration -->
                 <action android:name="com.teslacoilsw.widgetlocker.ENABLE" />
                 <action android:name="com.teslacoilsw.widgetlocker.DISABLE" />
@@ -91,14 +87,29 @@
                 <action android:name="com.roymam.android.notificationswidget.update_clock" />
                 <action android:name="com.roymam.android.notificationswidget.switchmode" />
                 <action android:name="com.roymam.android.notificationswidget.performaction" />
-
-                <!-- Floating Notifications Sync -->
-                <action android:name="robj.floating.notifications.dismissed"/>
             </intent-filter>
             <!-- This specifies the widget provider info -->
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widgetinfo" />
+        </receiver>
+
+        <receiver android:name=".EventsHandler">
+            <intent-filter>
+                <!-- locking/unlocking device -->
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.teslacoilsw.widgetlocker.intent.LOCKED" />
+                <action android:name="com.teslacoilsw.widgetlocker.intent.UNLOCKED" />
+
+                <!-- floating notifications -->
+                <action android:name="robj.floating.notifications.dismissed"/>
+
+                <!-- 3rd party API -->
+                <action android:name="com.roymam.android.nils.remove_notification"/>
+                <action android:name="com.roymam.android.nils.open_notification"/>
+                <action android:name="com.roymam.android.nils.resend_all_notifications"/>
+
+            </intent-filter>
         </receiver>
 
         <!-- <service android:name="com.roymam.android.notificationswidget.ClockService"/> -->
@@ -108,7 +119,7 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService" />
         <service
-            android:name="com.roymam.android.notificationswidget.NotificationsService"
+            android:name="com.roymam.android.notificationswidget.NiLSAccessibilityService"
             android:label="@string/notifications_service"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
             <intent-filter>

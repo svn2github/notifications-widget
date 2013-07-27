@@ -1,5 +1,216 @@
 package com.roymam.android.notificationswidget;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+
+public class NotificationsService implements NotificationsProvider
+{
+    private static NotificationsProvider instance;
+    private NotificationsProvider source;
+    private Context context;
+
+    private NotificationsService(Context context, NotificationsProvider source)
+    {
+        this.source = source;
+        this.context = context;
+        setNotificationEventListener(new NotificationAdapter(context));
+    }
+
+    public static NotificationsProvider getSharedInstance(Context context)
+    {
+        if (instance == null)
+        {
+            if (NiLSAccessibilityService.getSharedInstance() != null)
+                instance = new NotificationsService(context, NiLSAccessibilityService.getSharedInstance());
+        }
+        return instance;
+    }
+
+    @Override
+    public List<NotificationData> getNotifications()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        List<NotificationData> notifications = source.getNotifications();
+
+        String sortBy = prefs.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
+        sortNotificationsList(notifications, sortBy);
+
+        return notifications;
+    }
+
+    private void sortNotificationsList(List<NotificationData> notifications, String sortBy)
+    {
+        if (sortBy.equals("priority"))
+        {
+            // sort by priority
+            Collections.sort(notifications, new Comparator<NotificationData>()
+            {
+                @Override
+                public int compare(NotificationData n1, NotificationData n2)
+                {
+                    if (n1.priority < n2.priority)
+                        return 1;
+                    if (n1.priority > n2.priority)
+                        return -1;
+                    // if we reached here, the priorities are equal - sory by time
+                    if (n1.received < n2.received)
+                        return 1;
+                    if (n1.received > n2.received)
+                        return -1;
+                    return 0;
+                }
+            });
+        }
+        else if (sortBy.equals("timeasc"))
+        {
+            // sort by time
+            Collections.sort(notifications, new Comparator<NotificationData>()
+            {
+                @Override
+                public int compare(NotificationData n1, NotificationData n2)
+                {
+                    if (n1.received > n2.received)
+                        return 1;
+                    if (n1.received < n2.received)
+                        return -1;
+                    return 0;
+                }
+            });
+        }
+        else //if (sortBy.equals("time"))
+        {
+            // sort by time
+            Collections.sort(notifications, new Comparator<NotificationData>()
+            {
+                @Override
+                public int compare(NotificationData n1, NotificationData n2)
+                {
+                    if (n1.received < n2.received)
+                        return 1;
+                    if (n1.received > n2.received)
+                        return -1;
+                    return 0;
+                }
+            });
+        }
+    }
+
+    @Override
+    public HashMap<String, PersistentNotification> getPersistentNotifications()
+    {
+        return source.getPersistentNotifications();
+    }
+
+    @Override
+    public void clearAllNotifications()
+    {
+        source.clearAllNotifications();
+    }
+
+    @Override
+    public void clearNotification(int notificationId)
+    {
+        source.clearNotification(notificationId);
+    }
+
+    @Override
+    public void setNotificationEventListener(NotificationEventListener listener)
+    {
+        source.setNotificationEventListener(listener);
+    }
+
+    @Override
+    public void clearNotificationsForApps(String[] apps)
+    {
+        source.clearNotificationsForApps(apps);
+    }
+}
+
+/* Other stuff that need to be integrated
+
+else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.LOCKED"))
+    	{
+    		NotificationsService ns = NotificationsService.getSharedInstance(context);
+    		if (ns!=null)
+    		{
+    			ns.setDeviceIsLocked();
+    			ns.setWidgetLockerEnabled(true);
+    		}
+    	}
+    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.UNLOCKED"))
+    	{
+    		NotificationsService ns = NotificationsService.getSharedInstance(context);
+    		if (ns != null)
+    		{
+    			ns.setDeviceIsUnlocked();
+				ns.setSelectedIndex(-1);
+				ns.setWidgetLockerEnabled(true);
+    		}
+    	}
+    	else if (intent.getAction().equals("android.intent.action.SCREEN_ON"))
+    	{
+    		NotificationsService ns = NotificationsService.getSharedInstance(context);
+    		if (ns != null)
+    		{
+    			// if the screen is on, so the device is currently locked (until USER_PRESENT will trigger)
+    			ns.setDeviceIsLocked();
+    		}
+    	}
+else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.DISABLED"))
+        {
+        NotificationsService ns = NotificationsService.getSharedInstance(context);
+if (ns != null)
+        {
+        ns.setWidgetLockerEnabled(false);
+}
+        }
+        else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.ENABLED"))
+        {
+        NotificationsService ns = NotificationsService.getSharedInstance(context);
+if (ns != null)
+        {
+        ns.setWidgetLockerEnabled(true);
+}
+        }
+        else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT))
+        {
+        NotificationsService ns = NotificationsService.getSharedInstance(context);
+if (ns != null)
+        {
+        if (!ns.isWidgetLockerEnabled())
+        {
+        ns.setDeviceIsUnlocked();
+ns.setSelectedIndex(-1);
+}
+        }
+        }
+
+private void updateClearOnUnlockState()
+{
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    //NotificationsService ns = NotificationsService.getSharedInstance(context);
+
+    // check if the screen has been turned on to start collecting
+    if (!prefs.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true) && ns != null)
+    {
+        PowerManager powerManager = (PowerManager) context.getSystemService(POWER_SERVICE);
+        boolean isScreenOn = powerManager.isScreenOn();
+        if (!isScreenOn && ns.isDeviceIsUnlocked())
+        {
+            ns.setDeviceIsLocked();
+        }
+    }
+
+}
+
+****/
+/*
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.TargetApi;
@@ -57,53 +268,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class NotificationsService extends AccessibilityService 
+public class NotificationsService extends AccessibilityService
 {
 	private static NotificationsService sSharedInstance;
 	private List<NotificationData> notifications;
-	private HashMap<String, PersistentNotification> persistentNotifications;
 	private boolean deviceCovered = false;
 	private boolean newNotificationsAvailable = false;
 	private boolean widgetLockerEnabled = false;
 
-	// Proximity Sensor Monitoring
-	SensorEventListener sensorListener = null;
-	
+
 	private int 	selectedIndex = -1;
-	private String clearButtonName = "Clear all notifications.";
-	
-	public int notification_image_id = 0;
-	public int notification_title_id = 0;
-	public int notification_text_id = 0;
-	public int notification_info_id = 0;
-	public int notification_subtext_id = 0;
-	public int big_notification_summary_id = 0;
-	public int big_notification_title_id = 0;
-	public int big_notification_content_title = 0;
-	public int big_notification_content_text = 0;
-	public int inbox_notification_title_id = 0;
-	public int inbox_notification_event_1_id = 0;
-	public int inbox_notification_event_2_id = 0;
-	public int inbox_notification_event_3_id = 0;
-	public int inbox_notification_event_4_id = 0;
-	public int inbox_notification_event_5_id = 0;
-	public int inbox_notification_event_6_id = 0;
-	public int inbox_notification_event_7_id = 0;
-	public int inbox_notification_event_8_id = 0;
-	public int inbox_notification_event_9_id = 0;
-	public int inbox_notification_event_10_id = 0;
+
     private PendingIntent runningAppsPendingIntent = null;
     private boolean overrideLocked = false;
     private int notificationId = 0;
 
     public static NotificationsService getSharedInstance() { return sSharedInstance; }
 
-    // extensions API
-    public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
-    public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
-    public static final String SHOW_NOTIFICATIONS = "com.roymam.android.nils.show_notifications";
-    public static final String HIDE_NOTIFICATIONS = "com.roymam.android.nils.hide_notifications";
-    public static final String RESEND_ALL_NOTIFICATIONS = "com.roymam.android.nils.resend_all_notifications";
 
     @Override
 	public int onStartCommand(Intent intent, int flags, int startId) 
@@ -145,21 +326,7 @@ public class NotificationsService extends AccessibilityService
 		// check if "Clear Notifications Monitor" feature enabled, if so - monitor view clicks
 		if (prefs.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
 		{
-			// find "clear all notifications." button text
-		    Resources res;
-			try 
-			{
-				res = getPackageManager().getResourcesForApplication("com.android.systemui");
-				int i = res.getIdentifier("accessibility_clear_all", "string", "com.android.systemui");
-				if (i!=0)
-				{
-					clearButtonName = res.getString(i);
-				}							
-			} 
-			catch (Exception exp)
-			{
-				Toast.makeText(this, R.string.failed_to_monitor_clear_button, Toast.LENGTH_LONG).show();
-			}			
+
 		    info.eventTypes |= AccessibilityEvent.TYPE_VIEW_CLICKED;
 		}
 
@@ -245,18 +412,7 @@ public class NotificationsService extends AccessibilityService
         registerReceiver(receiver,new IntentFilter(RESEND_ALL_NOTIFICATIONS));
     }
 
-    private void launchNotificationById(int id)
-    {
-        for(int i=0; i< notifications.size(); i++)
-        {
-            NotificationData nd = notifications.get(i);
 
-            if (nd.id == id)
-            {
-                launchNotification(i);
-            }
-        }
-    }
 
     private void removeNotificationById(int id)
     {
@@ -294,57 +450,6 @@ public class NotificationsService extends AccessibilityService
         }
     }
 
-
-    public void registerProximitySensor()
-	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
-			 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
-			{
-			    SensorManager sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-				Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-				sensorListener = new SensorEventListener()
-				{
-					@Override
-					public void onAccuracyChanged(Sensor sensor, int accuracy) 
-					{
-					}
-		
-					@Override
-					public void onSensorChanged(SensorEvent event) 
-					{
-						if (event.values[0] == 0)
-						{
-							deviceCovered = true;
-						}
-						else
-						{
-							if (deviceCovered)
-							{
-								deviceCovered = false;
-								SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(NotificationsService.this);
-								if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false) && newNotificationsAvailable)
-								{
-									turnScreenOn();
-								}
-							}
-						}
-					}				
-				};
-				sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_UI);
-			}
-	}
-
-	public void stopProximityMontior()
-	{
-		SensorManager sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-		sensorManager.unregisterListener(sensorListener);
-		deviceCovered = false;
-	}
-
-	/////////////////////////////////////////
-	
 	public void handleNotification(Notification n, String packageName)
 	{
 		if (n != null)
@@ -468,36 +573,7 @@ public class NotificationsService extends AccessibilityService
 
                         nd.id = ++notificationId;
 
-                        // check for duplicated notification
-						boolean keepOnlyLastNotification = sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
-						int duplicated = -1;
-						for(int i=0;i<notifications.size();i++)
-						{
-							CharSequence title1 = nd.title;
-							CharSequence title2 = notifications.get(i).title;
-							CharSequence text1 = nd.text;
-							CharSequence text2 = notifications.get(i).text;
-							CharSequence content1 = nd.content;
-							CharSequence content2 = notifications.get(i).content;
-							boolean titlesdup = (title1 != null && title2 != null && title1.toString().equals(title2.toString()) || title1 == null && title2 == null);
-							boolean textdup = (text1 != null && text2 != null && text1.toString().startsWith(text2.toString()) || text1 == null && text2 == null);
-							boolean contentsdup = (content1 != null && content2 != null && content1.toString().startsWith(content2.toString())  || content1 == null && content2 == null);
-							boolean allDup = titlesdup && textdup && contentsdup;
-							
-							if (nd.packageName.equals(notifications.get(i).packageName) &&
-							   (allDup || keepOnlyLastNotification))
-								{
-									duplicated = i;
-								}
-						}
-						if (duplicated >= 0)
-						{
-							NotificationData dup = notifications.get(duplicated);
-							nd.id = dup.id;
-                            nd.pinned = dup.pinned;
-							notifications.remove(duplicated);			
-						}
-						
+
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 						{
 							nd.priority = getPriority(n);
@@ -509,14 +585,6 @@ public class NotificationsService extends AccessibilityService
 						int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));						
 						if (apppriority != -9) nd.priority = apppriority;
 
-                        String sortBy = sharedPref.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
-                        if (sortBy.equals("timeasc"))
-                            notifications.add(nd);
-                        else
-						    notifications.add(0,nd);
-					    if (selectedIndex >= 0) selectedIndex++;
-						
-						sortNotificationsList();
 
                         notifyNotificationAdd(nd);
 
@@ -557,152 +625,15 @@ public class NotificationsService extends AccessibilityService
 		}
 	}
 
-    private void notifyNotificationAdd(NotificationData nd)
-    {
-        Log.d("Nils", "notification add #" + nd.id);
 
-        // send notification to nilsplus
-        Intent npsIntent = new Intent();
-        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction(ADD_NOTIFICATION);
-        npsIntent.putExtra("title", nd.title);
-        npsIntent.putExtra("text", nd.text);
-        npsIntent.putExtra("package", nd.packageName);
-        npsIntent.putExtra("id", nd.id);
-
-        // convert large icon to byte stream
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        nd.icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        npsIntent.putExtra("icon", stream.toByteArray());
-
-        // convert large icon to byte stream
-        stream = new ByteArrayOutputStream();
-        nd.appicon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        npsIntent.putExtra("appicon", stream.toByteArray());
-
-        startService(npsIntent);
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private int getPriority(Notification n)
-	{
-		return n.priority;
-	}
 		
-	private void sortNotificationsList() 
-	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-    	String sortBy = sharedPref.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
-    	if (sortBy.equals("priority"))
-    	{
-    		// sort by priority
-    		Collections.sort(notifications, new Comparator<NotificationData>() 
-    		{
-    	        @Override
-    	        public int compare(NotificationData n1, NotificationData n2) 
-    	        {
-    	        	if (n1.priority < n2.priority)
-    	        		return 1;
-    	        	if (n1.priority > n2.priority)
-    	        		return -1;
-    	        	// if we reached here, the priorities are equal - sory by time
-    	        	if (n1.received < n2.received)
-    	        		return 1;
-    	        	if (n1.received > n2.received)
-    	        		return -1;
-    	        	return 0;
-    	        }
-    	    });
-    		
-    		// reset selected index (because we don't know where is it now
-    		selectedIndex = -1;
-    	}
-	}
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private RemoteViews getExpandedContent(Notification n) 
-	{
-		if (n.bigContentView != null)
-			return n.bigContentView;
-		else
-			return n.contentView;
-	}
 
-	private Action[] getActionsFromNotification(Notification n, String packageName) 
-	{
-		ArrayList<Action> returnActions = new ArrayList<Action>();
-		try
-		{
-			Object[] actions = null;
-			Field fs = n.getClass().getDeclaredField("actions");
-			if (fs != null)
-			{
-				fs.setAccessible(true);
-				actions = (Object[]) fs.get(n);												
-			}
-			if (actions != null)
-			{
-				for(int i=0; i<actions.length; i++)
-				{
-					Action a = new Action();
-					Class<?> actionClass=Class.forName("android.app.Notification$Action");
-					a.icon = actionClass.getDeclaredField("icon").getInt(actions[i]);
-					a.title = (CharSequence) actionClass.getDeclaredField("title").get(actions[i]);;
-					a.actionIntent = (PendingIntent) actionClass.getDeclaredField("actionIntent").get(actions[i]);;					
-					
-					// find drawable 
-					// extract app icons
-					Resources res;
-					try {
-						res = getPackageManager().getResourcesForApplication(packageName);
-						a.drawable = BitmapFactory.decodeResource(res, a.icon);						
-					} catch (NameNotFoundException e) 
-					{
-						a.drawable = null;
-					}
-					returnActions.add(a);
-				}
-			}
-		}
-		catch(Exception exp)
-		{
-			
-		}	
-		Action[] returnArray = new Action[returnActions.size()];
-		returnActions.toArray(returnArray);
-		return returnArray;
-	}
+
+
+
 	
-	private void turnScreenOn() 
-	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		// check if need to turn screen on
-		Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);					
-		if (turnScreenOn && !deviceCovered)
-		{
-			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			// turn the screen on only if it was off
-			if (!pm.isScreenOn())
-			{
-				@SuppressWarnings("deprecation")
-				final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-				wl.acquire();	
-				
-				// release after 5 seconds
-				final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-				Runnable task = new Runnable() 
-				{
-				    public void run() 
-				    {
-				    	wl.release();
-				    }
-				};
-                worker.schedule(task, 10, TimeUnit.SECONDS);
-			}		
-			newNotificationsAvailable = false;
-		}	
-	}
+
 
 	@SuppressWarnings("unused")
 	private int recursiveFindFirstImage(ViewGroup v)
@@ -723,326 +654,6 @@ public class NotificationsService extends AccessibilityService
 		}
 		return -1;
 	}
-	
-	private void recursiveDetectNotificationsIds(ViewGroup v)
-	{
-		for(int i=0; i<v.getChildCount(); i++)
-		{
-			View child = v.getChildAt(i);
-			if (child instanceof ViewGroup)
-				recursiveDetectNotificationsIds((ViewGroup)child);
-			else if (child instanceof TextView)
-			{
-				String text = ((TextView)child).getText().toString();
-				int id = child.getId();
-				if (text.equals("1")) notification_title_id = id;
-				else if (text.equals("2")) notification_text_id = id;
-				else if (text.equals("3")) notification_info_id = id;
-				else if (text.equals("4")) notification_subtext_id = id;
-				else if (text.equals("5")) big_notification_summary_id = id;
-				else if (text.equals("6")) big_notification_content_title = id;
-				else if (text.equals("7")) big_notification_content_text = id;
-				else if (text.equals("8")) big_notification_title_id = id;
-				else if (text.equals("9")) inbox_notification_title_id = id;
-				else if (text.equals("10")) inbox_notification_event_1_id = id;
-				else if (text.equals("11")) inbox_notification_event_2_id = id;
-				else if (text.equals("12")) inbox_notification_event_3_id = id;				
-				else if (text.equals("13")) inbox_notification_event_4_id = id;
-				else if (text.equals("14")) inbox_notification_event_5_id = id;
-				else if (text.equals("15")) inbox_notification_event_6_id = id;				
-				else if (text.equals("16")) inbox_notification_event_7_id = id;
-				else if (text.equals("17")) inbox_notification_event_8_id = id;
-				else if (text.equals("18")) inbox_notification_event_9_id = id;				
-				else if (text.equals("19")) inbox_notification_event_10_id = id;
-			}
-			else if (child instanceof ImageView)
-			{
-				Drawable d = ((ImageView)child).getDrawable();
-				if (d!=null)
-				{
-					this.notification_image_id = child.getId();
-				}
-			}	
-		}
-	}	
-		
-	private void detectNotificationIds()
-	{		
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-	    .setSmallIcon(R.drawable.appicon)
-	    .setContentTitle("1")
-	    .setContentText("2")
-	    .setContentInfo("3")
-	    .setSubText("4");
-
-		Notification n = mBuilder.build();
-				
-		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ViewGroup localView;
-	
-		// detect id's from normal view
-		localView = (ViewGroup) inflater.inflate(n.contentView.getLayoutId(), null);
-		n.contentView.reapply(getApplicationContext(), localView);
-		recursiveDetectNotificationsIds(localView);
-		
-		// detect id's from expanded views		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) 
-		{
-			NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
-			bigtextstyle.setSummaryText("5");
-			bigtextstyle.setBigContentTitle("6");
-			bigtextstyle.bigText("7");								
-			mBuilder.setContentTitle("8");
-			mBuilder.setStyle(bigtextstyle);
-			detectExpandedNotificationsIds(mBuilder.build());
-			
-			NotificationCompat.InboxStyle inboxStyle =
-			        new NotificationCompat.InboxStyle();
-			String[] events = {"10","11","12","13","14","15","16","17","18","19"};
-			inboxStyle.setBigContentTitle("6");
-			mBuilder.setContentTitle("9");
-			inboxStyle.setSummaryText("5");
-			
-			for (int i=0; i < events.length; i++) 
-			{	
-			    inboxStyle.addLine(events[i]);
-			}
-			mBuilder.setStyle(inboxStyle);
-			
-			detectExpandedNotificationsIds(mBuilder.build());			
-		}
-	}
-	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private void detectExpandedNotificationsIds(Notification n)
-	{
-		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ViewGroup localView = (ViewGroup) inflater.inflate(n.bigContentView.getLayoutId(), null);
-		n.bigContentView.reapply(getApplicationContext(), localView);
-		recursiveDetectNotificationsIds(localView);
-	}
-	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private RemoteViews getBigContentView(Notification n)
-	{
-		if (n.bigContentView == null)
-			return n.contentView;
-		else
-		{
-			return n.bigContentView;
-		}
-	}
-	
-	private void getExpandedText(Notification n, NotificationData nd, String multipleEventsHandling)
-	{
-		RemoteViews view = n.contentView;
-		
-		// first get information from the original content view
-		extractTextFromView(view, nd, multipleEventsHandling);
-		
-		// then try get information from the expanded view
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-		{		
-			view = getBigContentView(n);
-			extractTextFromView(view, nd, multipleEventsHandling);
-		}
-	}
-
-	private void extractTextFromView(RemoteViews view, NotificationData nd, String multipleEventsHandling)
-	{
-		CharSequence title = null;
-		CharSequence text = null;
-		CharSequence content = null;
-		boolean hasParsableContent = true;
-		ViewGroup localView = null;
-		try
-		{
-			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			localView = (ViewGroup) inflater.inflate(view.getLayoutId(), null);
-			view.reapply(getApplicationContext(), localView);
-		}
-		catch (Exception exp)
-		{
-			hasParsableContent = false;				
-		}
-		if (hasParsableContent)
-		{
-			View v;						
-			// try to get big text				
-			v = localView.findViewById(big_notification_content_text);
-			if (v != null && v instanceof TextView)
-			{
-				text = ((TextView)v).getText();
-			}
-
-			// get title string if available
-			View titleView = localView.findViewById(notification_title_id );
-			View bigTitleView = localView.findViewById(big_notification_title_id );
-			View inboxTitleView = localView.findViewById(inbox_notification_title_id );
-			if (titleView  != null && titleView  instanceof TextView)
-			{
-				title = ((TextView)titleView).getText();
-			} else if (bigTitleView != null && bigTitleView instanceof TextView)
-			{
-				title = ((TextView)titleView).getText();
-			} else if  (inboxTitleView != null && inboxTitleView instanceof TextView)
-			{
-				title = ((TextView)titleView).getText();
-			}
-			
-			// try to extract details lines 
-			content = null;
-			v = localView.findViewById(inbox_notification_event_1_id);
-            CharSequence firstEventStr = null;
-            CharSequence lastEventStr = null;
-
-			if (v != null && v instanceof TextView) 
-			{
-				CharSequence s = ((TextView)v).getText();
-				if (!s.equals(""))
-                {
-                    firstEventStr = s;
-					content = s;
-                }
-			}
-			
-            v = localView.findViewById(inbox_notification_event_2_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_3_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_4_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_5_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_6_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_7_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_8_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_9_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            v = localView.findViewById(inbox_notification_event_10_id);
-            if (v != null && v instanceof TextView)
-            {
-                CharSequence s = ((TextView)v).getText();
-                if (!s.equals(""))
-                {
-                    content = TextUtils.concat(content,"\n",s);
-                    lastEventStr = s;
-                }
-            }
-
-            if (multipleEventsHandling.equals("first")) content = firstEventStr;
-            else if (multipleEventsHandling.equals("last")) content = lastEventStr;
-
-            // if there is no text - make the text to be the content
-            if (text == null || text.equals(""))
-            {
-                text = content;
-                content = null;
-            }
-
-			// if no content lines, try to get subtext
-			if (content == null)
-			{
-				v = localView.findViewById(notification_subtext_id);
-				if (v != null && v instanceof TextView)
-				{
-					CharSequence s = ((TextView)v).getText();
-					if (!s.equals(""))
-					{
-						content = s;
-					}
-				}
-			}	
-		}
-		
-		if (title!=null)
-		{
-			nd.title = title;
-		}
-		if (text != null)
-		{
-			nd.text = text;
-		}
-		if (content != null)
-		{
-			nd.content = content;
-		}
-	}
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) 
@@ -1057,118 +668,20 @@ public class NotificationsService extends AccessibilityService
 			}
 			else if (event.getPackageName()!= null && event.getClassName() != null && event.getContentDescription() != null)
 				{
-					if (event.getPackageName().equals("com.android.systemui"))
-						{
-							if (event.getClassName().equals(android.widget.ImageView.class.getName()) &&
-							 event.getContentDescription().equals(clearButtonName))
-							{
-								// clear notifications button clicked
-								final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-				
-								if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
-								{	
-									clearAllNotifications();
-								}
-							}
-						}
+
                 }
             else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
             {
-                Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED "+event.getPackageName().toString());
-                if (!event.getPackageName().equals("com.android.systemui"))
-                {
-                    clearNotificationsForApps(new String[]{event.getPackageName().toString()});
-                }
 
-                // request nilsplus to hide/show notifications list
-                KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-                Intent npsIntent = new Intent();
-                npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-                if (event.getPackageName().equals("android") && km.inKeyguardRestrictedInputMode())
-                    npsIntent.setAction(SHOW_NOTIFICATIONS);
-                else
-                    npsIntent.setAction(HIDE_NOTIFICATIONS);
-                startService(npsIntent);
             }
             else if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
             {
-                if (event.getPackageName().equals("com.android.systemui"))
-                {
-                    //Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
-                    AccessibilityNodeInfo node = event.getSource();
 
-                    if (node != null)
-                    {
-                        //recursivePrintNodes(node,"  ");
-                        if (hasClickables(node))
-                        {
-                            //List<NotificationData> notificationsToKeep = new ArrayList<NotificationData>();
-                            HashMap<Integer, NotificationData> notificationsToKeep = new HashMap<Integer, NotificationData>();
-
-                            List<String> titles = recursiveGetStrings(node);
-                            for(String title: titles)
-                            {
-                                //Log.d("NiLS","Notification Title:"+ title);
-                                for (NotificationData nd : notifications)
-                                {
-                                    if (nd.title.toString().equals(title.toString()))
-                                    {
-                                        notificationsToKeep.put(nd.id, nd);
-                                    }
-                                }
-                            }
-
-                            if (notifications.size()!= notificationsToKeep.size())
-                            {
-                                Iterator<NotificationData> iter = notifications.iterator();
-                                while(iter.hasNext())
-                                {
-                                    NotificationData nd = iter.next();
-                                    if (!notificationsToKeep.containsKey(nd.id))
-                                    {
-                                        notifyNotificationRemove(nd);
-                                        iter.remove();
-                                    }
-                                }
-
-                                updateWidget(true);
-                            }
-                        }
-                    }
-                }
             }
 		}
 	}
 
-    private boolean hasClickables(AccessibilityNodeInfo node)
-    {
-        if (node != null && node.isClickable())
-            return true;
-        else
-        {
-            boolean hasClickables = false;
-            if (node != null)
-                for(int i=0;i<node.getChildCount();i++)
-                {
-                    if (hasClickables(node.getChild(i))) hasClickables = true;
-                }
-            return hasClickables;
-        }
-    }
-    private List<String> recursiveGetStrings(AccessibilityNodeInfo node)
-    {
-       ArrayList<String> strings = new ArrayList<String>();
-       if (node!= null)
-       {
-           if (node.getText()!=null)
-                strings.add(node.getText().toString());
-           for(int i=0;i<node.getChildCount();i++)
-           {
-               strings.addAll(recursiveGetStrings(node.getChild(i)));
-           }
-       }
-       return strings;
-    }
+
 
     private void recursivePrintNodes(AccessibilityNodeInfo node, String padding)
     {
@@ -1232,55 +745,9 @@ public class NotificationsService extends AccessibilityService
 		}
 	}
 
-    private void notifyNotificationRemove(NotificationData nd)
-    {
-        // send notification to nilsplus
-        Log.d("Nils", "notification remove #" + nd.id);
-        Intent npsIntent = new Intent();
-        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction(REMOVE_NOTIFICATION);
-        npsIntent.putExtra("id", nd.id);
-        startService(npsIntent);
 
-        // notify FloatingNotifications for clearing this notification
-        Intent intent = new Intent();
-        intent.setAction("robj.floating.notifications.dismiss");
-        intent.putExtra("package", nd.packageName);
-        sendBroadcast(intent);
-    }
 
-    public void clearAllNotifications()
-	{
-		Iterator<NotificationData> i = notifications.iterator();
-		while (i.hasNext()) 
-		{
-			NotificationData nd = i.next(); 
-			if (!nd.pinned)
-            {
-                notifyNotificationRemove(nd);
-                i.remove();
-            }
-		}
-        setSelectedIndex(-1);
-        updateWidget(true);
-	}
-	
-	private void updateWidget(boolean refreshList)
-	{
-		Context ctx = getApplicationContext();
-		AppWidgetManager widgetManager = AppWidgetManager.getInstance(ctx);
-		ComponentName widgetComponent = new ComponentName(ctx, NotificationsWidgetProvider.class);
-		int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
 
-        if (refreshList)
-        {
-            for (int i=0; i<widgetIds.length; i++)
-            {
-                AppWidgetManager.getInstance(ctx).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
-            }
-        }
-		sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));		
-	}
 
 	public void setDeviceIsUnlocked()
 	{
@@ -1321,52 +788,7 @@ public class NotificationsService extends AccessibilityService
 		}
 	}
 
-	public void launchNotification(int pos) 
-	{
-		if (pos >=0 && pos < notifications.size())
-		{			
-			try 
-			{
-				notifications.get(pos).action.send();
-			} catch (Exception e) 
-			{
-				// if cannot launch intent, create a new one for the app
-				try
-				{
-					Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(notifications.get(pos).packageName);
-					startActivity(LaunchIntent);
-				}
-				catch(Exception e2)
-				{
-					// cannot launch intent - do nothing...
-					e2.printStackTrace();
-					Toast.makeText(this, "Error - cannot launch app", Toast.LENGTH_SHORT).show();
-				}
-			}
-            // clear all notifications from the same app
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            boolean clear = prefs.getBoolean(SettingsActivity.CLEAR_FROM_SAME_APP, false);
 
-            String packageName = notifications.get(pos).packageName;
-            removeNotification(pos);
-            if (clear)
-            {
-                Iterator<NotificationData> iter = notifications.iterator();
-                while(iter.hasNext())
-                {
-                    NotificationData nd = iter.next();
-                    if (!nd.pinned && nd.packageName.equals(packageName))
-                    {
-                        notifyNotificationRemove(nd);
-                        iter.remove();
-                    }
-                }
-            }
-
-			updateWidget(true);
-		}
-	}
-	
 	public HashMap<String, PersistentNotification> getPersistentNotifications() 
 	{
 		return persistentNotifications;
@@ -1402,49 +824,11 @@ public class NotificationsService extends AccessibilityService
         return !onLockScreen;
 	}
 
-    public void clearNotificationsForApps(String[] pkgList)
-    {
-        boolean changed = false;
-        for(String packageName : pkgList)
-        {
-            Iterator<NotificationData> i = notifications.iterator();
-            while (i.hasNext())
-            {
-                NotificationData nd = i.next();
-                if (!nd.pinned && nd.packageName.equals(packageName))
-                {
-                    notifyNotificationRemove(nd);
-                    i.remove();
-                    changed = true;
-                }
-            }
-        }
-        if (changed)
-        {
-            setSelectedIndex(-1);
-            updateWidget(true);
-        }
-    }
 
-    public void purgePersistentNotifications(ArrayList<String> runningApps)
-    {
-        HashMap<String,PersistentNotification> newPN = new HashMap<String, PersistentNotification>();
-        for(String packageName : runningApps)
-        {
-            if (persistentNotifications.containsKey(packageName))
-            {
-                newPN.put(packageName, persistentNotifications.get(packageName));
-            }
-        }
-        if (newPN.size()!=persistentNotifications.size())
-        {
-            persistentNotifications = newPN;
-            updateWidget(true);
-        }
-    }
 
     public void setDeviceIsLocked()
     {
         overrideLocked = true;
     }
 }
+*/

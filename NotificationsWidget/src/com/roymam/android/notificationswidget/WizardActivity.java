@@ -199,7 +199,7 @@ public class WizardActivity extends Activity
 			int currentStep;
 			
 			// check if service is activated
-			if (NotificationsService.getSharedInstance() == null)
+			if (NotificationsService.getSharedInstance(this) == null)
 				currentStep = 1;
 			else
 			{

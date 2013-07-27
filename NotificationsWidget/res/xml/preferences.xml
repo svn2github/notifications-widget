@@ -36,12 +36,6 @@
                 android:enabled="true" 
                 android:defaultValue="true" 
                 android:summary="@string/collectonunlock_summary"/>
-            <CheckBoxPreference
-                android:title="@string/clear_all_from_same_app"
-                android:key="clear_all_from_same_app"
-                android:enabled="true"
-                android:defaultValue="false"
-                android:summary="@string/clear_all_from_same_app_summary"/>
         <ListPreference android:dialogTitle="@string/order_notifications_by"
     	    			android:entries="@array/settings_orderby_entries" 
     	    			android:entryValues="@array/settings_orderby_values" 

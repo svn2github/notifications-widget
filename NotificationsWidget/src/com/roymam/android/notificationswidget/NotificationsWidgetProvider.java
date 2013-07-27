@@ -37,7 +37,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public static int PIN_ACTION = 3;
     public static int SETTINGS_ACTION = 2;
     public static boolean widgetExpanded = false;
-	
+
     public NotificationsWidgetProvider() 
     {
     }
@@ -91,7 +91,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     {  	    
     	if (intent.getAction().equals(CLEAR_ALL))
     	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
+    		NotificationsProvider ns = NotificationsService.getSharedInstance(ctx);
 
     		if (ns != null)
     	    {
@@ -103,65 +103,10 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	{
     		updateWidget(ctx, false);
     	}
-    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.LOCKED"))
-    	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
-    		if (ns!=null)
-    		{
-    			ns.setDeviceIsLocked();
-    			ns.setWidgetLockerEnabled(true);
-    		}
-    	}
-    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.UNLOCKED"))
-    	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
-    		if (ns != null)
-    		{
-    			ns.setDeviceIsUnlocked();
-				ns.setSelectedIndex(-1);
-				ns.setWidgetLockerEnabled(true);
-    		}
-    	}
-    	/*else if (intent.getAction().equals("android.intent.action.SCREEN_ON"))
-    	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
-    		if (ns != null)
-    		{
-    			// if the screen is on, so the device is currently locked (until USER_PRESENT will trigger)
-    			ns.setDeviceIsLocked();
-    		}
-    	}*/
-    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.DISABLED"))
-    	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
-    		if (ns != null)
-    		{
-    			ns.setWidgetLockerEnabled(false);
-    		}
-    	}
-    	else if (intent.getAction().equals("com.teslacoilsw.widgetlocker.intent.ENABLED"))
-    	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
-    		if (ns != null)
-    		{
-    			ns.setWidgetLockerEnabled(true);
-    		}
-    	}
-    	else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT))
-    	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
-    		if (ns != null)
-    		{
-    			if (!ns.isWidgetLockerEnabled())
-    			{
-    				ns.setDeviceIsUnlocked();
-    				ns.setSelectedIndex(-1);
-    			}
-    		}
-    	}
+
     	else if (intent.getAction().equals(PERFORM_ACTION))
     	{
-    		NotificationsService ns = NotificationsService.getSharedInstance();
+    		NotificationsProvider ns = NotificationsService.getSharedInstance(ctx);
     		int pos = intent.getIntExtra(NOTIFICATION_INDEX, -1);
     		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,-1);
     		    		
@@ -169,18 +114,30 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     		{
     			if (action == ACTIONBAR_TOGGLE)
     			{
-    				if (pos != ns.getSelectedIndex())
-    					ns.setSelectedIndex(pos);
-    				else
-    					ns.setSelectedIndex(-1);
-                    updateWidget(ctx,true);
+                    if (pos >= 0 && pos < ns.getNotifications().size())
+                    {
+                        NotificationData nd = ns.getNotifications().get(pos);
+                        if (nd.selected)
+                            nd.selected = false;
+                        else
+                        {
+                            // deselect current first
+                            for(NotificationData nd2 : ns.getNotifications())
+                            {
+                                nd2.selected = false;
+                            }
+                            // select current
+                            nd.selected = true;
+                        }
+                        updateWidget(ctx,true);
+                    }
     			}
-	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
-	    		{	    			
-	    			ns.removeNotification(pos);
+	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotifications().size())
+	    		{
+	    			ns.clearNotification(ns.getNotifications().get(pos).id);
                     updateWidget(ctx, true);
 	    		}
-	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
+	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotifications().size())
 	    		{
 	    			Intent appSettingsIntent = new Intent(ctx, AppSettingsActivity.class);
 	    			appSettingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -189,9 +146,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 					appSettingsIntent.putExtras(settingsExtras);					
 	    			ctx.startActivity(appSettingsIntent);
 	    		}
-	    		else if (action == PIN_ACTION && pos >= 0 && pos < ns.getNotificationsCount())
+	    		else if (action == PIN_ACTION && pos >= 0 && pos < ns.getNotifications().size())
 	    		{
-	    			ns.togglePinNotification(pos);
+                    NotificationData nd = ns.getNotifications().get(pos);
+                    if (!nd.pinned) nd.pinned = true;
+                    else nd.pinned = false;
+                    updateWidget(ctx,true);
 	    		}	    		
     		}
     	}

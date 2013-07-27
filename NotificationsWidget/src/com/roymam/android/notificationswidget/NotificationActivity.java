@@ -11,17 +11,17 @@ public class NotificationActivity extends Activity
   {
     super.onCreate(state);
 
-      getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
-      ;
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
-      int pos=getIntent().getIntExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,-1);
-    NotificationsService ns = NotificationsService.getSharedInstance();
-    if (pos != -1)
+    int pos=getIntent().getIntExtra(NotificationsWidgetProvider.NOTIFICATION_INDEX,-1);
+    NotificationsProvider ns = NotificationsService.getSharedInstance(this);
+
+    if (ns != null &&
+        pos >= 0 && pos < ns.getNotifications().size())
     {
-	    if (ns != null)
-	    {
-	    	ns.launchNotification(pos);
-		}
+        NotificationData nd = ns.getNotifications().get(pos);
+        nd.launch(getApplicationContext());
+        ns.clearNotification(nd.id);
   	}
     finish();
   }

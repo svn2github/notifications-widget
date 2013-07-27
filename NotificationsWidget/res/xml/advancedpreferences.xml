@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <CheckBoxPreference android:key="keep_on_foreground"
-                        android:title="@string/keep_on_foreground"
-                        android:summary="@string/keep_on_foreground_summary"
-                        android:defaultValue="false"/>
     <CheckBoxPreference android:key="disable_auto_switch"
                         android:title="@string/disable_auto_switch"
                         android:summary="@string/disable_auto_switch_summary"
@@ -14,35 +10,10 @@
             android:enabled="true"
             android:defaultValue="true"
             android:summary="@string/clear_app_notifications_summary"/>
-    <PreferenceCategory android:key="experimental" android:title="@string/experimental">
-        <CheckBoxPreference
-            android:title="@string/clearonclear" 
-            android:key="clearonclear" 
-            android:enabled="true" 
-            android:defaultValue="false" 
-            android:summary="@string/clearonclear_summary"/>
-        <CheckBoxPreference
+    <CheckBoxPreference
                 android:title="@string/monitor_shade"
                 android:key="monitor_shade"
                 android:enabled="true"
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:summary="@string/monitor_shade__summary"/>
-        <CheckBoxPreference
-                android:title="@string/auto_kill_persistent"
-                android:key="auto_kill_persistent"
-                android:enabled="true"
-                android:defaultValue="false"
-                android:summary="@string/auto_kill_persistent_summary"/>
-        <ListPreference
-            android:title="@string/monitor_apps_interval"
-            android:key="monitor_apps_interval"
-            android:dependency="auto_kill_persistent"
-            android:entries="@array/monitor_apps_interval_entries"
-            android:entryValues="@array/monitor_apps_interval_values"
-            android:defaultValue="5"/>
-        <PreferenceScreen
-            android:title="@string/open_accessibility_settings">
-            <intent android:action="android.settings.ACCESSIBILITY_SETTINGS"/>
-        </PreferenceScreen>
-    </PreferenceCategory>
 </PreferenceScreen>

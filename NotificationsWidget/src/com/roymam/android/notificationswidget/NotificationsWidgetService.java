@@ -1,7 +1,6 @@
 package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -11,12 +10,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.SpannableString;
@@ -28,22 +33,17 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-
-import static android.app.ActivityManager.RunningAppProcessInfo;
 
 public class NotificationsWidgetService extends Service 
 {	
 	public static final String REFRESH_LIST = "com.roymam.android.notificationswidget.REFRESH_LIST";
 	public static final String IS_EXPANDED = "com.roymam.android.notificationswidget.IS_EXPANDED";
 	public static final String ACTION = "com.roymam.android.notificationswidget.ACTION";
+
 	public static final int ACTION_RENDER_WIDGETS = 0;
 	public static final int ACTION_OPTIONS_CHANGED = 1;
-    public static final int ACTION_MONITOR_APPS = 9;
-	private static boolean widgetExpanded;
-	private static boolean clockStarted = false;
+    private static boolean widgetExpanded;
 	public static boolean widgetActive = false;
 
     @Override
@@ -76,8 +76,6 @@ public class NotificationsWidgetService extends Service
 						AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(widgetId, R.id.notificationsListView);
 					}
 				}
-				
-				updateClearOnUnlockState();
 			}
 			else if (action == ACTION_OPTIONS_CHANGED)
 			{
@@ -126,51 +124,9 @@ public class NotificationsWidgetService extends Service
 					}					
 				}			
 			}
-            else if (action == ACTION_MONITOR_APPS)
-            {
-                monitorRunningApps();
-            }
 		}
         stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);
-	}
-
-    private void monitorRunningApps() 
-    {
-        NotificationsService ns = NotificationsService.getSharedInstance();
-        if (ns!=null)
-        {
-            ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            List<RunningAppProcessInfo> l = am.getRunningAppProcesses();
-            Iterator<RunningAppProcessInfo> i = l.iterator();
-            ArrayList<String> runningApps = new ArrayList<String>();
-            while(i.hasNext())
-            {
-                RunningAppProcessInfo info = i.next();
-                if (info.importance <= RunningAppProcessInfo.IMPORTANCE_SERVICE)
-                    for(String packageName : info.pkgList)
-                        runningApps.add(packageName);
-            }
-            ns.purgePersistentNotifications(runningApps);
-        }
-    }
-
-    private void updateClearOnUnlockState() 
-	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		NotificationsService ns = NotificationsService.getSharedInstance();
-		
-	    // check if the screen has been turned on to start collecting
-	    if (!prefs.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true) && ns != null)
-		{
-			PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-			boolean isScreenOn = powerManager.isScreenOn();
-			if (!isScreenOn && ns.isDeviceIsUnlocked())
-			{
-				ns.setDeviceIsLocked();
-			}
-		}
-	
 	}
 
 	private void updateWidget(int widgetId) 
@@ -264,7 +220,7 @@ public class NotificationsWidgetService extends Service
     private void setupNotificationsList(RemoteViews widget, int appWidgetId)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		NotificationsService ns = NotificationsService.getSharedInstance();
+		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
 		
 		// set up notifications list
 		Intent svcIntent=new Intent(this, NotificationsRemoteViewsFactoryService.class);
@@ -286,7 +242,7 @@ public class NotificationsWidgetService extends Service
 	    
 	    if (ns!=null)
 	    {
-	    	notificationsCount = ns.getNotificationsCount();    	    	
+	    	notificationsCount = ns.getNotifications().size();
 	    }
 	    
 	    String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
@@ -337,22 +293,29 @@ public class NotificationsWidgetService extends Service
 	private String getClockStyle(int widgetId)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		NotificationsService ns = NotificationsService.getSharedInstance();
+		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
 		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 		
 		// hide clock if required
 	    String clockstyle = prefs.getString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);
 	    String notificationsStyle = getNotificationStyle(widgetId);
 	    int notificationsCount = 0;
-	    if (ns != null) notificationsCount  = ns.getNotificationsCount();
+	    if (ns != null) notificationsCount  = ns.getNotifications().size();
 
 	    if (clockstyle.equals(SettingsActivity.CLOCK_AUTO))
 	    {
 	    	int largeClockLimit;
 	    	int mediumClockLimit;
-	    	
-	    	boolean actionBarVisible = (ns != null && ns.getSelectedIndex() >= 0);
-	    	
+
+            boolean actionBarVisible = false;
+
+            if (ns!= null)
+                for(NotificationData nd : ns.getNotifications())
+                {
+                    if (nd.selected) actionBarVisible = true;
+                }
+
+            //TODO: make it configurable
 	    	if (notificationsStyle.equals("compact"))
 	    	{
 	    		largeClockLimit = 3;
@@ -387,7 +350,7 @@ public class NotificationsWidgetService extends Service
 	{
 		ArrayList<RemoteViews> pns = new ArrayList<RemoteViews>();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		NotificationsService ns = NotificationsService.getSharedInstance();
+		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
 
 		if (ns != null)
 		{
@@ -401,7 +364,7 @@ public class NotificationsWidgetService extends Service
 	    			Time now = new Time();
 	    		    now.setToNow();
 	    		    Time max = new Time();
-	    		    max.set(pn.recieved + persistentTimeout*60*1000);
+	    		    max.set(pn.received + persistentTimeout*60*1000);
 	    		    
 	    			if (
 	    					// notification is not too old 
@@ -409,7 +372,7 @@ public class NotificationsWidgetService extends Service
 	    					// and notification is set to be seen
 	    					&& prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false)
 	    					// and notification is not set to hide when notifications appears 
-	    					&& (!prefs.getBoolean(packageName+"."+PersistentNotificationSettingsActivity.HIDE_WHEN_NOTIFICATIONS, false) || ns.getNotificationsCount() == 0))
+	    					&& (!prefs.getBoolean(packageName+"."+PersistentNotificationSettingsActivity.HIDE_WHEN_NOTIFICATIONS, false) || ns.getNotifications().size() == 0))
     				{
     					String layout = prefs.getString(packageName +"." + PersistentNotificationSettingsActivity.PERSISTENT_NOTIFICATION_HEIGHT, "normal");
     					RemoteViews rv = new RemoteViews(this.getPackageName(), R.layout.notification_persistent);
@@ -453,9 +416,42 @@ public class NotificationsWidgetService extends Service
 		return rvs;
 	}
 
+    private Bitmap getClockIcon(int color)
+    {
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.ic_lock_idle_alarm);
+
+        float r = (float) Color.red(color),
+              g = (float) Color.green(color),
+              b = (float) Color.blue(color);
+
+        float[] colorTransform =
+                {
+                        r/255, 0    , 0    , 0, 0,  // R color
+                        0    , g/255, 0    , 0, 0,  // G color
+                        0    , 0    , b/255, 0, 0,  // B color
+                        0    , 0    , 0    , 1, 0
+                };
+
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0f); // Remove colour
+        colorMatrix.set(colorTransform);
+
+        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
+        Paint paint = new Paint();
+        paint.setColorFilter(colorFilter);
+
+        Bitmap resultBitmap = Bitmap.createBitmap(sourceBitmap);
+        Bitmap mutableBitmap = resultBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+        Canvas canvas = new Canvas(mutableBitmap);
+        canvas.drawBitmap(mutableBitmap, 0, 0, paint);
+
+        return mutableBitmap;
+    }
+
 	private RemoteViews createClock(String type, int widgetId)
 	{		
-		NotificationsService ns = NotificationsService.getSharedInstance();
+		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		RemoteViews clock;
@@ -496,23 +492,27 @@ public class NotificationsWidgetService extends Service
 	    String datestr = DateFormat.getLongDateFormat(this).format(t.toMillis(true));
 	    clock.setTextViewText(R.id.date, datestr.toUpperCase(Locale.getDefault()));
 	    
-	    // display next alarm if needed
-	    String nextAlarm = Settings.System.getString(getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
-	    if (nextAlarm != null && !nextAlarm.equals(""))
+	    String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+
+        int clockColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_COLOR, Color.WHITE);
+        int dateColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_DATE_COLOR, Color.WHITE);
+        int alarmColor  = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.GRAY);
+
+        // display next alarm if needed
+        String nextAlarm = Settings.System.getString(getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
+        if (nextAlarm != null && !nextAlarm.equals("") && alarmColor != Resources.getSystem().getColor(android.R.color.transparent))
 	    {
 	    	clock.setViewVisibility(R.id.alarmtime, View.VISIBLE);
-	    	clock.setTextViewText(R.id.alarmtime, "⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
+            clock.setViewVisibility(R.id.alarm_clock_image, View.VISIBLE);
+            clock.setImageViewBitmap(R.id.alarm_clock_image, getClockIcon(alarmColor));
+	    	clock.setTextViewText(R.id.alarmtime, nextAlarm.toUpperCase(Locale.getDefault()));
 	    }
 	    else
 	    {
 	    	clock.setViewVisibility(R.id.alarmtime, View.GONE);
+            clock.setViewVisibility(R.id.alarm_clock_image, View.GONE);
 	    }
 	    
-	    String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
-		
-	    int clockColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_COLOR, Color.WHITE);
-	    int dateColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_DATE_COLOR, Color.WHITE);
-	    int alarmColor  = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.GRAY);
 	    clock.setTextColor(R.id.hours, clockColor);
 	    clock.setTextColor(R.id.minutes, clockColor);
 	    clock.setTextColor(R.id.ampm, clockColor);
@@ -562,7 +562,7 @@ public class NotificationsWidgetService extends Service
 	   
 	    // set up filler for clear button
 	    if (ns != null &&
-	    	ns.getNotificationsCount() > 0 &&
+	    	ns.getNotifications().size() > 0 &&
                 prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE) ? false : true))
 	    	clock.setViewVisibility(R.id.clearButtonFiller, View.VISIBLE);
 	    else

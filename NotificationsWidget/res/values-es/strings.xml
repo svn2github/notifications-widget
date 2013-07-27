@@ -16,7 +16,7 @@
     <string name="notifications">Notificaciones</string>
     <string name="turnscreenon">Auto Encender</string>
     <string name="turnscreenon_summary">Despierta el dispositivo y enciende la pantalla cuando hay notificaciones nuevas.</string>
-    <string name="disableproximity">Deshabilitar Sensor de Proximidad</string>
+    <string name="disableproximity">Anular Sensor de Proximidad</string>
     <string name="disableproximity_summary">Si está activado, el dispositivo siempre enciende la pantalla para notificaciones, aunque esté la pantalla cubierta.</string>
     <string name="disableproximity_nexus4_warning">Por favor ten en cuenta que el Nexus 4 tiene problemas conocidos cuando el sensor de prox. se habilita, puede causar mucho gasto de batería, y podrías escuchar sonidos como ticks durante la reproducción de música o una llamada.\nEstás seguro que quieres habilitar esta función?</string>
     <string name="disableproximity_nexus4_warning_title">Aviso para Nexus 4</string>
@@ -28,7 +28,7 @@
     <string name="clearonunlock_summary">Borra todas las notificaciones cuando el dispositivo es desbloqueado</string>
     <string name="clearonlock">Borrar al bloquear</string>
     <string name="clearonlock_summary">Borra todas las notificaciones cuando el dispositivo es bloqueado</string>
-    <string name="collectonunlock">Reunir al desbloquear</string>
+    <string name="collectonunlock">Continuar notificando</string>
     <string name="collectonunlock_summary">Sigue reuniendo notificaciones cuando el disp. es desbloqueado</string>
     <string name="order_notifications_by">Ordenar notificaciones por</string>
     <string name="clear_all_from_same_app">Borrar todas de la misma app</string>
@@ -45,16 +45,11 @@
     <string name="show_full_notification">Mostrar el contenido completo de las notificaciones</string>
     <string name="show_full_notification_summary">Muestra el contenido completo tal cual es visualizado en la barra de notificaciones</string>
     <string name="clearonclear">Monitorear \"Borrar Todo\"</string>
-    <string name="clearonclear_summary">Limpiar notificaciones cuando el botón de limpiar es clickeado en la barra de notificaciones de Android. (requiere reinicio del servicio de accesibilidad)</string>
+    <string name="clearonclear_summary">Limpiar notificaciones cuando el botón de limpiar es clickeado en la barra de notificaciones de Android.</string>
     <string name="monitor_shade">Monitorear barra de notificaciones</string>
-    <string name="monitor_shade__summary">Limpia notificaciones que no aparecen en la barra de notificaciones de Android. (requiere reinicio del servicio de accesibilidad)</string>
-    <string name="clear_app_notifications">Limpiar cuando la app es abierta</string>
-    <string name="clear_app_notifications_summary">Limpiar automáticamente notificaciones de la app cuando ésta es abierta. (requiere reinicio del servicio de accesibilidad)</string>
-    <string name="auto_kill_persistent">Eliminar automáticamente notificaciones persistentes</string>
-    <string name="auto_kill_persistent_summary">Elimina automáticamente notificaciones persistentes cuando el servicio de la app no se está ejecutando, puede incrementar el uso de la batería. (requiere reinicio del servicio de accesibilidad)</string>
-    <string name="monitor_apps_interval">Monitorea el intervalo de apps</string>
-    <string name="keep_on_foreground">Mantener al frente</string>
-    <string name="keep_on_foreground_summary">Mantiene el servicio de Notificaciones del Widget al frente para prevenir que otras apps la cierren</string>
+    <string name="monitor_shade__summary">Limpia notificaciones que no aparecen en la barra de notificaciones de Android.</string>
+    <string name="clear_app_notifications">Limpiar al abrir aplicación</string>
+    <string name="clear_app_notifications_summary">Limpiar automáticamente notificaciones de la app cuando ésta es abierta.</string>
     <string name="disable_auto_switch_summary">Deshabilitar el cambio automático entre los presets de PB Minimizada y PB Maximizada en pant. bloq. Android 4.2</string>
     <string name="disable_auto_switch">Deshabilita el cambio automático de presets</string>
 
@@ -66,13 +61,6 @@
         <item>5</item>
         <item>6</item>
         <item>Ilimitadas</item>
-    </string-array>
-
-    <string-array name="monitor_apps_interval_entries">
-        <item>2 segundos</item>
-        <item>5 segundos</item>
-        <item>10 segundos</item>
-        <item>30 segundos</item>
     </string-array>
 
     <string name="service_inactive_text">El Servicio está inactivo. Por favor habilita el servicio \"Servicio NiLS\" en opciones de accesibilidad, toca el icono de alerta para abrir los Ajustes de Accesibilidad</string>
@@ -129,7 +117,7 @@
     <string name="app_specific_settings_title">Ajustes Específicos de App</string>
     <string name="ignore_notifications">Ignorar esta app</string>
     <string name="ignore_notifications_summary">Ignorar todas las notificaciones de esta app</string>
-    <string name="show_only_last_notification">Mantener solamente las últimas notificaciones</string>
+    <string name="show_only_last_notification">Mantener solo las últimas notificaciones</string>
     <string name="show_only_last_notification_summary">Mantener solamente la última notificación que fue recibida de esta app</string>
     <string name="extract_expanded_text">Usar notificación expandida</string>
     <string name="extract_expanded_text_summary">Solo Android 4.1+: Usar notificación expandida si está disp.</string>
@@ -149,18 +137,19 @@
         <item>Máx</item>
     </string-array>
 
+
     <string-array name="settings_multiple_events_entries">
-        <item>Mostrar TodoShow All</item>
+        <item>Mostrar Todo</item>
         <item>Mostrar Primer Evento</item>
         <item>Mostrar Último Evento</item>
     </string-array>
 
-    <string name="ignore_empty_notifications">Ignoarar notificaciones vacías</string>
+    <string name="ignore_empty_notifications">Ignorar notificaciones vacías</string>
     <string name="ignore_empty_notifications_summary">Ignorar notificaciones sin contenido</string>
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Limpiar ajustes específicos para esta app</string>
     <string name="app_specific_help">Cómo agregar Ajustes Específicos de App?</string>
-    <string name="app_specific_help_details">Ajuestes específicos de app permite porder ajustar especificamente para diferentes apps - como ocultar notificaciones de la app, elegir prioridades, etc...\n\nPara agregar ajustes específicos de app, haz click en el ícono de la notificación de la app cuando ésta aparece, un menú de acción va a aparecer por sobre la notificación, entonces haz click en el botón \"Ajustes\". (el que tiene un icono de una herramienta)</string>
+    <string name="app_specific_help_details">Ajustes específicos de app permite porder ajustar especificamente para diferentes apps - como ocultar notificaciones de la app, elegir prioridades, etc...\n\nPara agregar ajustes específicos de app, haz click en el ícono de la notificación de la app cuando ésta aparece, un menú de acción va a aparecer por sobre la notificación, entonces haz click en el botón \"Ajustes\". (el que tiene un icono de una herramienta)</string>
 
     <!-- Persistent Notifications -->
     <string name="persistent_notifications">Notificaciones Persistentes</string>
@@ -188,6 +177,7 @@
         <item>Luego de 4 Min.</item>
         <item>Luego de 24 Min.</item>
     </string-array>
+
 
     <string name="how_to_use">Cómo usar?</string>
     <string name="persistent_notifications_help">Cómo Usar Notificaciones Persistentes?</string>
@@ -232,7 +222,7 @@
     <string name="clock_color">Color Reloj</string>
     <string name="date_color">Color Fecha</string>
     <string name="alarm_color">Color Alarma</string>
-    <string name="clickable">Clickable</string>
+    <string name="clickable">Permitir Click</string>
     <string name="bold_hours">Hora en Negrita</string>
     <string name="bold_minutes">Minutos en Negrita</string>
     <string name="auto_switch_clock_size">Tamaño de reloj automático</string>
@@ -251,5 +241,4 @@
     <string name="notification_action_2">Acción de Notificación 2</string>
     <string name="clear_notification">Limpiar Notificación</string>
     <string name="open_accessibility_settings">Abrir Ajustes de Accesibilidad</string>
-
 </resources>

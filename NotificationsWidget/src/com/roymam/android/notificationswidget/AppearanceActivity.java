@@ -9,7 +9,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -37,6 +44,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -438,6 +446,39 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		{
 		}
 
+        private Bitmap getClockIcon(int color)
+        {
+            Bitmap sourceBitmap = BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.ic_lock_idle_alarm);
+
+            float r = (float) Color.red(color),
+                    g = (float) Color.green(color),
+                    b = (float) Color.blue(color);
+
+            float[] colorTransform =
+                    {
+                            r/255, 0    , 0    , 0, 0,  // R color
+                            0    , g/255, 0    , 0, 0,  // G color
+                            0    , 0    , b/255, 0, 0,  // B color
+                            0    , 0    , 0    , 1, 0
+                    };
+
+            ColorMatrix colorMatrix = new ColorMatrix();
+            colorMatrix.setSaturation(0f); // Remove colour
+            colorMatrix.set(colorTransform);
+
+            ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
+            Paint paint = new Paint();
+            paint.setColorFilter(colorFilter);
+
+            Bitmap resultBitmap = Bitmap.createBitmap(sourceBitmap);
+            Bitmap mutableBitmap = resultBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+            Canvas canvas = new Canvas(mutableBitmap);
+            canvas.drawBitmap(mutableBitmap, 0, 0, paint);
+
+            return mutableBitmap;
+        }
+
 		public void refreshPreview() 
 		{			
 			List<View> clockPreviews = Arrays.asList(getView().findViewById(R.id.smallClock),
@@ -458,6 +499,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 					TextView ampm = (TextView) v.findViewById(R.id.ampm);
 					TextView date = (TextView) v.findViewById(R.id.date);
 					TextView alarm = (TextView) v.findViewById(R.id.alarmtime);
+                    ImageView alarmIcon = (ImageView) v.findViewById(R.id.alarm_clock_image);
 					
 					// get current time
 					Time t = new Time();
@@ -480,13 +522,17 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				    
 				    // display next alarm if needed
 				    String nextAlarm = Settings.System.getString(getActivity().getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
-				    if (nextAlarm != null && !nextAlarm.equals(""))
+				    int alarmColor = ((ColorDrawable)alarmColorView.getBackground()).getColor();
+                    if (nextAlarm != null && !nextAlarm.equals("") && alarmColor != Resources.getSystem().getColor(android.R.color.transparent))
 				    {
 				    	alarm.setVisibility(View.VISIBLE);
-				    	alarm.setText("⏰" + nextAlarm.toUpperCase(Locale.getDefault()));
+                        alarmIcon.setVisibility(View.VISIBLE);
+                        alarmIcon.setImageBitmap(getClockIcon(alarmColor));
+				    	alarm.setText(nextAlarm.toUpperCase(Locale.getDefault()));
 				    }
 				    else
 				    {
+                        alarmIcon.setVisibility(View.GONE);
 				    	alarm.setVisibility(View.GONE);
 				    }
 				    // set clock text color

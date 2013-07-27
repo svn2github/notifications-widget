@@ -50,16 +50,11 @@
     <string name="show_full_notification">Show full notification content</string>
     <string name="show_full_notification_summary">Show full notification content as it appears on notifications bar</string>
     <string name="clearonclear">Monitor \"Clear All\"</string>
-    <string name="clearonclear_summary">Clear notifications when clear button is clicked on android notifications bar. (requires accessibility service restart)</string>
+    <string name="clearonclear_summary">Clear notifications when clear button is clicked on android notifications bar.</string>
     <string name="monitor_shade">Monitor notifications bar</string>
-    <string name="monitor_shade__summary">Clear notifications that don\'t appear on android notifications bar. (requires accessibility service restart)</string>
+    <string name="monitor_shade__summary">Clear notifications that don\'t appear on android notifications bar.</string>
     <string name="clear_app_notifications">Clear when app is opened</string>
-    <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched. (requires accessibility service restart)</string>
-    <string name="auto_kill_persistent">Auto remove persistent notifications</string>
-    <string name="auto_kill_persistent_summary">Automatically remove persistent notifications when the app service is no longer running, may increase battery usage. (requires accessibility service restart)</string>
-    <string name="monitor_apps_interval">Monitor apps interval</string>
-    <string name="keep_on_foreground">Keep on foreground</string>
-    <string name="keep_on_foreground_summary">Keeps NotificiationsWidget service on foreground to prevent other apps from killing it</string>
+    <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched.</string>
     <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string>
     <string name="disable_auto_switch">Disable auto switch preset</string>
 

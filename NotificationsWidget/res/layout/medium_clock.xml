@@ -65,6 +65,14 @@
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="2dp"
+                android:id="@+id/alarm_clock_image"
+                android:src="@android:drawable/ic_lock_idle_alarm"/>
+
         <TextView
             android:id="@+id/alarmtime"
             android:layout_width="wrap_content"

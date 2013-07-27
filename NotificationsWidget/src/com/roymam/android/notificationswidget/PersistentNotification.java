@@ -9,5 +9,6 @@ public class PersistentNotification
 	public RemoteViews content;
 	public RemoteViews expandedContent;
 	public PendingIntent contentIntent;
-	public long recieved;
+	public long received;
+    public int id;
 }
