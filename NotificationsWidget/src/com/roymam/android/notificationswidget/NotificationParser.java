@@ -57,7 +57,7 @@ public class NotificationParser
         detectNotificationIds();
     }
     
-    public NotificationData parseNotification(Notification n, String packageName, int notificationId)
+    public NotificationData parseNotification(Notification n, String packageName, int notificationId, String tag)
     {
         if (n != null)
         {
@@ -154,6 +154,7 @@ public class NotificationParser
                         return null;
 
                     nd.id = notificationId;
+                    nd.tag = tag;
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     {

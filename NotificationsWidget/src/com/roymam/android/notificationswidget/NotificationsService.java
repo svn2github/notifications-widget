@@ -2,6 +2,7 @@ package com.roymam.android.notificationswidget;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import java.util.Collections;
@@ -13,21 +14,45 @@ public class NotificationsService implements NotificationsProvider
 {
     private static NotificationsProvider instance;
     private NotificationsProvider source;
+    private NotificationAdapter adapter;
     private Context context;
 
     private NotificationsService(Context context, NotificationsProvider source)
     {
         this.source = source;
         this.context = context;
-        setNotificationEventListener(new NotificationAdapter(context));
+        this.adapter = new NotificationAdapter(context);
+        setNotificationEventListener(adapter);
     }
 
     public static NotificationsProvider getSharedInstance(Context context)
     {
         if (instance == null)
         {
-            if (NiLSAccessibilityService.getSharedInstance() != null)
-                instance = new NotificationsService(context, NiLSAccessibilityService.getSharedInstance());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            {
+                if (NewNotificationsListener.getSharedInstance() != null)
+                    instance = new NotificationsService(context, NewNotificationsListener.getSharedInstance());
+            }
+            else
+            {
+                if (NiLSAccessibilityService.getSharedInstance() != null)
+                    instance = new NotificationsService(context, NiLSAccessibilityService.getSharedInstance());
+            }
+        }
+        else // (instance != null)
+        {
+            // make sure that the source provider is still alive
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            {
+                if (NewNotificationsListener.getSharedInstance() == null)
+                    instance = null;
+            }
+            else
+            {
+                if (NiLSAccessibilityService.getSharedInstance() == null)
+                    instance = null;
+            }
         }
         return instance;
     }
@@ -123,6 +148,12 @@ public class NotificationsService implements NotificationsProvider
     public void setNotificationEventListener(NotificationEventListener listener)
     {
         source.setNotificationEventListener(listener);
+    }
+
+    @Override
+    public NotificationEventListener getNotificationEventListener()
+    {
+        return source.getNotificationEventListener();
     }
 
     @Override

@@ -52,6 +52,7 @@ public class EventsHandler extends BroadcastReceiver
             }
             else if (intent.getAction().equals(RESEND_ALL_NOTIFICATIONS))
             {
+                if (ns != null)
                 for(NotificationData nd : ns.getNotifications())
                 {
                     notifyNotificationAdd(context, nd);
@@ -60,11 +61,27 @@ public class EventsHandler extends BroadcastReceiver
             else if (intent.getAction().equals(OPEN_NOTIFICATION))
             {
                 int id = intent.getIntExtra("id",-1);
-                if (id > -1)
+                if (id > -1 && ns != null)
                 {
                     Log.d("NiLS", "open notification #" + id);
                     launchNotificationById(context, ns.getNotifications(), id);
                 }
+            }
+            else if (intent.getAction().equals(NotificationsProvider.ACTION_SERVICE_READY))
+            {
+                // previous call to NotificationsService.getSharedInstance(context) has already
+                // connected to the new service listener
+                // notify that the service was started
+                if (ns != null && ns.getNotificationEventListener() != null)
+                    ns.getNotificationEventListener().onServiceStarted();
+            }
+            else if (intent.getAction().equals(NotificationsProvider.ACTION_SERVICE_DIED))
+            {
+                // previous call to NotificationsService.getSharedInstance(context) has already
+                // connected to the new service listener
+                // notify that the service was stopped
+                if (ns != null && ns.getNotificationEventListener() != null)
+                    ns.getNotificationEventListener().onServiceStopped();
             }
         }
     }

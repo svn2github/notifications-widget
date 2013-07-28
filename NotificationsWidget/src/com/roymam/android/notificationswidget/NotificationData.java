@@ -9,6 +9,7 @@ import android.widget.Toast;
 public class NotificationData 
 {
     public int id;
+    public String tag;
 
     public static class Action
 	{

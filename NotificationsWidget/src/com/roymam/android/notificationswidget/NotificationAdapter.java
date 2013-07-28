@@ -107,12 +107,14 @@ public class NotificationAdapter implements NotificationEventListener
     public void onServiceStarted()
     {
         registerProximitySensor();
+        updateWidget(true);
     }
 
     @Override
     public void onServiceStopped()
     {
         stopProximityMontior();
+        updateWidget(true);
     }
 
     private void updateWidget(boolean refreshList)

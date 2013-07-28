@@ -144,16 +144,6 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.advancedpreferences);
-
-            // monitor apps interval
-            ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
-                    getResources().getStringArray(R.array.monitor_apps_interval_entries),
-                    getResources().getStringArray(R.array.monitor_apps_interval_values));
-
-            Preference miPref = findPreference(MONITOR_APPS_INTERVAL);
-            String currValue = getPreferenceScreen().getSharedPreferences().getString(MONITOR_APPS_INTERVAL, "5");
-            listener.setPrefSummary(miPref, currValue);
-            miPref.setOnPreferenceChangeListener(listener);
 	    }
 	}
 	

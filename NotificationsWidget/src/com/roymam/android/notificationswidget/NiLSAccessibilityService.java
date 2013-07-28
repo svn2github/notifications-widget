@@ -40,6 +40,16 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
         parser = new NotificationParser(getApplicationContext());
         findClearAllButton();
         sSharedInstance = this;
+        // notify that the service has been started
+        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        sSharedInstance = null;
+        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
+        super.onDestroy();
     }
 
     private void findClearAllButton()
@@ -77,7 +87,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
 
                         if (!parser.isPersistent(n))
                         {
-                            NotificationData nd = parser.parseNotification(n, packageName, notificationId);
+                            NotificationData nd = parser.parseNotification(n, packageName, notificationId, null);
                             if (nd != null)
                             {
                                 // check for duplicated notification
@@ -334,9 +344,13 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
     @Override
     public void setNotificationEventListener(NotificationEventListener listener)
     {
-        if (this.listener == null)
-            listener.onServiceStarted();
         this.listener = listener;
+    }
+
+    @Override
+    public NotificationEventListener getNotificationEventListener()
+    {
+        return listener;
     }
 
     // persistent notifications - currently unavailable feature
