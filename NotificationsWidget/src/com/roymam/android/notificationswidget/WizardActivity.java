@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,7 +78,15 @@ public class WizardActivity extends Activity
 			public void onClick(View v) 
 			{
 				Toast.makeText(WizardActivity.this, getResources().getText(R.string.tutorial_toast_1), Toast.LENGTH_LONG).show();
-				Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                Intent intent;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                {
+                    intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+                }
+                else
+                {
+				    intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                }
 			    startActivity(intent);
 			}
 		});

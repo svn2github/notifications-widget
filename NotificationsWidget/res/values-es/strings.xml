@@ -63,7 +63,7 @@
         <item>Ilimitadas</item>
     </string-array>
 
-    <string name="service_inactive_text">El Servicio está inactivo. Por favor habilita el servicio \"Servicio NiLS\" en opciones de accesibilidad, toca el icono de alerta para abrir los Ajustes de Accesibilidad</string>
+    <string name="service_inactive_text">Service is inactive. Tap on the alert icon to go to Android Settings, then enable \"NiLS Service\" from the list.</string>
 
     <!-- Wizard Strings -->
     <string name="menu_settings">Ajustes</string>

@@ -69,7 +69,7 @@
         <item>30 Sekunden</item>
     </string-array>
 
-    <string name="service_inactive_text">Dienst inaktiv. Bitte aktivieren sie \"NiLS Dienst\" in den Bedienungshilfen, drücke Warn-Icon um die Bedienungshilfen zu öffnen</string>
+    <string name="service_inactive_text">Service is inactive. Tap on the alert icon to go to Android Settings, then enable \"NiLS Service\" from the list.</string>
 
     <!-- Wizard Strings -->
     <string name="menu_settings">Einstellungen</string>

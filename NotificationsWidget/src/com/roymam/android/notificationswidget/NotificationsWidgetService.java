@@ -234,7 +234,11 @@ public class NotificationsWidgetService extends Service
 	    widget.setOnClickPendingIntent(R.id.clearButton, 
 	    		  PendingIntent.getBroadcast(this, 0, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 	          	      
-	    Intent settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+	    Intent settingsIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            settingsIntent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+        else
+            settingsIntent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
     	widget.setOnClickPendingIntent(R.id.serviceInactiveButton, 
     			  PendingIntent.getActivity(this, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 	     	    	
