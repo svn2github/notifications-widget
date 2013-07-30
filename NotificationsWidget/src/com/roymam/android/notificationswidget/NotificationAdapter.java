@@ -104,6 +104,12 @@ public class NotificationAdapter implements NotificationEventListener
     }
 
     @Override
+    public void onPersistentNotificationCleared(PersistentNotification pn)
+    {
+        updateWidget(true);
+    }
+
+    @Override
     public void onServiceStarted()
     {
         registerProximitySensor();

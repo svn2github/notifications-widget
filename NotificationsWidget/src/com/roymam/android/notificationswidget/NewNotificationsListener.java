@@ -19,6 +19,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
     private NotificationEventListener listener;
     private ArrayList<NotificationData> notifications = new ArrayList<NotificationData>();
     private NotificationParser parser;
+    private HashMap<String, PersistentNotification> persistentNotifications = new HashMap<String, PersistentNotification>();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
@@ -73,6 +74,15 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 }
             }
         }
+        else
+        {
+            PersistentNotification pn = parser.parsePersistentNotification(sbn.getNotification(), sbn.getPackageName(), sbn.getId());
+            if (pn != null)
+            {
+                persistentNotifications.put(sbn.getPackageName(), pn);
+                if (listener != null) listener.onPersistentNotificationAdded(pn);
+            }
+        }
     }
 
     @Override
@@ -96,6 +106,19 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 break;
             }
         }
+        // remove also persistent notification
+        if (parser.isPersistent(sbn.getNotification()))
+        {
+            if (persistentNotifications.containsKey(sbn.getPackageName()))
+            {
+                PersistentNotification pn = persistentNotifications.get(sbn.getPackageName());
+                persistentNotifications.remove(sbn.getPackageName());
+                if (listener != null)
+                {
+                    listener.onPersistentNotificationCleared(pn);
+                }
+            }
+        }
     }
 
     public static NotificationsProvider getSharedInstance()
@@ -112,7 +135,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
     @Override
     public HashMap<String, PersistentNotification> getPersistentNotifications()
     {
-        return new HashMap<String, PersistentNotification>();
+        return persistentNotifications;
     }
 
     @Override

@@ -179,7 +179,8 @@ public class NotificationParser
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         if (!prefs.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true) && !km.inKeyguardRestrictedInputMode() ||
-             prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false))
+             prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false) ||
+                packageName.equals("com.android.providers.downloads"))
             return true;
         return false;
     }
