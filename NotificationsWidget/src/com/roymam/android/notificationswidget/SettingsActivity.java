@@ -147,19 +147,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        orderPref.setOnPreferenceChangeListener(listener);
 	    }	    
 	}		
-	
-	public static class PrefsAdvancedFragment extends PreferenceFragment 
-	{
-	    @Override
-	    public void onCreate(Bundle savedInstanceState) 
-	    {
-	        super.onCreate(savedInstanceState);
 
-	        // Load the preferences from an XML resource
-	        addPreferencesFromResource(R.xml.advancedpreferences);
-	    }
-	}
-	
 	public static class PrefsContactFragment extends PreferenceFragment 
 	{
 	    @Override
@@ -219,55 +207,55 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        setPreferenceScreen(root);
 	    }
 	}
-	
+
 	public static class PrefsPersistentNotificationsFragment extends PreferenceFragment
 	{
 		@Override
-	    public void onCreate(Bundle savedInstanceState) 
+	    public void onCreate(Bundle savedInstanceState)
 	    {
 	        super.onCreate(savedInstanceState);
 
 	        // add app specific settings
 			PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-			
+
 			// Persistent notifications list
 			NotificationsProvider ns = NotificationsService.getSharedInstance(getActivity());
 			if (ns != null)
-    		{    			
+    		{
     			List<String> apps = new ArrayList<String>();
-    			
+
     			// show first the enabled persistent apps
     			String packages = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
-    			for (String packageName : packages.split(",")) 
+    			for (String packageName : packages.split(","))
     			{
     				if (!packageName.isEmpty())
     					apps.add(packageName);
     			}
-    			
+
     			// then add the current persistent notifications apps
     			Iterator<Entry<String, PersistentNotification>> it = ns.getPersistentNotifications().entrySet().iterator();
     			while (it.hasNext())
     			{
     				Entry<String, PersistentNotification> e = it.next();
-    				String packageName = e.getKey();    				
+    				String packageName = e.getKey();
     				if (!apps.contains(packageName))
     					apps.add(packageName);
     			}
-    			
+
     			// build preferences list
     			for (final String packageName : apps)
     			{
     				final Context ctx = getActivity();
-    				CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());					
+    				CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());
 					getPreferenceManager();
-					intentPref.setKey(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION);					
+					intentPref.setKey(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION);
 					intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings);
 					intentPref.setChecked(prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false));
 					intentPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 					{
 						@Override
-						public boolean onPreferenceChange(Preference preference, Object newValue) 
+						public boolean onPreferenceChange(Preference preference, Object newValue)
 						{
 							prefs.edit().putBoolean(preference.getKey(), (Boolean)newValue).commit();
 							if ((Boolean)newValue)
@@ -275,24 +263,24 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 							else
 								PersistentNotificationSettingsActivity.removeAppFromPersistentNotifications(packageName, ctx);
 							return true;
-						}						
+						}
 					});
-					
+
 					// get package title
-					try 
+					try
 					{
 						ApplicationInfo ai = getActivity().getPackageManager().getApplicationInfo(packageName, 0);
 						String appName = getActivity().getPackageManager().getApplicationLabel(ai).toString();
 						if (appName == null) appName = packageName;
 						intentPref.setTitle(appName);
 						intentPref.setIcon(getActivity().getPackageManager().getApplicationIcon(ai));
-					} catch (NameNotFoundException e2) 
+					} catch (NameNotFoundException e2)
 					{
 						intentPref.setTitle(packageName);
 					}
 					intentPref.setSummary(packageName);
 			        root.addPreference(intentPref);
-    			}	    			    			    			
+    			}
 			}
 			DialogPreference howToUse = new DialogPreference(getActivity(), null) {};
 			howToUse.setTitle(R.string.how_to_use);
@@ -301,7 +289,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			howToUse.setDialogMessage(R.string.persistent_notifications_help_details);
 			howToUse.setNegativeButtonText(null);
 			root.addPreference(howToUse);
-			
+
 	        setPreferenceScreen(root);
 	    }
 	}

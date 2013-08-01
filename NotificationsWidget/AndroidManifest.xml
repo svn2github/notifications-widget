@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="184"
+    android:versionCode="185"
     android:versionName="1.2alpha4" >
 
     <uses-sdk

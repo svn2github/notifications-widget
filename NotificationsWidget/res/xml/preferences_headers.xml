@@ -14,10 +14,16 @@
             	<intent android:targetPackage="com.roymam.android.notificationswidget"
         		android:targetClass="com.roymam.android.notificationswidget.AppearanceActivity" />
             </header>
-    
+
+    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsPersistentNotificationsFragment"
+            android:icon="@drawable/persistent"
+            android:summary="@string/persistent_notifications_summary"
+            android:title="@string/persistent_notifications" />
+
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAppSpecificFragment"
         	android:icon="@drawable/apps"
-            android:title="@string/app_specific_settings_title" />
+            android:title="@string/app_specific_settings_title"
+            android:summary="@string/app_specific_settings_summary"/>
 
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsContactFragment"
         	android:icon="@android:drawable/ic_dialog_email"

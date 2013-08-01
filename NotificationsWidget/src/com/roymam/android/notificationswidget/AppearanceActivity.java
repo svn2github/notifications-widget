@@ -112,7 +112,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 	public static ViewGroup contentColorButton;
 	public static SeekBar notificationBgClockOpacitySlider;
 	public static Spinner maxLinesSpinner;
-	
+
     @Override
     protected void onSaveInstanceState(Bundle outState) 
     {
