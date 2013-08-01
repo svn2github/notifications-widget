@@ -3,12 +3,14 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsGeneralFragment"
-            android:icon="@android:drawable/ic_menu_preferences"
-            android:title="@string/generalsettings" />
+            android:icon="@android:drawable/presence_offline"
+            android:summary="@string/service_is_inactive"
+            android:title="@string/service" />
     
     <header 
-            android:icon="@drawable/hardware_phone"
-            android:title="@string/appearance">
+            android:icon="@android:drawable/presence_offline"
+            android:title="@string/widget"
+            android:summary="@string/widget_is_not_present">
             	<intent android:targetPackage="com.roymam.android.notificationswidget"
         		android:targetClass="com.roymam.android.notificationswidget.AppearanceActivity" />
             </header>
@@ -16,15 +18,7 @@
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAppSpecificFragment"
         	android:icon="@drawable/apps"
             android:title="@string/app_specific_settings_title" />
-    
-    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsPersistentNotificationsFragment"
-        	android:icon="@drawable/persistent"
-            android:title="@string/persistent_notifications" />
 
-    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAdvancedFragment"
-        	android:icon="@drawable/settings"
-            android:title="@string/advancedsettings" />
-    
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsContactFragment"
         	android:icon="@android:drawable/ic_dialog_email"
             android:title="@string/about_contactus_title" 

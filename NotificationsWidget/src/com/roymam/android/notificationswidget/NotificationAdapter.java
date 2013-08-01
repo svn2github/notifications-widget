@@ -55,15 +55,22 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.putExtra("package", nd.packageName);
         npsIntent.putExtra("id", nd.id);
 
-        // convert large icon to byte stream
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        nd.icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        npsIntent.putExtra("icon", stream.toByteArray());
+        ByteArrayOutputStream stream;
+        if (nd.icon != null)
+        {
+            // convert large icon to byte stream
+            stream = new ByteArrayOutputStream();
+            nd.icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            npsIntent.putExtra("icon", stream.toByteArray());
+        }
 
-        // convert large icon to byte stream
-        stream = new ByteArrayOutputStream();
-        nd.appicon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        npsIntent.putExtra("appicon", stream.toByteArray());
+        if (nd.appicon != null)
+        {
+            // convert large icon to byte stream
+            stream = new ByteArrayOutputStream();
+            nd.appicon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            npsIntent.putExtra("appicon", stream.toByteArray());
+        }
 
         context.startService(npsIntent);
     }

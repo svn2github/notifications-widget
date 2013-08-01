@@ -245,4 +245,11 @@
     <string name="clear_notification">Lösche Benachrichtigungen</string>
     <string name="open_accessibility_settings">Öffne Bedienungshilfe</string>
 
+    <string name="service">Service</string>
+    <string name="widget">Widget</string>
+    <string name="service_is_inactive">Service is offline.\nclick to learn how to activate it.</string>
+    <string name="service_is_active">Service is online.\nclick to change settings.</string>
+    <string name="widget_is_not_present">Widget is not present.\nclick to learn how to add it.</string>
+    <string name="widget_is_present">Widget is present.\nclick to change settings.</string>
+
 </resources>

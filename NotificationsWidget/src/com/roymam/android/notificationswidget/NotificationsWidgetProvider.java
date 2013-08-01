@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
@@ -46,7 +47,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public void onEnabled(Context context) 
     {    
        super.onEnabled(context);
-	   NotificationsWidgetService.widgetActive = true;
+       PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(SettingsActivity.WIDGET_PRESENT, true).commit();
     }
     
     @Override
@@ -66,6 +67,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	public void onDisabled(Context context) 
 	{
 		NotificationsWidgetService.widgetActive = false;
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(SettingsActivity.WIDGET_PRESENT, false).commit();
 		super.onDisabled(context);
 		context.stopService(new Intent(context, NotificationsWidgetService.class));
 	}

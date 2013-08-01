@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="183"
-    android:versionName="1.2alpha3" >
+    android:versionCode="184"
+    android:versionName="1.2alpha4" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -24,7 +24,7 @@
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Holo" >
         </activity>
-        <activity
+        <!--<activity
             android:name="com.roymam.android.notificationswidget.SettingsActivity"
             android:label="@string/settingstitle"
             android:theme="@android:style/Theme.Holo" >
@@ -33,11 +33,11 @@
             android:name="com.roymam.android.notificationswidget.WizardActivity"
             android:label="@string/title_activity_main"
             android:theme="@android:style/Theme.Holo" >
-        </activity>
+        </activity>-->
         <activity
-            android:name="com.roymam.android.notificationswidget.MainActivity"
+            android:name="com.roymam.android.notificationswidget.SettingsActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.Transparent" >
+            android:theme="@android:style/Theme.Holo" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

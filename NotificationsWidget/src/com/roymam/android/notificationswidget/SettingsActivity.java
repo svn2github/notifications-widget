@@ -1,6 +1,9 @@
 package com.roymam.android.notificationswidget;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +21,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.roymam.android.common.ListPreferenceChangeListener;
@@ -32,7 +37,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 {
 	public static final String WIDGET_MODE = "widgetmode";  
 	public static final String COLLAPSED_WIDGET_MODE = "collapsed";
-	public static final String EXPANDED_WIDGET_MODE = "expanded";
+    public static final String EXPANDED_WIDGET_MODE = "expanded";
 	public static final String HOME_WIDGET_MODE = "home";
 	public static final String SHOW_CLEAR_BUTTON = "showclearbutton";
 	public static final String CLOCK_IS_CLICKABLE = "clockisclickable";
@@ -63,21 +68,29 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     public static final String NOTIFICATION_ICON_BG_COLOR = "notification_icon_bg_color";
     public static final String SHOW_PERSISTENT_NOTIFICATIONS = "show_persistent";
     public static final String MONITOR_NOTIFICATIONS_BAR = "monitor_shade";
+    public static final String WIDGET_PRESENT = "widget_present";
     public static String CLEAR_ON_UNLOCK = "clearonunlock";
 	public static String CLEAR_FROM_SAME_APP = "clear_all_from_same_app";
 	public static String COLLECT_ON_UNLOCK = "collectonunlock";
 	public static String CLEAR_ON_CLEAR = "clearonclear";
     public static String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
-    public static String AUTO_KILL_PERSISTENT= "auto_kill_persistent";
-    public static String MONITOR_APPS_INTERVAL = "monitor_apps_interval";
     public static String CLOCK_SMALL = "small";
 	public static String CLOCK_MEDIUM = "medium";
 	public static String CLOCK_LARGE = "large";
 	public static String CLOCK_HIDDEN = "clockhidden";
 	public static String CLOCK_AUTO = "auto";
 	public static String APPS_SETTINGS = "specificapps";
-	
-	public static class PrefsGeneralFragment extends PreferenceFragment 
+
+    public static class HowToAddWidgetFragment extends Fragment
+    {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            return inflater.inflate(R.layout.view_help_add_widget, null);
+        }
+    }
+
+    public static class PrefsGeneralFragment extends PreferenceFragment
 	{
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) 
@@ -86,7 +99,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.preferences);
-	        
+
 		    // proximity sensor listener
 	        Preference proxPref = findPreference(DISABLE_PROXIMITY);	        
 	        proxPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
@@ -293,11 +306,60 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    }
 	}
 
-	@Override
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus)
+            invalidateHeaders();
+    }
+
+    @Override
     public void onBuildHeaders(List<Header> target) 
 	{
         loadHeadersFromResource(R.xml.preferences_headers, target);
-        
+
+        // check service status
+        if (NotificationsService.getSharedInstance(this) != null)
+        {
+            target.get(0).iconRes = android.R.drawable.presence_online;
+            target.get(0).summaryRes = R.string.service_is_active;
+        }
+        else
+        {
+            target.get(0).iconRes = android.R.drawable.presence_offline;
+            target.get(0).summaryRes = R.string.service_is_inactive;
+
+            Intent intent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            {
+                intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+            }
+            else
+            {
+                intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            }
+            target.get(0).intent = intent;
+            target.get(0).fragment = null;
+        }
+
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+        ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
+        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(WIDGET_PRESENT, false) || widgetIds.length > 0)
+        {
+            target.get(1).iconRes = android.R.drawable.presence_online;
+            target.get(1).summaryRes = R.string.widget_is_present;
+        }
+        else
+        {
+            target.get(1).iconRes = android.R.drawable.presence_offline;
+            target.get(1).summaryRes = R.string.widget_is_not_present;
+            target.get(1).fragment = "com.roymam.android.notificationswidget.SettingsActivity$HowToAddWidgetFragment";
+        }
+
+        // check widget status
+
         // setting last "about" button summary
         String versionString = "";
     	try 
@@ -315,40 +377,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	{
         super.onCreate(savedInstanceState);        
     }
-	
-	/*private void showAbout() 
-	{	
-		AboutDialogFragment dialog = new WizardActivity.AboutDialogFragment();
-		//TBD - find a way to show about dialog
-		dialog.show(getFragmentManager(), "AboutDialogFragment");	
-	}*/
-	
-	/*
-	public boolean onCreateOptionsMenu(Menu menu) 
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		final MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.settings_menu, menu);
-	    
-	    OnMenuItemClickListener menuListener = new OnMenuItemClickListener()
-	    {
-			@Override
-			public boolean onMenuItemClick(MenuItem arg0) 
-			{
-				if (arg0.getItemId() == R.id.menu_about)
-				{
-					showAbout();
-					return true;
-				}
-				return false;
-			}
-	    };
-	    for(int i=0;i<menu.size();i++)
-	    	menu.getItem(i).setOnMenuItemClickListener(menuListener);
-	    
-	    return super.onCreateOptionsMenu(menu);
-	}*/
-	
+
 	@Override
 	protected void onResume() 
 	{
