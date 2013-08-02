@@ -88,7 +88,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            return inflater.inflate(R.layout.view_help_add_widget, null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                return inflater.inflate(R.layout.view_help_add_widget, null);
+            else
+                return inflater.inflate(R.layout.view_help_no_lswidgets, null);
         }
     }
 

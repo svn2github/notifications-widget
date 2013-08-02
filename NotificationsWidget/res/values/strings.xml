@@ -316,5 +316,20 @@
     <string name="widget_is_present">Widget is present.\nclick to change settings.</string>
     <string name="persistent_notifications_summary">Add/remove persistent notifications from NiLS widget</string>
     <string name="app_specific_settings_summary">Change notifications settings for individual apps</string>
+    <string name="widget_help_no_ls_title">NiLS Requires Android 4.2 and above</string>
+    <string name="widget_help_no_ls_body">Lock screen widgets are supported on Android 4.2 and above.\nHowever you can still use NiLS as an Home Screen Widget or use 3rd party lock screen app such as WidgetLocker.
+    </string>
+    <string name="widget_help_title">How to add NiLS to the Lock Screen?</string>
+    <string name="widget_help_summary">Requires Android 4.2 and above, might be different on variant devices
+    </string>
+    <string name="widget_help_step_1_title">1. Lock your screen</string>
+    <string name="widget_help_step_1_body">Lock your screen manually using the device power button
+    </string>
+    <string name="widget_help_step_2_title">2. Remove the clock widget</string>
+    <string name="widget_help_step_2_body">Expand the default clock widget by dragging it down, then long press it and drag it up to the \'X Remove\' label\nIf you have Samsung Galaxy S4 You\'ll need first to enable \'Multiple Widgets\' on \'Device Settings\' > \'Lock Screen\'</string>
+    <string name="widget_help_step_3_title">3. Click on the + Button</string>
+    <string name="widget_help_step_3_body">After removing the clock, a + button will appear, click on it.</string>
+    <string name="widget_help_step_4_title">4. Add NiLS Widget</string>
+    <string name="widget_help_step_4_body">Choose NiLS widget from the list. this will add it as your lock screen widget.</string>
 
 </resources>

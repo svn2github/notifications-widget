@@ -14,13 +14,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="How to add NiLS to Lock Screen?"
+                android:text="@string/widget_help_title"
                 android:layout_gravity="center"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Requires Android 4.2 and above, might be different on variant devices"
+                android:text="@string/widget_help_summary"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"/>
         <TextView
@@ -28,13 +28,13 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_marginTop="16dp"
-                android:text="1. Lock your screen"
+                android:text="@string/widget_help_step_1_title"
                 android:layout_gravity="center"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Lock your screen manually using the device power button"
+                android:text="@string/widget_help_step_1_body"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"/>
 
@@ -43,14 +43,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="2. Remove the clock widget"
+                android:text="@string/widget_help_step_2_title"
                 android:layout_gravity="center"/>
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Expand the default clock widget by dragging it down, then long press it and drag it up to the 'X Remove' label\nIf you have Samsung Galaxy S4 You\'ll need first to enable \'Multiple Widgets\' on \'Lock Screen Settings\'"
+                android:text="@string/widget_help_step_2_body"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"/>
 
@@ -65,14 +65,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="3. Click on the + Button"
+                android:text="@string/widget_help_step_3_title"
                 android:layout_gravity="center"/>
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="After removing the clock, a + button will appear, click on it."
+                android:text="@string/widget_help_step_3_body"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"/>
 
@@ -87,14 +87,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="4. Add NiLS Widget"
+                android:text="@string/widget_help_step_4_title"
                 android:layout_gravity="center"/>
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Choose NiLS widget from the list. this will add it as your lock screen widget."
+                android:text="@string/widget_help_step_4_body"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"/>
 
