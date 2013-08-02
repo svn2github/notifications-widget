@@ -14,6 +14,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="How to add NiLS to Lock Screen?"
+                android:layout_gravity="center"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Requires Android 4.2 and above, might be different on variant devices"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_marginTop="16dp"
                 android:text="1. Lock your screen"
                 android:layout_gravity="center"/>
@@ -37,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Expand the default clock widget by dragging it down, then long press it and drag it up to the 'X Remove' label"
+                android:text="Expand the default clock widget by dragging it down, then long press it and drag it up to the 'X Remove' label\nIf you have Samsung Galaxy S4 You\'ll need first to enable \'Multiple Widgets\' on \'Lock Screen Settings\'"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"/>
 
