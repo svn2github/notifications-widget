@@ -49,14 +49,24 @@
     <string name="max_lines">Maximum text lines</string>
     <string name="show_full_notification">Show full notification content</string>
     <string name="show_full_notification_summary">Show full notification content as it appears on notifications bar</string>
-    <string name="clearonclear">Monitor \"Clear All\"</string>
-    <string name="clearonclear_summary">Clear notifications when clear button is clicked on android notifications bar.</string>
-    <string name="monitor_shade">Monitor notifications bar</string>
-    <string name="monitor_shade__summary">Clear notifications that don\'t appear on android notifications bar.</string>
+    <string name="sync_notifications">Sync with notifications bar</string>
     <string name="clear_app_notifications">Clear when app is opened</string>
     <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched.</string>
     <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string>
     <string name="disable_auto_switch">Disable auto switch preset</string>
+    <string name="force_clear_on_open">Force clear notifications when opened</string>
+    <string name="force_clear_on_open_summary">Forcibly clear notification when it opened even if the app hasn\'t clear it by itself</string>
+
+    <string-array name="sync_notifications_entries">
+        <item>Disabled</item>
+        <item>One-way sync</item>
+        <item>Two-way sync (Android 4.3+)</item>
+    </string-array>
+    <string-array name="sync_notifications_values" translatable="false">
+        <item>none</item>
+        <item>oneway</item>
+        <item>twoway</item>
+</string-array>
 
     <string-array name="max_lines_entries">
         <item>1</item>
@@ -297,15 +307,14 @@
     <string name="clear_notification">Clear Notification</string>
     <string name="open_accessibility_settings">Open Accessibility Settings</string>
 
+    <!-- new settings wizard combination -->
     <string name="service">Service</string>
     <string name="widget">Widget</string>
     <string name="service_is_inactive">Service is offline.\nclick to activate it.</string>
     <string name="service_is_active">Service is online.\nclick to change settings.</string>
     <string name="widget_is_not_present">Widget is not present.\nclick to learn how to add it.</string>
     <string name="widget_is_present">Widget is present.\nclick to change settings.</string>
-    <string name="persistent_notifications_summary">Add/remove persistent notifications from NiLS
-        widget
-    </string>
-    <string name="app_specific_settings_summary">Change notifications settings for individual apps
-    </string>
+    <string name="persistent_notifications_summary">Add/remove persistent notifications from NiLS widget</string>
+    <string name="app_specific_settings_summary">Change notifications settings for individual apps</string>
+
 </resources>

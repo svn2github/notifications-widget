@@ -67,19 +67,21 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String DISABLE_AUTO_SWITCH = "disable_auto_switch";
     public static final String NOTIFICATION_ICON_BG_COLOR = "notification_icon_bg_color";
     public static final String SHOW_PERSISTENT_NOTIFICATIONS = "show_persistent";
-    public static final String MONITOR_NOTIFICATIONS_BAR = "monitor_shade";
     public static final String WIDGET_PRESENT = "widget_present";
-    public static String CLEAR_ON_UNLOCK = "clearonunlock";
-	public static String CLEAR_FROM_SAME_APP = "clear_all_from_same_app";
-	public static String COLLECT_ON_UNLOCK = "collectonunlock";
-	public static String CLEAR_ON_CLEAR = "clearonclear";
-    public static String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
-    public static String CLOCK_SMALL = "small";
-	public static String CLOCK_MEDIUM = "medium";
-	public static String CLOCK_LARGE = "large";
-	public static String CLOCK_HIDDEN = "clockhidden";
-	public static String CLOCK_AUTO = "auto";
-	public static String APPS_SETTINGS = "specificapps";
+    public static final String CLEAR_ON_UNLOCK = "clearonunlock";
+    public static final String SYNC_NOTIFICATIONS = "sync_notifications";
+    public static final String SYNC_NOTIFICATIONS_DISABLED = "none";
+    public static final String SYNC_NOTIFICATIONS_ONEWAY = "oneway";
+    public static final String SYNC_NOTIFICATIONS_TWOWAY = "twoway";
+    public static final String FORCE_CLEAR_ON_OPEN = "force_clear_on_open";
+	public static final String COLLECT_ON_UNLOCK = "collectonunlock";
+	public static final String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
+    public static final String CLOCK_SMALL = "small";
+	public static final String CLOCK_MEDIUM = "medium";
+	public static final String CLOCK_LARGE = "large";
+	public static final String CLOCK_HIDDEN = "clockhidden";
+	public static final String CLOCK_AUTO = "auto";
+	public static final String APPS_SETTINGS = "specificapps";
 
     public static class HowToAddWidgetFragment extends Fragment
     {
@@ -141,11 +143,32 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        		getResources().getStringArray(R.array.settings_orderby_entries),
 	        		getResources().getStringArray(R.array.settings_orderby_values));
 	        
-	        Preference orderPref = findPreference(NOTIFICATIONS_ORDER);	        
+	        Preference orderPref = findPreference(NOTIFICATIONS_ORDER);
 	        String currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATIONS_ORDER, "time");	        
 	        listener.setPrefSummary(orderPref, (String)currValue);
 	        orderPref.setOnPreferenceChangeListener(listener);
-	    }	    
+
+            // set up notifications sync
+            listener = new ListPreferenceChangeListener(
+                    getResources().getStringArray(R.array.sync_notifications_entries),
+                    getResources().getStringArray(R.array.sync_notifications_values));
+
+            Preference pref = findPreference(SYNC_NOTIFICATIONS);
+            String syncDefaultValue = SYNC_NOTIFICATIONS_ONEWAY;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                syncDefaultValue = SYNC_NOTIFICATIONS_TWOWAY;
+            currValue = getPreferenceScreen().getSharedPreferences().getString(SYNC_NOTIFICATIONS, syncDefaultValue);
+            listener.setPrefSummary(pref, (String)currValue);
+            pref.setOnPreferenceChangeListener(listener);
+
+            // disable clear_app_notifications on Android 4.3+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            {
+                pref = findPreference(CLEAR_APP_NOTIFICATIONS);
+                getPreferenceScreen().removePreference(pref);
+                getPreferenceScreen().getSharedPreferences().edit().putBoolean(CLEAR_APP_NOTIFICATIONS, false).commit();
+            }
+        }
 	}		
 
 	public static class PrefsContactFragment extends PreferenceFragment 

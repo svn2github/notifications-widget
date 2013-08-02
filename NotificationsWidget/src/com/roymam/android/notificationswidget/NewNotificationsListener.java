@@ -2,6 +2,8 @@ package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -88,34 +90,40 @@ public class NewNotificationsListener extends NotificationListenerService implem
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn)
     {
-        Log.d("NiLS","onNotificationRemoved");
-        // find the notification and remove it
-        for (NotificationData nd : notifications)
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
+        if (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
+            sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY))
         {
-            if (nd.id == sbn.getId() && !nd.pinned)
+            Log.d("NiLS","onNotificationRemoved");
+            // find the notification and remove it
+            for (NotificationData nd : notifications)
             {
-                // remove the notification
-                notifications.remove(nd);
+                if (nd.id == sbn.getId() && !nd.pinned)
+                {
+                    // remove the notification
+                    notifications.remove(nd);
 
-                // notify that the notification was added
-                if (listener != null)
-                {
-                    listener.onNotificationCleared(nd);
-                    listener.onNotificationsListChanged();
+                    // notify that the notification was added
+                    if (listener != null)
+                    {
+                        listener.onNotificationCleared(nd);
+                        listener.onNotificationsListChanged();
+                    }
+                    break;
                 }
-                break;
             }
-        }
-        // remove also persistent notification
-        if (parser.isPersistent(sbn.getNotification()))
-        {
-            if (persistentNotifications.containsKey(sbn.getPackageName()))
+            // remove also persistent notification
+            if (parser.isPersistent(sbn.getNotification()))
             {
-                PersistentNotification pn = persistentNotifications.get(sbn.getPackageName());
-                persistentNotifications.remove(sbn.getPackageName());
-                if (listener != null)
+                if (persistentNotifications.containsKey(sbn.getPackageName()))
                 {
-                    listener.onPersistentNotificationCleared(pn);
+                    PersistentNotification pn = persistentNotifications.get(sbn.getPackageName());
+                    persistentNotifications.remove(sbn.getPackageName());
+                    if (listener != null)
+                    {
+                        listener.onPersistentNotificationCleared(pn);
+                    }
                 }
             }
         }
@@ -141,6 +149,9 @@ public class NewNotificationsListener extends NotificationListenerService implem
     @Override
     public void clearAllNotifications()
     {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean syncback = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
+
         Iterator<NotificationData> i = notifications.iterator();
         while (i.hasNext())
         {
@@ -149,8 +160,10 @@ public class NewNotificationsListener extends NotificationListenerService implem
             {
                 if (listener != null) listener.onNotificationCleared(nd);
                 i.remove();
+
                 // notify android to clear it too
-                cancelNotification(nd.packageName, nd.tag, nd.id);
+                if (syncback)
+                    cancelNotification(nd.packageName, nd.tag, nd.id);
             }
         }
 
@@ -160,14 +173,23 @@ public class NewNotificationsListener extends NotificationListenerService implem
     @Override
     public void clearNotification(int notificationId)
     {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean syncback = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
+        boolean changed = false;
         // first, find it on list
         for(NotificationData nd : notifications)
         {
             if (nd.id == notificationId)
             {
-                cancelNotification(nd.packageName, nd.tag, nd.id);
+                notifications.remove(nd);
+                if (syncback)
+                    cancelNotification(nd.packageName, nd.tag, nd.id);
+                if (listener != null) listener.onNotificationCleared(nd);
+                changed = true;
+                break;
             }
         }
+        if (changed  && listener != null) listener.onNotificationsListChanged();
     }
 
     @Override
@@ -185,6 +207,8 @@ public class NewNotificationsListener extends NotificationListenerService implem
     @Override
     public void clearNotificationsForApps(String[] packages)
     {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean syncback = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
         boolean changed = false;
         for(String packageName : packages)
         {
@@ -195,7 +219,9 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 if (!nd.pinned && nd.packageName.equals(packageName))
                 {
                     i.remove();
-                    cancelNotification(packageName, nd.tag, nd.id);
+                    if (syncback)
+                        cancelNotification(packageName, nd.tag, nd.id);
+
                     changed = true;
                     if (listener != null) listener.onNotificationCleared(nd);
                 }

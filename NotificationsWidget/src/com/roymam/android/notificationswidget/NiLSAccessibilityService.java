@@ -162,7 +162,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                 break;
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 if (accessibilityEvent.getPackageName().equals("com.android.systemui") &&
-                    prefs.getBoolean(SettingsActivity.MONITOR_NOTIFICATIONS_BAR, true))
+                    !prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
                 {
                     //Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
                     AccessibilityNodeInfo node = accessibilityEvent.getSource();
@@ -214,7 +214,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                         // clear notifications button clicked
                         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-                        if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_CLEAR, false))
+                        if (!prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
                         {
                             clearAllNotifications();
                         }

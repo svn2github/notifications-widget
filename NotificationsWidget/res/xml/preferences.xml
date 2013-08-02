@@ -55,10 +55,15 @@
                 android:defaultValue="true"
                 android:summary="@string/clear_app_notifications_summary"/>
         <CheckBoxPreference
-                android:title="@string/monitor_shade"
-                android:key="monitor_shade"
-                android:enabled="true"
-                android:defaultValue="true"
-                android:summary="@string/monitor_shade__summary"/>
+                android:title="@string/force_clear_on_open"
+                android:key="force_clear_on_open"
+                android:defaultValue="false"
+                android:summary="@string/force_clear_on_open_summary"/>
+        <ListPreference android:dialogTitle="@string/sync_notifications"
+                        android:entries="@array/sync_notifications_entries"
+                        android:entryValues="@array/sync_notifications_values"
+                        android:title="@string/sync_notifications"
+                        android:key="sync_notifications"
+                        android:defaultValue="twoway" />
     </PreferenceCategory>
 </PreferenceScreen>

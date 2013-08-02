@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class NotificationData 
@@ -53,6 +54,13 @@ public class NotificationData
                 e2.printStackTrace();
                 Toast.makeText(context, "Error - cannot launch app", Toast.LENGTH_SHORT).show();
             }
+        }
+        // clear notification from notifications list
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsActivity.FORCE_CLEAR_ON_OPEN, false) &&
+            NotificationsService.getSharedInstance(context) != null)
+        {
+            // request service to clear itself
+            NotificationsService.getSharedInstance(context).clearNotification(id);
         }
     }
 }
