@@ -53,8 +53,9 @@ public class EventsHandler extends BroadcastReceiver
             else if (intent.getAction().equals(RESEND_ALL_NOTIFICATIONS))
             {
                 if (ns != null)
-                for(NotificationData nd : ns.getNotifications())
+                for(int i = ns.getNotifications().size()-1; i>=0; i--)
                 {
+                    NotificationData nd = ns.getNotifications().get(i);
                     notifyNotificationAdd(context, nd);
                 }
             }
