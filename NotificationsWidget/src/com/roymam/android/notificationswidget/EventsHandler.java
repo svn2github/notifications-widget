@@ -98,6 +98,7 @@ public class EventsHandler extends BroadcastReceiver
         npsIntent.putExtra("title", nd.title);
         npsIntent.putExtra("text", nd.text);
         npsIntent.putExtra("package", nd.packageName);
+        npsIntent.putExtra("time", nd.received);
         npsIntent.putExtra("id", nd.id);
 
         // convert large icon to byte stream
