@@ -35,7 +35,8 @@ public class EventsHandler extends BroadcastReceiver
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
                 if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false))
                 {
-                    NotificationsService.getSharedInstance(context).clearAllNotifications();
+                    if (NotificationsService.getSharedInstance(context) != null)
+                        NotificationsService.getSharedInstance(context).clearAllNotifications();
                 }
            }
             if (action.equals(DISMISS_NOTIFICATIONS) || action.equals(FN_DISMISS_NOTIFICATIONS))
