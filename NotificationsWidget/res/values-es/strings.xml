@@ -44,14 +44,19 @@
     <string name="max_lines">Lineas de texto máximas</string>
     <string name="show_full_notification">Mostrar el contenido completo de las notificaciones</string>
     <string name="show_full_notification_summary">Muestra el contenido completo tal cual es visualizado en la barra de notificaciones</string>
-    <string name="clearonclear">Monitorear \"Borrar Todo\"</string>
-    <string name="clearonclear_summary">Limpiar notificaciones cuando el botón de limpiar es clickeado en la barra de notificaciones de Android.</string>
-    <string name="monitor_shade">Monitorear barra de notificaciones</string>
-    <string name="monitor_shade__summary">Limpia notificaciones que no aparecen en la barra de notificaciones de Android.</string>
+    <string name="sync_notifications">Sincronizar con la barra de notificaciones.</string>
     <string name="clear_app_notifications">Limpiar al abrir aplicación</string>
     <string name="clear_app_notifications_summary">Limpiar automáticamente notificaciones de la app cuando ésta es abierta.</string>
     <string name="disable_auto_switch_summary">Deshabilitar el cambio automático entre los presets de PB Minimizada y PB Maximizada en pant. bloq. Android 4.2</string>
     <string name="disable_auto_switch">Deshabilita el cambio automático de presets</string>
+    <string name="force_clear_on_open">Forzar borrar notificaciones al abrir</string>
+    <string name="force_clear_on_open_summary">Forzar borrar notificaciones al abrir aunque la app no lo haya hecho por si sola</string>
+
+    <string-array name="sync_notifications_entries">
+        <item>Deshabilitado</item>
+        <item>Sinc. unidireccional</item>
+        <item>Sinc. bidireccional (Android 4.3+)</item>
+    </string-array>
 
     <string-array name="max_lines_entries">
         <item>1</item>
@@ -63,7 +68,14 @@
         <item>Ilimitadas</item>
     </string-array>
 
-    <string name="service_inactive_text">Service is inactive. Tap on the alert icon to go to Android Settings, then enable \"NiLS Service\" from the list.</string>
+    <string-array name="monitor_apps_interval_entries">
+        <item>2 segundos</item>
+        <item>5 segundos</item>
+        <item>10 segundos</item>
+        <item>30 segundos</item>
+    </string-array>
+
+    <string name="service_inactive_text">El Servicio está inactivo. Por favor habilita el servicio \"Servicio NiLS\" en opciones de accesibilidad, toca el icono de alerta para abrir los Ajustes de Accesibilidad</string>
 
     <!-- Wizard Strings -->
     <string name="menu_settings">Ajustes</string>
@@ -137,7 +149,6 @@
         <item>Máx</item>
     </string-array>
 
-
     <string-array name="settings_multiple_events_entries">
         <item>Mostrar Todo</item>
         <item>Mostrar Primer Evento</item>
@@ -178,7 +189,6 @@
         <item>Luego de 24 Min.</item>
     </string-array>
 
-
     <string name="how_to_use">Cómo usar?</string>
     <string name="persistent_notifications_help">Cómo Usar Notificaciones Persistentes?</string>
     <string name="persistent_notifications_help_details">Notificaciones persistentes son notificaciones que aparecen en la barra de estado y no pueden ser removidas (ej. apps en ejecución, reproduciendo música, etc...)\n\nEsta lista va a ser llenada con las aplicaciones que crearon notificaciones persistentes, para agregar una notificación persistente al widget elige el recuadro cerca del nombre de la app.\n\nSi no hay apps en la lista, ejecuta esta pantalla de ajustes luego de que la notificación persistente es actualizada por la app que la creó.</string>
@@ -197,9 +207,9 @@
     <string name="expanded">Maximizada</string>
 
     <string-array name="widget_mode_entries">
-        <item>PB Minimizada</item>
-        <item>PB Maximizada</item>
-        <item>Inicio</item>
+        <item>LS Collapsed</item>
+        <item>LS Expanded</item>
+        <item>Home</item>
     </string-array>
 
     <string name="widget_mode_collapsed_desc">En pant. bloq. cuando minimizada (4.2+)</string>
@@ -242,10 +252,29 @@
     <string name="clear_notification">Limpiar Notificación</string>
     <string name="open_accessibility_settings">Abrir Ajustes de Accesibilidad</string>
 
-    <string name="service">Service</string>
+    <!-- new settings wizard combination -->
+    <string name="service">Servicio</string>
     <string name="widget">Widget</string>
-    <string name="service_is_inactive">Service is offline.\nclick to learn how to activate it.</string>
-    <string name="service_is_active">Service is online.\nclick to change settings.</string>
-    <string name="widget_is_not_present">Widget is not present.\nclick to learn how to add it.</string>
-    <string name="widget_is_present">Widget is present.\nclick to change settings.</string>
+    <string name="service_is_inactive">Servicio desactivado.\nclick para activarlo.</string>
+    <string name="service_is_active">Servicio activado.\nclick para cambiar ajustes.</string>
+    <string name="widget_is_not_present">Widget no presente.\nclick para aprender a agregarlo.</string>
+    <string name="widget_is_present">Widget presente.\nclick para cambiar ajustes.</string>
+    <string name="persistent_notifications_summary">Agregar/Eliminar notificaciones persistentes de NiLS widget</string>
+    <string name="app_specific_settings_summary">Cambiar ajustes de notificaciones para apps individuales</string>
+    <string name="widget_help_no_ls_title">NiLS necesita Android 4.2 o superior</string>
+    <string name="widget_help_no_ls_body">Widgets en pantalla de bloqueo son soportados por Android 4.2 o superior.\nSin embargo puedes usar NiLS como un widget de la pantalla de Inicio o usando apps de 3ros como WidgetLocker.
+    </string>
+    <string name="widget_help_title">¿Cómo agregar NiLS a la pant. de bloq.?</string>
+    <string name="widget_help_summary">Necesita Android 4.2 o superior, podría ser diferente en distintos dispositivos
+    </string>
+    <string name="widget_help_step_1_title">1. Bloquea la pantalla</string>
+    <string name="widget_help_step_1_body">Bloquea tu pantalla manualmente usando el botón Power
+    </string>
+    <string name="widget_help_step_2_title">2. Elimina el widget del Reloj</string>
+    <string name="widget_help_step_2_body">Maximiza el reloj por defecto arrastrándolo hacia abajo, después mantenlo presionado y arrástralo hacia la etiqueta \'X Eliminar\'\nSi tienes un Samsung Galaxy S4 Tendrás primero que habilitar \'Múltiples Widgets\' en \'Ajustes del Sistema\' > \'Pant. Bloqueo\'</string>
+    <string name="widget_help_step_3_title">3. Has click en el botón +</string>
+    <string name="widget_help_step_3_body">Después de eliminar el reloj, un botón + va a aparecer, has click en él.</string>
+    <string name="widget_help_step_4_title">4. Agrega NiLS Widget</string>
+    <string name="widget_help_step_4_body">Elige NiLS widget de la lista. Esto va a agregarlo como tu widget de la pant. de bloq.</string>
+
 </resources>

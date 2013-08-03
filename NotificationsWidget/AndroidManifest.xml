@@ -24,16 +24,6 @@
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Holo" >
         </activity>
-        <!--<activity
-            android:name="com.roymam.android.notificationswidget.SettingsActivity"
-            android:label="@string/settingstitle"
-            android:theme="@android:style/Theme.Holo" >
-        </activity>
-        <activity
-            android:name="com.roymam.android.notificationswidget.WizardActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@android:style/Theme.Holo" >
-        </activity>-->
         <activity
             android:name="com.roymam.android.notificationswidget.SettingsActivity"
             android:label="@string/title_activity_main"

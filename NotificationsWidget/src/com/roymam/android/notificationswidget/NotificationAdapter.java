@@ -52,6 +52,7 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.setAction(ADD_NOTIFICATION);
         npsIntent.putExtra("title", nd.title);
         npsIntent.putExtra("text", nd.text);
+        npsIntent.putExtra("time", nd.received);
         npsIntent.putExtra("package", nd.packageName);
         npsIntent.putExtra("id", nd.id);
 
