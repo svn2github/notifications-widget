@@ -58,7 +58,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 // remove old notification with the same id
                 for(NotificationData oldnd : notifications)
                 {
-                    if (oldnd.id == sbn.getId())
+                    if (oldnd.packageName.equals(sbn.getPackageName()) && oldnd.id == sbn.getId())
                     {
                         notifications.remove(oldnd);
                         break;
@@ -99,7 +99,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
             // find the notification and remove it
             for (NotificationData nd : notifications)
             {
-                if (nd.id == sbn.getId() && !nd.pinned)
+                if (nd.packageName.equals(sbn.getPackageName()) && nd.id == sbn.getId() && !nd.pinned)
                 {
                     // remove the notification
                     notifications.remove(nd);
@@ -171,7 +171,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
     }
 
     @Override
-    public void clearNotification(int notificationId)
+    public void clearNotification(String packageName, int notificationId)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean syncback = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
@@ -179,7 +179,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
         // first, find it on list
         for(NotificationData nd : notifications)
         {
-            if (nd.id == notificationId)
+            if (nd.packageName.equals(packageName) && nd.id == notificationId)
             {
                 notifications.remove(nd);
                 if (syncback)

@@ -307,7 +307,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
     }
 
     @Override
-    public void clearNotification(int notificationId)
+    public void clearNotification(String packageName, int notificationId)
     {
         Iterator<NotificationData> iter = notifications.iterator();
 

@@ -139,9 +139,9 @@ public class NotificationsService implements NotificationsProvider
     }
 
     @Override
-    public void clearNotification(int notificationId)
+    public void clearNotification(String packageName, int notificationId)
     {
-        source.clearNotification(notificationId);
+        source.clearNotification(packageName, notificationId);
     }
 
     @Override

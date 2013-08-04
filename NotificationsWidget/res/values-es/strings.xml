@@ -207,9 +207,9 @@
     <string name="expanded">Maximizada</string>
 
     <string-array name="widget_mode_entries">
-        <item>LS Collapsed</item>
-        <item>LS Expanded</item>
-        <item>Home</item>
+        <item>PB Minimizada</item>
+        <item>PB Expandida</item>
+        <item>Inicio</item>
     </string-array>
 
     <string name="widget_mode_collapsed_desc">En pant. bloq. cuando minimizada (4.2+)</string>

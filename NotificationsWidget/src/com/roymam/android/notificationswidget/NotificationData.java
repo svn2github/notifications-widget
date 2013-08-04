@@ -60,7 +60,7 @@ public class NotificationData
             NotificationsService.getSharedInstance(context) != null)
         {
             // request service to clear itself
-            NotificationsService.getSharedInstance(context).clearNotification(id);
+            NotificationsService.getSharedInstance(context).clearNotification(packageName, id);
         }
     }
 }

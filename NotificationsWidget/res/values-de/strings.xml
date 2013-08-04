@@ -43,18 +43,18 @@
     <string name="max_lines">Höchstanzahl Textzeilen</string>
     <string name="show_full_notification">Zeige vollständigen Benachrichtigungsinhalt</string>
     <string name="show_full_notification_summary">Zeigt den vollständigen Benachrichtigungsinhalt, wie er in der Benachrichtigungsleiste auftritt</string>
-    <string name="sync_notifications">Sync with notifications bar</string>
-    <string name="clear_app_notifications">Clear when app is opened</string>
-    <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched.</string>
+    <string name="sync_notifications">Synchronisiere mit Benachrichtigungsleiste</string>
+    <string name="clear_app_notifications">Lösche beim Öffnen der App</string>
+    <string name="clear_app_notifications_summary">Lösche App-Benachrichtigungen, wenn die App geöffnet wird</string>
     <string name="disable_auto_switch_summary">Deaktiviert den automatischen Wechsel zwischen den \"LS Minimiert\"- und \"LS Erweitert\"-Voreinstellungen, die auf dem Android 4.2 Sperrbildschirm angezeigt werden und verwendet nur \"LS Erweitert\"</string>
     <string name="disable_auto_switch">Einheitliche Darstellung</string>
-    <string name="force_clear_on_open">Force clear notifications when opened</string>
-    <string name="force_clear_on_open_summary">Forcibly clear notification when it opened even if the app hasn\'t clear it by itself</string>
+    <string name="force_clear_on_open">Erzwinge Löschen beim Öffnen der App</string>
+    <string name="force_clear_on_open_summary">Lösche App-Benachrichtigungen, wenn die App geöffnet wird, selbst wenn die App sie nicht selbst löscht</string>
 
     <string-array name="sync_notifications_entries">
-        <item>Disabled</item>
-        <item>One-way sync</item>
-        <item>Two-way sync (Android 4.3+)</item>
+        <item>DeaktiviertDisabled</item>
+        <item>Einweg-Synchronisation</item>
+        <item>Zweiwege-Synchronisation(Android 4.3+)</item>
     </string-array>
 
     <string-array name="max_lines_entries">
@@ -67,7 +67,7 @@
         <item>Unbegrenzt</item>
     </string-array>
 
-    <string name="service_inactive_text">Service is inactive. Tap on the alert icon to go to Android Settings, then enable \"NiLS Service\" from the list.</string>
+    <string name="service_inactive_text">Dienst ist inaktiv. Tippe auf das Warnsymbol um den \"NiLS Dienst\" in der Liste zu aktivieren.</string>
 
     <!-- Wizard Strings -->
     <string name="menu_settings">Einstellungen</string>
@@ -147,8 +147,8 @@
         <item>Zeige letztes Event</item>
     </string-array>
 
-    <string name="ignore_empty_notifications">Ignore empty notifications</string>
-    <string name="ignore_empty_notifications_summary">Ignore notifications without any content</string>
+    <string name="ignore_empty_notifications">Ignoriere leere Benachrichtigungen</string>
+    <string name="ignore_empty_notifications_summary">Ignoriere Benachrichtigungen ohne Inhalt</string>
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Lösche die appspezifischen Einstellungen für diese App</string>
     <string name="app_specific_help">Wie fügt man appspezifischen Einstellungen hinzu?</string>
@@ -245,24 +245,24 @@
     <string name="open_accessibility_settings">Öffne Bedienungshilfe</string>
 
     <!-- new settings wizard combination -->
-    <string name="service">Service</string>
+    <string name="service">Dienst</string>
     <string name="widget">Widget</string>
-    <string name="service_is_inactive">Service is offline.\nclick to activate it.</string>
-    <string name="service_is_active">Service is online.\nclick to change settings.</string>
-    <string name="widget_is_not_present">Widget is not present.\nclick to learn how to add it.</string>
-    <string name="widget_is_present">Widget is present.\nclick to change settings.</string>
-    <string name="persistent_notifications_summary">Add/remove persistent notifications from NiLS widget</string>
-    <string name="app_specific_settings_summary">Change notifications settings for individual apps</string>
-    <string name="widget_help_no_ls_title">NiLS Requires Android 4.2 and above</string>
-    <string name="widget_help_no_ls_body">Lock screen widgets are supported on Android 4.2 and above.\nHowever you can still use NiLS as an Home Screen Widget or use 3rd party lock screen app such as WidgetLocker.</string>
-    <string name="widget_help_title">How to add NiLS to the Lock Screen?</string>
-    <string name="widget_help_summary">Requires Android 4.2 and above, might be different on variant devices</string>
-    <string name="widget_help_step_1_title">1. Lock your screen</string>
-    <string name="widget_help_step_1_body">Lock your screen manually using the device power button</string>
-    <string name="widget_help_step_2_title">2. Remove the clock widget</string>
-    <string name="widget_help_step_2_body">Expand the default clock widget by dragging it down, then long press it and drag it up to the \'X Remove\' label\nIf you have Samsung Galaxy S4 You\'ll need first to enable \'Multiple Widgets\' on \'Device Settings\' > \'Lock Screen\'</string>
-    <string name="widget_help_step_3_title">3. Click on the + Button</string>
-    <string name="widget_help_step_3_body">After removing the clock, a + button will appear, click on it.</string>
-    <string name="widget_help_step_4_title">4. Add NiLS Widget</string>
-    <string name="widget_help_step_4_body">Choose NiLS widget from the list. this will add it as your lock screen widget.</string>
+    <string name="service_is_inactive">Dienst ist inaktiv\nKlicke zum aktivieren</string>
+    <string name="service_is_active">Dienst ist aktiv\nKlicke zum Ändern der Einstellungen</string>
+    <string name="widget_is_not_present">Widget nicht platziert\nKlicke um das zu ändern</string>
+    <string name="widget_is_present">Widget platziert\nKlicke um die Widget-Darstellung zu ändern</string>
+    <string name="persistent_notifications_summary">Dauerhafte Benachrichtigungen dem NiLS-Widget hinzufügen/entfernen</string>
+    <string name="app_specific_settings_summary">Ändere Benachrichtigungseinstellungen einzelner Apps</string>
+    <string name="widget_help_no_ls_title">NiLS erfordert Android 4.2+</string>
+    <string name="widget_help_no_ls_body">Lockscreen-Widgets gibt es erst ab Android 4.2\nSie können NiLS aber als Homescreen-Widget verwenden oder einen Dritthersteller-Sperrbildschirm wie WidgetLocker verwenden</string>
+    <string name="widget_help_title">Wie fügt man NiLS dem Sperrbildschirm hinzu?</string>
+    <string name="widget_help_summary">Benötigt Android 4.2+, kann bei bestimmten Geräten anders sein</string>
+    <string name="widget_help_step_1_title">1. Sperre dein Handy</string>
+    <string name="widget_help_step_1_body">Sperre dein Handy mit Hilfe der Ein/Aus-Taste(bei bestimmten Konfigurationen kann ein Warten erforderlich sein)</string>
+    <string name="widget_help_step_2_title">2. Entferne das Standard-Widget</string>
+    <string name="widget_help_step_2_body">Erweitere das Standard-Widget durch herunterziehen, klicke es dann lange und schiebe es auf \"X Remove\"\nWenn du das Samsung Galaxy S4 hast, muss zunächst \"Mehrere Widgets\" in \"Geräte-Einstellungen > Sperrbildschirm\" aktiviert werden</string>
+    <string name="widget_help_step_3_title">3. Klicke auf die \"+\"-Taste</string>
+    <string name="widget_help_step_3_body">Nach dem Entfernen der Uhr erscheint eine \"+\"-Taste, klicke diese</string>
+    <string name="widget_help_step_4_title">4. Füge das NiLS-Widget hinzu</string>
+    <string name="widget_help_step_4_body">Wähle das NiLS-Widget aus der Liste, dass fügt das Lockscreen-Widget hinzu</string>
 </resources>

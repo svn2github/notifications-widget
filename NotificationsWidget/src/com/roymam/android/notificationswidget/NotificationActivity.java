@@ -21,7 +21,7 @@ public class NotificationActivity extends Activity
     {
         NotificationData nd = ns.getNotifications().get(pos);
         nd.launch(getApplicationContext());
-        ns.clearNotification(nd.id);
+        ns.clearNotification(nd.packageName, nd.id);
   	}
     finish();
   }
