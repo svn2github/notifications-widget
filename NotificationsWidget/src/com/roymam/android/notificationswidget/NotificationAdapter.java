@@ -84,6 +84,7 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
         npsIntent.setAction(REMOVE_NOTIFICATION);
         npsIntent.putExtra("id", nd.id);
+        npsIntent.putExtra("package", nd.packageName);
         context.startService(npsIntent);
 
         // notify FloatingNotifications for clearing this notification
