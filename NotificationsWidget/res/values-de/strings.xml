@@ -88,7 +88,7 @@
     <string name="tutorial_step_3_title">Anpassen</string>
 
     <!--  About Dialog -->
-    <string name="about_title">NiLS</string>
+        <string name="about_title">NiLS</string>
     <string name="about_subtitle">Notifications Widget wurde entwickelt von Roymam\nDeutsche Übersetzung von robvisual und Wikiwix</string>
     <string name="about_content">Sie finden das Projekt hier:\nhttp://code.google.com/p/notifications-widget/\nFühlen Sie sich frei, sich am Projekt zu beteiligen und Fehler zu melden\n\nWenn Sie uns gerne finanziell unterstützen möchten, dann verweisen wir auf ein Spiel aus unserer Entwicklung:</string>
     <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
