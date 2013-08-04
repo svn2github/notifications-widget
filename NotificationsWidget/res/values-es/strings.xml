@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- General Strings -->
     <string name="title">NiLS</string>
     <string name="settingstitle">NiLS Ajustes</string>
@@ -66,13 +65,6 @@
         <item>5</item>
         <item>6</item>
         <item>Ilimitadas</item>
-    </string-array>
-
-    <string-array name="monitor_apps_interval_entries">
-        <item>2 segundos</item>
-        <item>5 segundos</item>
-        <item>10 segundos</item>
-        <item>30 segundos</item>
     </string-array>
 
     <string name="service_inactive_text">El Servicio está inactivo. Por favor habilita el servicio \"Servicio NiLS\" en opciones de accesibilidad, toca el icono de alerta para abrir los Ajustes de Accesibilidad</string>
@@ -262,19 +254,15 @@
     <string name="persistent_notifications_summary">Agregar/Eliminar notificaciones persistentes de NiLS widget</string>
     <string name="app_specific_settings_summary">Cambiar ajustes de notificaciones para apps individuales</string>
     <string name="widget_help_no_ls_title">NiLS necesita Android 4.2 o superior</string>
-    <string name="widget_help_no_ls_body">Widgets en pantalla de bloqueo son soportados por Android 4.2 o superior.\nSin embargo puedes usar NiLS como un widget de la pantalla de Inicio o usando apps de 3ros como WidgetLocker.
-    </string>
+    <string name="widget_help_no_ls_body">Widgets en pantalla de bloqueo son soportados por Android 4.2 o superior.\nSin embargo puedes usar NiLS como un widget de la pantalla de Inicio o usando apps de 3ros como WidgetLocker.</string>
     <string name="widget_help_title">¿Cómo agregar NiLS a la pant. de bloq.?</string>
-    <string name="widget_help_summary">Necesita Android 4.2 o superior, podría ser diferente en distintos dispositivos
-    </string>
+    <string name="widget_help_summary">Necesita Android 4.2 o superior, podría ser diferente en distintos dispositivos</string>
     <string name="widget_help_step_1_title">1. Bloquea la pantalla</string>
-    <string name="widget_help_step_1_body">Bloquea tu pantalla manualmente usando el botón Power
-    </string>
+    <string name="widget_help_step_1_body">Bloquea tu pantalla manualmente usando el botón Power</string>
     <string name="widget_help_step_2_title">2. Elimina el widget del Reloj</string>
     <string name="widget_help_step_2_body">Maximiza el reloj por defecto arrastrándolo hacia abajo, después mantenlo presionado y arrástralo hacia la etiqueta \'X Eliminar\'\nSi tienes un Samsung Galaxy S4 Tendrás primero que habilitar \'Múltiples Widgets\' en \'Ajustes del Sistema\' > \'Pant. Bloqueo\'</string>
     <string name="widget_help_step_3_title">3. Has click en el botón +</string>
     <string name="widget_help_step_3_body">Después de eliminar el reloj, un botón + va a aparecer, has click en él.</string>
     <string name="widget_help_step_4_title">4. Agrega NiLS Widget</string>
     <string name="widget_help_step_4_body">Elige NiLS widget de la lista. Esto va a agregarlo como tu widget de la pant. de bloq.</string>
-
 </resources>
