@@ -15,6 +15,7 @@ import java.util.List;
 public class EventsHandler extends BroadcastReceiver
 {
     private final String WIDGET_LOCKER_UNLOCKED = "com.teslacoilsw.widgetlocker.intent.UNLOCKED";
+    private final String WIDGET_LOCKER_LOCKED = "com.teslacoilsw.widgetlocker.intent.OCKED";
     public final static String FN_DISMISS_NOTIFICATIONS = "robj.floating.notifications.dismissed";
     public final static String DISMISS_NOTIFICATIONS = "com.roymam.android.nils.remove_notification";
     public final static String OPEN_NOTIFICATION = "com.roymam.android.nils.open_notification";
@@ -26,20 +27,26 @@ public class EventsHandler extends BroadcastReceiver
         if (intent != null)
         {
            NotificationsProvider ns = NotificationsService.getSharedInstance(context);
+           SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
            String action = intent.getAction();
-           if (action.equals(Intent.ACTION_USER_PRESENT) ||
+           if (action.equals(Intent.ACTION_USER_PRESENT) && !sharedPref.getBoolean("widgetlocker", false) ||
                action.equals(WIDGET_LOCKER_UNLOCKED))
            {
                 // clear all notifications if needed
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
                 if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false))
                 {
-                    if (NotificationsService.getSharedInstance(context) != null)
-                        NotificationsService.getSharedInstance(context).clearAllNotifications();
+                    if (ns != null)
+                        ns.clearAllNotifications();
                 }
+                   if (action.equals(WIDGET_LOCKER_UNLOCKED))
+                       sharedPref.edit().putBoolean("widgetlocker", false).commit();
            }
-            if (action.equals(DISMISS_NOTIFICATIONS) || action.equals(FN_DISMISS_NOTIFICATIONS))
+           else if (action.equals(WIDGET_LOCKER_LOCKED))
+           {
+               sharedPref.edit().putBoolean("widgetlocker", true).commit();
+           }
+           else if (action.equals(DISMISS_NOTIFICATIONS) || action.equals(FN_DISMISS_NOTIFICATIONS))
             {
                 String packageName = intent.getStringExtra("package");
                 int id = intent.getIntExtra("id",-1);

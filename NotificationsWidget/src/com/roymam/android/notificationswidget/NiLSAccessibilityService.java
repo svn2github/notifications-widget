@@ -74,7 +74,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent)
     {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         switch(accessibilityEvent.getEventType())
         {
@@ -208,16 +208,16 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
                 if (accessibilityEvent.getPackageName().equals("com.android.systemui"))
                 {
-                    if (accessibilityEvent.getClassName().equals(android.widget.ImageView.class.getName()) &&
-                            accessibilityEvent.getContentDescription().equals(clearButtonName))
+                    // clear notifications button clicked
+                    if (!prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
                     {
-                        // clear notifications button clicked
-                        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+                        if (accessibilityEvent.getClassName().equals(android.widget.ImageView.class.getName()) &&
+                                accessibilityEvent.getContentDescription() != null &&
+                                accessibilityEvent.getContentDescription().equals(clearButtonName))
+                            {
 
-                        if (!prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
-                        {
-                            clearAllNotifications();
-                        }
+                                clearAllNotifications();
+                            }
                     }
                 }
                 break;
