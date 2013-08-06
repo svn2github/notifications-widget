@@ -40,7 +40,7 @@ public class EventsHandler extends BroadcastReceiver
                         ns.clearAllNotifications();
                 }
                    if (action.equals(WIDGET_LOCKER_UNLOCKED))
-                       sharedPref.edit().putBoolean("widgetlocker", false).commit();
+                       sharedPref.edit().putBoolean("widgetlocker", true).commit();
            }
            else if (action.equals(WIDGET_LOCKER_LOCKED))
            {
