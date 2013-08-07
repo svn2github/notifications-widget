@@ -206,12 +206,16 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                 }
                 break;
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
-                if (accessibilityEvent.getPackageName().equals("com.android.systemui"))
+                if (    accessibilityEvent != null &&
+                        accessibilityEvent.getPackageName() != null &&
+                        accessibilityEvent.getPackageName().equals("com.android.systemui"))
                 {
                     // clear notifications button clicked
-                    if (!prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
+                    if (prefs != null &&
+                        !prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
                     {
-                        if (accessibilityEvent.getClassName().equals(android.widget.ImageView.class.getName()) &&
+                        if (accessibilityEvent.getClassName() != null &&
+                                accessibilityEvent.getClassName().equals(android.widget.ImageView.class.getName()) &&
                                 accessibilityEvent.getContentDescription() != null &&
                                 accessibilityEvent.getContentDescription().equals(clearButtonName))
                             {

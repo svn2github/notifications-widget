@@ -69,11 +69,12 @@ public class EventsHandler extends BroadcastReceiver
             }
             else if (intent.getAction().equals(OPEN_NOTIFICATION))
             {
+                String packageName = intent.getStringExtra("package");
                 int id = intent.getIntExtra("id",-1);
-                if (id > -1 && ns != null)
+                if (id > -1 && ns != null && packageName != null)
                 {
                     Log.d("NiLS", "open notification #" + id);
-                    launchNotificationById(context, ns.getNotifications(), id);
+                    launchNotificationById(context, ns.getNotifications(), packageName, id);
                 }
             }
             else if (intent.getAction().equals(NotificationsProvider.ACTION_SERVICE_READY))
@@ -123,13 +124,13 @@ public class EventsHandler extends BroadcastReceiver
         context.startService(npsIntent);
     }
 
-    private void launchNotificationById(Context context, List<NotificationData> notifications, int id)
+    private void launchNotificationById(Context context, List<NotificationData> notifications, String packageName, int id)
     {
         for(int i=0; i< notifications.size(); i++)
         {
             NotificationData nd = notifications.get(i);
 
-            if (nd.id == id)
+            if (nd.id == id && nd.packageName.equals(packageName))
             {
                 nd.launch(context);
             }
