@@ -102,6 +102,8 @@
                 <action android:name="com.roymam.android.nils.remove_notification"/>
                 <action android:name="com.roymam.android.nils.open_notification"/>
                 <action android:name="com.roymam.android.nils.resend_all_notifications"/>
+                <action android:name="com.roymam.android.nils.ping"/>
+
 
             </intent-filter>
         </receiver>

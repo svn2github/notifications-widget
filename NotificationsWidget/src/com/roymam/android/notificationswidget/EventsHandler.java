@@ -20,7 +20,9 @@ public class EventsHandler extends BroadcastReceiver
     public final static String DISMISS_NOTIFICATIONS = "com.roymam.android.nils.remove_notification";
     public final static String OPEN_NOTIFICATION = "com.roymam.android.nils.open_notification";
     public final static String RESEND_ALL_NOTIFICATIONS = "com.roymam.android.nils.resend_all_notifications";
-    public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
+    public final static String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
+    public final static String PING = "com.roymam.android.nils.ping";
+    public final static String ALIVE = "com.roymam.android.nils.alive";
 
     public void onReceive(Context context, Intent intent)
     {
@@ -93,6 +95,11 @@ public class EventsHandler extends BroadcastReceiver
                 if (ns != null && ns.getNotificationEventListener() != null)
                     ns.getNotificationEventListener().onServiceStopped();
             }
+           else if (intent.getAction().equals(PING))
+           {
+               if (NotificationsService.getSharedInstance(context) != null)
+                    context.sendBroadcast(new Intent(ALIVE));
+           }
         }
     }
 
