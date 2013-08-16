@@ -109,6 +109,7 @@ public class EventsHandler extends BroadcastReceiver
         Log.d("Nils", "notification add #" + nd.id);
 
         // send notification to nilsplus
+        // TODO: check if a nilsplus service is available
         Intent npsIntent = new Intent();
         npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
         npsIntent.setAction(ADD_NOTIFICATION);
@@ -117,6 +118,7 @@ public class EventsHandler extends BroadcastReceiver
         npsIntent.putExtra("package", nd.packageName);
         npsIntent.putExtra("time", nd.received);
         npsIntent.putExtra("id", nd.id);
+        npsIntent.putExtra("action", nd.action);
 
         // convert large icon to byte stream
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
