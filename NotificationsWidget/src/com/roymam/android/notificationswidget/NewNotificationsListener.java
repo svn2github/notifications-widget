@@ -55,12 +55,27 @@ public class NewNotificationsListener extends NotificationListenerService implem
             NotificationData nd = parser.parseNotification(sbn.getNotification(), sbn.getPackageName(), sbn.getId(), sbn.getTag());
             if (nd != null)
             {
-                // remove old notification with the same id
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                boolean keepOnlyLastNotification = prefs.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
+                String syncmode = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
+
+                boolean sync = !syncmode.equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED);
+                boolean updated = false;
+
+                // remove old notification
                 for(NotificationData oldnd : notifications)
                 {
-                    if (oldnd.packageName.equals(sbn.getPackageName()) && oldnd.id == sbn.getId())
+                    // remove only if one of the following scenarios:
+                    // 1. sync is enabled and its the same package and id
+                    // 2. notification is similar to the old one
+                    // 3. user choose to keep only last notification
+                    if (oldnd.packageName.equals(sbn.getPackageName())  &&
+                            ((oldnd.id == sbn.getId() && sync) ||
+                              oldnd.isSimilar(nd) ||
+                              keepOnlyLastNotification))
                     {
                         notifications.remove(oldnd);
+                        updated = true;
                         break;
                     }
                 }
@@ -71,7 +86,10 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 // notify that the notification was added
                 if (listener != null)
                 {
-                    listener.onNotificationAdded(nd);
+                    if (updated)
+                        listener.onNotificationUpdated(nd);
+                    else
+                        listener.onNotificationAdded(nd);
                     listener.onNotificationsListChanged();
                 }
             }
@@ -104,7 +122,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                     // remove the notification
                     notifications.remove(nd);
 
-                    // notify that the notification was added
+                    // notify that the notification was cleared
                     if (listener != null)
                     {
                         listener.onNotificationCleared(nd);
@@ -163,7 +181,14 @@ public class NewNotificationsListener extends NotificationListenerService implem
 
                 // notify android to clear it too
                 if (syncback)
+                try
+                {
                     cancelNotification(nd.packageName, nd.tag, nd.id);
+                }
+                catch (Exception exp)
+                {
+                    exp.printStackTrace();
+                }
             }
         }
 
@@ -183,7 +208,14 @@ public class NewNotificationsListener extends NotificationListenerService implem
             {
                 notifications.remove(nd);
                 if (syncback)
+                try
+                {
                     cancelNotification(nd.packageName, nd.tag, nd.id);
+                }
+                catch (Exception exp)
+                {
+                    exp.printStackTrace();
+                }
                 if (listener != null) listener.onNotificationCleared(nd);
                 changed = true;
                 break;
@@ -220,8 +252,14 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 {
                     i.remove();
                     if (syncback)
+                    try
+                    {
                         cancelNotification(packageName, nd.tag, nd.id);
-
+                    }
+                    catch (Exception exp)
+                    {
+                        exp.printStackTrace();
+                    }
                     changed = true;
                     if (listener != null) listener.onNotificationCleared(nd);
                 }

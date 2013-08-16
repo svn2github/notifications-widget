@@ -12,6 +12,29 @@ public class NotificationData
     public int id;
     public String tag;
 
+    public boolean isSimilar(NotificationData nd)
+    {
+        CharSequence title1 = nd.title;
+        CharSequence title2 = this.title;
+        CharSequence text1 = nd.text;
+        CharSequence text2 = this.text;
+        CharSequence content1 = nd.content;
+        CharSequence content2 = this.content;
+        boolean titlesdup = (title1 != null && title2 != null && title1.toString().equals(title2.toString()) || title1 == null && title2 == null);
+        boolean textdup = (text1 != null && text2 != null && text1.toString().startsWith(text2.toString()) || text1 == null && text2 == null);
+        boolean contentsdup = (content1 != null && content2 != null && content1.toString().startsWith(content2.toString())  || content1 == null && content2 == null);
+        boolean allDup = titlesdup && textdup && contentsdup;
+
+        if (nd.packageName.equals(this.packageName) && allDup)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static class Action
 	{
 		public Action() {};

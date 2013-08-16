@@ -27,6 +27,7 @@ public class NotificationAdapter implements NotificationEventListener
 
     // extensions API
     public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
+    public static final String UPDATE_NOTIFICATION = "com.roymam.android.nils.update_notification";
     public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
 
     public NotificationAdapter(Context context)
@@ -42,6 +43,14 @@ public class NotificationAdapter implements NotificationEventListener
         notifyNotificationAdd(nd);
     }
 
+    @Override
+    public void onNotificationUpdated(NotificationData nd)
+    {
+        // turn screen on (if needed)
+        turnScreenOn();
+        notifyNotificationUpdated(nd);
+    }
+
     private void notifyNotificationAdd(NotificationData nd)
     {
         Log.d("Nils", "notification add #" + nd.id);
@@ -50,6 +59,41 @@ public class NotificationAdapter implements NotificationEventListener
         Intent npsIntent = new Intent();
         npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
         npsIntent.setAction(ADD_NOTIFICATION);
+        npsIntent.putExtra("title", nd.title);
+        npsIntent.putExtra("text", nd.text);
+        npsIntent.putExtra("time", nd.received);
+        npsIntent.putExtra("package", nd.packageName);
+        npsIntent.putExtra("id", nd.id);
+        npsIntent.putExtra("action", nd.action);
+
+        ByteArrayOutputStream stream;
+        if (nd.icon != null)
+        {
+            // convert large icon to byte stream
+            stream = new ByteArrayOutputStream();
+            nd.icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            npsIntent.putExtra("icon", stream.toByteArray());
+        }
+
+        if (nd.appicon != null)
+        {
+            // convert large icon to byte stream
+            stream = new ByteArrayOutputStream();
+            nd.appicon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            npsIntent.putExtra("appicon", stream.toByteArray());
+        }
+
+        context.startService(npsIntent);
+    }
+
+    private void notifyNotificationUpdated(NotificationData nd)
+    {
+        Log.d("Nils", "notification update #" + nd.id);
+
+        // send notification to nilsplus
+        Intent npsIntent = new Intent();
+        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+        npsIntent.setAction(UPDATE_NOTIFICATION);
         npsIntent.putExtra("title", nd.title);
         npsIntent.putExtra("text", nd.text);
         npsIntent.putExtra("time", nd.received);
