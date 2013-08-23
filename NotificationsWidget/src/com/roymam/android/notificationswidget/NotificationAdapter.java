@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -166,6 +167,18 @@ public class NotificationAdapter implements NotificationEventListener
     @Override
     public void onServiceStarted()
     {
+        // first run preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean firstRun = prefs.getBoolean("com.roymam.android.notificationswidget.firstrun", true);
+        prefs.edit().putBoolean("com.roymam.android.notificationswidget.firstrun", false).commit();
+        if (firstRun)
+        {
+            if (Build.MODEL.equals("Nexus 4"))
+            {
+                prefs.edit().putBoolean(SettingsActivity.DISABLE_PROXIMITY, true).commit();
+            }
+        }
+
         registerProximitySensor();
         updateWidget(true);
     }
@@ -229,6 +242,7 @@ public class NotificationAdapter implements NotificationEventListener
     // Proximity Sensor Monitoring
     SensorEventListener sensorListener = null;
 
+    @Override
     public void registerProximitySensor()
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -270,6 +284,7 @@ public class NotificationAdapter implements NotificationEventListener
         }
     }
 
+    @Override
     public void stopProximityMontior()
     {
         SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);

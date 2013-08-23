@@ -409,20 +409,19 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@Override
 	public void onSharedPreferenceChanged(final SharedPreferences prefs, String key) 
 	{
-        //TODO: stop and start service after changing proximity settings
-		/*NotificationsProvider ns = NotificationsService.getSharedInstance(this);
+        NotificationsProvider ns = NotificationsService.getSharedInstance(this);
 		if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null)
         {
 			if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
 				 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
 			{
-				ns.registerProximitySensor();
+                ns.getNotificationEventListener().registerProximitySensor();
 			}
 			else 
 			{
-                ns.stopProximityMontior();
+                ns.getNotificationEventListener().stopProximityMontior();
 			}
-        }*/
+        }
 	}
 	
 	// openSettings is launched from the custom checkbox in persistent notifications settings 
