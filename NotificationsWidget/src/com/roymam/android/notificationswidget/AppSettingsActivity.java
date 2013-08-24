@@ -24,6 +24,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String APP_PRIORITY = "apppriority";
+    public static final String ALWAYS_USE_APP_ICON = "use_app_icon";
 	
 	private String packageName;
 	
@@ -80,6 +81,15 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
         root.addPreference(useExpandedTextPref);
 
+        // Always use app icon preference
+        CheckBoxPreference useAppIconPref = new CheckBoxPreference(this);
+        useAppIconPref.setKey(packageName+"."+ALWAYS_USE_APP_ICON);
+        useAppIconPref.setTitle(R.string.always_use_app_icon);
+        useAppIconPref.setDefaultValue(false);
+        useAppIconPref.setSummary(R.string.always_use_app_icon_summary);
+        root.addPreference(useAppIconPref);
+
+        // multiple events handling prefrence
         ListPreference multipleEvents = new ListPreference(this);
         multipleEvents.setKey(packageName + "." + MULTIPLE_EVENTS_HANDLING);
         multipleEvents.setTitle(R.string.multiple_events_handling);
@@ -112,6 +122,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 				            .remove(packageName+"."+KEEP_ONLY_LAST)
                             .remove(packageName+"."+MULTIPLE_EVENTS_HANDLING)
                             .remove(packageName+"."+USE_EXPANDED_TEXT)
+                            .remove(packageName+"."+ALWAYS_USE_APP_ICON)
                             .remove(packageName+"."+APP_PRIORITY)
                             .remove(packageName+"."+IGNORE_EMPTY_NOTIFICATIONS)
                             .remove(packageName+"."+MULTIPLE_EVENTS_HANDLING)

@@ -1,15 +1,12 @@
 package com.roymam.android.notificationswidget;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class EventsHandler extends BroadcastReceiver
@@ -66,7 +63,7 @@ public class EventsHandler extends BroadcastReceiver
                 for(int i = ns.getNotifications().size()-1; i>=0; i--)
                 {
                     NotificationData nd = ns.getNotifications().get(i);
-                    notifyNotificationAdd(context, nd);
+                    ns.getNotificationEventListener().onNotificationAdded(nd);
                 }
             }
             else if (intent.getAction().equals(OPEN_NOTIFICATION))
@@ -101,36 +98,6 @@ public class EventsHandler extends BroadcastReceiver
                     context.sendBroadcast(new Intent(ALIVE));
            }
         }
-    }
-
-    // TODO: move those functions to NotificationsService
-    private void notifyNotificationAdd(Context context, NotificationData nd)
-    {
-        Log.d("Nils", "notification add #" + nd.id);
-
-        // send notification to nilsplus
-        // TODO: check if a nilsplus service is available
-        Intent npsIntent = new Intent();
-        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction(ADD_NOTIFICATION);
-        npsIntent.putExtra("title", nd.title);
-        npsIntent.putExtra("text", nd.text);
-        npsIntent.putExtra("package", nd.packageName);
-        npsIntent.putExtra("time", nd.received);
-        npsIntent.putExtra("id", nd.id);
-        npsIntent.putExtra("action", nd.action);
-
-        // convert large icon to byte stream
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        nd.icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        npsIntent.putExtra("icon", stream.toByteArray());
-
-        // convert large icon to byte stream
-        stream = new ByteArrayOutputStream();
-        nd.appicon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        npsIntent.putExtra("appicon", stream.toByteArray());
-
-        context.startService(npsIntent);
     }
 
     private void launchNotificationById(Context context, List<NotificationData> notifications, String packageName, int id)

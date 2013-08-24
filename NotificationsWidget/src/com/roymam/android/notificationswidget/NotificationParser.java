@@ -96,7 +96,7 @@ public class NotificationParser
                         nd.appicon = nd.icon;
                     }
                 }
-                if (n.largeIcon != null)
+                if (n.largeIcon != null && !sharedPref.getBoolean(packageName+"."+AppSettingsActivity.ALWAYS_USE_APP_ICON, false))
                 {
                     nd.icon = n.largeIcon;
                 }

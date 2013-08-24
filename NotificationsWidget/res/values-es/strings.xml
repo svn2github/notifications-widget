@@ -123,6 +123,8 @@
     <string name="ignore_notifications_summary">Ignorar todas las notificaciones de esta app</string>
     <string name="show_only_last_notification">Mantener solo las últimas notificaciones</string>
     <string name="show_only_last_notification_summary">Mantener solamente la última notificación que fue recibida de esta app</string>
+    <string name="always_use_app_icon">Always use app icon</string>
+    <string name="always_use_app_icon_summary">Use app icon instead of notification icon</string>
     <string name="extract_expanded_text">Usar notificación expandida</string>
     <string name="extract_expanded_text_summary">Solo Android 4.1+: Usar notificación expandida si está disp.</string>
     <string name="show_only_last_event">Mostrar solo el último evento</string>
