@@ -79,8 +79,8 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.putExtra("package", nd.packageName);
         npsIntent.putExtra("id", nd.id);
         npsIntent.putExtra("action", nd.action);
-        npsIntent.putExtra("icon", getBitmapStream(nd.icon));
-        npsIntent.putExtra("appicon", getBitmapStream(nd.appicon));
+        npsIntent.putExtra("icon", nd.icon);
+        npsIntent.putExtra("appicon", nd.appicon);
 
         for (int i=0; i<nd.actions.length; i++)
         {
@@ -107,23 +107,16 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.putExtra("package", nd.packageName);
         npsIntent.putExtra("id", nd.id);
         npsIntent.putExtra("action", nd.action);
+        npsIntent.putExtra("icon", nd.icon);
+        npsIntent.putExtra("appicon", nd.appicon);
 
-        ByteArrayOutputStream stream;
-        if (nd.icon != null)
+        for (int i=0; i<nd.actions.length; i++)
         {
-            // convert large icon to byte stream
-            stream = new ByteArrayOutputStream();
-            nd.icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            npsIntent.putExtra("icon", stream.toByteArray());
+            npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
+            npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
+            npsIntent.putExtra("action"+i+"+label", nd.actions[i].title);
         }
-
-        if (nd.appicon != null)
-        {
-            // convert large icon to byte stream
-            stream = new ByteArrayOutputStream();
-            nd.appicon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            npsIntent.putExtra("appicon", stream.toByteArray());
-        }
+        npsIntent.putExtra("actions",nd.actions.length);
 
         context.startService(npsIntent);
     }
