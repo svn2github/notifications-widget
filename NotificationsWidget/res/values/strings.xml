@@ -74,6 +74,9 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
         <item>Unlimited</item>
     </string-array>
     <string-array name="max_lines_values" translatable="false">
@@ -83,6 +86,9 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
         <item>999</item>
     </string-array>
 

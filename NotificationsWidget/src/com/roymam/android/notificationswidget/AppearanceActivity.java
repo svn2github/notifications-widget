@@ -751,10 +751,10 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			
 			// setup number of lines
 			int maxLines = prefs.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
-			if (maxLines <= 6) 
+			if (maxLines <= 9)
 				maxLinesSpinner.setSelection(maxLines-1);
 			else
-				maxLinesSpinner.setSelection(6);
+				maxLinesSpinner.setSelection(9);
 			
 			((CheckBox)getView().findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false));
 		}
@@ -797,7 +797,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			boolean expanded = AppearanceActivity.useExpandedText.isChecked();
 			boolean iconClickable = AppearanceActivity.iconClickable.isChecked();
 			int maxLines = AppearanceActivity.maxLinesSpinner.getSelectedItemPosition()+1;
-			if (maxLines > 6) maxLines = 999;
+			if (maxLines > 9) maxLines = 999;
 		
 			List<View> notificationPreviews = Arrays.asList(getView().findViewById(R.id.compactNotification),
 					 getView().findViewById(R.id.normalNotification),
@@ -907,7 +907,21 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			}
 		}
 
-		@Override
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState)
+        {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+            // setup number of lines
+            int maxLines = prefs.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
+            if (maxLines <= 9)
+                maxLinesSpinner.setSelection(maxLines-1);
+            else
+                maxLinesSpinner.setSelection(9);
+
+            super.onViewCreated(view, savedInstanceState);
+        }
+
+        @Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) 
 		{
@@ -948,6 +962,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			// seekbar
 			notificationBgClockOpacitySlider = (SeekBar) notificationSettingsView.findViewById(R.id.bgTransparencySeekBar);
 			notificationBgClockOpacitySlider.setOnSeekBarChangeListener(this);
+
 			// maxlines spinner
 			maxLinesSpinner = (Spinner) notificationSettingsView.findViewById(R.id.maxLinesSpinner);
 			maxLinesSpinner.setOnItemSelectedListener(this);
@@ -987,7 +1002,7 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		{
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 			
-			if (pos <6) 
+			if (pos <9)
 				prefs.edit().putInt(widgetMode + "." + SettingsActivity.MAX_LINES, pos+1).commit();
 			else
 				prefs.edit().putInt(widgetMode + "." + SettingsActivity.MAX_LINES, 999).commit();
