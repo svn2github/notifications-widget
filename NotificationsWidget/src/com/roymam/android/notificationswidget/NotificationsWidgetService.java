@@ -170,7 +170,15 @@ public class NotificationsWidgetService extends Service
 		// set up notifications list 
 		setupNotificationsList(widget, widgetId);
 
-		appWidgetManager.updateAppWidget(widgetId, widget);
+		try
+        {
+            appWidgetManager.updateAppWidget(widgetId, widget);
+        }
+        // sometimes this method fails with TransactionIsTooLong
+        catch (Exception exp)
+        {
+            exp.printStackTrace();
+        }
 	}
 	
 	private PendingIntent getClockAppIntent()
@@ -423,34 +431,40 @@ public class NotificationsWidgetService extends Service
     private Bitmap getClockIcon(int color)
     {
         Bitmap sourceBitmap = BitmapFactory.decodeResource(Resources.getSystem(), android.R.drawable.ic_lock_idle_alarm);
+        if (sourceBitmap != null && sourceBitmap.getWidth() > 0)
+        {
+            float r = (float) Color.red(color),
+                  g = (float) Color.green(color),
+                  b = (float) Color.blue(color);
 
-        float r = (float) Color.red(color),
-              g = (float) Color.green(color),
-              b = (float) Color.blue(color);
+            float[] colorTransform =
+                    {
+                            r/255, 0    , 0    , 0, 0,  // R color
+                            0    , g/255, 0    , 0, 0,  // G color
+                            0    , 0    , b/255, 0, 0,  // B color
+                            0    , 0    , 0    , 1, 0
+                    };
 
-        float[] colorTransform =
-                {
-                        r/255, 0    , 0    , 0, 0,  // R color
-                        0    , g/255, 0    , 0, 0,  // G color
-                        0    , 0    , b/255, 0, 0,  // B color
-                        0    , 0    , 0    , 1, 0
-                };
+            ColorMatrix colorMatrix = new ColorMatrix();
+            colorMatrix.setSaturation(0f); // Remove colour
+            colorMatrix.set(colorTransform);
 
-        ColorMatrix colorMatrix = new ColorMatrix();
-        colorMatrix.setSaturation(0f); // Remove colour
-        colorMatrix.set(colorTransform);
+            ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
+            Paint paint = new Paint();
+            paint.setColorFilter(colorFilter);
 
-        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
-        Paint paint = new Paint();
-        paint.setColorFilter(colorFilter);
+            Bitmap resultBitmap = Bitmap.createBitmap(sourceBitmap);
+            Bitmap mutableBitmap = resultBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-        Bitmap resultBitmap = Bitmap.createBitmap(sourceBitmap);
-        Bitmap mutableBitmap = resultBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            Canvas canvas = new Canvas(mutableBitmap);
+            canvas.drawBitmap(mutableBitmap, 0, 0, paint);
 
-        Canvas canvas = new Canvas(mutableBitmap);
-        canvas.drawBitmap(mutableBitmap, 0, 0, paint);
-
-        return mutableBitmap;
+            return mutableBitmap;
+        }
+        else
+        {
+            return null;
+        }
     }
 
 	private RemoteViews createClock(String type, int widgetId)

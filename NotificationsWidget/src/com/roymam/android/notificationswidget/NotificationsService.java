@@ -79,6 +79,7 @@ public class NotificationsService implements NotificationsProvider
                 @Override
                 public int compare(NotificationData n1, NotificationData n2)
                 {
+                    if (n1 == null || n2 == null) return 0;
                     if (n1.priority < n2.priority)
                         return 1;
                     if (n1.priority > n2.priority)

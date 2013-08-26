@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 
 @TargetApi(18)
@@ -244,7 +245,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
         boolean changed = false;
         for(String packageName : packages)
         {
-            Iterator<NotificationData> i = notifications.iterator();
+            ListIterator<NotificationData> i = notifications.listIterator();
             while (i.hasNext())
             {
                 NotificationData nd = i.next();
