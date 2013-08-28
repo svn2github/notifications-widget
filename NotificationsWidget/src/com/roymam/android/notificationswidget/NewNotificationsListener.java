@@ -51,7 +51,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
     public void onNotificationPosted(StatusBarNotification sbn)
     {
         Log.d("NiLS","onNotificationPosted");
-        if (!parser.isPersistent(sbn.getNotification()))
+        if (!parser.isPersistent(sbn.getNotification(), sbn.getPackageName()))
         {
             NotificationData nd = parser.parseNotification(sbn.getNotification(), sbn.getPackageName(), sbn.getId(), sbn.getTag());
             if (nd != null)
@@ -133,7 +133,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 }
             }
             // remove also persistent notification
-            if (parser.isPersistent(sbn.getNotification()))
+            if (parser.isPersistent(sbn.getNotification(), sbn.getPackageName()))
             {
                 if (persistentNotifications.containsKey(sbn.getPackageName()))
                 {

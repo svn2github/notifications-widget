@@ -85,7 +85,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                         Notification n = (Notification) accessibilityEvent.getParcelableData();
                         String packageName = accessibilityEvent.getPackageName().toString();
 
-                        if (!parser.isPersistent(n))
+                        if (!parser.isPersistent(n, packageName))
                         {
                             NotificationData nd = parser.parseNotification(n, packageName, notificationId, null);
                             if (nd != null)

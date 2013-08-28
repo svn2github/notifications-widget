@@ -213,6 +213,8 @@
         <item>max</item>
     </string-array>
 
+    <string name="catch_all_notifications">Catch all notifications</string>
+    <string name="catch_all_notifications_summary">Catch all notifications from this app and handle them as persistent notifications</string>
     <string name="hide_when_notifications">Hide when notifications appear</string>
     <string name="hide_when_notifications_summary">Hide this persistent notification when normal notifications appear</string>
     <string name="auto_hide_persistent_notification">Hide when inactive</string>

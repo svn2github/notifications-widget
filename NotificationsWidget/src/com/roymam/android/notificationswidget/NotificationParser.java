@@ -63,7 +63,7 @@ public class NotificationParser
         if (n != null)
         {
             // handle only dismissable notifications
-            if (!isPersistent(n) && !shouldIgnore(n, packageName))
+            if (!isPersistent(n, packageName) && !shouldIgnore(n, packageName))
             {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -712,10 +712,19 @@ public class NotificationParser
         }
     }
 
-    public boolean isPersistent(Notification n)
+    public boolean isPersistent(Notification n, String packageName)
     {
-        return (((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) ||
-                ((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT));
+        boolean isPersistent = (((n.flags & Notification.FLAG_NO_CLEAR) == Notification.FLAG_NO_CLEAR) ||
+                                ((n.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT));
+        if (!isPersistent)
+        {
+            // check if user requested to treat all notifications as persistent
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            if (prefs.getBoolean(packageName+"."+PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false) &&
+                prefs.getBoolean(packageName+"."+PersistentNotificationSettingsActivity.CATCH_ALL_NOTIFICATIONS, true))
+                isPersistent = true;
+        }
+        return isPersistent;
     }
 
     public PersistentNotification parsePersistentNotification(Notification n, String packageName, int notificationId)

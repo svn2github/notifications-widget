@@ -19,6 +19,7 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String SHOW_PERSISTENT_NOTIFICATION = "showpersistent";
 	public static final String PERSISTENT_NOTIFICATION_HEIGHT = "persistent_notification_height";
+    public static final String CATCH_ALL_NOTIFICATIONS = "catch_all_notifications";
 	public static final String HIDE_WHEN_NOTIFICATIONS = "hidewhennotifications";
 	public static final String PN_TIMEOUT = "pn_timeout";
 	public static final String PERSISTENT_APPS = "persistent_apps";
@@ -72,7 +73,15 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
         persistentHeight.setEntryValues(R.array.settings_notification_height_values);
         persistentHeight.setDefaultValue("normal");
         root.addPreference(persistentHeight);
-        
+
+        // treat all notifications as persistent notifications
+        CheckBoxPreference catchAllNotificationsPref= new CheckBoxPreference(this);
+        catchAllNotificationsPref.setKey(packageName+"."+CATCH_ALL_NOTIFICATIONS);
+        catchAllNotificationsPref.setTitle(R.string.catch_all_notifications);
+        catchAllNotificationsPref.setDefaultValue(true);
+        catchAllNotificationsPref.setSummary(R.string.catch_all_notifications_summary);
+        root.addPreference(catchAllNotificationsPref);
+
         // Hide when notifications appears
         CheckBoxPreference hideWhenNotifications = new CheckBoxPreference(this);
         hideWhenNotifications.setKey(packageName+"."+HIDE_WHEN_NOTIFICATIONS);
