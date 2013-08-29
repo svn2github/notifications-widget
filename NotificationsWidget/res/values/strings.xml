@@ -115,8 +115,7 @@
     <!-- About Dialog -->
     <string name="about_title">NiLS</string>
     <string name="about_subtitle">NiLS is developed by Roymam</string>
-    <string name="about_content">The project is hosted on:\nhttp://code.google.com/p/notifications-widget/\nFell free to open issues for any bug report or feature request\n\nIf you would like to support the development of this app you may want to try our game below:</string>
-    <string name="about_ad_url">market://details?id=com.roymam.rollypoly</string>
+    <string name="about_content">The project is hosted on:\nhttp://code.google.com/p/notifications-widget/\nFell free to open issues for any bug report or feature request</string>
     <string name="about_contactus_title">Contact us</string>
     <string name="about_contactus_email">mailto:support@roymam.com</string>
     <string name="about_close">Close</string>

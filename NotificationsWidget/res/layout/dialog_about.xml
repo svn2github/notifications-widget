@@ -24,13 +24,4 @@
         android:maxLines="10"
         android:text="@string/about_content"
         android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:longClickable="true"
-        android:onClick="openAd"
-        android:scaleType="centerInside"
-        android:src="@drawable/rollypolyad" />
-    
 </LinearLayout>
