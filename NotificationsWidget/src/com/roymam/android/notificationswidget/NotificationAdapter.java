@@ -37,10 +37,10 @@ public class NotificationAdapter implements NotificationEventListener
     }
 
     @Override
-    public void onNotificationAdded(NotificationData nd)
+    public void onNotificationAdded(NotificationData nd, boolean wake)
     {
         // turn screen on (if needed)
-        turnScreenOn();
+        if (wake) turnScreenOn();
         notifyNotificationAdd(nd);
     }
 
@@ -115,13 +115,20 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.putExtra("icon", nd.icon);
         npsIntent.putExtra("appicon", nd.appicon);
 
-        for (int i=0; i<nd.actions.length; i++)
+        if (nd.actions != null)
         {
-            npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
-            npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
-            npsIntent.putExtra("action"+i+"+label", nd.actions[i].title);
+            for (int i=0; i<nd.actions.length; i++)
+            {
+                npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
+                npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
+                npsIntent.putExtra("action"+i+"+label", nd.actions[i].title);
+            }
+            npsIntent.putExtra("actions",nd.actions.length);
         }
-        npsIntent.putExtra("actions",nd.actions.length);
+        else
+        {
+            npsIntent.putExtra("actions",0);
+        }
 
         context.startService(npsIntent);
     }

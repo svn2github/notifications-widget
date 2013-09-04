@@ -90,7 +90,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                     if (updated)
                         listener.onNotificationUpdated(nd);
                     else
-                        listener.onNotificationAdded(nd);
+                        listener.onNotificationAdded(nd, true);
                     listener.onNotificationsListChanged();
                 }
             }

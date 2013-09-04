@@ -126,7 +126,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                                     if (duplicated >= 0)
                                         listener.onNotificationUpdated(nd);
                                     else
-                                        listener.onNotificationAdded(nd);
+                                        listener.onNotificationAdded(nd, true);
                                     listener.onNotificationsListChanged();
                                 }
 

@@ -63,7 +63,7 @@ public class EventsHandler extends BroadcastReceiver
                 for(int i = ns.getNotifications().size()-1; i>=0; i--)
                 {
                     NotificationData nd = ns.getNotifications().get(i);
-                    ns.getNotificationEventListener().onNotificationAdded(nd);
+                    ns.getNotificationEventListener().onNotificationAdded(nd, false);
                 }
             }
             else if (intent.getAction().equals(OPEN_NOTIFICATION))
