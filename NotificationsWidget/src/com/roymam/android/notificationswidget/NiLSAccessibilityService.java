@@ -145,24 +145,27 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                     }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
-                Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED " + accessibilityEvent.getPackageName().toString());
-                if (!accessibilityEvent.getPackageName().equals("com.android.systemui") &&
-                     prefs.getBoolean(SettingsActivity.CLEAR_APP_NOTIFICATIONS, true))
+                if (accessibilityEvent.getPackageName() != null)
                 {
-                    clearNotificationsForApps(new String[]{accessibilityEvent.getPackageName().toString()});
-                }
+                    Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED " + accessibilityEvent.getPackageName().toString());
+                    if (!accessibilityEvent.getPackageName().equals("com.android.systemui") &&
+                         prefs.getBoolean(SettingsActivity.CLEAR_APP_NOTIFICATIONS, true))
+                    {
+                        clearNotificationsForApps(new String[]{accessibilityEvent.getPackageName().toString()});
+                    }
 
-                // request nilsplus to hide/show notifications list
-                // TODO: move to notification adapter
-                KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-                Intent npsIntent = new Intent();
-                npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-                if (accessibilityEvent.getPackageName().equals("android") && km.inKeyguardRestrictedInputMode() ||
-                    accessibilityEvent.getPackageName().equals("com.teslacoilsw.widgetlocker"))
-                    npsIntent.setAction(SHOW_NOTIFICATIONS);
-                else
-                    npsIntent.setAction(HIDE_NOTIFICATIONS);
-                startService(npsIntent);
+                    // request nilsplus to hide/show notifications list
+                    // TODO: move to notification adapter
+                    KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+                    Intent npsIntent = new Intent();
+                    npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+                    if (accessibilityEvent.getPackageName().equals("android") && km.inKeyguardRestrictedInputMode() ||
+                        accessibilityEvent.getPackageName().equals("com.teslacoilsw.widgetlocker"))
+                        npsIntent.setAction(SHOW_NOTIFICATIONS);
+                    else
+                        npsIntent.setAction(HIDE_NOTIFICATIONS);
+                    startService(npsIntent);
+                }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 if (accessibilityEvent.getPackageName().equals("com.android.systemui") &&
