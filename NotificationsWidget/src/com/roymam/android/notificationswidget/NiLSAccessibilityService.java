@@ -160,7 +160,8 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                     Intent npsIntent = new Intent();
                     npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
                     if (accessibilityEvent.getPackageName().equals("android") && km.inKeyguardRestrictedInputMode() ||
-                        accessibilityEvent.getPackageName().equals("com.teslacoilsw.widgetlocker"))
+                        accessibilityEvent.getPackageName().equals("com.teslacoilsw.widgetlocker") ||
+                        accessibilityEvent.getPackageName().equals("com.jiubang.goscreenlock"))
                         npsIntent.setAction(SHOW_NOTIFICATIONS);
                     else
                         npsIntent.setAction(HIDE_NOTIFICATIONS);
