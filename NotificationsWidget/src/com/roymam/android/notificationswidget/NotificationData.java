@@ -9,9 +9,16 @@ import android.widget.Toast;
 
 public class NotificationData 
 {
+    public static int nextUID = 0;
+    public int uid;
     public int id;
     public String tag;
 
+    public NotificationData()
+    {
+        uid = nextUID;
+        nextUID++;
+    }
     public boolean isSimilar(NotificationData nd)
     {
         CharSequence title1 = nd.title;

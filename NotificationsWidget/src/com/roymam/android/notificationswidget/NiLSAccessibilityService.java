@@ -116,6 +116,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                                 {
                                     NotificationData dup = notifications.get(duplicated);
                                     nd.id = dup.id;
+                                    nd.uid = dup.uid;
                                     nd.pinned = dup.pinned;
                                     notifications.remove(duplicated);
                                 }

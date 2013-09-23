@@ -323,4 +323,6 @@
     <string name="widget_help_step_3_body">After removing the clock, a + button will appear, click on it.</string>
     <string name="widget_help_step_4_title">4. Add NiLS Widget</string>
     <string name="widget_help_step_4_body">Choose NiLS widget from the list. this will add it as your lock screen widget.</string>
+    <string name="loading_title">Loading Apps</string>
+    <string name="loading_summary">Please wait...</string>
 </resources>

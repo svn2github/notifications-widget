@@ -75,6 +75,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                               oldnd.isSimilar(nd) ||
                               keepOnlyLastNotification))
                     {
+                        nd.uid = oldnd.uid;
                         notifications.remove(oldnd);
                         updated = true;
                         break;

@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.DialogPreference;
 import android.preference.Preference;
@@ -29,6 +31,9 @@ import android.widget.TextView;
 import com.roymam.android.common.ListPreferenceChangeListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -188,17 +193,21 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	public static class PrefsAppSpecificFragment extends PreferenceFragment
 	{
-		@Override
+        HashMap<String, Boolean> appsDisplayed = new HashMap<String, Boolean>();
+        Handler handler = new Handler();
+
+        @Override
 	    public void onCreate(Bundle savedInstanceState) 
 	    {
 	        super.onCreate(savedInstanceState);
 
 	        // add app specific settings
-			PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
+			final PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
 			
 			// Specfic app list 
 			String specificApps = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(APPS_SETTINGS, "");
 
+            // add apps that already have app specific settings
 			for (String packageName : specificApps.split(",")) 
 			{		
 				if (!packageName.equals(""))
@@ -207,8 +216,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 					Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
 					runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
 					intentPref.setIntent(runAppSpecificSettings);
-					
-					// get package title
+                    intentPref.setSummary(packageName);
+
+                    // get package title
 					try 
 					{
 						ApplicationInfo ai = getActivity().getPackageManager().getApplicationInfo(packageName, 0);
@@ -221,18 +231,120 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 						intentPref.setTitle(packageName);
 					}
 			        root.addPreference(intentPref);
+                    appsDisplayed.put(packageName, true);
 				}				
 			}
+
+            // add the rest of the apps
+            handler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    loadAllApps();
+                }
+            },500);
+
+            Preference loading = new Preference(getActivity());
+            loading.setTitle(R.string.loading_title);
+            loading.setSummary(R.string.loading_summary);
+            loading.setKey("loading");
+            root.addPreference(loading);
+            /*
 			DialogPreference howToUse = new DialogPreference(getActivity(), null) {};
 			howToUse.setTitle(R.string.how_to_use);
 			howToUse.setIcon(android.R.drawable.ic_menu_help);
 			howToUse.setDialogTitle(R.string.app_specific_help);
 			howToUse.setDialogMessage(R.string.app_specific_help_details);
 			howToUse.setNegativeButtonText(null);
-			root.addPreference(howToUse);
+			root.addPreference(howToUse);*/
 	        setPreferenceScreen(root);
 	    }
-	}
+
+        private void loadAllApps()
+        {
+            PreferenceScreen root = getPreferenceScreen();
+
+            final PackageManager pm = getActivity().getPackageManager();
+            //get a list of installed apps.
+            List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+            ArrayList<String[]> apps = new ArrayList<String[]>();
+
+            // build a list of packages with app names
+            for (ApplicationInfo ai : packages)
+            {
+                String packageName = ai.packageName;
+                if (!appsDisplayed.containsKey(packageName))
+                {
+                    apps.add(new String[]{packageName, pm.getApplicationLabel(ai).toString()});
+                }
+            }
+
+            // sort the list alphabetically
+            Collections.sort(apps, new Comparator<String[]>()
+            {
+                @Override
+                public int compare(String[] lhs, String[] rhs)
+                {
+                    String name1 = lhs[1];
+                    String name2 = rhs[1];
+                    return name1.compareTo(name2);
+                }
+            });
+
+            // add pereference item for each app
+            for (String[] app : apps)
+            {
+                String packageName = app[0];
+                String appName = app[1];
+                final PreferenceScreen intentPref = getPreferenceManager().createPreferenceScreen(getActivity());
+                Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
+                runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+                intentPref.setIntent(runAppSpecificSettings);
+                intentPref.setTitle(appName);
+                intentPref.setSummary(packageName);
+                intentPref.setKey(packageName);
+                root.addPreference(intentPref);
+            }
+
+            root.removePreference(root.findPreference("loading"));
+            // a-synchronically load icons
+            final Iterator<String[]> iter = apps.iterator();
+            if (iter.hasNext())
+            {
+                handler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        String[] app = iter.next();
+                        String packageName = app[0];
+
+                        // load app icon
+                        try
+                        {
+                            if (getActivity() != null)
+                            {
+                                ApplicationInfo ai = getActivity().getPackageManager().getApplicationInfo(packageName, 0);
+                                Preference pref = findPreference(packageName);
+                                if (pref != null)
+                                {
+                                    pref.setIcon(getActivity().getPackageManager().getApplicationIcon(ai));
+                                }
+                            }
+                        } catch (NameNotFoundException e)
+                        {
+                            // do nothing - shouldn't happen
+                        }
+
+                        if (iter.hasNext())
+                            // load next app
+                            handler.postDelayed(this, 0);
+                    }
+                }, 0);
+            }
+        }
+    }
 
 	public static class PrefsPersistentNotificationsFragment extends PreferenceFragment
 	{

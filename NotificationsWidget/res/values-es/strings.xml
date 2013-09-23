@@ -270,4 +270,6 @@
     <string name="widget_help_step_3_body">Después de eliminar el reloj, un botón + va a aparecer, has click en él.</string>
     <string name="widget_help_step_4_title">4. Agrega NiLS Widget</string>
     <string name="widget_help_step_4_body">Elige NiLS widget de la lista. Esto va a agregarlo como tu widget de la pant. de bloq.</string>
+    <string name="loading_title">Loading Apps</string>
+    <string name="loading_summary">Please wait...</string>
 </resources>

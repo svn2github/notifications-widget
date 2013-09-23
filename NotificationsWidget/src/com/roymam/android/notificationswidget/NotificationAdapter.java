@@ -78,6 +78,7 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.putExtra("time", nd.received);
         npsIntent.putExtra("package", nd.packageName);
         npsIntent.putExtra("id", nd.id);
+        npsIntent.putExtra("uid", nd.uid);
         npsIntent.putExtra("action", nd.action);
         npsIntent.putExtra("icon", nd.icon);
         npsIntent.putExtra("appicon", nd.appicon);
@@ -111,6 +112,7 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.putExtra("time", nd.received);
         npsIntent.putExtra("package", nd.packageName);
         npsIntent.putExtra("id", nd.id);
+        npsIntent.putExtra("uid", nd.uid);
         npsIntent.putExtra("action", nd.action);
         npsIntent.putExtra("icon", nd.icon);
         npsIntent.putExtra("appicon", nd.appicon);
@@ -141,6 +143,7 @@ public class NotificationAdapter implements NotificationEventListener
         npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
         npsIntent.setAction(REMOVE_NOTIFICATION);
         npsIntent.putExtra("id", nd.id);
+        npsIntent.putExtra("uid", nd.id);
         npsIntent.putExtra("package", nd.packageName);
         context.startService(npsIntent);
 
