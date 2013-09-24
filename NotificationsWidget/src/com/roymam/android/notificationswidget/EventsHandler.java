@@ -47,15 +47,24 @@ public class EventsHandler extends BroadcastReceiver
            }
            else if (action.equals(DISMISS_NOTIFICATIONS) || action.equals(FN_DISMISS_NOTIFICATIONS))
             {
-                String packageName = intent.getStringExtra("package");
-                int id = intent.getIntExtra("id",-1);
-                if (id > -1)
+                int uid = intent.getIntExtra("uid", -1);
+                if (uid != -1)
                 {
-                    Log.d("NiLS", "remove notification package:" + packageName +" #" + id);
-                    if (ns != null) ns.clearNotification(packageName, id);
+                    Log.d("NiLS", "remove notification uid:" + uid);
+                    if (ns != null) ns.clearNotification(uid);
                 }
                 else
-                    if (ns != null) ns.clearNotificationsForApps(new String[]{packageName});
+                {
+                    String packageName = intent.getStringExtra("package");
+                    int id = intent.getIntExtra("id",-1);
+                    if (id > -1)
+                    {
+                        Log.d("NiLS", "remove notification package:" + packageName +" #" + id);
+                        if (ns != null) ns.clearNotification(packageName, id);
+                    }
+                    else
+                        if (ns != null) ns.clearNotificationsForApps(new String[]{packageName});
+                }
             }
             else if (intent.getAction().equals(RESEND_ALL_NOTIFICATIONS))
             {

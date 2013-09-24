@@ -272,4 +272,35 @@ public class NewNotificationsListener extends NotificationListenerService implem
             if (listener != null) listener.onNotificationsListChanged();
         }
     }
+
+    @Override
+    public void clearNotification(int uid)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean syncback = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
+
+        // first, find it on list
+        Iterator<NotificationData> iter = notifications.iterator();
+        boolean removed = false;
+        while (iter.hasNext() && !removed)
+        {
+            NotificationData nd = iter.next();
+            if (nd.uid == uid)
+            {
+                iter.remove();
+                removed = true;
+                if (syncback)
+                try
+                {
+                    cancelNotification(nd.packageName, nd.tag, nd.id);
+                }
+                catch (Exception exp)
+                {
+                    exp.printStackTrace();
+                }
+                if (listener != null) listener.onNotificationCleared(nd);
+            }
+        }
+        if (removed && listener != null) listener.onNotificationsListChanged();
+    }
 }

@@ -15,4 +15,5 @@ public interface NotificationsProvider
     public void setNotificationEventListener(NotificationEventListener listener);
     public NotificationEventListener getNotificationEventListener();
     public void clearNotificationsForApps(String[] strings);
+    public void clearNotification(int uid);
 }

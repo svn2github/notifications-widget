@@ -308,9 +308,27 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
     }
 
     @Override
+    public void clearNotification(int uid)
+    {
+        // first, find it on list
+        Iterator<NotificationData> iter = notifications.iterator();
+        boolean removed = false;
+        while (iter.hasNext() && !removed)
+        {
+            NotificationData nd = iter.next();
+            if (nd.uid == uid)
+            {
+                iter.remove();
+                removed = true;
+                if (listener != null) listener.onNotificationCleared(nd);
+            }
+        }
+        if (removed && listener != null) listener.onNotificationsListChanged();
+    }
+
+    @Override
     public void onInterrupt()
     {
-
     }
 
     @Override

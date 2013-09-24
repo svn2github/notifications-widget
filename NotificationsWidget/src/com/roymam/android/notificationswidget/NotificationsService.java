@@ -162,4 +162,10 @@ public class NotificationsService implements NotificationsProvider
     {
         source.clearNotificationsForApps(apps);
     }
+
+    @Override
+    public void clearNotification(int uid)
+    {
+        source.clearNotification(uid);
+    }
 }

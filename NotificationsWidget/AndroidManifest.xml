@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="214"
-    android:versionName="1.2.5r1" >
+    android:versionCode="254"
+    android:versionName="1.2.5r2" >
 
     <uses-sdk
         android:minSdkVersion="14"
