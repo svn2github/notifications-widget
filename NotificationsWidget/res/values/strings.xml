@@ -288,6 +288,7 @@
     <string name="auto_switch_clock_size">Auto switch clock size</string>
     <string name="show_clear_all_button">Show &quot;Clear All&quot; Button</string>
     <string name="hide_clock">Hide Clock</string>
+    <string name="hide_notifications">Hide Notifications</string>
     <string name="show_persistent">Show Persistent Notifications</string>
     <string name="compact">Compact</string>
     <string name="normal">Normal</string>

@@ -101,7 +101,7 @@ public class NotificationAdapter implements NotificationEventListener
 
     private void notifyNotificationUpdated(NotificationData nd)
     {
-        Log.d("Nils", "notification update #" + nd.id);
+        Log.d("Nils", "notification update #" + nd.uid);
 
         // send notification to nilsplus
         Intent npsIntent = new Intent();

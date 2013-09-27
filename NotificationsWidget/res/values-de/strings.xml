@@ -235,6 +235,7 @@
     <string name="auto_switch_clock_size">Automatische Uhrengröße</string>
     <string name="show_clear_all_button">Zeige \"Alle löschen\"-Button</string>
     <string name="hide_clock">Verstecke Uhr</string>
+    <string name="hide_notifications">Hide Notifications</string>
     <string name="show_persistent">Zeige permanente Benachrichtigungen</string>
     <string name="compact">Kompakt</string>
     <string name="normal">Normal</string>

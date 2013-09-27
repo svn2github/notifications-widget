@@ -85,6 +85,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String CLOCK_MEDIUM = "medium";
 	public static final String CLOCK_LARGE = "large";
 	public static final String CLOCK_HIDDEN = "clockhidden";
+    public static final String HIDE_NOTIFICATIONS = "hide_notifications";
 	public static final String CLOCK_AUTO = "auto";
 	public static final String APPS_SETTINGS = "specificapps";
 

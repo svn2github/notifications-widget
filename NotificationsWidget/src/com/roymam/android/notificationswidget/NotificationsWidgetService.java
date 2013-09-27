@@ -167,8 +167,16 @@ public class NotificationsWidgetService extends Service
             }
         }
 		
-		// set up notifications list 
-		setupNotificationsList(widget, widgetId);
+		// set up notifications list
+        if (!prefs.getBoolean(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS, false))
+        {
+            widget.setViewVisibility(R.id.notificationsListView, View.VISIBLE);
+    		setupNotificationsList(widget, widgetId);
+        }
+        else
+        {
+            widget.setViewVisibility(R.id.notificationsListView, View.GONE);
+        }
 
 		try
         {

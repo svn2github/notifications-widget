@@ -232,6 +232,14 @@
         android:tag="show_actionbar"
         android:text="@string/show_actionbar" />
 
+    <CheckBox
+            android:id="@+id/hideNotificationsCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="hide_notifications"
+            android:text="@string/hide_notifications" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
