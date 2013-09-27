@@ -755,8 +755,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 				maxLinesSpinner.setSelection(maxLines-1);
 			else
 				maxLinesSpinner.setSelection(9);
-			
-			((CheckBox)getView().findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false));
+
+            ((CheckBox)getView().findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false));
+            ((CheckBox)getView().findViewById(R.id.hideNotificationsCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS, false));
 		}
 
 		private void setupNotificationStyle() 
