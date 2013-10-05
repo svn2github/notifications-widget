@@ -236,7 +236,7 @@ public class NotificationAdapter implements NotificationEventListener
                 final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
                 wl.acquire();
 
-                // release after 5 seconds
+                // release after 10 seconds
                 final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
                 Runnable task = new Runnable()
                 {
@@ -245,7 +245,7 @@ public class NotificationAdapter implements NotificationEventListener
                         wl.release();
                     }
                 };
-                worker.schedule(task, 10, TimeUnit.SECONDS);
+                worker.schedule(task, sharedPref.getInt(SettingsActivity.TURNSCREENON_TIMEOUT, SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT), TimeUnit.SECONDS);
             }
             newNotificationsAvailable = false;
         }

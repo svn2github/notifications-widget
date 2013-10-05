@@ -326,4 +326,6 @@
     <string name="widget_help_step_4_body">Choose NiLS widget from the list. this will add it as your lock screen widget.</string>
     <string name="loading_title">Loading Apps</string>
     <string name="loading_summary">Please wait...</string>
+    <string name="screenon_timeout">Timeout (seconds)</string>
+    <string name="screenon_timeout_summary">Set minimum timeout before the screen will turn off again (doesn\'t work for all devices)</string>
 </resources>

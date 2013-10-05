@@ -21,7 +21,15 @@
                 android:enabled="true"
                 android:defaultValue="false"
                 android:summary="@string/delayed_screenon_summary"
-                android:dependency="disableproximity"/>"                
+                android:dependency="disableproximity"/>"
+        <EditTextPreference
+                android:title="@string/screenon_timeout"
+                android:key="turnscreenon_timeout"
+                android:enabled="true"
+                android:defaultValue="10"
+                android:inputType="number"
+                android:summary="@string/screenon_timeout_summary"
+                android:dependency="turnscreenon"/>
     </PreferenceCategory>             
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
             <CheckBoxPreference 

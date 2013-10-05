@@ -88,6 +88,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     public static final String HIDE_NOTIFICATIONS = "hide_notifications";
 	public static final String CLOCK_AUTO = "auto";
 	public static final String APPS_SETTINGS = "specificapps";
+    public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
+    public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
 
     public static class HowToAddWidgetFragment extends Fragment
     {
