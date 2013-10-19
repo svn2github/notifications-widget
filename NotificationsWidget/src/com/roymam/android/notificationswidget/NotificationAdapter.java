@@ -245,7 +245,7 @@ public class NotificationAdapter implements NotificationEventListener
                         wl.release();
                     }
                 };
-                worker.schedule(task, sharedPref.getInt(SettingsActivity.TURNSCREENON_TIMEOUT, SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT), TimeUnit.SECONDS);
+                worker.schedule(task, Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT))), TimeUnit.SECONDS);
             }
             newNotificationsAvailable = false;
         }
