@@ -324,8 +324,8 @@
     <string name="widget_help_step_3_body">After removing the clock, a + button will appear, click on it.</string>
     <string name="widget_help_step_4_title">4. Add NiLS Widget</string>
     <string name="widget_help_step_4_body">Choose NiLS widget from the list. this will add it as your lock screen widget.</string>
-    <string name="loading_title">Loading Apps</string>
-    <string name="loading_summary">Please wait...</string>
+    <string name="loading_title">Show All Apps</string>
+    <string name="loading_summary">Click to show all of the installed apps</string>
     <string name="screenon_timeout">Timeout (seconds)</string>
     <string name="screenon_timeout_summary">Set minimum timeout before the screen will turn off again (doesn\'t work for all devices)</string>
 </resources>

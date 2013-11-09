@@ -69,6 +69,9 @@ public class NotificationAdapter implements NotificationEventListener
     {
         Log.d("Nils", "notification add uid:" + nd.uid);
 
+        // add the package to the app specific settings page
+        AppSettingsActivity.addAppToAppSpecificSettings(nd.packageName, context);
+
         // send notification to nilsplus
         Intent npsIntent = new Intent();
         npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
@@ -179,7 +182,11 @@ public class NotificationAdapter implements NotificationEventListener
     @Override
     public void onPersistentNotificationCleared(PersistentNotification pn)
     {
-        updateWidget(true);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // update widget if it is need to display this persistent notification;
+        if (prefs.getBoolean(pn.packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
+            updateWidget(true);
     }
 
     @Override

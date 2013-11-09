@@ -271,8 +271,8 @@
     <string name="widget_help_step_3_body">Nach dem Entfernen der Uhr erscheint eine \"+\"-Taste, klicke diese</string>
     <string name="widget_help_step_4_title">4. Füge das NiLS-Widget hinzu</string>
     <string name="widget_help_step_4_body">Wähle das NiLS-Widget aus der Liste, dass fügt das Lockscreen-Widget hinzu</string>
-    <string name="loading_title">Loading Apps</string>
-    <string name="loading_summary">Please wait...</string>
+    <string name="loading_title">Show All Apps</string>
+    <string name="loading_summary">Click to show all of the installed apps</string>
     <string name="screenon_timeout">Timeout (seconds)</string>
     <string name="screenon_timeout_summary">Set minimum timeout before the screen will turn off again (doesn\'t work for all devices)</string>
 </resources>

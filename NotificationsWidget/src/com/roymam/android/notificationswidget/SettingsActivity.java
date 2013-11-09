@@ -194,8 +194,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    }
 	}
 
-	public static class PrefsAppSpecificFragment extends PreferenceFragment
-	{
+	public static class PrefsAppSpecificFragment extends PreferenceFragment implements OnPreferenceChangeListener {
         HashMap<String, Boolean> appsDisplayed = new HashMap<String, Boolean>();
         Handler handler = new Handler();
 
@@ -206,19 +205,22 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	        // add app specific settings
 			final PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 			
 			// Specfic app list 
-			String specificApps = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(APPS_SETTINGS, "");
+			String specificApps = prefs.getString(APPS_SETTINGS, "");
 
             // add apps that already have app specific settings
 			for (String packageName : specificApps.split(",")) 
 			{		
 				if (!packageName.equals(""))
-				{				
-					PreferenceScreen intentPref = getPreferenceManager().createPreferenceScreen(getActivity());
-					Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
-					runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
-					intentPref.setIntent(runAppSpecificSettings);
+				{
+                    prefs.edit().putBoolean(packageName, !prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false)).commit();
+
+                    CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());
+                    intentPref.setKey(packageName);
+                    intentPref.setOnPreferenceChangeListener(this);
+                    intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings_app);
                     intentPref.setSummary(packageName);
 
                     // get package title
@@ -238,20 +240,19 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 				}				
 			}
 
-            // add the rest of the apps
-            handler.postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    loadAllApps();
-                }
-            },500);
-
             Preference loading = new Preference(getActivity());
             loading.setTitle(R.string.loading_title);
             loading.setSummary(R.string.loading_summary);
             loading.setKey("loading");
+            loading.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
+                @Override
+                public boolean onPreferenceClick(Preference preference)
+                {
+                    loadAllApps();
+                    return true;
+                }
+            });
             root.addPreference(loading);
             /*
 			DialogPreference howToUse = new DialogPreference(getActivity(), null) {};
@@ -267,6 +268,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         private void loadAllApps()
         {
             PreferenceScreen root = getPreferenceScreen();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
             final PackageManager pm = getActivity().getPackageManager();
             //get a list of installed apps.
@@ -300,10 +302,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             {
                 String packageName = app[0];
                 String appName = app[1];
-                final PreferenceScreen intentPref = getPreferenceManager().createPreferenceScreen(getActivity());
-                Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
-                runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
-                intentPref.setIntent(runAppSpecificSettings);
+                prefs.edit().remove(packageName).commit();
+                final CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());
+                intentPref.setKey(packageName);
+                intentPref.setDefaultValue(true);
+                intentPref.setOnPreferenceChangeListener(this);
+                intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings_app);
                 intentPref.setTitle(appName);
                 intentPref.setSummary(packageName);
                 intentPref.setKey(packageName);
@@ -346,6 +350,21 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                     }
                 }, 0);
             }
+        }
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue)
+        {
+            String packageName = preference.getKey();
+            boolean ignoreApp = !((Boolean) newValue);
+
+            // set the app to be ignored if unchecked
+            preference.getSharedPreferences().edit().putBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, ignoreApp).commit();
+
+            // add the app to app specific settings
+            AppSettingsActivity.addAppToAppSpecificSettings(packageName, getActivity());
+
+            return true;
         }
     }
 
@@ -391,7 +410,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     				CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());
 					getPreferenceManager();
 					intentPref.setKey(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION);
-					intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings);
+					intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings_persistent);
 					intentPref.setChecked(prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false));
 					intentPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 					{
@@ -539,16 +558,28 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         }
 	}
 	
-	// openSettings is launched from the custom checkbox in persistent notifications settings 
-	public void openSettings(View v)
+	// openPersistentSettings is launched from the custom checkbox in persistent notifications settings
+	public void openPersistentSettings(View v)
 	{		
 		// this is a dirty hack to get the package name within the settings button
 		String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
-		
-		// open persistent notification settings
+
+        // open persistent notification settings
 		Intent runAppSpecificSettings = new Intent(this, PersistentNotificationSettingsActivity.class);
 		runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
 		startActivity(runAppSpecificSettings);
 		
 	}
+
+    // openAppSettings is launched from the custom checkbox in app specific settings
+    public void openAppSettings(View v)
+    {
+        // this is a dirty hack to get the package name within the settings button
+        String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
+
+        // open persistent notification settings
+        Intent runAppSpecificSettings = new Intent(this, AppSettingsActivity.class);
+        runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+        startActivity(runAppSpecificSettings);
+    }
 }
