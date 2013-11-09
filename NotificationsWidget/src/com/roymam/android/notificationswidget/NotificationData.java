@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 public class NotificationData 
@@ -27,13 +28,30 @@ public class NotificationData
         CharSequence text2 = this.text;
         CharSequence content1 = nd.content;
         CharSequence content2 = this.content;
-        boolean titlesdup = (title1 != null && title2 != null && title1.toString().equals(title2.toString()) || title1 == null && title2 == null);
-        boolean textdup = (text1 != null && text2 != null && text1.toString().startsWith(text2.toString()) || text1 == null && text2 == null);
-        boolean contentsdup = (content1 != null && content2 != null && content1.toString().startsWith(content2.toString())  || content1 == null && content2 == null);
+        if (title1 == null) title1 = "";
+        if (title2 == null) title2 = "";
+        if (text1 == null) text1 = "";
+        if (text2 == null) text2 = "";
+        if (content1 == null) content1 = "";
+        if (content2 == null) content2 = "";
+        boolean titlesdup = title1.toString().trim().equals(title2.toString().trim());
+        boolean textdup = text1.toString().trim().startsWith(text2.toString().trim());
+        boolean contentsdup = content1.toString().trim().startsWith(content2.toString().trim());
         boolean allDup = titlesdup && textdup && contentsdup;
 
+        /*Log.d("NiLS", "Title1 '"+title1+"'");
+        Log.d("NiLS", "Title2 '"+title2+"'");
+        Log.d("NiLS", "Title Dup:"+titlesdup);
+        Log.d("NiLS", "Text1 '"+text1+"'");
+        Log.d("NiLS", "Text2 '"+text2+"'");
+        Log.d("NiLS", "Text Dup:"+textdup);
+        Log.d("NiLS", "Content1 '"+content1+"'");
+        Log.d("NiLS", "Content2 '"+content2+"'");
+        Log.d("NiLS", "Content Dup:"+contentsdup);
+*/
         if (nd.packageName.equals(this.packageName) && allDup)
         {
+            Log.d("NiLS", "All Dup");
             return true;
         }
         else

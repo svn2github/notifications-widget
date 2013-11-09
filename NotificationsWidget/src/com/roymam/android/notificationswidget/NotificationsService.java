@@ -71,59 +71,62 @@ public class NotificationsService implements NotificationsProvider
 
     private void sortNotificationsList(List<NotificationData> notifications, String sortBy)
     {
-        if (sortBy.equals("priority"))
+        if (notifications.size() > 0)
         {
-            // sort by priority
-            Collections.sort(notifications, new Comparator<NotificationData>()
-            {
-                @Override
-                public int compare(NotificationData n1, NotificationData n2)
+                if (sortBy.equals("priority"))
                 {
-                    if (n1 == null || n2 == null) return 0;
-                    if (n1.priority < n2.priority)
-                        return 1;
-                    if (n1.priority > n2.priority)
-                        return -1;
-                    // if we reached here, the priorities are equal - sory by time
-                    if (n1.received < n2.received)
-                        return 1;
-                    if (n1.received > n2.received)
-                        return -1;
-                    return 0;
+                    // sort by priority
+                    Collections.sort(notifications, new Comparator<NotificationData>()
+                    {
+                        @Override
+                        public int compare(NotificationData n1, NotificationData n2)
+                        {
+                            if (n1 == null || n2 == null) return 0;
+                            if (n1.priority < n2.priority)
+                                return 1;
+                            if (n1.priority > n2.priority)
+                                return -1;
+                            // if we reached here, the priorities are equal - sory by time
+                            if (n1.received < n2.received)
+                                return 1;
+                            if (n1.received > n2.received)
+                                return -1;
+                            return 0;
+                        }
+                    });
                 }
-            });
-        }
-        else if (sortBy.equals("timeasc"))
-        {
-            // sort by time
-            Collections.sort(notifications, new Comparator<NotificationData>()
-            {
-                @Override
-                public int compare(NotificationData n1, NotificationData n2)
+                else if (sortBy.equals("timeasc"))
                 {
-                    if (n1.received > n2.received)
-                        return 1;
-                    if (n1.received < n2.received)
-                        return -1;
-                    return 0;
+                    // sort by time
+                    Collections.sort(notifications, new Comparator<NotificationData>()
+                    {
+                        @Override
+                        public int compare(NotificationData n1, NotificationData n2)
+                        {
+                            if (n1.received > n2.received)
+                                return 1;
+                            if (n1.received < n2.received)
+                                return -1;
+                            return 0;
+                        }
+                    });
                 }
-            });
-        }
-        else //if (sortBy.equals("time"))
-        {
-            // sort by time
-            Collections.sort(notifications, new Comparator<NotificationData>()
-            {
-                @Override
-                public int compare(NotificationData n1, NotificationData n2)
+                else if (sortBy.equals("time"))
                 {
-                    if (n1.received < n2.received)
-                        return 1;
-                    if (n1.received > n2.received)
-                        return -1;
-                    return 0;
+                    // sort by time
+                    Collections.sort(notifications, new Comparator<NotificationData>()
+                    {
+                        @Override
+                        public int compare(NotificationData n1, NotificationData n2)
+                        {
+                            if (n1.received < n2.received)
+                                return 1;
+                            if (n1.received > n2.received)
+                                return -1;
+                            return 0;
+                        }
+                    });
                 }
-            });
         }
     }
 

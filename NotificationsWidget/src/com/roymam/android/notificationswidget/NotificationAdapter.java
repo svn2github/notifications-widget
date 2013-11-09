@@ -89,7 +89,7 @@ public class NotificationAdapter implements NotificationEventListener
             {
                 npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
                 npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
-                npsIntent.putExtra("action"+i+"+label", nd.actions[i].title);
+                npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
             }
             npsIntent.putExtra("actions",nd.actions.length);
         }
@@ -123,7 +123,7 @@ public class NotificationAdapter implements NotificationEventListener
             {
                 npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
                 npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
-                npsIntent.putExtra("action"+i+"+label", nd.actions[i].title);
+                npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
             }
             npsIntent.putExtra("actions",nd.actions.length);
         }
@@ -169,7 +169,11 @@ public class NotificationAdapter implements NotificationEventListener
     @Override
     public void onPersistentNotificationAdded(PersistentNotification pn)
     {
-        updateWidget(true);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // update widget if it is need to display this persistent notification;
+        if (prefs.getBoolean(pn.packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false))
+            updateWidget(true);
     }
 
     @Override
