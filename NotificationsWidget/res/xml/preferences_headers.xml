@@ -25,6 +25,11 @@
             android:title="@string/app_specific_settings_title"
             android:summary="@string/app_specific_settings_summary"/>
 
+    <header android:title="@string/backup_restore"
+            android:icon="@android:drawable/ic_menu_save"
+            android:fragment="com.roymam.android.common.BackupRestorePreferenceFragment"
+            android:summary="@string/backup_restore_summary"/>
+
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsContactFragment"
         	android:icon="@android:drawable/ic_dialog_email"
             android:title="@string/about_contactus_title" 
