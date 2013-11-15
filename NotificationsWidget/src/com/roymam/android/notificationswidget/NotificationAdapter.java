@@ -305,7 +305,7 @@ public class NotificationAdapter implements NotificationEventListener
                     }
                 }
             };
-            sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(sensorListener, proximitySensor, 60*1000000);
         }
     }
 
