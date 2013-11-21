@@ -72,6 +72,6 @@
                         android:entryValues="@array/sync_notifications_values"
                         android:title="@string/sync_notifications"
                         android:key="sync_notifications"
-                        android:defaultValue="twoway" />
+                        android:defaultValue="smart" />
     </PreferenceCategory>
 </PreferenceScreen>

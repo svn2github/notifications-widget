@@ -235,14 +235,14 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
         {
 			n.setTextViewText(R.id.notificationContent, nd.content);
             n.setViewVisibility(R.id.notificationContent, View.VISIBLE);
-            n.setViewVisibility(R.id.contentArea, View.VISIBLE);
-            n.setViewVisibility(R.id.noContentArea, View.GONE);
+            //n.setViewVisibility(R.id.contentArea, View.VISIBLE);
+            //n.setViewVisibility(R.id.noContentArea, View.GONE);
         }
 		else
         {
 			n.setViewVisibility(R.id.notificationContent, View.GONE);
-            n.setViewVisibility(R.id.contentArea, View.GONE);
-            n.setViewVisibility(R.id.noContentArea, View.VISIBLE);
+            //n.setViewVisibility(R.id.contentArea, View.GONE);
+            //n.setViewVisibility(R.id.noContentArea, View.VISIBLE);
         }
 		
 		if (nd.count > 1)

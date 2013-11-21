@@ -15,8 +15,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Time;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -418,6 +420,22 @@ public class NotificationParser
 
             if (multipleEventsHandling.equals("first")) content = firstEventStr;
             else if (multipleEventsHandling.equals("last")) content = lastEventStr;
+
+            // extract title from content for first/last event
+            if ((multipleEventsHandling.equals("first") || multipleEventsHandling.equals("last")) && content != null)
+            {
+                SpannableStringBuilder ssb = new SpannableStringBuilder(content);
+                TextAppearanceSpan[] spans = ssb.getSpans(0, content.length(), TextAppearanceSpan.class);
+                if (spans.length == 2)
+                {
+                    int s0start = ssb.getSpanStart(spans[0]);
+                    int s0end = ssb.getSpanEnd(spans[0]);
+                    title = content.subSequence(s0start, s0end).toString();
+                    int s1start = ssb.getSpanStart(spans[1]);
+                    int s1end = ssb.getSpanEnd(spans[1]);
+                    content = content.subSequence(s1start, s1end).toString();
+                }
+            }
 
             // if there is no text - make the text to be the content
             if (text == null || text.equals(""))

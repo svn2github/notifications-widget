@@ -78,6 +78,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     public static final String SYNC_NOTIFICATIONS_DISABLED = "none";
     public static final String SYNC_NOTIFICATIONS_ONEWAY = "oneway";
     public static final String SYNC_NOTIFICATIONS_TWOWAY = "twoway";
+    public static final String SYNC_NOTIFICATIONS_SMART = "smart";
     public static final String FORCE_CLEAR_ON_OPEN = "force_clear_on_open";
 	public static final String COLLECT_ON_UNLOCK = "collectonunlock";
 	public static final String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
