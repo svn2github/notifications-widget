@@ -65,19 +65,23 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 boolean updated = false;
 
                 // remove old notification
-                for(NotificationData oldnd : notifications)
+                Iterator<NotificationData> iter = notifications.iterator();
+
+                while (iter.hasNext())
                 {
+                    NotificationData oldnd = iter.next();
+
                     // remove only if one of the following scenarios:
                     // 1. sync is enabled and its the same package and id
                     // 2. notification is similar to the old one
                     // 3. user choose to keep only last notification
                     if (oldnd.packageName.equals(sbn.getPackageName())  &&
                             ((oldnd.id == sbn.getId() && sync) ||
-                              oldnd.isSimilar(nd) ||
-                              keepOnlyLastNotification))
+                                    oldnd.isSimilar(nd) ||
+                                    keepOnlyLastNotification))
                     {
                         nd.uid = oldnd.uid;
-                        notifications.remove(oldnd);
+                        iter.remove();
                         updated = true;
                         break;
                     }
@@ -214,12 +218,16 @@ public class NewNotificationsListener extends NotificationListenerService implem
                             sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART));
 
         boolean changed = false;
+
         // first, find it on list
-        for(NotificationData nd : notifications)
+        Iterator<NotificationData> iter = notifications.iterator();
+        while(iter.hasNext())
         {
+            NotificationData nd = iter.next();
+
             if (nd.packageName.equals(packageName) && nd.id == notificationId)
             {
-                notifications.remove(nd);
+                iter.remove();
                 if (syncback)
                 try
                 {
