@@ -125,12 +125,16 @@ public class NewNotificationsListener extends NotificationListenerService implem
             boolean cleared = false;
 
             // find the notification and remove it
-            for (NotificationData nd : notifications)
+            Iterator<NotificationData> iter = notifications.iterator();
+
+            while (iter.hasNext())
             {
+                NotificationData nd = iter.next();
+
                 if (nd.packageName.equals(sbn.getPackageName()) && nd.id == sbn.getId() && !nd.pinned)
                 {
                     // remove the notification
-                    notifications.remove(nd);
+                    iter.remove();
 
                     // notify that the notification was cleared
                     if (listener != null)
