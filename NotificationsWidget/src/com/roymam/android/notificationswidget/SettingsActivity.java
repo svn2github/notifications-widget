@@ -545,7 +545,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public void onSharedPreferenceChanged(final SharedPreferences prefs, String key) 
 	{
         NotificationsProvider ns = NotificationsService.getSharedInstance(this);
-		if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null)
+		/*if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null)
         {
 			if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
 				 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
@@ -556,7 +556,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			{
                 ns.getNotificationEventListener().stopProximityMontior();
 			}
-        }
+        }*/
 	}
 	
 	// openPersistentSettings is launched from the custom checkbox in persistent notifications settings

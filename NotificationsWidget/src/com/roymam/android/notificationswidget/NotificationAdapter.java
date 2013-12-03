@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class NotificationAdapter implements NotificationEventListener
     public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
     public static final String UPDATE_NOTIFICATION = "com.roymam.android.nils.update_notification";
     public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
+    private Handler mHandler = null;
 
     public NotificationAdapter(Context context)
     {
@@ -40,7 +42,37 @@ public class NotificationAdapter implements NotificationEventListener
     public void onNotificationAdded(NotificationData nd, boolean wake)
     {
         // turn screen on (if needed)
-        if (wake) turnScreenOn();
+        if (wake)
+        {
+            final  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+                turnScreenOn();
+            else
+            {
+                deviceCovered = false;
+                registerProximitySensor();
+
+                mHandler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        if (!deviceCovered)
+                        {
+                            turnScreenOn();
+                            stopProximityMontior();
+                        }
+                        else
+                        {
+                            final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+                            // stop proximity monitoring if delayed screen on is inactive, otherwise it will stopped later when uncovered
+                            if (!sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
+                                stopProximityMontior();
+                        }
+                    }
+                }, 1000);
+            }
+        }
         notifyNotificationAdd(nd);
     }
 
@@ -48,7 +80,12 @@ public class NotificationAdapter implements NotificationEventListener
     public void onNotificationUpdated(NotificationData nd)
     {
         // turn screen on (if needed)
-        turnScreenOn();
+        final  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+            turnScreenOn();
+        else
+            registerProximitySensor();
+
         notifyNotificationUpdated(nd);
     }
 
@@ -204,7 +241,8 @@ public class NotificationAdapter implements NotificationEventListener
             }
         }
 
-        registerProximitySensor();
+        //registerProximitySensor();
+        mHandler = new Handler();
         updateWidget(true);
     }
 
@@ -270,48 +308,53 @@ public class NotificationAdapter implements NotificationEventListener
     @Override
     public void registerProximitySensor()
     {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Log.d("NiLS", "registerProximitySensor");
         if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
                 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
         {
-            SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-            Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-            sensorListener = new SensorEventListener()
-            {
-                @Override
-                public void onAccuracyChanged(Sensor sensor, int accuracy)
+            final SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+            final Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+            if (sensorListener == null)
+                sensorListener = new SensorEventListener()
                 {
-                }
-
-                @Override
-                public void onSensorChanged(SensorEvent event)
-                {
-                    if (event.values[0] == 0)
+                    @Override
+                    public void onAccuracyChanged(Sensor sensor, int accuracy)
                     {
-                        deviceCovered = true;
                     }
-                    else
+
+                    @Override
+                    public void onSensorChanged(SensorEvent event)
                     {
-                        if (deviceCovered)
+                        Log.d("NiLS", "onSensorChanged:"+event.values[0]);
+                        if (event.values[0] == 0)
                         {
-                            deviceCovered = false;
-                            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-                            if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false) && newNotificationsAvailable)
+                            deviceCovered = true;
+                        }
+                        else
+                        {
+                            if (deviceCovered)
                             {
-                                turnScreenOn();
+                                deviceCovered = false;
+                                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+                                // stop proximity monitoring if delayed screen on is inactive
+                                if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
+                                {
+                                    turnScreenOn();
+                                }
+                                stopProximityMontior();
                             }
                         }
                     }
-                }
-            };
-            sensorManager.registerListener(sensorListener, proximitySensor, 60*1000000);
+                };
+            sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
     @Override
     public void stopProximityMontior()
     {
+        Log.d("NiLS", "unregisterProximitySensor");
         SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         sensorManager.unregisterListener(sensorListener);
         deviceCovered = false;

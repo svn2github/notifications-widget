@@ -65,6 +65,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 boolean updated = false;
 
                 // remove old notification
+                Log.d("NiLS", "onNotificationPosted: iteration started");
                 Iterator<NotificationData> iter = notifications.iterator();
 
                 while (iter.hasNext())
@@ -86,6 +87,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                         break;
                     }
                 }
+                Log.d("NiLS", "onNotificationPosted: iteration finished");
 
                 // add the new notification
                 notifications.add(nd);
@@ -124,7 +126,10 @@ public class NewNotificationsListener extends NotificationListenerService implem
             Log.d("NiLS","onNotificationRemoved");
             boolean cleared = false;
 
+            ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
+
             // find the notification and remove it
+            Log.d("NiLS", "onNotificationRemoved: iteration started");
             Iterator<NotificationData> iter = notifications.iterator();
 
             while (iter.hasNext())
@@ -137,17 +142,26 @@ public class NewNotificationsListener extends NotificationListenerService implem
                     iter.remove();
 
                     // notify that the notification was cleared
-                    if (listener != null)
-                    {
-                        listener.onNotificationCleared(nd);
-                        cleared = true;
-                    }
+                    clearedNotifications.add(nd);
 
+                    cleared = true;
                     // do not stop loop - keep looping to clear all of the notifications with the same id
                 }
             }
-            if (listener != null && cleared)
+
+
+            Log.d("NiLS", "onNotificationRemoved: iteration finished");
+
+            // notify listener for cleared notifications
+            if (cleared && listener != null)
+            {
+                for(NotificationData nd : clearedNotifications)
+                {
+                    listener.onNotificationCleared(nd);
+                }
                 listener.onNotificationsListChanged();
+            }
+
 
             // remove also persistent notification
             if (parser.isPersistent(sbn.getNotification(), sbn.getPackageName()))
@@ -188,13 +202,16 @@ public class NewNotificationsListener extends NotificationListenerService implem
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean syncback = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
 
+        Log.d("NiLS", "clearAllNotifications: iteration started");
+        ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
+
         Iterator<NotificationData> i = notifications.iterator();
         while (i.hasNext())
         {
             NotificationData nd = i.next();
             if (!nd.pinned)
             {
-                if (listener != null) listener.onNotificationCleared(nd);
+                clearedNotifications.add(nd);
                 i.remove();
 
                 // notify android to clear it too
@@ -209,12 +226,21 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 }
             }
         }
+        Log.d("NiLS", "clearAllNotifications: iteration finished");
 
-        if (listener != null) listener.onNotificationsListChanged();
+        // notify listener for cleared notifications
+        if (listener != null)
+        {
+            for(NotificationData nd : clearedNotifications)
+            {
+                listener.onNotificationCleared(nd);
+            }
+            listener.onNotificationsListChanged();
+        }
     }
 
     @Override
-    public void clearNotification(String packageName, int notificationId)
+    public synchronized void clearNotification(String packageName, int notificationId)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
@@ -224,7 +250,9 @@ public class NewNotificationsListener extends NotificationListenerService implem
         boolean changed = false;
 
         // first, find it on list
+        Log.d("NiLS", "clearNotification(packageName, notificationId): iteration started");
         Iterator<NotificationData> iter = notifications.iterator();
+        ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
         while(iter.hasNext())
         {
             NotificationData nd = iter.next();
@@ -241,13 +269,23 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 {
                     exp.printStackTrace();
                 }
-                if (listener != null) listener.onNotificationCleared(nd);
+                clearedNotifications.add(nd);
                 changed = true;
 
                 // do not stop loop - keep searching for more notification with the same id
             }
         }
-        if (changed  && listener != null) listener.onNotificationsListChanged();
+        Log.d("NiLS", "clearNotification(packageName, notificationId): iteration finished");
+
+        // notify listener for cleared notifications
+        if (changed && listener != null)
+        {
+            for(NotificationData nd : clearedNotifications)
+            {
+                listener.onNotificationCleared(nd);
+            }
+            listener.onNotificationsListChanged();
+        }
     }
 
     @Override
@@ -263,15 +301,18 @@ public class NewNotificationsListener extends NotificationListenerService implem
     }
 
     @Override
-    public void clearNotificationsForApps(String[] packages)
+    public synchronized void clearNotificationsForApps(String[] packages)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
         boolean syncback = (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
                 sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART));
         boolean changed = false;
+        ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
+
         for(String packageName : packages)
         {
+            Log.d("NiLS", "clearNotificationsForApps: iteration started");
             ListIterator<NotificationData> i = notifications.listIterator();
             while (i.hasNext())
             {
@@ -289,18 +330,24 @@ public class NewNotificationsListener extends NotificationListenerService implem
                         exp.printStackTrace();
                     }
                     changed = true;
-                    if (listener != null) listener.onNotificationCleared(nd);
+                    clearedNotifications.add(nd);
                 }
             }
+            Log.d("NiLS", "clearNotificationsForApps: iteration finished");
         }
-        if (changed)
+        // notify listener for cleared notifications
+        if (changed && listener != null)
         {
-            if (listener != null) listener.onNotificationsListChanged();
+            for(NotificationData nd : clearedNotifications)
+            {
+                listener.onNotificationCleared(nd);
+            }
+            listener.onNotificationsListChanged();
         }
     }
 
     @Override
-    public void clearNotification(int uid)
+    public synchronized void clearNotification(int uid)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
@@ -308,6 +355,7 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART));
 
         // first, find it on list
+        Log.d("NiLS", "clearNotification(uid): iteration started");
         Iterator<NotificationData> iter = notifications.iterator();
         boolean removed = false;
         NotificationData removedNd = null;
@@ -322,9 +370,9 @@ public class NewNotificationsListener extends NotificationListenerService implem
 
                 iter.remove();
                 removed = true;
-                if (listener != null) listener.onNotificationCleared(nd);
             }
         }
+        Log.d("NiLS", "clearNotification(uid): iteration finished");
 
         if (removed)
         {
@@ -346,7 +394,11 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 exp.printStackTrace();
             }
 
-            if (listener != null) listener.onNotificationsListChanged();
+            if (listener != null)
+            {
+                listener.onNotificationCleared(removedNd);
+                listener.onNotificationsListChanged();
+            }
         }
     }
 }
