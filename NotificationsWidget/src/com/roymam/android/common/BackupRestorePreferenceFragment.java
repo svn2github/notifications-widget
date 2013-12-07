@@ -1,5 +1,7 @@
 package com.roymam.android.common;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -8,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.roymam.android.notificationswidget.R;
+import com.roymam.android.notificationswidget.SettingsActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +23,10 @@ import java.util.Map;
 
 public class BackupRestorePreferenceFragment extends PreferenceFragment
 {
+    public static final String NILSPLUS_BACKUP_SERVICE = "com.roymam.android.nilsplus.NPService";
+    public static final String BACKUP_SETTINGS = "com.roymam.android.nils.backup_settings";
+    public static final String RESTORE_SETTINGS = "com.roymam.android.nils.restore_settings";
+
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -37,6 +44,12 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
                     Toast.makeText(getActivity(), getActivity().getString(R.string.backup_success), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getActivity(), getActivity().getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
+
+                // Call Backup method of NiLS+
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName(SettingsActivity.NILSPLUS_PACKAGE, NILSPLUS_BACKUP_SERVICE));
+                intent.setAction(BACKUP_SETTINGS);
+                getActivity().startService(intent);
                 return true;
             }
         });
@@ -51,6 +64,12 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
                     Toast.makeText(getActivity(), getActivity().getString(R.string.restore_success), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getActivity(), getActivity().getString(R.string.restore_failed), Toast.LENGTH_SHORT).show();
+
+                // Call Restore method of NiLS+
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName(SettingsActivity.NILSPLUS_PACKAGE, NILSPLUS_BACKUP_SERVICE));
+                intent.setAction(RESTORE_SETTINGS);
+                getActivity().startService(intent);
                 return true;
             }
         });

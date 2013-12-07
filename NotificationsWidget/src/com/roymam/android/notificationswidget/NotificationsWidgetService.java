@@ -5,11 +5,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -193,38 +191,28 @@ public class NotificationsWidgetService extends Service
 	{
 		// add alarm clock intent
 	    PackageManager packageManager = this.getPackageManager();
-	    Intent alarmClockIntent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
 
 	    // Verify clock implementation
-	    String clockImpls[][] = 
+	    String clockImpls[] =
 	    {
-	            {"HTC Alarm Clock", "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl" },
-	            {"Standar Alarm Clock", "com.android.deskclock", "com.android.deskclock.AlarmClock"},
-	            {"Moto Blur Alarm Clock", "com.motorola.blur.alarmclock",  "com.motorola.blur.alarmclock.AlarmClock"},
-	            {"Samsung Galaxy Clock", "com.sec.android.app.clockpackage","com.sec.android.app.clockpackage.ClockPackage"},
-	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"}
+                "com.htc.android.worldclock",
+                "com.motorola.blur.alarmclock",
+                "com.sec.android.app.clockpackage",
+                "com.lge.clock",
+                "com.android.deskclock",
+                "com.google.android.deskclock"
 	    };
 
-	    boolean foundClockImpl = false;
-
-	    for(int i=0; i<clockImpls.length; i++) 
+        Intent alarmClockIntent  = null;
+	    for(int i=0; i<clockImpls.length  && alarmClockIntent == null; i++)
 	    {
-	        String packageName = clockImpls[i][1];
-	        String className = clockImpls[i][2];
-	        try 
-	        {
-	            ComponentName cn = new ComponentName(packageName, className);
-	            packageManager.getActivityInfo(cn, PackageManager.GET_META_DATA);
-	            alarmClockIntent.setComponent(cn);
-	            foundClockImpl = true;
-	        } catch (NameNotFoundException e) 
-	        {	            
-	        }
+	        String packageName = clockImpls[i];
+            alarmClockIntent = packageManager.getLaunchIntentForPackage(packageName);
 	    }
 
-	    if (foundClockImpl) 
+	    if (alarmClockIntent != null)
 	    {
-	        return PendingIntent.getActivity(this, 0, alarmClockIntent, 0);
+	        return PendingIntent.getActivity(this, 0, alarmClockIntent , 0);
 	    }
 	    else
 	    {

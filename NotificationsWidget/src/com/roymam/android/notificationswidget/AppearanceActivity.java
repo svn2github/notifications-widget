@@ -2,9 +2,12 @@ package com.roymam.android.notificationswidget;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,10 +25,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
@@ -58,71 +58,73 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class AppearanceActivity extends FragmentActivity implements OnNavigationListener
-{		
-	// page scroll stuff
+public class AppearanceActivity extends Activity implements OnNavigationListener
+{
+    // page scroll stuff
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
-	
+
 	// selected widget mode
 	private static String 	 widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
-	
-	// fragements
+
+    // fragements
 	private ClockSectionFragment clockSettingsFragment = null;
-	private NotificationSectionFragment notificationsSettingsFragment = null;
-	private int updateViewId = 0;
+    private NotificationSectionFragment notificationsSettingsFragment = null;
+    private int updateViewId = 0;
 	private DialogFragment colorDialog;
-	
-	// clock form fields
+
+    // clock form fields
 	private static RadioGroup clockStyleRG;
-	private static CheckBox autoSwitch;
-	private static CheckBox showClearAll;
-	private static CheckBox hideClock;
+    private static CheckBox autoSwitch;
+    private static CheckBox showClearAll;
+    private static CheckBox hideClock;
     private static CheckBox showPersistent;
-	private static ViewAnimator clockStyleView;
-	private static ToggleButton clockClickable;
-	private static ToggleButton boldHours;
-	private static ToggleButton boldMinutes;
-	public static View bgColorView;
-	public static View clockColorView;
-	public static View dateColorView;
-	public static View alarmColorView;
-	public static ViewGroup bgColorButton;
-	public static ViewGroup clockColorButton;
-	public static ViewGroup dateColorButton;
-	public static ViewGroup alarmColorButton;
+    private static ViewAnimator clockStyleView;
+    private static ToggleButton clockClickable;
+    private static ToggleButton boldHours;
+    private static ToggleButton boldMinutes;
+    public static View bgColorView;
+    public static View clockColorView;
+    public static View dateColorView;
+    public static View alarmColorView;
+    public static ViewGroup bgColorButton;
+    public static ViewGroup clockColorButton;
+    public static ViewGroup dateColorButton;
+    public static ViewGroup alarmColorButton;
 	public static SeekBar bgClockOpacitySlider;
 
-	// notification fields
+    // notification fields
 	public static ViewAnimator notificationStyleView;
-	public static RadioGroup notificationStyleRG;
-	public static RadioButton notificationStyleCompact;
-	public static RadioButton notificationStyleNormal;
-	public static RadioButton notificationStyleLarge;
-	public static ToggleButton notificationClickable;
-	public static ToggleButton useExpandedText;
-	public static ToggleButton iconClickable;
-	public static View notificationBgColorView;
-	public static View titleColorView;
-	public static View textColorView;
-	public static View contentColorView;
-	public static ViewGroup notificationBgColorButton;
-	public static ViewGroup titleColorButton;
-	public static ViewGroup textColorButton;
-	public static ViewGroup contentColorButton;
-	public static SeekBar notificationBgClockOpacitySlider;
-	public static Spinner maxLinesSpinner;
+    public static RadioGroup notificationStyleRG;
+    public static RadioButton notificationStyleCompact;
+    public static RadioButton notificationStyleNormal;
+    public static RadioButton notificationStyleLarge;
+    public static ToggleButton notificationClickable;
+    public static ToggleButton useExpandedText;
+    public static ToggleButton iconClickable;
+    public static View notificationBgColorView;
+    public static View titleColorView;
+    public static View textColorView;
+    public static View contentColorView;
+    public static ViewGroup notificationBgColorButton;
+    public static ViewGroup titleColorButton;
+    public static ViewGroup textColorButton;
+    public static ViewGroup contentColorButton;
+    public static SeekBar notificationBgClockOpacitySlider;
+    public static Spinner maxLinesSpinner;
+    private SettingsActivity.PrefsPersistentNotificationsFragment persistentNotificationsFragment;
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) 
+    protected void onSaveInstanceState(Bundle outState)
     {
     	super.onSaveInstanceState(outState);
-    	getSupportFragmentManager().putFragment(outState, ClockSectionFragment.class.getName(), clockSettingsFragment);
-    	getSupportFragmentManager().putFragment(outState, NotificationSectionFragment.class.getName(), notificationsSettingsFragment);
+    	getFragmentManager().putFragment(outState, ClockSectionFragment.class.getName(), clockSettingsFragment);
+        getFragmentManager().putFragment(outState, NotificationSectionFragment.class.getName(), notificationsSettingsFragment);
+        getFragmentManager().putFragment(outState, SettingsActivity.PrefsPersistentNotificationsFragment.class.getName(), persistentNotificationsFragment);
     }
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) 
+	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_appearance);
@@ -130,12 +132,12 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		
+
 		CharSequence[] modes = getResources().getStringArray(R.array.widget_mode_entries);
-		
+
 		ArrayAdapter<CharSequence> list = new ArrayAdapter<CharSequence> (this, R.layout.spinner_widget_mode, android.R.id.text1, modes);
 		list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
+
 	    getActionBar().setListNavigationCallbacks(list, this);
 	    getActionBar().setDisplayShowTitleEnabled(false);
 
@@ -149,21 +151,22 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 	    	itemPosition =1 ;
 	    else
 	    	itemPosition = 2;
-	    
+
 	    getActionBar().setSelectedNavigationItem(itemPosition);
 
 	    // Create the adapter that will return a fragment for each of the two
 		// primary sections of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-		
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
-		if (savedInstanceState != null) 
+
+		if (savedInstanceState != null)
 	    {
-	        clockSettingsFragment = (ClockSectionFragment) getSupportFragmentManager().getFragment(savedInstanceState, ClockSectionFragment.class.getName());
-	        notificationsSettingsFragment = (NotificationSectionFragment) getSupportFragmentManager().getFragment(savedInstanceState, NotificationSectionFragment.class.getName());
+	        clockSettingsFragment = (ClockSectionFragment) getFragmentManager().getFragment(savedInstanceState, ClockSectionFragment.class.getName());
+	        notificationsSettingsFragment = (NotificationSectionFragment) getFragmentManager().getFragment(savedInstanceState, NotificationSectionFragment.class.getName());
+            persistentNotificationsFragment = (SettingsActivity.PrefsPersistentNotificationsFragment) getFragmentManager().getFragment(savedInstanceState, SettingsActivity.PrefsPersistentNotificationsFragment.class.getName());
 	    }
 	}
 
@@ -397,9 +400,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		colorDialog.show(getFragmentManager(), "ChooseColorDialog");	
 	}
 
-	public class SectionsPagerAdapter extends FragmentPagerAdapter 
+	public class SectionsPagerAdapter extends FragmentPagerAdapter
 	{
-		public SectionsPagerAdapter(FragmentManager fm) 
+		public SectionsPagerAdapter(FragmentManager fm)
 		{
 			super(fm);
 		}
@@ -415,6 +418,9 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			case 1:
 				notificationsSettingsFragment = new NotificationSectionFragment();
 				return notificationsSettingsFragment;
+            case 2:
+                persistentNotificationsFragment = new SettingsActivity.PrefsPersistentNotificationsFragment();
+                return persistentNotificationsFragment;
 			}
 			return null;
 		}
@@ -422,8 +428,8 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 		@Override
 		public int getCount() 
 		{
-			// Show 2 total pages.
-			return 2;
+			// Show 3 total pages.
+			return 3;
 		}
 
 		@Override
@@ -433,9 +439,11 @@ public class AppearanceActivity extends FragmentActivity implements OnNavigation
 			{
 			case 0:
 				return getString(R.string.title_section1).toUpperCase(Locale.US);
-			case 1:
-				return getString(R.string.title_section2).toUpperCase(Locale.US);
-			}
+            case 1:
+                return getString(R.string.title_section2).toUpperCase(Locale.US);
+            case 2:
+                return getString(R.string.persistent_notifications).toUpperCase(Locale.US);
+            }
 			return null;
 		}
 	}

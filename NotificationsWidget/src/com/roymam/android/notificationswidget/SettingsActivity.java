@@ -23,6 +23,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +93,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
     public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
 
+    public static final String NILSPLUS_PACKAGE = "com.roymam.android.nilsplus";
+
     public static class HowToAddWidgetFragment extends Fragment
     {
         @Override
@@ -101,6 +104,19 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 return inflater.inflate(R.layout.view_help_add_widget, null);
             else
                 return inflater.inflate(R.layout.view_help_no_lswidgets, null);
+        }
+    }
+
+    public static class InstallNFPFragment extends Fragment
+    {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            View v = inflater.inflate(R.layout.view_install_nfp, null);
+            ((TextView) v.findViewById(R.id.beta_1st_step)).setMovementMethod(LinkMovementMethod.getInstance());
+            ((TextView) v.findViewById(R.id.beta_2nd_step)).setMovementMethod(LinkMovementMethod.getInstance());
+            ((TextView) v.findViewById(R.id.beta_3rd_step)).setMovementMethod(LinkMovementMethod.getInstance());
+            return v;
         }
     }
 
@@ -492,6 +508,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             target.get(0).fragment = null;
         }
 
+        // check widget status
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
         ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
         int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
@@ -507,7 +524,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             target.get(1).fragment = "com.roymam.android.notificationswidget.SettingsActivity$HowToAddWidgetFragment";
         }
 
-        // check widget status
+        // check NiLSPlus status
+        if (isNiLSPlusInstalled())
+        {
+            target.get(2).iconRes = android.R.drawable.presence_online;
+            target.get(2).summaryRes = R.string.floating_panel_is_active;
+            Intent nilsPlusSettingsIntent = new Intent();
+            nilsPlusSettingsIntent.setComponent(new ComponentName(NILSPLUS_PACKAGE, NILSPLUS_PACKAGE+".activities.NPSettings"));
+            target.get(2).intent = nilsPlusSettingsIntent;
+            target.get(2).fragment = null;
+        }
 
         // setting last "about" button summary
         String versionString = "";
@@ -519,6 +545,18 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		} catch (NameNotFoundException e) 
 		{
 		}               
+    }
+
+    private boolean isNiLSPlusInstalled()
+    {
+        try
+        {
+            getPackageManager().getPackageInfo(NILSPLUS_PACKAGE, 0);
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            return false;
+        }
+        return true;
     }
 	
 	@Override

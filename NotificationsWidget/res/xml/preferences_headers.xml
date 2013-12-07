@@ -15,11 +15,18 @@
         		android:targetClass="com.roymam.android.notificationswidget.AppearanceActivity" />
             </header>
 
-    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsPersistentNotificationsFragment"
+    <header
+        android:icon="@android:drawable/presence_offline"
+        android:title="@string/floating_panel"
+        android:summary="@string/floating_panel_not_installed"
+        android:fragment="com.roymam.android.notificationswidget.SettingsActivity$InstallNFPFragment">
+    </header>
+
+   <!-- <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsPersistentNotificationsFragment"
             android:icon="@drawable/persistent"
             android:summary="@string/persistent_notifications_summary"
             android:title="@string/persistent_notifications" />
-
+-->
     <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsAppSpecificFragment"
         	android:icon="@drawable/apps"
             android:title="@string/app_specific_settings_title"

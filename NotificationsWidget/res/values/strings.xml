@@ -340,4 +340,12 @@
     <string name="backup_failed">Failed to backup settings</string>
     <string name="restore_success">Settings were restored successfully</string>
     <string name="restore_failed">Failed to restore settings</string>
+
+    <!-- NiLSPlus Integration -->
+    <string name="floating_panel">Floating Panel - BETA</string>
+    <string name="floating_panel_not_installed">Swipe gestures, animations, themes and many more features. Click for info.</string>
+    <string name="floating_panel_is_active">Floating Notifications Panel is active.\nclick to change settings.</string>
+    <string name="download_fp_googleplay">Download &amp; Install <a href="https://play.google.com/store/apps/details?id=com.roymam.android.nilsplus">NiLS Floating Panel</a> from Google Play</string>
+    <string name="enable_fp_tester_googleplay">Enable <a href="https://play.google.com/apps/testing/com.roymam.android.nilsplus">Tester Mode</a> on Google Play</string>
+    <string name="join_nils_community">Join <a href="https://plus.google.com/u/0/communities/115156552435983276604">NiLS Official Community</a> on Google+</string>
 </resources>
