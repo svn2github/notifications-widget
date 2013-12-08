@@ -597,20 +597,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         }*/
 	}
 	
-	// openPersistentSettings is launched from the custom checkbox in persistent notifications settings
-	public void openPersistentSettings(View v)
-	{		
-		// this is a dirty hack to get the package name within the settings button
-		String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
-
-        // open persistent notification settings
-		Intent runAppSpecificSettings = new Intent(this, PersistentNotificationSettingsActivity.class);
-		runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
-		startActivity(runAppSpecificSettings);
-		
-	}
-
-    // openAppSettings is launched from the custom checkbox in app specific settings
+	// openAppSettings is launched from the custom checkbox in app specific settings
     public void openAppSettings(View v)
     {
         // this is a dirty hack to get the package name within the settings button

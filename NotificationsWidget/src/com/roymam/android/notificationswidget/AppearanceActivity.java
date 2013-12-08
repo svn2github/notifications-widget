@@ -400,6 +400,19 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 		colorDialog.show(getFragmentManager(), "ChooseColorDialog");	
 	}
 
+    // openPersistentSettings is launched from the custom checkbox in persistent notifications settings
+    public void openPersistentSettings(View v)
+    {
+        // this is a dirty hack to get the package name within the settings button
+        String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
+
+        // open persistent notification settings
+        Intent runAppSpecificSettings = new Intent(this, PersistentNotificationSettingsActivity.class);
+        runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+        startActivity(runAppSpecificSettings);
+
+    }
+
 	public class SectionsPagerAdapter extends FragmentPagerAdapter
 	{
 		public SectionsPagerAdapter(FragmentManager fm)
