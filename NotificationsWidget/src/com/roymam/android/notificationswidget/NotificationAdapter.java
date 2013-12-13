@@ -25,7 +25,7 @@ public class NotificationAdapter implements NotificationEventListener
 {
     private Context context = null;
     private boolean newNotificationsAvailable = false;
-    private boolean deviceCovered = false;
+    private Boolean deviceCovered = null;
 
     // extensions API
     public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
@@ -49,7 +49,7 @@ public class NotificationAdapter implements NotificationEventListener
                 turnScreenOn();
             else
             {
-                deviceCovered = false;
+                deviceCovered = null;
                 registerProximitySensor();
 
                 mHandler.postDelayed(new Runnable()
@@ -57,12 +57,13 @@ public class NotificationAdapter implements NotificationEventListener
                     @Override
                     public void run()
                     {
-                        if (!deviceCovered)
+                        if (deviceCovered == null || !deviceCovered)
                         {
+                            // the device is not covered or we don't know yet so we turn the screen on
                             turnScreenOn();
                             stopProximityMontior();
                         }
-                        else
+                        else  // the device is covered
                         {
                             final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
                             // stop proximity monitoring if delayed screen on is inactive, otherwise it will stopped later when uncovered
@@ -327,26 +328,34 @@ public class NotificationAdapter implements NotificationEventListener
                     public void onSensorChanged(SensorEvent event)
                     {
                         Log.d("NiLS", "onSensorChanged:"+event.values[0]);
-                        if (event.values[0] == 0)
+                        boolean newCoverStatus = (event.values[0] == 0);
+                        // unknown -> something
+                        if (deviceCovered == null)
+                            deviceCovered = newCoverStatus;
+                        // uncovered -> covered
+                        else if (!deviceCovered && newCoverStatus)
                         {
                             deviceCovered = true;
                         }
-                        else
+                        // covered -> uncovered
+                        else if (deviceCovered && !newCoverStatus)
                         {
-                            if (deviceCovered)
+                            deviceCovered = false;
+                            final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
+                            // stop proximity monitoring if delayed screen on is inactive
+                            if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
                             {
-                                deviceCovered = false;
-                                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-                                // stop proximity monitoring if delayed screen on is inactive
-                                if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
-                                {
-                                    turnScreenOn();
-                                }
-                                stopProximityMontior();
+                                turnScreenOn();
                             }
+
+                            stopProximityMontior();
                         }
+                        // else (cover -> cover , uncover -> uncover) - do nothing
                     }
                 };
+            // start with unknown cover status
+            deviceCovered = null;
             sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }

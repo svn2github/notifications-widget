@@ -2,9 +2,7 @@ package com.roymam.android.notificationswidget;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.ActivityManager;
-import android.app.KeyguardManager;
 import android.app.Notification;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -152,11 +150,11 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                     if (!accessibilityEvent.getPackageName().equals("com.android.systemui") &&
                          prefs.getBoolean(SettingsActivity.CLEAR_APP_NOTIFICATIONS, true))
                     {
-                        clearNotificationsForApps(new String[]{accessibilityEvent.getPackageName().toString()});
+                        NotificationsService.getSharedInstance(getApplicationContext()).clearNotificationsForApps(new String[]{accessibilityEvent.getPackageName().toString()});
                     }
-
+                    /*
                     // request nilsplus to hide/show notifications list
-                    // TODO: move to notification adapter
+                    // TODO: remove this
                     KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
                     Intent npsIntent = new Intent();
                     npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
@@ -166,7 +164,8 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                         npsIntent.setAction(SHOW_NOTIFICATIONS);
                     else
                         npsIntent.setAction(HIDE_NOTIFICATIONS);
-                    startService(npsIntent);
+                    startService(npsIntent);*/
+
                 }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
