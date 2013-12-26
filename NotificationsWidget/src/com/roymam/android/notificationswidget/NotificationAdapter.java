@@ -276,7 +276,7 @@ public class NotificationAdapter implements NotificationEventListener
 
         // check if need to turn screen on
         Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);
-        if (turnScreenOn && !deviceCovered)
+        if (turnScreenOn && (deviceCovered == null || !deviceCovered))
         {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             // turn the screen on only if it was off
@@ -366,7 +366,7 @@ public class NotificationAdapter implements NotificationEventListener
         Log.d("NiLS", "unregisterProximitySensor");
         SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         sensorManager.unregisterListener(sensorListener);
-        deviceCovered = false;
+        deviceCovered = null;
     }
 
 }
