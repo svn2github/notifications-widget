@@ -161,6 +161,7 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(1, false);
 
 		if (savedInstanceState != null)
 	    {
