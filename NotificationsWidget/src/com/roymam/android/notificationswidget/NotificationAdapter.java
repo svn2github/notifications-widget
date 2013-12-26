@@ -52,6 +52,8 @@ public class NotificationAdapter implements NotificationEventListener
                 deviceCovered = null;
                 registerProximitySensor();
 
+                if (mHandler == null) mHandler = new Handler();
+
                 mHandler.postDelayed(new Runnable()
                 {
                     @Override
