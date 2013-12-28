@@ -26,6 +26,7 @@ public class NotificationAdapter implements NotificationEventListener
     private Context context = null;
     private boolean newNotificationsAvailable = false;
     private Boolean deviceCovered = null;
+    private boolean proximityRegistered = false;
 
     // extensions API
     public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
@@ -49,7 +50,6 @@ public class NotificationAdapter implements NotificationEventListener
                 turnScreenOn();
             else
             {
-                deviceCovered = null;
                 registerProximitySensor();
 
                 if (mHandler == null) mHandler = new Handler();
@@ -356,9 +356,14 @@ public class NotificationAdapter implements NotificationEventListener
                         // else (cover -> cover , uncover -> uncover) - do nothing
                     }
                 };
+
             // start with unknown cover status
-            deviceCovered = null;
-            sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+            if (!proximityRegistered)
+            {
+                deviceCovered = null;
+                sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+                proximityRegistered = true;
+            }
         }
     }
 
@@ -369,6 +374,7 @@ public class NotificationAdapter implements NotificationEventListener
         SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         sensorManager.unregisterListener(sensorListener);
         deviceCovered = null;
+        proximityRegistered = false;
     }
 
 }

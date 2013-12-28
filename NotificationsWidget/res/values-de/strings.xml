@@ -291,4 +291,6 @@
     <string name="floating_panel">Floating Panel - BETA</string>
     <string name="floating_panel_not_installed">Swipe gestures, animations, themes and many more features. Click for info.</string>
     <string name="floating_panel_is_active">Floating Notifications Panel is active.\nclick to change settings.</string>
+    <string name="hide_clock_when_visible">Hide clock when visible</string>
+    <string name="hide_clock_when_visible_summary">Hide clock when the persistent notification is visible for this app</string>
 </resources>

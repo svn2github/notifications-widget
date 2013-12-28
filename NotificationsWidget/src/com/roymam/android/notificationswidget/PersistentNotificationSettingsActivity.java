@@ -20,8 +20,9 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
 	public static final String SHOW_PERSISTENT_NOTIFICATION = "showpersistent";
 	public static final String PERSISTENT_NOTIFICATION_HEIGHT = "persistent_notification_height";
     public static final String CATCH_ALL_NOTIFICATIONS = "catch_all_notifications";
-	public static final String HIDE_WHEN_NOTIFICATIONS = "hidewhennotifications";
-	public static final String PN_TIMEOUT = "pn_timeout";
+    public static final String HIDE_WHEN_NOTIFICATIONS = "hidewhennotifications";
+    public static final String HIDE_CLOCK_WHEN_VISIBLE = "hide_clock_when_visible";
+    public static final String PN_TIMEOUT = "pn_timeout";
 	public static final String PERSISTENT_APPS = "persistent_apps";
 	
 	private String packageName;
@@ -88,8 +89,16 @@ public class PersistentNotificationSettingsActivity extends PreferenceActivity i
         hideWhenNotifications.setTitle(R.string.hide_when_notifications);
         hideWhenNotifications.setDefaultValue(false);
         hideWhenNotifications.setSummary(R.string.hide_when_notifications_summary);
-        root.addPreference(hideWhenNotifications);  
-        
+        root.addPreference(hideWhenNotifications);
+
+        // Hide when notifications appears
+        CheckBoxPreference hideClockWhenVisible = new CheckBoxPreference(this);
+        hideClockWhenVisible.setKey(packageName+"."+HIDE_CLOCK_WHEN_VISIBLE);
+        hideClockWhenVisible.setTitle(R.string.hide_clock_when_visible);
+        hideClockWhenVisible.setDefaultValue(false);
+        hideClockWhenVisible.setSummary(R.string.hide_clock_when_visible_summary);
+        root.addPreference(hideClockWhenVisible);
+
         // persistent notification timeout
         ListPreference persistenttimeout = new ListPreference(this);
         persistenttimeout.setKey(packageName +"." +PN_TIMEOUT);

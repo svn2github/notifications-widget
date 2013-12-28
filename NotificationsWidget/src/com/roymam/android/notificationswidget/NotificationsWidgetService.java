@@ -140,10 +140,30 @@ public class NotificationsWidgetService extends Service
 		
 		// update clock
 		widget.removeAllViews(R.id.clockContainer);
-		String clockStyle = getClockStyle(widgetId);
-		if (!prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false))
+		boolean hideClock = prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false);
+
+        // check if need to hide the clock because of persistent notifications
+        if (prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true))
+        {
+            NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
+            if (ns != null)
+            {
+                String persistentApps = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
+                for (String packageName : persistentApps.split(","))
+                {
+                    PersistentNotification pn = ns.getPersistentNotifications().get(packageName);
+                    if (pn != null && prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.HIDE_CLOCK_WHEN_VISIBLE, false))
+                    {
+                        hideClock = true;
+                    }
+                }
+            }
+        }
+
+        if (!hideClock)
 		{
-			widget.addView(R.id.clockContainer, createClock(clockStyle, widgetId));
+            String clockStyle = getClockStyle(widgetId);
+            widget.addView(R.id.clockContainer, createClock(clockStyle, widgetId));
 		}
 		
 		// set clock bg color

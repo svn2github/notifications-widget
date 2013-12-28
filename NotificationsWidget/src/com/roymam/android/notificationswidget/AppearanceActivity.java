@@ -118,9 +118,9 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
     protected void onSaveInstanceState(Bundle outState)
     {
     	super.onSaveInstanceState(outState);
-    	getFragmentManager().putFragment(outState, ClockSectionFragment.class.getName(), clockSettingsFragment);
-        getFragmentManager().putFragment(outState, NotificationSectionFragment.class.getName(), notificationsSettingsFragment);
-        getFragmentManager().putFragment(outState, SettingsActivity.PrefsPersistentNotificationsFragment.class.getName(), persistentNotificationsFragment);
+    	if (clockSettingsFragment != null) getFragmentManager().putFragment(outState, ClockSectionFragment.class.getName(), clockSettingsFragment);
+        if (notificationsSettingsFragment != null) getFragmentManager().putFragment(outState, NotificationSectionFragment.class.getName(), notificationsSettingsFragment);
+        if (persistentNotificationsFragment != null) getFragmentManager().putFragment(outState, SettingsActivity.PrefsPersistentNotificationsFragment.class.getName(), persistentNotificationsFragment);
     }
 
 	@Override
@@ -152,8 +152,6 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 	    else
 	    	itemPosition = 2;
 
-	    getActionBar().setSelectedNavigationItem(itemPosition);
-
 	    // Create the adapter that will return a fragment for each of the two
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
@@ -169,7 +167,9 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 	        notificationsSettingsFragment = (NotificationSectionFragment) getFragmentManager().getFragment(savedInstanceState, NotificationSectionFragment.class.getName());
             persistentNotificationsFragment = (SettingsActivity.PrefsPersistentNotificationsFragment) getFragmentManager().getFragment(savedInstanceState, SettingsActivity.PrefsPersistentNotificationsFragment.class.getName());
 	    }
-	}
+
+        getActionBar().setSelectedNavigationItem(itemPosition);
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 

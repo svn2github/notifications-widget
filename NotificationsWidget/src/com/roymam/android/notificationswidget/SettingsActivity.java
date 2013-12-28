@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
@@ -551,7 +552,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     {
         try
         {
-            getPackageManager().getPackageInfo(NILSPLUS_PACKAGE, 0);
+            PackageInfo info = getPackageManager().getPackageInfo(NILSPLUS_PACKAGE, 0);
+            if (info.versionCode < 32) return false;
         } catch (PackageManager.NameNotFoundException e)
         {
             return false;
