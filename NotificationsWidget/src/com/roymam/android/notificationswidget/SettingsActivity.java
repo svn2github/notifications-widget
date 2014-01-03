@@ -534,6 +534,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         // check NiLSPlus status
         if (isNiLSPlusInstalled())
         {
+            target.get(2).titleRes = R.string.floating_panel_short;
             target.get(2).summaryRes = R.string.floating_panel_is_active;
             Intent nilsPlusSettingsIntent = new Intent();
             nilsPlusSettingsIntent.setComponent(new ComponentName(NILSPLUS_PACKAGE, NILSPLUS_PACKAGE+".activities.NPSettings"));

@@ -213,7 +213,15 @@ public class NewNotificationsListener extends NotificationListenerService implem
             {
                 clearedNotifications.add(nd);
                 i.remove();
+            }
+        }
+        Log.d("NiLS", "clearAllNotifications: iteration finished");
 
+        // notify listener for cleared notifications
+        if (listener != null)
+        {
+            for(NotificationData nd : clearedNotifications)
+            {
                 // notify android to clear it too
                 if (syncback)
                 try
@@ -224,15 +232,6 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 {
                     exp.printStackTrace();
                 }
-            }
-        }
-        Log.d("NiLS", "clearAllNotifications: iteration finished");
-
-        // notify listener for cleared notifications
-        if (listener != null)
-        {
-            for(NotificationData nd : clearedNotifications)
-            {
                 listener.onNotificationCleared(nd);
             }
             listener.onNotificationsListChanged();
@@ -260,15 +259,6 @@ public class NewNotificationsListener extends NotificationListenerService implem
             if (nd.packageName.equals(packageName) && nd.id == notificationId)
             {
                 iter.remove();
-                if (syncback)
-                try
-                {
-                    cancelNotification(nd.packageName, nd.tag, nd.id);
-                }
-                catch (Exception exp)
-                {
-                    exp.printStackTrace();
-                }
                 clearedNotifications.add(nd);
                 changed = true;
 
@@ -282,6 +272,15 @@ public class NewNotificationsListener extends NotificationListenerService implem
         {
             for(NotificationData nd : clearedNotifications)
             {
+                if (syncback)
+                try
+                {
+                    cancelNotification(nd.packageName, nd.tag, nd.id);
+                }
+                catch (Exception exp)
+                {
+                    exp.printStackTrace();
+                }
                 listener.onNotificationCleared(nd);
             }
             listener.onNotificationsListChanged();
@@ -320,15 +319,6 @@ public class NewNotificationsListener extends NotificationListenerService implem
                 if (!nd.pinned && nd.packageName.equals(packageName))
                 {
                     i.remove();
-                    if (syncback)
-                    try
-                    {
-                        cancelNotification(packageName, nd.tag, nd.id);
-                    }
-                    catch (Exception exp)
-                    {
-                        exp.printStackTrace();
-                    }
                     changed = true;
                     clearedNotifications.add(nd);
                 }
@@ -340,6 +330,15 @@ public class NewNotificationsListener extends NotificationListenerService implem
         {
             for(NotificationData nd : clearedNotifications)
             {
+                if (syncback)
+                try
+                {
+                    cancelNotification(nd.packageName, nd.tag, nd.id);
+                }
+                catch (Exception exp)
+                {
+                    exp.printStackTrace();
+                }
                 listener.onNotificationCleared(nd);
             }
             listener.onNotificationsListChanged();
