@@ -113,33 +113,37 @@ public class NotificationAdapter implements NotificationEventListener
         AppSettingsActivity.addAppToAppSpecificSettings(nd.packageName, context);
 
         // send notification to nilsplus
-        Intent npsIntent = new Intent();
-        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction(ADD_NOTIFICATION);
-        npsIntent.putExtra("title", nd.title);
-        npsIntent.putExtra("text", nd.text);
-        npsIntent.putExtra("time", nd.received);
-        npsIntent.putExtra("package", nd.packageName);
-        npsIntent.putExtra("id", nd.id);
-        npsIntent.putExtra("uid", nd.uid);
-        npsIntent.putExtra("action", nd.action);
-        npsIntent.putExtra("icon", nd.icon);
-        npsIntent.putExtra("appicon", nd.appicon);
-
-        if (nd.actions != null)
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
         {
-            for (int i=0; i<nd.actions.length; i++)
-            {
-                npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
-                npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
-                npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
-            }
-            npsIntent.putExtra("actions",nd.actions.length);
-        }
-        else
-            npsIntent.putExtra("actions",0);
+            Intent npsIntent = new Intent();
+            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            npsIntent.setAction(ADD_NOTIFICATION);
+            npsIntent.putExtra("title", nd.title);
+            npsIntent.putExtra("text", nd.text);
+            npsIntent.putExtra("time", nd.received);
+            npsIntent.putExtra("package", nd.packageName);
+            npsIntent.putExtra("id", nd.id);
+            npsIntent.putExtra("uid", nd.uid);
+            npsIntent.putExtra("action", nd.action);
+            npsIntent.putExtra("icon", nd.icon);
+            npsIntent.putExtra("appicon", nd.appicon);
 
-        context.startService(npsIntent);
+            if (nd.actions != null)
+            {
+                for (int i=0; i<nd.actions.length; i++)
+                {
+                    npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
+                    npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
+                    npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
+                }
+                npsIntent.putExtra("actions",nd.actions.length);
+            }
+            else
+                npsIntent.putExtra("actions",0);
+
+            context.startService(npsIntent);
+        }
     }
 
     private void notifyNotificationUpdated(NotificationData nd)
@@ -147,48 +151,57 @@ public class NotificationAdapter implements NotificationEventListener
         Log.d("Nils", "notification update #" + nd.uid);
 
         // send notification to nilsplus
-        Intent npsIntent = new Intent();
-        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction(UPDATE_NOTIFICATION);
-        npsIntent.putExtra("title", nd.title);
-        npsIntent.putExtra("text", nd.text);
-        npsIntent.putExtra("time", nd.received);
-        npsIntent.putExtra("package", nd.packageName);
-        npsIntent.putExtra("id", nd.id);
-        npsIntent.putExtra("uid", nd.uid);
-        npsIntent.putExtra("action", nd.action);
-        npsIntent.putExtra("icon", nd.icon);
-        npsIntent.putExtra("appicon", nd.appicon);
-
-        if (nd.actions != null)
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
         {
-            for (int i=0; i<nd.actions.length; i++)
+            Intent npsIntent = new Intent();
+            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            npsIntent.setAction(UPDATE_NOTIFICATION);
+            npsIntent.putExtra("title", nd.title);
+            npsIntent.putExtra("text", nd.text);
+            npsIntent.putExtra("time", nd.received);
+            npsIntent.putExtra("package", nd.packageName);
+            npsIntent.putExtra("id", nd.id);
+            npsIntent.putExtra("uid", nd.uid);
+            npsIntent.putExtra("action", nd.action);
+            npsIntent.putExtra("icon", nd.icon);
+            npsIntent.putExtra("appicon", nd.appicon);
+
+            if (nd.actions != null)
             {
-                npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
-                npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
-                npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
+                for (int i=0; i<nd.actions.length; i++)
+                {
+                    npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
+                    npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
+                    npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
+                }
+                npsIntent.putExtra("actions",nd.actions.length);
             }
-            npsIntent.putExtra("actions",nd.actions.length);
-        }
-        else
-        {
-            npsIntent.putExtra("actions",0);
-        }
+            else
+            {
+                npsIntent.putExtra("actions",0);
+            }
 
-        context.startService(npsIntent);
+            context.startService(npsIntent);
+        }
     }
 
     private void notifyNotificationRemove(NotificationData nd)
     {
-        // send notification to nilsplus
         Log.d("Nils", "notification remove #" + nd.id);
-        Intent npsIntent = new Intent();
-        npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
-        npsIntent.setAction(REMOVE_NOTIFICATION);
-        npsIntent.putExtra("id", nd.id);
-        npsIntent.putExtra("uid", nd.uid);
-        npsIntent.putExtra("package", nd.packageName);
-        context.startService(npsIntent);
+
+        // send notification to nilsplus
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
+        {
+            Intent npsIntent = new Intent();
+            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            npsIntent.setAction(REMOVE_NOTIFICATION);
+            npsIntent.putExtra("id", nd.id);
+            npsIntent.putExtra("uid", nd.uid);
+            npsIntent.putExtra("package", nd.packageName);
+            context.startService(npsIntent);
+        }
 
         // notify FloatingNotifications for clearing this notification
         Intent intent = new Intent();

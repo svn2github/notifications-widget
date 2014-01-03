@@ -28,9 +28,11 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.roymam.android.common.ListPreferenceChangeListener;
+import com.roymam.android.common.SwitchPrefsHeaderAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,19 +84,23 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     public static final String SYNC_NOTIFICATIONS_TWOWAY = "twoway";
     public static final String SYNC_NOTIFICATIONS_SMART = "smart";
     public static final String FORCE_CLEAR_ON_OPEN = "force_clear_on_open";
-	public static final String COLLECT_ON_UNLOCK = "collectonunlock";
-	public static final String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
+    public static final String COLLECT_ON_UNLOCK = "collectonunlock";
+    public static final String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
     public static final String CLOCK_SMALL = "small";
-	public static final String CLOCK_MEDIUM = "medium";
-	public static final String CLOCK_LARGE = "large";
-	public static final String CLOCK_HIDDEN = "clockhidden";
+    public static final String CLOCK_MEDIUM = "medium";
+    public static final String CLOCK_LARGE = "large";
+    public static final String CLOCK_HIDDEN = "clockhidden";
     public static final String HIDE_NOTIFICATIONS = "hide_notifications";
-	public static final String CLOCK_AUTO = "auto";
-	public static final String APPS_SETTINGS = "specificapps";
+    public static final String CLOCK_AUTO = "auto";
+    public static final String APPS_SETTINGS = "specificapps";
     public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
-    public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
+    public static final String FP_ENABLED = "fp_enabled";
 
+    public static final boolean DEFAULT_FP_ENABLED = true;
+
+    public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
     public static final String NILSPLUS_PACKAGE = "com.roymam.android.nilsplus";
+    private List<Header> mHeaders = null;
 
     public static class HowToAddWidgetFragment extends Fragment
     {
@@ -528,12 +534,19 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         // check NiLSPlus status
         if (isNiLSPlusInstalled())
         {
-            target.get(2).iconRes = android.R.drawable.presence_online;
             target.get(2).summaryRes = R.string.floating_panel_is_active;
             Intent nilsPlusSettingsIntent = new Intent();
             nilsPlusSettingsIntent.setComponent(new ComponentName(NILSPLUS_PACKAGE, NILSPLUS_PACKAGE+".activities.NPSettings"));
             target.get(2).intent = nilsPlusSettingsIntent;
             target.get(2).fragment = null;
+
+            // set switch key and default value
+            target.get(2).extras = new Bundle();
+            target.get(2).extras.putInt(SwitchPrefsHeaderAdapter.HEADER_TYPE, SwitchPrefsHeaderAdapter.HEADER_TYPE_SWITCH);
+            target.get(2).extras.putString(SwitchPrefsHeaderAdapter.HEADER_KEY, FP_ENABLED);
+            target.get(2).extras.putBoolean(SwitchPrefsHeaderAdapter.HEADER_DEFAULT_VALUE, true);
+            target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_ENABLED_MESSAGE, getString(R.string.nils_fp_enabled));
+            target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_DISABLED_MESSAGE, getString(R.string.nils_fp_disabled));
         }
 
         // setting last "about" button summary
@@ -545,7 +558,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        		
 		} catch (NameNotFoundException e) 
 		{
-		}               
+		}
+
+        mHeaders = target;
     }
 
     private boolean isNiLSPlusInstalled()
@@ -560,8 +575,27 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         }
         return true;
     }
-	
-	@Override
+
+    @Override
+    public void setListAdapter(ListAdapter adapter)
+    {
+        int i, count;
+
+        if (mHeaders == null)
+        {
+            mHeaders = new ArrayList<Header>();
+            // When the saved state provides the list of headers,
+            // onBuildHeaders is not called
+            // so we build it from the adapter given, then use our own adapter
+            count = adapter.getCount();
+            for (i = 0; i < count; ++i)
+                mHeaders.add((Header) adapter.getItem(i));
+        }
+
+        super.setListAdapter(new SwitchPrefsHeaderAdapter(this, mHeaders));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) 
 	{
         super.onCreate(savedInstanceState);        

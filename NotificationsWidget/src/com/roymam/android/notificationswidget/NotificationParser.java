@@ -425,6 +425,7 @@ public class NotificationParser
             if ((multipleEventsHandling.equals("first") || multipleEventsHandling.equals("last")) && content != null)
             {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(content);
+                // try to split it by text style
                 TextAppearanceSpan[] spans = ssb.getSpans(0, content.length(), TextAppearanceSpan.class);
                 if (spans.length == 2)
                 {
@@ -434,6 +435,16 @@ public class NotificationParser
                     int s1start = ssb.getSpanStart(spans[1]);
                     int s1end = ssb.getSpanEnd(spans[1]);
                     content = content.subSequence(s1start, s1end).toString();
+                }
+                else
+                {
+                    // try to split it by ":" delimiter
+                    String[] parts = content.toString().split(":", 2);
+                    if (parts.length == 2)
+                    {
+                        title = parts[0];
+                        content = parts[1];
+                    }
                 }
             }
 

@@ -16,7 +16,8 @@
             </header>
 
     <header
-        android:icon="@android:drawable/presence_offline"
+        android:id="@+id/floating_panel_header"
+        android:icon="@drawable/nilsfp_icon_mono"
         android:title="@string/floating_panel"
         android:summary="@string/floating_panel_not_installed"
         android:fragment="com.roymam.android.notificationswidget.SettingsActivity$InstallNFPFragment">
