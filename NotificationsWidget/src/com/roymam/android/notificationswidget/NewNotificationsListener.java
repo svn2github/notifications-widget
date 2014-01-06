@@ -1,13 +1,21 @@
 package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.text.format.Time;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,8 +51,45 @@ public class NewNotificationsListener extends NotificationListenerService implem
     public void onDestroy()
     {
         instance = null;
+        saveLog(getApplicationContext());
         getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
         super.onDestroy();
+    }
+
+    private void saveLog(Context context)
+    {
+        // save crash log
+        Log.d("NiLS", "Service has stopped. saving log file...");
+        try
+        {
+            // read logcat
+            Process process = Runtime.getRuntime().exec("logcat -d");
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            StringBuilder log=new StringBuilder();
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                log.append(line);
+            }
+
+            Time now = new Time();
+            now.setToNow();
+            String filename = now.format("%Y-%m-%dT%H:%M:%S")+".log";
+
+            // save log into a file
+            File dst = new File(context.getExternalFilesDir(null),filename);
+            ObjectOutputStream output = null;
+            output = new ObjectOutputStream(new FileOutputStream(dst));
+            output.writeObject(log.toString());
+            output.flush();
+            output.close();
+
+            Log.d("NiLS", "Log file written to "+context.getExternalFilesDir(null)+"/"+filename);
+        }
+        catch (IOException e)
+        {}
     }
 
     @Override
