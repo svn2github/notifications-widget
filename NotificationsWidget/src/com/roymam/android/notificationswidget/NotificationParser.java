@@ -124,7 +124,8 @@ public class NotificationParser
                 nd.title = null;
                 if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
                 {
-                    getExpandedText(n,nd, sharedPref.getString(nd.packageName + "." + AppSettingsActivity.MULTIPLE_EVENTS_HANDLING, "all"));
+                    getExpandedText(n,nd, sharedPref.getString(nd.packageName + "." + AppSettingsActivity.MULTIPLE_EVENTS_HANDLING, "all"),
+                                          sharedPref.getBoolean(nd.packageName + "." + AppSettingsActivity.TRY_EXTRACT_TITLE, true));
                     // replace text with content if no text
                     if (nd.text == null || nd.text.equals("") &&
                             nd.content != null && !nd.content.equals(""))
@@ -241,18 +242,18 @@ public class NotificationParser
         return returnArray;
     }
 
-    private void getExpandedText(Notification n, NotificationData nd, String multipleEventsHandling)
+    private void getExpandedText(Notification n, NotificationData nd, String multipleEventsHandling, boolean tryExtractTitle)
     {
         RemoteViews view = n.contentView;
 
         // first get information from the original content view
-        extractTextFromView(view, nd, multipleEventsHandling);
+        extractTextFromView(view, nd, multipleEventsHandling, tryExtractTitle);
 
         // then try get information from the expanded view
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
         {
             view = getBigContentView(n);
-            extractTextFromView(view, nd, multipleEventsHandling);
+            extractTextFromView(view, nd, multipleEventsHandling, tryExtractTitle);
         }
     }
 
@@ -267,7 +268,7 @@ public class NotificationParser
         }
     }
 
-    private void extractTextFromView(RemoteViews view, NotificationData nd, String multipleEventsHandling)
+    private void extractTextFromView(RemoteViews view, NotificationData nd, String multipleEventsHandling, boolean tryExtractTitle)
     {
         CharSequence title = null;
         CharSequence text = null;
@@ -422,7 +423,7 @@ public class NotificationParser
             else if (multipleEventsHandling.equals("last")) content = lastEventStr;
 
             // extract title from content for first/last event
-            if ((multipleEventsHandling.equals("first") || multipleEventsHandling.equals("last")) && content != null)
+            if ((tryExtractTitle && (multipleEventsHandling.equals("first") || multipleEventsHandling.equals("last")) && content != null))
             {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(content);
                 // try to split it by text style
@@ -456,18 +457,19 @@ public class NotificationParser
             }
 
             // if no content lines, try to get subtext
-            if (content == null)
-            {
+            //if (content == null)
+            //{
                 if (notificationStrings.containsKey(notification_subtext_id))
                 {
                     CharSequence s = notificationStrings.get(notification_subtext_id);
 
                     if (!s.equals(""))
                     {
-                        content = s;
+                        if (content == null) content = s;
+                        else content = content + "\n" + s;
                     }
                 }
-            }
+            //}
         }
 
         if (title!=null)

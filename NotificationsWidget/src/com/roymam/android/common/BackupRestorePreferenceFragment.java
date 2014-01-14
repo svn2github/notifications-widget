@@ -41,7 +41,7 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
             {
                 // Backup to a file
                 if (saveSharedPreferencesToFile())
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.backup_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.backup_success) + getActivity().getExternalFilesDir(null) + "/settings.dat", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getActivity(), getActivity().getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
 

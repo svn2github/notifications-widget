@@ -215,6 +215,7 @@ public class NotificationsWidgetService extends Service
 	    // Verify clock implementation
 	    String clockImpls[] =
 	    {
+                "ch.bitspin.timely",
                 "com.sonyericsson.alarm",
                 "com.htc.android.worldclock",
                 "com.motorola.blur.alarmclock",

@@ -11,7 +11,7 @@ public interface NotificationsProvider
     public List<NotificationData> getNotifications();
     public HashMap<String, PersistentNotification> getPersistentNotifications();
     public void clearAllNotifications();
-    public void clearNotification(String packageName, int notificationId);
+    //public void clearNotification(String packageName, int notificationId);
     public void setNotificationEventListener(NotificationEventListener listener);
     public NotificationEventListener getNotificationEventListener();
     public void clearNotificationsForApps(String[] strings);

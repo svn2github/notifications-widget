@@ -323,26 +323,26 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
         return notifications;
     }
 
-    @Override
-    public void clearNotification(String packageName, int notificationId)
-    {
-        Iterator<NotificationData> iter = notifications.iterator();
-
-        boolean changed = false;
-
-        while (iter.hasNext())
-        {
-            NotificationData nd = iter.next();
-            if (nd.id == notificationId)
-            {
-                if (listener != null) listener.onNotificationCleared(nd);
-                iter.remove();
-                changed = true;
-            }
-        }
-
-        if (changed && listener != null) listener.onNotificationsListChanged();
-    }
+//    @Override
+//    public void clearNotification(String packageName, int notificationId)
+//    {
+//        Iterator<NotificationData> iter = notifications.iterator();
+//
+//        boolean changed = false;
+//
+//        while (iter.hasNext())
+//        {
+//            NotificationData nd = iter.next();
+//            if (nd.id == notificationId)
+//            {
+//                if (listener != null) listener.onNotificationCleared(nd);
+//                iter.remove();
+//                changed = true;
+//            }
+//        }
+//
+//        if (changed && listener != null) listener.onNotificationsListChanged();
+//    }
 
     @Override
     public boolean onUnbind(Intent intent)

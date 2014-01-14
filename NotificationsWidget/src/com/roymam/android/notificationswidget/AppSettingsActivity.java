@@ -21,7 +21,8 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String IGNORE_APP = "ignoreapp";
     public static final String IGNORE_EMPTY_NOTIFICATIONS = "ignore_empty_notifications";
 	public static final String KEEP_ONLY_LAST = "showlast";
-	public static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
+    public static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
+    public static final String TRY_EXTRACT_TITLE = "try_extract_title";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String APP_PRIORITY = "apppriority";
     public static final String ALWAYS_USE_APP_ICON = "use_app_icon";
@@ -99,6 +100,14 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         multipleEvents.setEntryValues(R.array.settings_multiple_events_values);
         root.addPreference(multipleEvents);
 
+        CheckBoxPreference tryExtractTitlePref = new CheckBoxPreference(this);
+        tryExtractTitlePref.setKey(packageName+"."+TRY_EXTRACT_TITLE);
+        tryExtractTitlePref.setTitle(R.string.try_extract_title);
+        tryExtractTitlePref.setSummary(R.string.try_extract_title_summary);
+        tryExtractTitlePref.setDefaultValue(true);
+        root.addPreference(tryExtractTitlePref );
+
+        // Show last preference
         ListPreference overrideAppPriority = new ListPreference(this);
         overrideAppPriority.setKey(packageName + "." + APP_PRIORITY);
         overrideAppPriority.setTitle(R.string.set_app_priority);
@@ -107,7 +116,7 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
         overrideAppPriority.setEntries(R.array.settings_app_priority_entries);
         overrideAppPriority.setEntryValues(R.array.settings_app_priority_values);
         root.addPreference(overrideAppPriority);
-                
+
         // Clear app specific preferences button
         PreferenceScreen clearPref = getPreferenceManager().createPreferenceScreen(this);
         clearPref.setTitle(R.string.clear_app_settings);

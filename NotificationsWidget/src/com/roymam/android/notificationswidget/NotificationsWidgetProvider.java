@@ -136,7 +136,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     			}
 	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotifications().size())
 	    		{
-	    			ns.clearNotification(ns.getNotifications().get(pos).packageName, ns.getNotifications().get(pos).id);
+	    			ns.clearNotification(ns.getNotifications().get(pos).uid);
                     updateWidget(ctx, true);
 	    		}
 	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotifications().size())

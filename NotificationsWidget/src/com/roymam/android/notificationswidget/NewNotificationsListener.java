@@ -283,54 +283,54 @@ public class NewNotificationsListener extends NotificationListenerService implem
         }
     }
 
-    @Override
-    public synchronized void clearNotification(String packageName, int notificationId)
-    {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
-        boolean syncback = (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
-                            sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART));
-
-        boolean changed = false;
-
-        // first, find it on list
-        Log.d("NiLS", "clearNotification(packageName, notificationId): iteration started");
-        Iterator<NotificationData> iter = notifications.iterator();
-        ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
-        while(iter.hasNext())
-        {
-            NotificationData nd = iter.next();
-
-            if (nd.packageName.equals(packageName) && nd.id == notificationId)
-            {
-                iter.remove();
-                clearedNotifications.add(nd);
-                changed = true;
-
-                // do not stop loop - keep searching for more notification with the same id
-            }
-        }
-        Log.d("NiLS", "clearNotification(packageName, notificationId): iteration finished");
-
-        // notify listener for cleared notifications
-        if (changed && listener != null)
-        {
-            for(NotificationData nd : clearedNotifications)
-            {
-                if (syncback)
-                try
-                {
-                    cancelNotification(nd.packageName, nd.tag, nd.id);
-                }
-                catch (Exception exp)
-                {
-                    exp.printStackTrace();
-                }
-                listener.onNotificationCleared(nd);
-            }
-            listener.onNotificationsListChanged();
-        }
-    }
+//    @Override
+//    public synchronized void clearNotification(String packageName, int notificationId)
+//    {
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
+//        boolean syncback = (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
+//                            sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART));
+//
+//        boolean changed = false;
+//
+//        // first, find it on list
+//        Log.d("NiLS", "clearNotification(packageName, notificationId): iteration started");
+//        Iterator<NotificationData> iter = notifications.iterator();
+//        ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
+//        while(iter.hasNext())
+//        {
+//            NotificationData nd = iter.next();
+//
+//            if (nd.packageName.equals(packageName) && nd.id == notificationId)
+//            {
+//                iter.remove();
+//                clearedNotifications.add(nd);
+//                changed = true;
+//
+//                // do not stop loop - keep searching for more notification with the same id
+//            }
+//        }
+//        Log.d("NiLS", "clearNotification(packageName, notificationId): iteration finished");
+//
+//        // notify listener for cleared notifications
+//        if (changed && listener != null)
+//        {
+//            for(NotificationData nd : clearedNotifications)
+//            {
+//                if (syncback)
+//                try
+//                {
+//                    cancelNotification(nd.packageName, nd.tag, nd.id);
+//                }
+//                catch (Exception exp)
+//                {
+//                    exp.printStackTrace();
+//                }
+//                listener.onNotificationCleared(nd);
+//            }
+//            listener.onNotificationsListChanged();
+//        }
+//    }
 
     @Override
     public void setNotificationEventListener(NotificationEventListener listener)

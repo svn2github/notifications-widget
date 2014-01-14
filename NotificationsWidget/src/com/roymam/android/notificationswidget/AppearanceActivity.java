@@ -148,7 +148,7 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 	    if (widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE))
 	    	itemPosition = 0;
 	    else if (widgetMode.equals(SettingsActivity.EXPANDED_WIDGET_MODE))
-	    	itemPosition =1 ;
+	    	itemPosition = 1 ;
 	    else
 	    	itemPosition = 2;
 

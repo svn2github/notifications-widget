@@ -284,7 +284,7 @@
     <string name="restore">Restore</string>
     <string name="backup_summary">Backup settings to sd card</string>
     <string name="restore_summary">Restore settings from sd card</string>
-    <string name="backup_success">Backup settings completed</string>
+    <string name="backup_success">NiLS settings were backed up succesfully to </string>
     <string name="backup_failed">Failed to backup settings</string>
     <string name="restore_success">Settings were restored successfully</string>
     <string name="restore_failed">Failed to restore settings</string>
