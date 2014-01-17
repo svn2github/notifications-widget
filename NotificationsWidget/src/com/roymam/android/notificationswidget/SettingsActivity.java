@@ -94,13 +94,30 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     public static final String CLOCK_AUTO = "auto";
     public static final String APPS_SETTINGS = "specificapps";
     public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
+    private static final String FIRST_RUN = "first_run";
     public static final String FP_ENABLED = "fp_enabled";
 
     public static final boolean DEFAULT_FP_ENABLED = true;
-
     public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
     public static final String NILSPLUS_PACKAGE = "com.roymam.android.nilsplus";
     private List<Header> mHeaders = null;
+
+    public static boolean shouldHideNotifications(Context context, String widgetMode)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        boolean fpEnabled = prefs.getBoolean(SettingsActivity.FP_ENABLED, false);
+        boolean overrideHideNotifications = prefs.getAll().containsKey(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS);
+        boolean hideNotifications = prefs.getBoolean(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS, false);
+
+        if ((fpEnabled && !overrideHideNotifications &&
+                (widgetMode.equals(SettingsActivity.EXPANDED_WIDGET_MODE) || widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)))
+                ||
+                hideNotifications)
+            return true;
+        else
+            return false;
+    }
 
     public static class HowToAddWidgetFragment extends Fragment
     {
@@ -502,15 +519,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             target.get(0).iconRes = android.R.drawable.presence_offline;
             target.get(0).summaryRes = R.string.service_is_inactive;
 
-            Intent intent;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            {
-                intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
-            }
-            else
-            {
-                intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-            }
+            Intent intent = getNotificationsServiesIntent();
             target.get(0).intent = intent;
             target.get(0).fragment = null;
         }
@@ -564,14 +573,37 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         mHeaders = target;
     }
 
+    private Intent getNotificationsServiesIntent()
+    {
+        Intent intent;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+        {
+            intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+        }
+        else
+        {
+            intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        }
+
+        return intent;
+    }
+
     private boolean isNiLSPlusInstalled()
     {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try
         {
             PackageInfo info = getPackageManager().getPackageInfo(NILSPLUS_PACKAGE, 0);
             if (info.versionCode < 32) return false;
+
+            // if the user hasn't disabled fp yet, mark it as enabled
+            if (!prefs.getAll().containsKey(SettingsActivity.FP_ENABLED))
+                prefs.edit().putBoolean(SettingsActivity.FP_ENABLED, true).commit();
         } catch (PackageManager.NameNotFoundException e)
         {
+            // if nils fp was uninstalled - removed this preference
+            prefs.edit().remove(SettingsActivity.FP_ENABLED).commit();
             return false;
         }
         return true;
@@ -599,7 +631,31 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     @Override
     public void onCreate(Bundle savedInstanceState) 
 	{
-        super.onCreate(savedInstanceState);        
+        super.onCreate(savedInstanceState);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (NotificationsService.getSharedInstance(this) == null)
+        {
+            new AlertDialog.Builder(this)
+                        .setTitle(R.string.nils_service_is_not_running)
+                        .setMessage(R.string.nils_service_enable_instructions)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                Intent intent = getNotificationsServiesIntent();
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+        }
+
     }
 
 	@Override

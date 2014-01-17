@@ -186,14 +186,14 @@ public class NotificationsWidgetService extends Service
         }
 		
 		// set up notifications list
-        if (!prefs.getBoolean(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS, false))
+        if (SettingsActivity.shouldHideNotifications(getApplicationContext(), widgetMode))
         {
-            widget.setViewVisibility(R.id.notificationsListView, View.VISIBLE);
-    		setupNotificationsList(widget, widgetId);
+            widget.setViewVisibility(R.id.notificationsListView, View.GONE);
         }
         else
         {
-            widget.setViewVisibility(R.id.notificationsListView, View.GONE);
+            widget.setViewVisibility(R.id.notificationsListView, View.VISIBLE);
+            setupNotificationsList(widget, widgetId);
         }
 
 		try
@@ -366,7 +366,7 @@ public class NotificationsWidgetService extends Service
     			largeClockLimit--;
     			mediumClockLimit--;
     		}
-	    	if (notificationsCount < largeClockLimit )
+	    	if (notificationsCount < largeClockLimit || SettingsActivity.shouldHideNotifications(getApplicationContext(), widgetMode))
 	    		clockstyle = SettingsActivity.CLOCK_LARGE;
 	    	else if (notificationsCount < mediumClockLimit)
 	    		clockstyle = SettingsActivity.CLOCK_MEDIUM;
