@@ -298,4 +298,12 @@
     <string name="join_nils_community">Join <a href="https://plus.google.com/u/0/communities/115156552435983276604">NiLS Official Community</a> on Google+</string>
     <string name="nils_service_is_not_running">NiLS Service is not running</string>
     <string name="nils_service_enable_instructions">Click OK to go to Android settings, then find \"NiLS Service\" there and enable it.</string>
+    <string name="nilsfp_title">Floating Notifications Panel</string>
+    <string name="nilsfp_description">NiLS Floating Panel is an extension that creates a floating notifications panel over your lock screen</string>
+    <string name="main_features">Main Features:</string>
+    <string name="nilsfp_feature_1">Provides swiping gestures such as Swipe to dismiss</string>
+    <string name="nilsfp_feature_2">Highly customizable and supports beautiful 3rd-party themes</string>
+    <string name="nilsfp_feature_3">Runs on top of the lock screen without the need of lock screen widgets support</string>
+    <string name="nilsfp_feature_4">Works with almost any lock screen including WidgetLocker, GoLocker, Cover and all of the stock lock screens</string>
+    <string name="nilsfp_getit">Get it Now!</string>
 </resources>

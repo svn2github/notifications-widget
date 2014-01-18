@@ -13,6 +13,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +25,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,9 +137,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             View v = inflater.inflate(R.layout.view_install_nfp, null);
-            ((TextView) v.findViewById(R.id.beta_1st_step)).setMovementMethod(LinkMovementMethod.getInstance());
-            ((TextView) v.findViewById(R.id.beta_2nd_step)).setMovementMethod(LinkMovementMethod.getInstance());
-            ((TextView) v.findViewById(R.id.beta_3rd_step)).setMovementMethod(LinkMovementMethod.getInstance());
+            v.findViewById(R.id.getnilsfp_button).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    String playstoreUrl = "market://details?id=com.roymam.android.nilsplus";
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(playstoreUrl));
+                    startActivity(browserIntent);
+                }
+            });
             return v;
         }
     }

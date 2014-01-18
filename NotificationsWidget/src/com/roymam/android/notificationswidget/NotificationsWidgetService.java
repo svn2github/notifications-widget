@@ -209,6 +209,7 @@ public class NotificationsWidgetService extends Service
 	
 	private PendingIntent getClockAppIntent()
 	{
+
 		// add alarm clock intent
 	    PackageManager packageManager = this.getPackageManager();
 
@@ -232,13 +233,13 @@ public class NotificationsWidgetService extends Service
             alarmClockIntent = packageManager.getLaunchIntentForPackage(packageName);
 	    }
 
-	    if (alarmClockIntent != null)
+        if (alarmClockIntent != null)
 	    {
 	        return PendingIntent.getActivity(this, 0, alarmClockIntent , 0);
 	    }
 	    else
 	    {
-	    	return null;
+            return null;
 	    }
 	}
 

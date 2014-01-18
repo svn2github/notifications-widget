@@ -344,10 +344,9 @@
     <string name="hide_clock_when_visible_summary">Hide clock when the persistent notification is visible for this app</string>
 
     <!-- NiLSPlus Integration -->
-    <string name="floating_panel">Floating Panel - BETA</string>
+    <string name="floating_panel">Floating Panel</string>
     <string name="floating_panel_short">Floating Panel</string>
     <string name="floating_panel_not_installed">Swipe gestures, animations, themes and many more features. Click for info.</string>
-    <string name="floating_panel_is_active">BETA</string>
     <string name="download_fp_googleplay">Download &amp; Install <a href="https://play.google.com/store/apps/details?id=com.roymam.android.nilsplus">NiLS Floating Panel</a> from Google Play</string>
     <string name="enable_fp_tester_googleplay">Enable <a href="https://play.google.com/apps/testing/com.roymam.android.nilsplus">Tester Mode</a> on Google Play</string>
     <string name="join_nils_community">Join <a href="https://plus.google.com/u/0/communities/115156552435983276604">NiLS Official Community</a> on Google+</string>
@@ -357,6 +356,14 @@
     <string name="try_extract_title_summary">When multiple events is set to \"Show First\" or \"Show Last\" try to extract the event title from the event text (e.g instead of \"X new emails\")</string>
     <string name="nils_service_is_not_running">NiLS Service is not running</string>
     <string name="nils_service_enable_instructions">Click OK to go to Android settings, then find \"NiLS Service\" there and enable it.</string>
+    <string name="nilsfp_title">Floating Notifications Panel</string>
+    <string name="nilsfp_description">NiLS Floating Panel is an extension that creates a floating notifications panel over your lock screen</string>
+    <string name="main_features">Main Features:</string>
+    <string name="nilsfp_feature_1">Provides swiping gestures such as Swipe to dismiss</string>
+    <string name="nilsfp_feature_2">Highly customizable and supports beautiful 3rd-party themes</string>
+    <string name="nilsfp_feature_3">Runs on top of the lock screen without the need of lock screen widgets support</string>
+    <string name="nilsfp_feature_4">Works with almost any lock screen including WidgetLocker, GoLocker, Cover and all of the stock lock screens</string>
+    <string name="nilsfp_getit">Get it Now!</string>
 
 
 </resources>
