@@ -58,8 +58,11 @@ public class SwitchPrefsHeaderAdapter extends ArrayAdapter<Header>
 			((ImageView) view.findViewById(android.R.id.icon)).setImageResource(header.iconRes);
 			((TextView) view.findViewById(android.R.id.title)).setText(header.getTitle(getContext()
 					.getResources()));
-			((TextView) view.findViewById(android.R.id.summary)).setText(header
-					.getSummary(getContext().getResources()));
+            TextView summaryTV = (TextView) view.findViewById(android.R.id.summary);
+            if (summaryTV != null &&
+                getContext().getResources() != null &&
+                header.getSummary(getContext().getResources()) != null)
+                summaryTV.setText(header.getSummary(getContext().getResources()));
 
             final String key = header.extras.getString(HEADER_KEY);
             final boolean defaultValue = header.extras.getBoolean(HEADER_DEFAULT_VALUE, false);
