@@ -80,6 +80,16 @@
         android:orientation="vertical" >
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/persistentNotificationsErrorView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/persistent_notifications_error"
+        android:gravity="center"
+        android:visibility="gone"
+        style="@android:style/TextAppearance.DeviceDefault.Small">
+    </TextView>
+
     <ListView
         android:id="@+id/notificationsListView"
         android:layout_width="match_parent"

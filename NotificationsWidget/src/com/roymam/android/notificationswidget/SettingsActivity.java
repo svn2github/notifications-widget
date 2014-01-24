@@ -551,7 +551,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         if (isNiLSPlusInstalled())
         {
             target.get(2).titleRes = R.string.floating_panel_short;
-            target.get(2).summaryRes = 0;
+            target.get(2).summaryRes = R.string.floating_panel_installed;
             Intent nilsPlusSettingsIntent = new Intent();
             nilsPlusSettingsIntent.setComponent(new ComponentName(NILSPLUS_PACKAGE, NILSPLUS_PACKAGE+".activities.NPSettings"));
             target.get(2).intent = nilsPlusSettingsIntent;

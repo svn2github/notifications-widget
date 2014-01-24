@@ -133,13 +133,16 @@ public class NotificationsWidgetService extends Service
 		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
-		RemoteViews widget=new RemoteViews(this.getPackageName(), R.layout.widget_layout);
-		
+
+        RemoteViews clockRV = new RemoteViews(this.getPackageName(), R.layout.widget_layout);
+        RemoteViews notificationsRV = new RemoteViews(this.getPackageName(), R.layout.widget_layout);
+        RemoteViews persistentNotificationsRV = new RemoteViews(this.getPackageName(), R.layout.widget_layout);
+
 		// hide loading spinner
-		widget.setViewVisibility(R.id.loadingSpinner, View.GONE);
+        clockRV.setViewVisibility(R.id.loadingSpinner, View.GONE);
 		
 		// update clock
-		widget.removeAllViews(R.id.clockContainer);
+        clockRV.removeAllViews(R.id.clockContainer);
 		boolean hideClock = prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false);
 
         // check if need to hide the clock because of persistent notifications
@@ -163,47 +166,53 @@ public class NotificationsWidgetService extends Service
         if (!hideClock)
 		{
             String clockStyle = getClockStyle(widgetId);
-            widget.addView(R.id.clockContainer, createClock(clockStyle, widgetId));
+            clockRV.addView(R.id.clockContainer, createClock(clockStyle, widgetId));
 		}
 		
 		// set clock bg color
 	    int bgColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_COLOR, Color.BLACK);		    
 	    int alpha = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_OPACITY, 0);
 	    bgColor = Color.argb(alpha * 255 / 100, Color.red(bgColor), Color.green(bgColor), Color.blue(bgColor));
-	    widget.setInt(R.id.clockContainer, "setBackgroundColor", bgColor);
+        clockRV.setInt(R.id.clockContainer, "setBackgroundColor", bgColor);
 
 		// persistent notifications
-		widget.removeAllViews(R.id.persistentNotificationsView);
-		widget.setInt(R.id.persistentNotificationsView, "setBackgroundColor", bgColor);
+		persistentNotificationsRV.removeAllViews(R.id.persistentNotificationsView);
+        persistentNotificationsRV.setInt(R.id.persistentNotificationsView, "setBackgroundColor", bgColor);
 
         if (prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true))
         {
             RemoteViews[] persistentNotifications = getPersistentNotifications();
             for(RemoteViews pn : persistentNotifications)
             {
-                widget.addView(R.id.persistentNotificationsView, pn);
+                persistentNotificationsRV.addView(R.id.persistentNotificationsView, pn);
             }
         }
 		
 		// set up notifications list
         if (SettingsActivity.shouldHideNotifications(getApplicationContext(), widgetMode))
         {
-            widget.setViewVisibility(R.id.notificationsListView, View.GONE);
+            notificationsRV.setViewVisibility(R.id.notificationsListView, View.GONE);
         }
         else
         {
-            widget.setViewVisibility(R.id.notificationsListView, View.VISIBLE);
-            setupNotificationsList(widget, widgetId);
+            notificationsRV.setViewVisibility(R.id.notificationsListView, View.VISIBLE);
+            setupNotificationsList(notificationsRV, widgetId);
         }
 
-		try
+        appWidgetManager.updateAppWidget(widgetId, clockRV);
+        appWidgetManager.updateAppWidget(widgetId, notificationsRV);
+        try
         {
-            appWidgetManager.updateAppWidget(widgetId, widget);
+            persistentNotificationsRV.setViewVisibility(R.id.persistentNotificationsErrorView, View.GONE);
+            appWidgetManager.updateAppWidget(widgetId, persistentNotificationsRV);
         }
-        // sometimes this method fails with TransactionIsTooLong
+
+        // sometimes this method fails with TransactionIsTooLarge
         catch (Exception exp)
         {
-            exp.printStackTrace();
+            // if it fails - show an error instead
+            persistentNotificationsRV = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget_layout);
+            persistentNotificationsRV.setViewVisibility(R.id.persistentNotificationsErrorView, View.VISIBLE);
         }
 	}
 	
