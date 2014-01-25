@@ -199,7 +199,7 @@ public class NotificationsWidgetService extends Service
             setupNotificationsList(notificationsRV, widgetId);
         }
 
-        appWidgetManager.partiallyUpdateAppWidget(widgetId, clockRV);
+        appWidgetManager.updateAppWidget(widgetId, clockRV);
         appWidgetManager.partiallyUpdateAppWidget(widgetId, notificationsRV);
         try
         {
