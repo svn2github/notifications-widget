@@ -13,13 +13,27 @@ public class NotificationData
     public static int nextUID = 0;
     public int uid;
     public int id;
-    public String tag;
+    CharSequence 	text;
+    CharSequence	title;
+    CharSequence	content;
+    Bitmap 	icon;
+    Bitmap 	appicon;
+    long	received;
+    String	packageName;
+    PendingIntent action;
+    int 	count;
+    boolean pinned = false;
+    boolean selected = false;
+    public Action[] actions = null;
+    public int priority;
 
+    public String tag;
     public NotificationData()
     {
         uid = nextUID;
         nextUID++;
     }
+
     public boolean isSimilar(NotificationData nd)
     {
         CharSequence title1 = nd.title;
@@ -39,16 +53,6 @@ public class NotificationData
         boolean contentsdup = content1.toString().trim().startsWith(content2.toString().trim());
         boolean allDup = titlesdup && textdup && contentsdup;
 
-        /*Log.d("NiLS", "Title1 '"+title1+"'");
-        Log.d("NiLS", "Title2 '"+title2+"'");
-        Log.d("NiLS", "Title Dup:"+titlesdup);
-        Log.d("NiLS", "Text1 '"+text1+"'");
-        Log.d("NiLS", "Text2 '"+text2+"'");
-        Log.d("NiLS", "Text Dup:"+textdup);
-        Log.d("NiLS", "Content1 '"+content1+"'");
-        Log.d("NiLS", "Content2 '"+content2+"'");
-        Log.d("NiLS", "Content Dup:"+contentsdup);
-*/
         if (nd.packageName.equals(this.packageName) && allDup)
         {
             Log.d("NiLS", "All Dup");
@@ -59,29 +63,15 @@ public class NotificationData
             return false;
         }
     }
-
     public static class Action
 	{
-		public Action() {};
-		public int icon;
-		public CharSequence title;
-		public PendingIntent actionIntent;
-		public Bitmap drawable;
-	}
+        public Action() {};
+        public int icon;
+        public CharSequence title;
+        public PendingIntent actionIntent;
+        public Bitmap drawable;
 
-	CharSequence 	text;
-	CharSequence	title;
-	CharSequence	content;
-	Bitmap 	icon;
-	Bitmap 	appicon;
-	long	received;
-	String	packageName;
-	PendingIntent action;
-	int 	count;
-	boolean pinned = false;
-    boolean selected = false;
-	public Action[] actions = null;
-	public int priority;
+	}
 
     public void launch(Context context)
     {

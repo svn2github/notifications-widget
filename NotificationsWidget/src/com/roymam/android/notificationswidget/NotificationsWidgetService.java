@@ -199,12 +199,12 @@ public class NotificationsWidgetService extends Service
             setupNotificationsList(notificationsRV, widgetId);
         }
 
-        appWidgetManager.updateAppWidget(widgetId, clockRV);
-        appWidgetManager.updateAppWidget(widgetId, notificationsRV);
+        appWidgetManager.partiallyUpdateAppWidget(widgetId, clockRV);
+        appWidgetManager.partiallyUpdateAppWidget(widgetId, notificationsRV);
         try
         {
             persistentNotificationsRV.setViewVisibility(R.id.persistentNotificationsErrorView, View.GONE);
-            appWidgetManager.updateAppWidget(widgetId, persistentNotificationsRV);
+            appWidgetManager.partiallyUpdateAppWidget(widgetId, persistentNotificationsRV);
         }
 
         // sometimes this method fails with TransactionIsTooLarge
@@ -213,6 +213,7 @@ public class NotificationsWidgetService extends Service
             // if it fails - show an error instead
             persistentNotificationsRV = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget_layout);
             persistentNotificationsRV.setViewVisibility(R.id.persistentNotificationsErrorView, View.VISIBLE);
+            appWidgetManager.partiallyUpdateAppWidget(widgetId, persistentNotificationsRV);
         }
 	}
 	
