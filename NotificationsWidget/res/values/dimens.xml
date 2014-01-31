@@ -19,4 +19,5 @@
     <dimen name="widget_margin_left">8dp</dimen>
     <dimen name="widget_margin_right">8dp</dimen>
     <dimen name="min_expanded_height">200dp</dimen>
+    <dimen name="max_icon_size">96dp</dimen>
 </resources>

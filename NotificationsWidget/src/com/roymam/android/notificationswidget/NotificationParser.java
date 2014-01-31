@@ -10,6 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -72,6 +73,8 @@ public class NotificationParser
                 // build notification data object
                 NotificationData nd = new NotificationData();
 
+                float maxIconSize = context.getResources().getDimension(R.dimen.max_icon_size);
+
                 // extract notification & app icons
                 Resources res;
                 PackageInfo info;
@@ -89,19 +92,34 @@ public class NotificationParser
                     ai = null;
                 }
 
+                boolean useMonoIcon = sharedPref.getBoolean(SettingsActivity.USE_MONO_ICON, false);
                 if (res != null && info != null)
                 {
                     nd.appicon = BitmapFactory.decodeResource(res, n.icon);
-                    nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
-                    if (nd.appicon == null)
+                    if (useMonoIcon) nd.icon = nd.appicon;
+                    else
                     {
-                        nd.appicon = nd.icon;
+                        nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+                        if (nd.appicon == null)
+                        {
+                            nd.appicon = nd.icon;
+                        }
                     }
                 }
-                if (n.largeIcon != null && !sharedPref.getBoolean(packageName+"."+AppSettingsActivity.ALWAYS_USE_APP_ICON, false))
+                if (n.largeIcon != null && !useMonoIcon && !sharedPref.getBoolean(packageName+"."+AppSettingsActivity.ALWAYS_USE_APP_ICON, false))
                 {
                     nd.icon = n.largeIcon;
                 }
+
+                // resizing icon to smaller size if needed
+                if (nd.appicon != null &&
+                        (nd.appicon.getWidth() > maxIconSize || nd.appicon.getHeight() > maxIconSize))
+                    nd.appicon = Bitmap.createScaledBitmap(nd.appicon, (int) maxIconSize, (int) maxIconSize, false);
+
+                // resizing icon to smaller size if needed
+                if (nd.icon != null &&
+                        (nd.icon.getWidth() > maxIconSize || nd.icon.getHeight() > maxIconSize))
+                    nd.icon = Bitmap.createScaledBitmap(nd.icon, (int) maxIconSize, (int) maxIconSize, false);
 
                 // get time of the event
                 if (n.when != 0)

@@ -309,5 +309,7 @@
     <string name="nilsfp_feature_4">Works with almost any lock screen including WidgetLocker, GoLocker, Cover and all of the stock lock screens</string>
     <string name="nilsfp_getit">Get it Now!</string>
     <string name="persistent_notifications_error">There was a problem to load the persistent notifications\n please remove some persistent notifications and try again</string>
+    <string name="use_mono_icon">Use status bar icon</string>
+    <string name="use_mono_icon_summary">Always use status bar icon (monochrome) instead of the notification icon</string>
 
 </resources>

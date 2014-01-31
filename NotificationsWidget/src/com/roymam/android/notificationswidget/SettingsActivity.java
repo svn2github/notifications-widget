@@ -100,6 +100,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     public static final boolean DEFAULT_FP_ENABLED = true;
     public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
     public static final String NILSPLUS_PACKAGE = "com.roymam.android.nilsplus";
+    public static final String USE_MONO_ICON = "use_mono_icon";
     private List<Header> mHeaders = null;
 
     public static boolean shouldHideNotifications(Context context, String widgetMode)

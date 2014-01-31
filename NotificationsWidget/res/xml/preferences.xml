@@ -38,12 +38,19 @@
                 android:enabled="true" 
                 android:defaultValue="false" 
                 android:summary="@string/clearonunlock_summary"/>
-            <CheckBoxPreference
-                android:title="@string/collectonunlock" 
-                android:key="collectonunlock" 
-                android:enabled="true" 
-                android:defaultValue="true" 
-                android:summary="@string/collectonunlock_summary"/>
+        <CheckBoxPreference
+            android:title="@string/collectonunlock"
+            android:key="collectonunlock"
+            android:enabled="true"
+            android:defaultValue="true"
+            android:summary="@string/collectonunlock_summary"/>
+        <CheckBoxPreference
+            android:title="@string/use_mono_icon"
+            android:key="use_mono_icon"
+            android:enabled="true"
+            android:defaultValue="false"
+            android:summary="@string/use_mono_icon_summary"/>
+
         <ListPreference android:dialogTitle="@string/order_notifications_by"
     	    			android:entries="@array/settings_orderby_entries" 
     	    			android:entryValues="@array/settings_orderby_values" 
