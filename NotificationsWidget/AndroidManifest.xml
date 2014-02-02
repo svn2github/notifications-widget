@@ -117,6 +117,7 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService" />
+        <service android:name="com.roymam.android.notificationswidget.NotificationsService" />
         <service
             android:name="com.roymam.android.notificationswidget.NiLSAccessibilityService"
             android:label="@string/notifications_service"

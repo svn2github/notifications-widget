@@ -93,7 +93,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     {  	    
     	if (intent.getAction().equals(CLEAR_ALL))
     	{
-    		NotificationsProvider ns = NotificationsService.getSharedInstance(ctx);
+    		NotificationsProvider ns = NotificationsService.getSharedInstance();
 
     		if (ns != null)
     	    {
@@ -108,7 +108,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 
     	else if (intent.getAction().equals(PERFORM_ACTION))
     	{
-    		NotificationsProvider ns = NotificationsService.getSharedInstance(ctx);
+    		NotificationsProvider ns = NotificationsService.getSharedInstance();
     		int pos = intent.getIntExtra(NOTIFICATION_INDEX, -1);
     		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,-1);
     		    		

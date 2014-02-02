@@ -25,7 +25,7 @@ public class EventsHandler extends BroadcastReceiver
     {
         if (intent != null)
         {
-           NotificationsProvider ns = NotificationsService.getSharedInstance(context);
+           NotificationsProvider ns = NotificationsService.getSharedInstance();
            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
            String action = intent.getAction();
@@ -103,7 +103,7 @@ public class EventsHandler extends BroadcastReceiver
             }
            else if (intent.getAction().equals(PING))
            {
-               if (NotificationsService.getSharedInstance(context) != null)
+               if (NotificationsService.getSharedInstance() != null)
                     context.sendBroadcast(new Intent(ALIVE));
            }
         }

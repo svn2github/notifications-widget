@@ -148,7 +148,7 @@ public class NotificationsWidgetService extends Service
         // check if need to hide the clock because of persistent notifications
         if (prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true))
         {
-            NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
+            NotificationsProvider ns = NotificationsService.getSharedInstance();
             if (ns != null)
             {
                 String persistentApps = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
@@ -257,7 +257,7 @@ public class NotificationsWidgetService extends Service
     private void setupNotificationsList(RemoteViews widget, int appWidgetId)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
+		NotificationsProvider ns = NotificationsService.getSharedInstance();
 		
 		// set up notifications list
 		Intent svcIntent=new Intent(this, NotificationsRemoteViewsFactoryService.class);
@@ -334,7 +334,7 @@ public class NotificationsWidgetService extends Service
 	private String getClockStyle(int widgetId)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
+		NotificationsProvider ns = NotificationsService.getSharedInstance();
 		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 		
 		// hide clock if required
@@ -391,7 +391,7 @@ public class NotificationsWidgetService extends Service
 	{
 		ArrayList<RemoteViews> pns = new ArrayList<RemoteViews>();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
+		NotificationsProvider ns = NotificationsService.getSharedInstance();
 
 		if (ns != null)
 		{
@@ -498,7 +498,7 @@ public class NotificationsWidgetService extends Service
 
 	private RemoteViews createClock(String type, int widgetId)
 	{		
-		NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
+		NotificationsProvider ns = NotificationsService.getSharedInstance();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		RemoteViews clock;

@@ -150,7 +150,7 @@ public class NiLSAccessibilityService extends AccessibilityService implements No
                     if (!accessibilityEvent.getPackageName().equals("com.android.systemui") &&
                          prefs.getBoolean(SettingsActivity.CLEAR_APP_NOTIFICATIONS, true))
                     {
-                        NotificationsProvider ns = NotificationsService.getSharedInstance(getApplicationContext());
+                        NotificationsProvider ns = NotificationsService.getSharedInstance();
                         if (ns != null) ns.clearNotificationsForApps(new String[]{accessibilityEvent.getPackageName().toString()});
                     }
                 }

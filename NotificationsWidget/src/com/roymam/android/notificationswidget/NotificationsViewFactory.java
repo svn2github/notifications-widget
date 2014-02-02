@@ -50,7 +50,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	@Override
 	public int getCount() 
 	{
-		NotificationsProvider s = NotificationsService.getSharedInstance(ctxt);
+		NotificationsProvider s = NotificationsService.getSharedInstance();
 		if (s != null) 
 		{
 	        // The service is running and connected.
@@ -80,7 +80,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	public RemoteViews getViewAt(int position) 
 	{
 		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.listitem_notification);	
-		NotificationsProvider s = NotificationsService.getSharedInstance(ctxt);
+		NotificationsProvider s = NotificationsService.getSharedInstance();
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		String widgetMode = preferences.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 
@@ -314,9 +314,9 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
                         PendingIntent.getBroadcast(ctxt, NotificationsWidgetProvider.CLEAR_ACTION+position*10, clearIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
                 // hide clear button for pinned notifications
-                if (NotificationsService.getSharedInstance(ctxt) != null &&
-                    NotificationsService.getSharedInstance(ctxt).getNotifications().get(position) != null &&
-                    NotificationsService.getSharedInstance(ctxt).getNotifications().get(position).pinned)
+                if (NotificationsService.getSharedInstance() != null &&
+                    NotificationsService.getSharedInstance().getNotifications().get(position) != null &&
+                    NotificationsService.getSharedInstance().getNotifications().get(position).pinned)
                 {
                     actionBar.setViewVisibility(R.id.actionClear, View.GONE);
                     actionBar.setTextViewText(R.id.actionPinText, ctxt.getText(R.string.unpin));

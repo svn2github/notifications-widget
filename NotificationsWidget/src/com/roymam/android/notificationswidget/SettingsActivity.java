@@ -429,7 +429,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 			// Persistent notifications list
-			NotificationsProvider ns = NotificationsService.getSharedInstance(getActivity());
+			NotificationsProvider ns = NotificationsService.getSharedInstance();
 			if (ns != null)
     		{
     			List<String> apps = new ArrayList<String>();
@@ -517,7 +517,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         loadHeadersFromResource(R.xml.preferences_headers, target);
 
         // check service status
-        if (NotificationsService.getSharedInstance(this) != null)
+        if (NotificationsService.getSharedInstance() != null)
         {
             target.get(0).iconRes = android.R.drawable.presence_online;
             target.get(0).summaryRes = R.string.service_is_active;
@@ -642,7 +642,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         super.onCreate(savedInstanceState);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (NotificationsService.getSharedInstance(this) == null)
+        if (NotificationsService.getSharedInstance() == null)
         {
             new AlertDialog.Builder(this)
                         .setTitle(R.string.nils_service_is_not_running)
@@ -683,7 +683,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@Override
 	public void onSharedPreferenceChanged(final SharedPreferences prefs, String key) 
 	{
-        NotificationsProvider ns = NotificationsService.getSharedInstance(this);
+        NotificationsProvider ns = NotificationsService.getSharedInstance();
 		/*if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null)
         {
 			if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
