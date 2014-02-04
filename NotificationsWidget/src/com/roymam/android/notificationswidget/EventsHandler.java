@@ -25,6 +25,7 @@ public class EventsHandler extends BroadcastReceiver
     {
         if (intent != null)
         {
+           Log.d("NiLS", "EventsHandler:onReceive "+intent.getAction());
            NotificationsProvider ns = NotificationsService.getSharedInstance();
            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -56,13 +57,6 @@ public class EventsHandler extends BroadcastReceiver
                 else
                 {
                     String packageName = intent.getStringExtra("package");
-                    /*int id = intent.getIntExtra("id",-1);
-                    if (id > -1)
-                    {
-                        Log.d("NiLS", "remove notification package:" + packageName +" #" + id);
-                        if (ns != null) ns.clearNotification(packageName, id);
-                    }
-                    else */
                     if (ns != null) ns.clearNotificationsForApps(new String[]{packageName});
                 }
             }

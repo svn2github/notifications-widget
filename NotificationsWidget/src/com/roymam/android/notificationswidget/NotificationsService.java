@@ -456,6 +456,8 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public synchronized void clearNotification(int uid)
     {
+        Log.d("NiLS","NotificationsService:clearNotification #" + uid);
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
         boolean syncback = (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
@@ -504,6 +506,10 @@ public class NotificationsService extends Service implements NotificationsProvid
                 listener.onNotificationCleared(removedNd);
                 listener.onNotificationsListChanged();
             }
+        }
+        else
+        {
+            Log.d("NiLS","NotificationsService:clearNotificationsForApps - wasn't found");
         }
     }
 

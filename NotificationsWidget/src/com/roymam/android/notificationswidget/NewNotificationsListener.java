@@ -50,6 +50,10 @@ public class NewNotificationsListener extends NotificationListenerService
             }
         };
         registerReceiver(receiver, new IntentFilter(NotificationsService.CANCEL_NOTIFICATION));
+
+        // notify that the service has been started
+        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
+
         super.onCreate();
     }
 
@@ -57,6 +61,7 @@ public class NewNotificationsListener extends NotificationListenerService
     public void onDestroy()
     {
         Log.d("NiLS","NewNotificationsListener:onDestroy");
+        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
         if (receiver != null)
         {
             unregisterReceiver(receiver);
@@ -84,7 +89,7 @@ public class NewNotificationsListener extends NotificationListenerService
 
             Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
             intent.setAction(NotificationsService.PERSISTENT_NOTIFICATION_POSTED);
-            intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, parser.parsePersistentNotification(sbn.getNotification(), sbn.getPackageName(), sbn.getId()));
+            intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, pn);
             getApplicationContext().startService(intent);
         }
     }
