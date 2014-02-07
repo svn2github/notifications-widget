@@ -5,18 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,69 +37,59 @@ public class NotificationAdapter implements NotificationEventListener
     }
 
     @Override
-    public void onNotificationAdded(NotificationData nd, boolean wake)
+    public void onNotificationAdded(NotificationData nd, final boolean wake)
     {
         // turn screen on (if needed)
         if (wake)
         {
-            final  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
-                turnScreenOn();
-            else
-            {
-                registerProximitySensor();
-
-                if (mHandler == null) mHandler = new Handler();
-
-                mHandler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        if (deviceCovered == null || !deviceCovered)
-                        {
-                            // the device is not covered or we don't know yet so we turn the screen on
-                            turnScreenOn();
-                            stopProximityMontior();
-                        }
-                        else  // the device is covered
-                        {
-                            final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-                            // stop proximity monitoring if delayed screen on is inactive, otherwise it will stopped later when uncovered
-                            if (!sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
-                                stopProximityMontior();
-                        }
-                    }
-                }, 1000);
-            }
+            handleWakeupMode();
         }
         notifyNotificationAdd(nd);
     }
 
-    @Override
-    public void onNotificationUpdated(NotificationData nd)
+    private void handleWakeupMode()
     {
-        // turn screen on (if needed)
-        final  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+        String wakeupMode = SettingsActivity.getWakeupMode(context);
+
+        if (wakeupMode.equals(SettingsActivity.WAKEUP_ALWAYS))
             turnScreenOn();
         else
+        {
             registerProximitySensor();
 
-        notifyNotificationUpdated(nd);
+            if (mHandler == null) mHandler = new Handler();
+
+            mHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (deviceCovered == null || !deviceCovered)
+                    {
+                        // the device is not covered or we don't know yet so we turn the screen on
+                        turnScreenOn();
+                        stopProximityMontior();
+                    }
+                    else  // the device is covered
+                    {
+                        String wakeupMode = SettingsActivity.getWakeupMode(context);
+                        // stop proximity monitoring if delayed screen on is inactive, otherwise it will stopped later when uncovered
+                        if (!wakeupMode.equals(SettingsActivity.WAKEUP_UNCOVERED))
+                            stopProximityMontior();
+                    }
+                }
+            }, 1000);
+        }
     }
 
-    private byte[] getBitmapStream(Bitmap bmp)
+    @Override
+    public void onNotificationUpdated(NotificationData nd, boolean changed)
     {
-        // convert bitmap to byte stream
-        if (bmp != null)
-        {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            return stream.toByteArray();
-        }
-        else
-            return null;
+        // turn screen on (if needed)
+        if (changed)
+            handleWakeupMode();
+
+        notifyNotificationUpdated(nd);
     }
 
     private void notifyNotificationAdd(NotificationData nd)
@@ -249,13 +236,13 @@ public class NotificationAdapter implements NotificationEventListener
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean firstRun = prefs.getBoolean("com.roymam.android.notificationswidget.firstrun", true);
         prefs.edit().putBoolean("com.roymam.android.notificationswidget.firstrun", false).commit();
-        if (firstRun)
-        {
-            if (Build.MODEL.equals("Nexus 4"))
-            {
-                prefs.edit().putBoolean(SettingsActivity.DISABLE_PROXIMITY, true).commit();
-            }
-        }
+//        if (firstRun)
+//        {
+//            if (Build.MODEL.equals("Nexus 4"))
+//            {
+//                prefs.edit().putBoolean(SettingsActivity.DISABLE_PROXIMITY, true).commit();
+//            }
+//        }
 
         //registerProximitySensor();
         mHandler = new Handler();
@@ -290,7 +277,9 @@ public class NotificationAdapter implements NotificationEventListener
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         // check if need to turn screen on
-        Boolean turnScreenOn = sharedPref.getBoolean(SettingsActivity.TURNSCREENON, true);
+        String wakeupMode = SettingsActivity.getWakeupMode(context);
+        Boolean turnScreenOn = !wakeupMode.equals(SettingsActivity.WAKEUP_NEVER);
+
         if (turnScreenOn && (deviceCovered == null || !deviceCovered))
         {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -326,8 +315,9 @@ public class NotificationAdapter implements NotificationEventListener
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Log.d("NiLS", "registerProximitySensor");
-        if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
-                prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
+        String wakeupMode = SettingsActivity.getWakeupMode(context);
+
+        if (wakeupMode.equals(SettingsActivity.WAKEUP_NOT_COVERED) || wakeupMode.equals(SettingsActivity.WAKEUP_UNCOVERED))
         {
             final SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
             final Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
@@ -342,7 +332,6 @@ public class NotificationAdapter implements NotificationEventListener
                     @Override
                     public void onSensorChanged(SensorEvent event)
                     {
-                        Log.d("NiLS", "onSensorChanged:"+event.values[0]);
                         boolean newCoverStatus = (event.values[0] == 0);
                         // unknown -> something
                         if (deviceCovered == null)
@@ -356,10 +345,10 @@ public class NotificationAdapter implements NotificationEventListener
                         else if (deviceCovered && !newCoverStatus)
                         {
                             deviceCovered = false;
-                            final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+                            String wakeupMode = SettingsActivity.getWakeupMode(context);
 
                             // stop proximity monitoring if delayed screen on is inactive
-                            if (sharedPref.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
+                            if (wakeupMode.equals(SettingsActivity.WAKEUP_UNCOVERED))
                             {
                                 turnScreenOn();
                             }
@@ -367,6 +356,7 @@ public class NotificationAdapter implements NotificationEventListener
                             stopProximityMontior();
                         }
                         // else (cover -> cover , uncover -> uncover) - do nothing
+                        Log.d("NiLS", "device covered:"+deviceCovered);
                     }
                 };
 

@@ -76,14 +76,14 @@ public class NotificationsService extends Service implements NotificationsProvid
         {
             // read logcat
             Process process = Runtime.getRuntime().exec("logcat -d");
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             StringBuilder log=new StringBuilder();
             String line = "";
             while ((line = bufferedReader.readLine()) != null)
             {
                 log.append(line);
+                log.append("\r\n");
             }
 
             Time now = new Time();
@@ -92,11 +92,11 @@ public class NotificationsService extends Service implements NotificationsProvid
 
             // save log into a file
             File dst = new File(context.getExternalFilesDir(null),filename);
-            ObjectOutputStream output = null;
-            output = new ObjectOutputStream(new FileOutputStream(dst));
-            output.writeObject(log.toString());
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(dst));
+            output.writeChars(log.toString());
             output.flush();
             output.close();
+            bufferedReader.close();
 
             Log.d("NiLS", "Log file written to "+context.getExternalFilesDir(null)+"/"+filename);
         }
@@ -158,6 +158,8 @@ public class NotificationsService extends Service implements NotificationsProvid
             // remove old notification
             Iterator<NotificationData> iter = notifications.iterator();
 
+            boolean changed = false;
+
             while (iter.hasNext())
             {
                 NotificationData oldnd = iter.next();
@@ -174,6 +176,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     nd.uid = oldnd.uid;
                     iter.remove();
                     updated = true;
+                    changed = oldnd.isEqual(nd);
                     break;
                 }
             }
@@ -185,7 +188,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (listener != null)
             {
                 if (updated)
-                    listener.onNotificationUpdated(nd);
+                    listener.onNotificationUpdated(nd, changed);
                 else
                     listener.onNotificationAdded(nd, true);
                 listener.onNotificationsListChanged();

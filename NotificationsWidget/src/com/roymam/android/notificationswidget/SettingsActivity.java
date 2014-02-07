@@ -53,9 +53,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public static final String BOLD_HOURS = "boldhours";
 	public static final String BOLD_MINUTES = "boldminutes";
 	public static final String CLOCK_BG_OPACITY = "clockbgopacity";
-	public static final String TURNSCREENON = "turnscreenon";
-	public static final String DISABLE_PROXIMITY = "disableproximity";
-	public static final String DELAYED_SCREEON = "delayed_screenon";
+
+    public static final String WAKEUP_MODE = "wakeup_mode";
+    public static final String WAKEUP_ALWAYS = "always";
+    public static final String WAKEUP_NEVER = "never";
+    public static final String WAKEUP_UNCOVERED = "when_uncovered";
+    public static final String WAKEUP_NOT_COVERED = "when_not_covered";
+
+    private static final String TURNSCREENON = "turnscreenon";
+    private static final String DISABLE_PROXIMITY = "disableproximity";
+    private static final String DELAYED_SCREEON = "delayed_screenon";
 	public static final String NOTIFICATIONS_ORDER = "order_notifications_by";
 	public static final String CLOCK_STYLE = "clockstyle";
 	public static final String NOTIFICATION_STYLE="notification_style";
@@ -163,7 +170,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        addPreferencesFromResource(R.xml.preferences);
 
 		    // proximity sensor listener
-	        Preference proxPref = findPreference(DISABLE_PROXIMITY);	        
+	        /*Preference proxPref = findPreference(DISABLE_PROXIMITY);
 	        proxPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 	        {
 				@Override
@@ -197,15 +204,26 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 					return true;
 				}	        	
 	        });
-	        
-	        // notification order by 
-	        ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
+	        */
+            // auto wake up mode
+            ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
+                    getResources().getStringArray(R.array.wakeup_mode_entries),
+                    getResources().getStringArray(R.array.wakeup_mode_values));
+
+            Preference wakeupPref = findPreference(WAKEUP_MODE);
+            String currValue = SettingsActivity.getWakeupMode(getActivity());
+            wakeupPref.setDefaultValue(currValue);
+            listener.setPrefSummary(wakeupPref, currValue);
+            wakeupPref.setOnPreferenceChangeListener(listener);
+
+            // notification order by
+	        listener = new ListPreferenceChangeListener(
 	        		getResources().getStringArray(R.array.settings_orderby_entries),
 	        		getResources().getStringArray(R.array.settings_orderby_values));
 	        
 	        Preference orderPref = findPreference(NOTIFICATIONS_ORDER);
-	        String currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATIONS_ORDER, "time");	        
-	        listener.setPrefSummary(orderPref, (String)currValue);
+	        currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATIONS_ORDER, "time");
+	        listener.setPrefSummary(orderPref, currValue);
 	        orderPref.setOnPreferenceChangeListener(listener);
 
             // set up notifications sync
@@ -229,9 +247,29 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 getPreferenceScreen().getSharedPreferences().edit().putBoolean(CLEAR_APP_NOTIFICATIONS, false).commit();
             }
         }
-	}		
+	}
 
-	public static class PrefsContactFragment extends PreferenceFragment 
+    public static String getWakeupMode(Context context)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String defaultWakeupMode;
+
+        // setting default according to old settings
+        if (!prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
+            defaultWakeupMode = WAKEUP_NEVER;
+        else
+            if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+                defaultWakeupMode = WAKEUP_ALWAYS;
+            else
+                if (prefs.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
+                    defaultWakeupMode = WAKEUP_UNCOVERED;
+                else
+                    defaultWakeupMode = WAKEUP_NOT_COVERED;
+
+        return prefs.getString(WAKEUP_MODE, defaultWakeupMode);
+    }
+
+    public static class PrefsContactFragment extends PreferenceFragment
 	{
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) 

@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory android:key="behavior" android:title="@string/behavior">
-            <CheckBoxPreference 
-                android:title="@string/turnscreenon" 
-                android:key="turnscreenon" 
-                android:enabled="true" 
-                android:defaultValue="true" 
-                android:summary="@string/turnscreenon_summary"/>            
-            <CheckBoxPreference 
-                android:title="@string/disableproximity" 
-                android:key="disableproximity" 
-                android:enabled="true" 
-                android:defaultValue="false" 
-                android:disableDependentsState="true"
-                android:summary="@string/disableproximity_summary"
-                android:dependency="turnscreenon"/>
-            <CheckBoxPreference 
-                android:title="@string/delayed_screenon"
-                android:key="delayed_screenon"
-                android:enabled="true"
-                android:defaultValue="false"
-                android:summary="@string/delayed_screenon_summary"
-                android:dependency="disableproximity"/>"
+        <ListPreference
+            android:title="@string/turnscreenon"
+            android:key="wakeup_mode"
+            android:defaultValue="when_not_covered"
+            android:entryValues="@array/wakeup_mode_values"
+            android:entries="@array/wakeup_mode_entries"
+            />
         <EditTextPreference
                 android:title="@string/screenon_timeout"
                 android:key="turnscreenon_timeout"
                 android:enabled="true"
                 android:defaultValue="10"
                 android:inputType="number"
-                android:summary="@string/screenon_timeout_summary"
-                android:dependency="turnscreenon"/>
+                android:summary="@string/screenon_timeout_summary"/>
     </PreferenceCategory>             
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
             <CheckBoxPreference 
@@ -58,27 +43,36 @@
     	    			android:key="order_notifications_by" 
     	    			android:defaultValue="time" />      
             </PreferenceCategory>
+    <PreferenceCategory android:key="sync" android:title="@string/sync_notifications">
+        <!--
+            TODO:
+            1. Clear notifications when cleared from Android Notifications Bar
+            2. Clear notifications on Android Notifications Bar when cleared from NiLS (4.3)
+            3. Clear notifications when app is opened
+            4. Notifications Mode: Combined / Separated / Last
+        -->
+        <ListPreference android:dialogTitle="@string/sync_notifications"
+            android:entries="@array/sync_notifications_entries"
+            android:entryValues="@array/sync_notifications_values"
+            android:title="@string/sync_notifications"
+            android:key="sync_notifications"
+            android:defaultValue="smart" />
+        <CheckBoxPreference
+            android:title="@string/clear_app_notifications"
+            android:key="clear_app_notifications"
+            android:enabled="true"
+            android:defaultValue="true"
+            android:summary="@string/clear_app_notifications_summary"/>
+    </PreferenceCategory>
     <PreferenceCategory android:key="advanced" android:title="@string/advanced">
-        <CheckBoxPreference android:key="disable_auto_switch"
+        <!--<CheckBoxPreference android:key="disable_auto_switch"
                             android:title="@string/disable_auto_switch"
                             android:summary="@string/disable_auto_switch_summary"
-                            android:defaultValue="false"/>
-        <CheckBoxPreference
-                android:title="@string/clear_app_notifications"
-                android:key="clear_app_notifications"
-                android:enabled="true"
-                android:defaultValue="true"
-                android:summary="@string/clear_app_notifications_summary"/>
+                            android:defaultValue="false"/>-->
         <CheckBoxPreference
                 android:title="@string/force_clear_on_open"
                 android:key="force_clear_on_open"
                 android:defaultValue="false"
                 android:summary="@string/force_clear_on_open_summary"/>
-        <ListPreference android:dialogTitle="@string/sync_notifications"
-                        android:entries="@array/sync_notifications_entries"
-                        android:entryValues="@array/sync_notifications_values"
-                        android:title="@string/sync_notifications"
-                        android:key="sync_notifications"
-                        android:defaultValue="smart" />
     </PreferenceCategory>
 </PreferenceScreen>

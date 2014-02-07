@@ -9,20 +9,35 @@
     <!-- Settings Page -->
     <string name="generalsettings">General Settings</string>
     <string name="advancedsettings">Advanced Settings</string>
-    <string name="behavior">Auto Wake up</string>
+    <string name="behavior">When notification arrives</string>
     <string name="appearance">Appearance</string>
     <string name="advanced">Advanced</string>
     <string name="notifications">Notifications</string>
-    <string name="turnscreenon">Auto wake up</string>
-    <string name="turnscreenon_summary">Wake device and turn screen on when a new notification arrives</string>
-    <string name="disableproximity">Disable proximity sensor</string>
+    <string name="turnscreenon">Turn on screen</string>
+
+    <string-array name="wakeup_mode_entries">
+        <item>Never</item>
+        <item>When device is not covered</item>
+        <item>When device is uncovered</item>
+        <item>Always</item>
+    </string-array>
+    <string-array name="wakeup_mode_values">
+        <item>never</item>
+        <item>when_not_covered</item>
+        <item>when_uncovered</item>
+        <item>always</item>
+    </string-array>
+
+    <!--<string name="turnscreenon_summary">Wake device and turn screen on when a new notification arrives</string>-->
+    <!--<string name="disableproximity">Disable proximity sensor</string>
     <string name="disableproximity_summary">When checked, the device will always turn on screen for notifications, even if it covered.</string>
     <string name="disableproximity_nexus4_warning">Please note that Nexus 4 has known issues when enabling proximity sensor, it may cause a battery drain, and you may hear tick sounds during music playback or a phone call.\nAre you sure that you want to enable this feature?</string>
-    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warning</string>
+    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warning</string>-->
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="delayed_screenon">Delayed wake up</string>
+    <!--<string name="delayed_screenon">Delayed wake up</string>
     <string name="delayed_screenon_summary">When a new notification arrives, wake up and turn screen on only after putting device out of the pocket</string>
+    -->
     <string name="clearonunlock">Clear when unlocked</string>
     <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
     <string name="clearonlock">Clear when locked</string>
@@ -50,7 +65,7 @@
     <string name="show_full_notification_summary">Show full notification content as it appears on notifications bar</string>
     <string name="sync_notifications">Sync with notifications bar</string>
     <string name="clear_app_notifications">Clear when app is opened</string>
-    <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched.</string>
+    <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched. (Not available on 4.3 or later)</string>
     <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string>
     <string name="disable_auto_switch">Disable auto switch preset</string>
     <string name="force_clear_on_open">Force clear notifications when opened</string>

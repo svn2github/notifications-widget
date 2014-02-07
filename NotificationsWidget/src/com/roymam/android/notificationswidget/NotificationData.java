@@ -190,6 +190,25 @@ public class NotificationData implements Parcelable
         }
     };
 
+    public boolean isEqual(NotificationData nd)
+    {
+        CharSequence title1 = nd.title;
+        CharSequence title2 = this.title;
+        CharSequence text1 = nd.text;
+        CharSequence text2 = this.text;
+        CharSequence content1 = nd.content;
+        CharSequence content2 = this.content;
+        if (title1 == null) title1 = "";
+        if (title2 == null) title2 = "";
+        if (text1 == null) text1 = "";
+        if (text2 == null) text2 = "";
+        if (content1 == null) content1 = "";
+        if (content2 == null) content2 = "";
+        return title1.equals(title2) &&
+               text1.equals(text2) &&
+               content1.equals(content2);
+    }
+
     public static class Action implements Parcelable
 	{
         public Action() {};
