@@ -92,14 +92,18 @@ public class NotificationParser
                     ai = null;
                 }
 
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+                opts.outHeight = (int) maxIconSize;
+                opts.outWidth = (int) maxIconSize;
+
                 boolean useMonoIcon = sharedPref.getBoolean(SettingsActivity.USE_MONO_ICON, false);
                 if (res != null && info != null)
                 {
-                    nd.appicon = BitmapFactory.decodeResource(res, n.icon);
+                    nd.appicon = BitmapFactory.decodeResource(res, n.icon, opts);
                     if (useMonoIcon) nd.icon = nd.appicon;
                     else
                     {
-                        nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon);
+                        nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon, opts);
                         if (nd.appicon == null)
                         {
                             nd.appicon = nd.icon;

@@ -195,6 +195,19 @@ public class NotificationAdapter implements NotificationEventListener
         intent.setAction("robj.floating.notifications.dismiss");
         intent.putExtra("package", nd.packageName);
         context.sendBroadcast(intent);
+
+        // free memory used by the notification
+        if (nd.appicon != null)
+        {
+            nd.appicon.recycle();
+            nd.appicon = null;
+        }
+
+        if (nd.icon != null)
+        {
+            nd.icon.recycle();
+            nd.icon = null;
+        }
     }
 
     @Override

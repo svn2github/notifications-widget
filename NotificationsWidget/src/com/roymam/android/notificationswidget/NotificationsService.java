@@ -176,7 +176,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     nd.uid = oldnd.uid;
                     iter.remove();
                     updated = true;
-                    changed = oldnd.isEqual(nd);
+                    changed = !oldnd.isEqual(nd);
                     break;
                 }
             }
