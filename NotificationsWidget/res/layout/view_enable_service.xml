@@ -33,7 +33,7 @@
                 android:layout_height="20dp"
                 android:id="@+id/imageView"
                 android:layout_gravity="center_horizontal"
-                android:src=""
+                android:src="@android:color/transparent"
                 android:scaleType="fitCenter" />
 
             <TextView
