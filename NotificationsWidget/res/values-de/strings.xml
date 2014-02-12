@@ -13,16 +13,24 @@
     <string name="appearance">Darstellung</string>
     <string name="advanced">Erweitert</string>
     <string name="notifications">Benachrichtigungen</string>
-    <string name="turnscreenon">Auto Displayaktivierung</string>
-    <string name="turnscreenon_summary">Schaltet das Display bei neuer Benachrichtigung ein</string>
-    <string name="disableproximity">Näherungssensor deaktivieren</string>
-    <string name="disableproximity_summary">Weckt das Gerät auch auf, wenn es in einer Tasche steckt</string>
-    <string name="disableproximity_nexus4_warning">Beachten Sie, dass, bei aktiviertem Näherungssensor, Probleme mit dem Nexus 4 auftreten können: Erhöhter Akkuverbrauch und Tick-Geräusche bei der Musik-Wiedergabe und in Anrufen.\nSind sie sicher, dass sie dieses Feature aktivieren wollen?</string>
-    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warnung</string>
+    <string name="turnscreenon">Turn on screen</string>
+
+    <string-array name="wakeup_mode_entries">
+        <item>Never</item>
+        <item>When device is not covered</item>
+        <item>When device is uncovered</item>
+        <item>Always</item>
+    </string-array>
+    <string-array name="wakeup_mode_values">
+        <item>never</item>
+        <item>when_not_covered</item>
+        <item>when_uncovered</item>
+        <item>always</item>
+    </string-array>
+
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
-    <string name="delayed_screenon">Verzögerte Displayaktivierung</string>
-    <string name="delayed_screenon_summary">Aktiviert das Display bei neuer Benachrichtgung erst, wenn Sie das Gerät aus der Tasche nehmen</string>
+
     <string name="clearonunlock">Löschen bei Entsperrung</string>
     <string name="clearonunlock_summary">Löscht alle Benachrichtigungen, wenn das Gerät ensperrt wird</string>
     <string name="clearonlock">Löschen bei Sperrung</string>
@@ -311,5 +319,6 @@
     <string name="persistent_notifications_error">There was a problem to load the persistent notifications\n please remove some persistent notifications and try again</string>
     <string name="use_mono_icon">Use status bar icon</string>
     <string name="use_mono_icon_summary">Always use status bar icon (monochrome) instead of the notification icon</string>
+    <string name="open_android_settings">Open Android Settings</string>
 
 </resources>

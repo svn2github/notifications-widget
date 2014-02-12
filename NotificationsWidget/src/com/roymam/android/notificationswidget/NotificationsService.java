@@ -113,7 +113,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (parser == null) parser = new NotificationParser(getApplicationContext());
         if (listener == null) setNotificationEventListener(new NotificationAdapter(context));
 
-        if (intent.getAction() != null)
+        if (intent != null && intent.getAction() != null)
         {
             String action = intent.getAction();
             if (action.equals(NOTIFICATION_POSTED))
@@ -274,10 +274,12 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public List<NotificationData> getNotifications()
     {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String sortBy = prefs.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
-        sortNotificationsList(notifications, sortBy);
-
+        if (context != null)
+        {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String sortBy = prefs.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
+            sortNotificationsList(notifications, sortBy);
+        }
         return notifications;
     }
 

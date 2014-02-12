@@ -28,16 +28,9 @@
         <item>always</item>
     </string-array>
 
-    <!--<string name="turnscreenon_summary">Wake device and turn screen on when a new notification arrives</string>-->
-    <!--<string name="disableproximity">Disable proximity sensor</string>
-    <string name="disableproximity_summary">When checked, the device will always turn on screen for notifications, even if it covered.</string>
-    <string name="disableproximity_nexus4_warning">Please note that Nexus 4 has known issues when enabling proximity sensor, it may cause a battery drain, and you may hear tick sounds during music playback or a phone call.\nAre you sure that you want to enable this feature?</string>
-    <string name="disableproximity_nexus4_warning_title">Nexus 4 Warning</string>-->
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <!--<string name="delayed_screenon">Delayed wake up</string>
-    <string name="delayed_screenon_summary">When a new notification arrives, wake up and turn screen on only after putting device out of the pocket</string>
-    -->
+
     <string name="clearonunlock">Clear when unlocked</string>
     <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
     <string name="clearonlock">Clear when locked</string>
@@ -115,17 +108,17 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
     <string name="title_activity_main">NiLS</string>
-    <string name="tutorial_help_1">When settings page opens, select \"NiLS Service\" and enable it.  Touch \"OK\" in the warning dialog</string>
-    <string name="tutorial_help_2">After locking the screen, remove the standard Android clock widget by swiping it down to expanded the widget and drag it to the top to remove it, then click the + icon, choose \"NiLS Widget\" from the widget list</string>
-    <string name="tutorial_help_2_widgetlocker">Add the widget to your home screen. If you have WidgetLocker installed - launch it and long touch an empty area to add the widget</string>
-    <string name="tutorial_help_3">That\'s all. if you have any questions or issues - don\'t hesitate to contact us at support@roymam.com</string>
-    <string name="tutorial_step_1">Enable \"NiLS Service\" on Android Settings</string>
-    <string name="tutorial_step_2">Add \"NiLS\" widget</string>
-    <string name="tutorial_step_3">Customize \"NiLS\" in \"Settings\" page</string>
+    <string name="tutorial_help_1">NiLS need to get access to your notifications.\nPlease follow the following instructions to enable NiLS service on Android settings.</string>
+
+    <string name="tutorial_instructions">Instructions:</string>
+    <string name="tutorial_step_1">Click the button below to open Android settings</string>
+    <string name="tutorial_step_2">Find \"NiLS Service\" in the list and enable it</string>
+    <string name="tutorial_step_3">Click \"OK" in the warning dialog</string>
+    <string name="tutorial_step_4">Click \"Back" button to return to NiLS settings</string>
     <string name="tutorial_toast_1">Enable \"NiLS Service\" and hit back to return to the wizard</string>
     <string name="tutorial_toast_2">You should lock the screen manually and then add the widget</string>
     <string name="welcome_text">Welcome to NiLS - Notifications widget, Let\'s get started.</string>
-    <string name="tutorial_step_1_title">Enable Service</string>
+    <string name="tutorial_step_1_title">Enable NiLS Service</string>
     <string name="tutorial_step_2_title">Add Widget</string>
     <string name="tutorial_step_3_title">Customize</string>
 
@@ -383,6 +376,7 @@
     <string name="persistent_notifications_error">There was a problem to load the persistent notifications\n please remove some persistent notifications and try again</string>
     <string name="use_mono_icon">Use status bar icon</string>
     <string name="use_mono_icon_summary">Always use status bar icon (monochrome) instead of the notification icon</string>
+    <string name="open_android_settings">Open Android Settings</string>
 
 
 </resources>

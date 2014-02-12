@@ -13,16 +13,24 @@
     <string name="appearance">Apariencia</string>
     <string name="advanced">Avanzado</string>
     <string name="notifications">Notificaciones</string>
-    <string name="turnscreenon">Auto Encender</string>
-    <string name="turnscreenon_summary">Despierta el dispositivo y enciende la pantalla cuando hay notificaciones nuevas.</string>
-    <string name="disableproximity">Anular Sensor de Proximidad</string>
-    <string name="disableproximity_summary">Si está activado, el dispositivo siempre enciende la pantalla para notificaciones, aunque esté la pantalla cubierta.</string>
-    <string name="disableproximity_nexus4_warning">Por favor ten en cuenta que el Nexus 4 tiene problemas conocidos cuando el sensor de prox. se habilita, puede causar mucho gasto de batería, y podrías escuchar sonidos como ticks durante la reproducción de música o una llamada.\nEstás seguro que quieres habilitar esta función?</string>
-    <string name="disableproximity_nexus4_warning_title">Aviso para Nexus 4</string>
+    <string name="turnscreenon">Turn on screen</string>
+
+    <string-array name="wakeup_mode_entries">
+        <item>Never</item>
+        <item>When device is not covered</item>
+        <item>When device is uncovered</item>
+        <item>Always</item>
+    </string-array>
+    <string-array name="wakeup_mode_values">
+        <item>never</item>
+        <item>when_not_covered</item>
+        <item>when_uncovered</item>
+        <item>always</item>
+    </string-array>
+
     <string name="yes">Si</string>
     <string name="no">No</string>
-    <string name="delayed_screenon">Encendido retrasado</string>
-    <string name="delayed_screenon_summary">Cuando llega una notificación, despierta el dispositivo y enciende la pantalla cuando el mismo es sacado del bolsillo</string>
+
     <string name="clearonunlock">Borrar al desbloquear</string>
     <string name="clearonunlock_summary">Borra todas las notificaciones cuando el dispositivo es desbloqueado</string>
     <string name="clearonlock">Borrar al bloquear</string>
