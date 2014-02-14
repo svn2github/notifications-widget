@@ -10,7 +10,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -26,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+
+import com.roymam.android.common.BitmapCache;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -99,11 +100,11 @@ public class NotificationParser
                 boolean useMonoIcon = sharedPref.getBoolean(SettingsActivity.USE_MONO_ICON, false);
                 if (res != null && info != null)
                 {
-                    nd.appicon = BitmapFactory.decodeResource(res, n.icon, opts);
+                    nd.appicon = BitmapCache.getInstance(context).getBitmap(packageName, n.icon);
                     if (useMonoIcon) nd.icon = nd.appicon;
                     else
                     {
-                        nd.icon = BitmapFactory.decodeResource(res, info.applicationInfo.icon, opts);
+                        nd.icon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
                         if (nd.appicon == null)
                         {
                             nd.appicon = nd.icon;
@@ -116,14 +117,14 @@ public class NotificationParser
                 }
 
                 // resizing icon to smaller size if needed
-                if (nd.appicon != null &&
+                /*if (nd.appicon != null &&
                         (nd.appicon.getWidth() > maxIconSize || nd.appicon.getHeight() > maxIconSize))
                     nd.appicon = Bitmap.createScaledBitmap(nd.appicon, (int) maxIconSize, (int) maxIconSize, false);
 
                 // resizing icon to smaller size if needed
                 if (nd.icon != null &&
                         (nd.icon.getWidth() > maxIconSize || nd.icon.getHeight() > maxIconSize))
-                    nd.icon = Bitmap.createScaledBitmap(nd.icon, (int) maxIconSize, (int) maxIconSize, false);
+                    nd.icon = Bitmap.createScaledBitmap(nd.icon, (int) maxIconSize, (int) maxIconSize, false);*/
 
                 // get time of the event
                 if (n.when != 0)
@@ -243,14 +244,7 @@ public class NotificationParser
 
                     // find drawable
                     // extract app icons
-                    Resources res;
-                    try {
-                        res = context.getPackageManager().getResourcesForApplication(packageName);
-                        a.drawable = BitmapFactory.decodeResource(res, a.icon);
-                    } catch (PackageManager.NameNotFoundException e)
-                    {
-                        a.drawable = null;
-                    }
+                    a.drawable = BitmapCache.getInstance(context).getBitmap(packageName, a.icon);
                     returnActions.add(a);
                 }
             }
