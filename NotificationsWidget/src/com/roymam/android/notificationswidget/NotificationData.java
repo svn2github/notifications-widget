@@ -209,6 +209,30 @@ public class NotificationData implements Parcelable
                content1.equals(content2);
     }
 
+    public void cleanup()
+    {
+        if (appicon != null)
+        {
+            appicon.recycle();
+            appicon = null;
+        }
+
+        if (icon != null)
+        {
+            icon.recycle();
+            icon = null;
+        }
+
+        if (actions != null)
+        {
+            for(Action action : actions)
+            {
+                action.drawable.recycle();
+                action.drawable = null;
+            }
+        }
+    }
+
     public static class Action implements Parcelable
 	{
         public Action() {};

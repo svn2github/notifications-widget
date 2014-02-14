@@ -101,7 +101,10 @@ public class NotificationParser
                 if (res != null && info != null)
                 {
                     nd.appicon = BitmapCache.getInstance(context).getBitmap(packageName, n.icon);
-                    if (useMonoIcon) nd.icon = nd.appicon;
+                    if (useMonoIcon)
+                    {
+                        nd.icon = nd.appicon;
+                    }
                     else
                     {
                         nd.icon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
@@ -292,7 +295,7 @@ public class NotificationParser
         boolean hasParsableContent = true;
 
         ViewGroup localView = null;
-        try
+        /*try
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             localView = (ViewGroup) inflater.inflate(view.getLayoutId(), null);
@@ -300,9 +303,9 @@ public class NotificationParser
             view.reapply(context.getApplicationContext(), localView);
         }
         catch (Exception exp)
-        {
+        {*/
             hasParsableContent = false;
-        }
+        /*}*/
 
         HashMap<Integer, CharSequence> notificationStrings;
         if (hasParsableContent)

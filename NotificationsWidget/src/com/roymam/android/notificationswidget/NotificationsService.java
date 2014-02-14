@@ -175,6 +175,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     nd.uid = oldnd.uid;
                     iter.remove();
+                    oldnd.cleanup();
                     updated = true;
                     changed = !oldnd.isEqual(nd);
                     break;

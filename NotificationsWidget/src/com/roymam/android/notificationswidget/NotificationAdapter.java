@@ -197,17 +197,7 @@ public class NotificationAdapter implements NotificationEventListener
         context.sendBroadcast(intent);
 
         // free memory used by the notification
-        if (nd.appicon != null)
-        {
-            nd.appicon.recycle();
-            nd.appicon = null;
-        }
-
-        if (nd.icon != null)
-        {
-            nd.icon.recycle();
-            nd.icon = null;
-        }
+        nd.cleanup();
     }
 
     @Override
