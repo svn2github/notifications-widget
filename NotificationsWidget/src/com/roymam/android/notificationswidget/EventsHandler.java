@@ -12,7 +12,7 @@ import java.util.List;
 public class EventsHandler extends BroadcastReceiver
 {
     private final String WIDGET_LOCKER_UNLOCKED = "com.teslacoilsw.widgetlocker.intent.UNLOCKED";
-    private final String WIDGET_LOCKER_LOCKED = "com.teslacoilsw.widgetlocker.intent.OCKED";
+    private final String WIDGET_LOCKER_LOCKED = "com.teslacoilsw.widgetlocker.intent.LOCKED";
     public final static String FN_DISMISS_NOTIFICATIONS = "robj.floating.notifications.dismissed";
     public final static String DISMISS_NOTIFICATIONS = "com.roymam.android.nils.remove_notification";
     public final static String OPEN_NOTIFICATION = "com.roymam.android.nils.open_notification";

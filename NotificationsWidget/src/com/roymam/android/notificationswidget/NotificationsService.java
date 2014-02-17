@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
@@ -395,11 +396,15 @@ public class NotificationsService extends Service implements NotificationsProvid
     private void cancelNotification(String packageName, String tag, int id)
     {
         Log.d("NiLS","NotificationsService:cancelNotification #" + id);
-        Intent intent = new Intent(CANCEL_NOTIFICATION);
-        intent.putExtra(EXTRA_PACKAGENAME, packageName);
-        intent.putExtra(EXTRA_TAG, tag);
-        intent.putExtra(EXTRA_ID, id);
-        sendBroadcast(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+        {
+            Intent intent = new Intent(context, NewNotificationsListener.class);
+            intent.setAction(CANCEL_NOTIFICATION);
+            intent.putExtra(EXTRA_PACKAGENAME, packageName);
+            intent.putExtra(EXTRA_TAG, tag);
+            intent.putExtra(EXTRA_ID, id);
+            startService(intent);
+        }
     }
 
     @Override

@@ -1,10 +1,7 @@
 package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -14,7 +11,26 @@ import android.util.Log;
 public class NewNotificationsListener extends NotificationListenerService
 {
     private NotificationParser parser;
-    private BroadcastReceiver receiver;
+    //private BroadcastReceiver receiver;
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        Log.d("NiLS","NewNotificationsListener:onStartCommand");
+        if (intent != null && intent.getAction() != null)
+        {
+            if (intent.getAction().equals(NotificationsService.CANCEL_NOTIFICATION))
+            {
+                String packageName = intent.getStringExtra(NotificationsService.EXTRA_PACKAGENAME);
+                String tag = intent.getStringExtra(NotificationsService.EXTRA_TAG);
+                int id = intent.getIntExtra(NotificationsService.EXTRA_ID, -1);
+
+                Log.d("NiLS","cancel notification #" + id);
+                cancelNotification(packageName, tag, id);
+            }
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     @Override
     public void onCreate()
@@ -29,7 +45,7 @@ public class NewNotificationsListener extends NotificationListenerService
         parser = new NotificationParser(getApplicationContext());
 
         // register a receiver for cancel notification action
-        receiver = new BroadcastReceiver()
+        /*receiver = new BroadcastReceiver()
         {
             @Override
             public void onReceive(Context context, Intent intent)
@@ -49,7 +65,7 @@ public class NewNotificationsListener extends NotificationListenerService
                 }
             }
         };
-        registerReceiver(receiver, new IntentFilter(NotificationsService.CANCEL_NOTIFICATION));
+        registerReceiver(receiver, new IntentFilter(NotificationsService.CANCEL_NOTIFICATION));*/
 
         // notify that the service has been started
         getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
@@ -62,11 +78,11 @@ public class NewNotificationsListener extends NotificationListenerService
     {
         Log.d("NiLS","NewNotificationsListener:onDestroy");
         getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
-        if (receiver != null)
+        /*if (receiver != null)
         {
             unregisterReceiver(receiver);
             receiver = null;
-        }
+        }*/
         super.onDestroy();
     }
 
