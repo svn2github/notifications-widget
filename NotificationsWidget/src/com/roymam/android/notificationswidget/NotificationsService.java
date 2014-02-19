@@ -26,7 +26,7 @@ import java.util.ListIterator;
 
 public class NotificationsService extends Service implements NotificationsProvider
 {
-    public static final String CANCEL_NOTIFICATION = "com.roymam.android.nils.CANCEL_NOTIFICATION";
+    public static final String CANCEL_NOTIFICATION = "com.roymam.android.nils.cancel_notification";
     public static final String NOTIFICATION_POSTED = "NOTIFICATION_POSTED";
     public static final String NOTIFICATION_REMOVED = "NOTIFICATION_REMOVED";
     public static final String PERSISTENT_NOTIFICATION_POSTED = "PERSISTENT_NOTIFICATION_POSTED";
@@ -34,6 +34,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     public static final String EXTRA_NOTIFICATION = "EXTRA_NOTIFICATION";
     public static final String EXTRA_PACKAGENAME = "EXTRA_PACKAGENAME";
     public static final String EXTRA_ID = "EXTRA_ID";
+    public static final String EXTRA_UID = "EXTRA_UID";
     public static final String EXTRA_TAG = "EXTRA_TAG";
 
     private static NotificationsProvider instance;
@@ -138,6 +139,12 @@ public class NotificationsService extends Service implements NotificationsProvid
                 String packageName = intent.getStringExtra(EXTRA_PACKAGENAME);
                 int id = intent.getIntExtra(EXTRA_ID, -1);
                 removePersistentNotification(packageName, id);
+            }
+            // cancel notification request from NiLS FP
+            else if (action.equals(CANCEL_NOTIFICATION))
+            {
+                int uid = intent.getIntExtra(EXTRA_UID, -1);
+                clearNotification(uid);
             }
         }
         return START_STICKY;

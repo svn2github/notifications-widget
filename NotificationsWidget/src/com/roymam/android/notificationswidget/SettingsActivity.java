@@ -1,11 +1,9 @@
 package com.roymam.android.notificationswidget;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -557,12 +555,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         // check service status
         if (NotificationsService.getSharedInstance() != null)
         {
-            target.get(0).iconRes = android.R.drawable.presence_online;
+            //target.get(0).iconRes = android.R.drawable.presence_online;
             target.get(0).summaryRes = R.string.service_is_active;
         }
         else
         {
-            target.get(0).iconRes = android.R.drawable.presence_offline;
+            //target.get(0).iconRes = android.R.drawable.presence_offline;
             target.get(0).summaryRes = R.string.service_is_inactive;
 
             Intent intent = getNotificationsServiesIntent();
@@ -576,12 +574,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(WIDGET_PRESENT, false) || widgetIds.length > 0)
         {
-            target.get(1).iconRes = android.R.drawable.presence_online;
+            //target.get(1).iconRes = android.R.drawable.presence_online;
             target.get(1).summaryRes = R.string.widget_is_present;
         }
         else
         {
-            target.get(1).iconRes = android.R.drawable.presence_offline;
+            //target.get(1).iconRes = android.R.drawable.presence_offline;
             target.get(1).summaryRes = R.string.widget_is_not_present;
             target.get(1).fragment = "com.roymam.android.notificationswidget.SettingsActivity$HowToAddWidgetFragment";
         }
@@ -619,7 +617,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         mHeaders = target;
     }
 
-    private Intent getNotificationsServiesIntent()
+    public static Intent getNotificationsServiesIntent()
     {
         Intent intent;
 
@@ -682,6 +680,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (NotificationsService.getSharedInstance() == null)
         {
+            finish();
+            startActivity(new Intent(getApplicationContext(), StartServiceActivity.class));
+            /*
             new AlertDialog.Builder(this)
                         .setTitle(R.string.nils_service_is_not_running)
                         .setMessage(R.string.nils_service_enable_instructions)
@@ -699,9 +700,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                        .show();*/
         }
-
     }
 
 	@Override

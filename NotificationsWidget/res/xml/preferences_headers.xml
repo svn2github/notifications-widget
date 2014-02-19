@@ -2,13 +2,13 @@
 <preference-headers
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <header android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsGeneralFragment"
-            android:icon="@android:drawable/presence_offline"
+    <header android:icon="@android:drawable/ic_menu_manage"
+            android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsGeneralFragment"
             android:summary="@string/service_is_inactive"
             android:title="@string/service" />
     
-    <header 
-            android:icon="@android:drawable/presence_offline"
+    <header
+            android:icon="@drawable/hardware_phone"
             android:title="@string/widget"
             android:summary="@string/widget_is_not_present">
             	<intent android:targetPackage="com.roymam.android.notificationswidget"

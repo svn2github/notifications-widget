@@ -108,19 +108,13 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
     <string name="title_activity_main">NiLS</string>
-    <string name="tutorial_help_1">NiLS need to get access to your notifications.\nPlease follow the following instructions to enable NiLS service on Android settings.</string>
+    <string name="tutorial_help_1">NiLS need to get access to your notifications.\nPlease follow instructions below to enable NiLS service on Android settings.</string>
 
     <string name="tutorial_instructions">Instructions:</string>
     <string name="tutorial_step_1">Click the button below to open Android settings</string>
     <string name="tutorial_step_2">Find \"NiLS Service\" in the list and enable it</string>
-    <string name="tutorial_step_3">Click \"OK" in the warning dialog</string>
-    <string name="tutorial_step_4">Click \"Back" button to return to NiLS settings</string>
-    <string name="tutorial_toast_1">Enable \"NiLS Service\" and hit back to return to the wizard</string>
-    <string name="tutorial_toast_2">You should lock the screen manually and then add the widget</string>
-    <string name="welcome_text">Welcome to NiLS - Notifications widget, Let\'s get started.</string>
-    <string name="tutorial_step_1_title">Enable NiLS Service</string>
-    <string name="tutorial_step_2_title">Add Widget</string>
-    <string name="tutorial_step_3_title">Customize</string>
+    <string name="tutorial_step_3">Click \"OK\" in the warning dialog</string>
+    <string name="tutorial_step_4">Click \"Back\" button to return to NiLS settings</string>
 
     <!-- About Dialog -->
     <string name="about_title">NiLS</string>
@@ -314,8 +308,8 @@
     <string name="open_accessibility_settings">Open Accessibility Settings</string>
 
     <!-- new settings wizard combination -->
-    <string name="service">Service</string>
-    <string name="widget">Widget</string>
+    <string name="service">Global Settings</string>
+    <string name="widget">Widget Settings</string>
     <string name="service_is_inactive">Service is offline.\nclick to activate it.</string>
     <string name="service_is_active">Service is online.\nclick to change settings.</string>
     <string name="widget_is_not_present">Widget is not present.\nclick to learn how to add it.</string>
@@ -377,6 +371,7 @@
     <string name="use_mono_icon">Use status bar icon</string>
     <string name="use_mono_icon_summary">Always use status bar icon (monochrome) instead of the notification icon</string>
     <string name="open_android_settings">Open Android Settings</string>
+    <string name="tutorial_step_1_title">Enable NiLS Service</string>
 
 
 </resources>

@@ -30,10 +30,11 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="100dp"
                 android:id="@+id/imageView"
                 android:layout_gravity="center_horizontal"
-                android:src="@android:color/transparent"
+                android:src="@drawable/nils_service"
+                android:alpha="0.75"
                 android:scaleType="fitCenter" />
 
             <TextView
@@ -122,5 +123,6 @@
         android:id="@+id/enableservice_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/open_android_settings" />
+        android:text="@string/open_android_settings"
+        android:onClick="openAndroidSettings"/>
 </LinearLayout>

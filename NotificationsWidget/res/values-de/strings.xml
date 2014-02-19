@@ -85,19 +85,13 @@
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_about">Über</string>
     <string name="title_activity_main">NiLS</string>
-    <string name="tutorial_help_1">Wenn sich die Bedienungshilfen öffnen, wählen Sie \"NiLS Dienst\" und ziehen Sie den Schieberegler von \"Aus\" auf \"Ein\".  Bestätigen Sie die Warnung mit \"OK\".</string>
-    <string name="tutorial_help_2">Nachdem Sie das Gerät gesperrt haben, fügen Sie dem Lockscreen das \"NiLS Widget\" hinzu und löschen ggf. das Bisherige.</string>
-    <string name="tutorial_help_2_widgetlocker">Füge das Widget deinem Homescreen hinzu. Wenn du WidgetLocker installiert hast - Starte ihn und halte einen freien Bereich kurz gedrückt um das Widget hinzuzufügen</string>
-    <string name="tutorial_help_3">Das war\'s. Wenn du irgendwelche Fragen oder Probleme hast - Zögere nicht dich bei support@roymam.com zu melden</string>
-    <string name="tutorial_step_1">Aktiviere den  \"NiLS Dienst\" in den Bedienungshilfen</string>
-    <string name="tutorial_step_2">Füge das \"NiLS Widget\" hinzu</string>
-    <string name="tutorial_step_3">Passe NiLS in den Einstellungen an</string>
-    <string name="tutorial_toast_1">Aktiviere den \"NiLS Dienst\" und tippe Zurück um mit der Einrichtung fortzufahren</string>
-    <string name="tutorial_toast_2">Sperren Sie den Bildschirm und fügen Sie dem Sperrbildschirm das \"NiLS Widget\" hinzu</string>
-    <string name="welcome_text">Willkommen bei NiLS!\nLos geht\'s...</string>
-    <string name="tutorial_step_1_title">Dienst aktivieren</string>
-    <string name="tutorial_step_2_title">Widget hinzufügen</string>
-    <string name="tutorial_step_3_title">Anpassen</string>
+
+    <string name="tutorial_help_1">NiLS need to get access to your notifications.\nPlease follow instructions below to enable NiLS service on Android settings.</string>
+    <string name="tutorial_instructions">Instructions:</string>
+    <string name="tutorial_step_1">Click the button below to open Android settings</string>
+    <string name="tutorial_step_2">Find \"NiLS Service\" in the list and enable it</string>
+    <string name="tutorial_step_3">Click \"OK\" in the warning dialog</string>
+    <string name="tutorial_step_4">Click \"Back\" button to return to NiLS settings</string>
 
     <!--  About Dialog -->
         <string name="about_title">NiLS</string>
@@ -260,8 +254,8 @@
     <string name="open_accessibility_settings">Öffne Bedienungshilfe</string>
 
     <!-- new settings wizard combination -->
-    <string name="service">Dienst</string>
-    <string name="widget">Widget</string>
+    <string name="service">Global Settings</string>
+    <string name="widget">Widget Settings</string>
     <string name="service_is_inactive">Dienst ist inaktiv\nKlicke zum aktivieren</string>
     <string name="service_is_active">Dienst ist aktiv\nKlicke zum Ändern der Einstellungen</string>
     <string name="widget_is_not_present">Widget nicht platziert\nKlicke um das zu ändern</string>
@@ -320,5 +314,6 @@
     <string name="use_mono_icon">Use status bar icon</string>
     <string name="use_mono_icon_summary">Always use status bar icon (monochrome) instead of the notification icon</string>
     <string name="open_android_settings">Open Android Settings</string>
+    <string name="tutorial_step_1_title">Enable NiLS Service</string>
 
 </resources>
