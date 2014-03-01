@@ -202,7 +202,7 @@
     <!-- Appearance new activity -->
     <string name="title_section2">Notificación</string>
     <string name="title_section1">Reloj</string>
-    <string name="title_activity_appearance">Apariencia</string>
+    <string name="title_activity_appearance">Widget Settings</string>
     <string name="collapsed">Minimizada</string>
     <string name="expanded">Maximizada</string>
 

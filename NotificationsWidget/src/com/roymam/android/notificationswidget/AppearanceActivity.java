@@ -168,6 +168,36 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
             persistentNotificationsFragment = (SettingsActivity.PrefsPersistentNotificationsFragment) getFragmentManager().getFragment(savedInstanceState, SettingsActivity.PrefsPersistentNotificationsFragment.class.getName());
 	    }
 
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int i, float v, int i2)
+            {
+
+            }
+
+            @Override
+            public void onPageSelected(int i)
+            {
+                if (i == 2)
+                {
+                    getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    getActionBar().setDisplayShowTitleEnabled(true);
+                }
+                else
+                {
+                    getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                    getActionBar().setDisplayShowTitleEnabled(false);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i)
+            {
+
+            }
+        });
+
         getActionBar().setSelectedNavigationItem(itemPosition);
     }
 
@@ -183,7 +213,7 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onClockStyleChanged(View v) 
+	public void onClockStyleChanged(View v)
 	{
 		boolean checked = ((RadioButton)v).isChecked();
 		if (checked)
@@ -502,7 +532,7 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
         }
 
 		public void refreshPreview() 
-		{			
+		{
 			List<View> clockPreviews = Arrays.asList(getView().findViewById(R.id.smallClock),
 													 getView().findViewById(R.id.mediumClock),
 													 getView().findViewById(R.id.largeClock));

@@ -284,7 +284,7 @@
     <!-- Appearance new activity -->
     <string name="title_section2">Notification</string>
     <string name="title_section1">Clock</string>
-    <string name="title_activity_appearance">Appearance</string>
+    <string name="title_activity_appearance">Widget Settings</string>
     <string name="collapsed">Collapsed</string>
     <string name="expanded">Expanded</string>
 
