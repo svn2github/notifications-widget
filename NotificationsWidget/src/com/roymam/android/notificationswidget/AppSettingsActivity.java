@@ -20,12 +20,12 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 	public static final String EXTRA_PACKAGE_NAME = "com.roymam.android.notificationswidget.packagename";
 	public static final String IGNORE_APP = "ignoreapp";
     public static final String IGNORE_EMPTY_NOTIFICATIONS = "ignore_empty_notifications";
-	public static final String KEEP_ONLY_LAST = "showlast";
-    public static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
-    public static final String TRY_EXTRACT_TITLE = "try_extract_title";
+	private static final String KEEP_ONLY_LAST = "showlast";
+    private static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
+    private static final String TRY_EXTRACT_TITLE = "try_extract_title";
 	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String APP_PRIORITY = "apppriority";
-    public static final String ALWAYS_USE_APP_ICON = "use_app_icon";
+    private static final String ALWAYS_USE_APP_ICON = "use_app_icon";
 	
 	private String packageName;
 	

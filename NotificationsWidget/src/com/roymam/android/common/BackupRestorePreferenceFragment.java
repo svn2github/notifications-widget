@@ -47,7 +47,7 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
 
                 // Call Backup method of NiLS+
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(SettingsActivity.NILSPLUS_PACKAGE, NILSPLUS_BACKUP_SERVICE));
+                intent.setComponent(new ComponentName(SettingsActivity.FP_PACKAGE, NILSPLUS_BACKUP_SERVICE));
                 intent.setAction(BACKUP_SETTINGS);
                 getActivity().startService(intent);
                 return true;
@@ -67,7 +67,7 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
 
                 // Call Restore method of NiLS+
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(SettingsActivity.NILSPLUS_PACKAGE, NILSPLUS_BACKUP_SERVICE));
+                intent.setComponent(new ComponentName(SettingsActivity.FP_PACKAGE, NILSPLUS_BACKUP_SERVICE));
                 intent.setAction(RESTORE_SETTINGS);
                 getActivity().startService(intent);
                 return true;

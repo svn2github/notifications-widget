@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
     android:versionCode="277"
-    android:versionName="1.3.2 (beta4)" >
+    android:versionName="1.4 (alpha 1)" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -102,7 +102,7 @@
                 <!-- floating notifications -->
                 <action android:name="robj.floating.notifications.dismissed"/>
 
-                <!-- 3rd party API -->
+                <!-- NiLS Floating Panel API -->
                 <action android:name="com.roymam.android.nils.remove_notification"/>
                 <action android:name="com.roymam.android.nils.open_notification"/>
                 <action android:name="com.roymam.android.nils.resend_all_notifications"/>

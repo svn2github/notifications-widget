@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -325,11 +324,6 @@ public class NotificationData implements Parcelable
             }
         }
         // clear notification from notifications list
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsActivity.FORCE_CLEAR_ON_OPEN, false) &&
-            NotificationsService.getSharedInstance() != null)
-        {
-            // request service to clear itself
-            NotificationsService.getSharedInstance().clearNotification(uid);
-        }
+        NotificationsService.getSharedInstance().clearNotification(uid);
     }
 }

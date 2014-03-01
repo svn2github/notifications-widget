@@ -156,11 +156,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         {
             Log.d("NiLS","NotificationsService:addNotification #" + nd.id);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            boolean keepOnlyLastNotification = prefs.getBoolean(nd.packageName+"."+AppSettingsActivity.KEEP_ONLY_LAST, false);
-            String syncmode = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
-
-            boolean sync =  syncmode.equals(SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY) ||
-                    syncmode.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ;
+            String notificationMode = SettingsActivity.getNotificationMode(getApplicationContext(), nd.packageName);
             boolean updated = false;
 
             // remove old notification
@@ -173,13 +169,12 @@ public class NotificationsService extends Service implements NotificationsProvid
                 NotificationData oldnd = iter.next();
 
                 // remove only if one of the following scenarios:
-                // 1. sync is enabled and its the same package and id
-                // 2. notification is similar to the old one
-                // 3. user choose to keep only last notification
+                // 1. Android >=4.3 - notification mode is "grouped" and the notification has the same package and id
+                // 2. Android <4.3 - notification mode is "grouped" and the notification has the same package
+                // 3. notification is similar to the old one
                 if (oldnd.packageName.equals(nd.packageName)  &&
-                        ((oldnd.id == nd.id && sync) ||
-                                oldnd.isSimilar(nd) ||
-                                keepOnlyLastNotification))
+                    (((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && notificationMode.equals(SettingsActivity.MODE_GROUPED)) ||
+                     oldnd.isSimilar(nd)))
                 {
                     nd.uid = oldnd.uid;
                     iter.remove();
@@ -219,11 +214,8 @@ public class NotificationsService extends Service implements NotificationsProvid
     private void removeNotification(String packageName, int id)
     {
         Log.d("NiLS","NotificationsService:removeNotification #"+id);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
-        if (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
-                sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART) ||
-                sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY))
+        boolean sync = SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext());
+        if (sync)
         {
             boolean cleared = false;
 
@@ -364,7 +356,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     {
         Log.d("NiLS","NotificationsService:clearAllNotifications");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean syncback = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY);
+        boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
 
         ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
 
@@ -431,9 +423,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     {
         Log.d("NiLS","NotificationsService:clearNotificationsForApps");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
-        boolean syncback = (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
-                sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART));
+        boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
         boolean changed = false;
         ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
 
@@ -477,9 +467,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d("NiLS","NotificationsService:clearNotification #" + uid);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String sync = prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_SMART);
-        boolean syncback = (sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_TWOWAY) ||
-                sync.equals(SettingsActivity.SYNC_NOTIFICATIONS_SMART));
+        boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
 
         // first, find it on list
         Iterator<NotificationData> iter = notifications.iterator();

@@ -86,11 +86,14 @@ public class NiLSAccessibilityService extends AccessibilityService
                         {
                             Log.d("NiLS","NewNotificationsListener:onNotificationPosted #" + id);
 
-                            Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-                            intent.setAction(NotificationsService.NOTIFICATION_POSTED);
-                            NotificationData notification = parser.parseNotification(n, packageName, id, null);
-                            intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, notification);
-                            getApplicationContext().startService(intent);
+                            List<NotificationData> notifications = parser.parseNotification(n, packageName, id, null);
+                            for (NotificationData nd : notifications)
+                            {
+                                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
+                                intent.setAction(NotificationsService.NOTIFICATION_POSTED);
+                                intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, nd);
+                                getApplicationContext().startService(intent);
+                            }
                         }
                         else
                         {
@@ -108,7 +111,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                 {
                     Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED " + accessibilityEvent.getPackageName().toString());
                     if (!accessibilityEvent.getPackageName().equals("com.android.systemui") &&
-                         prefs.getBoolean(SettingsActivity.CLEAR_APP_NOTIFICATIONS, true))
+                         SettingsActivity.shouldClearWhenAppIsOpened(getApplicationContext()))
                     {
                         NotificationsProvider ns = NotificationsService.getSharedInstance();
                         if (ns != null) ns.clearNotificationsForApps(new String[]{accessibilityEvent.getPackageName().toString()});
@@ -117,7 +120,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                 break;
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 if (accessibilityEvent.getPackageName().equals("com.android.systemui") &&
-                    !prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
+                    SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()))
                 {
                     //Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
                     AccessibilityNodeInfo node = accessibilityEvent.getSource();
@@ -176,8 +179,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                         accessibilityEvent.getPackageName().equals("com.android.systemui"))
                 {
                     // clear notifications button clicked
-                    if (prefs != null &&
-                        !prefs.getString(SettingsActivity.SYNC_NOTIFICATIONS, SettingsActivity.SYNC_NOTIFICATIONS_ONEWAY).equals(SettingsActivity.SYNC_NOTIFICATIONS_DISABLED))
+                    if (prefs != null && SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()))
                     {
                         if (accessibilityEvent.getClassName() != null &&
                                 accessibilityEvent.getClassName().equals(android.widget.ImageView.class.getName()) &&

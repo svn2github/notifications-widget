@@ -6,6 +6,8 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import java.util.List;
+
 
 @TargetApi(18)
 public class NewNotificationsListener extends NotificationListenerService
@@ -93,11 +95,14 @@ public class NewNotificationsListener extends NotificationListenerService
         {
             Log.d("NiLS","NewNotificationsListener:onNotificationPosted #" + sbn.getId());
 
-            Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-            intent.setAction(NotificationsService.NOTIFICATION_POSTED);
-            NotificationData notification = parser.parseNotification(sbn.getNotification(), sbn.getPackageName(), sbn.getId(), sbn.getTag());
-            intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, notification);
-            getApplicationContext().startService(intent);
+            List<NotificationData> notifications = parser.parseNotification(sbn.getNotification(), sbn.getPackageName(), sbn.getId(), sbn.getTag());
+            for (NotificationData n : notifications)
+            {
+                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
+                intent.setAction(NotificationsService.NOTIFICATION_POSTED);
+                intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, n);
+                getApplicationContext().startService(intent);
+            }
         }
         else
         {

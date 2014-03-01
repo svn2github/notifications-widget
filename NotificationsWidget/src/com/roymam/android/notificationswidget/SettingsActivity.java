@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -33,79 +32,114 @@ import com.roymam.android.common.ListPreferenceChangeListener;
 import com.roymam.android.common.SwitchPrefsHeaderAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
-public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
+public class SettingsActivity extends PreferenceActivity
 {
-	public static final String WIDGET_MODE = "widgetmode";  
-	public static final String COLLAPSED_WIDGET_MODE = "collapsed";
-    public static final String EXPANDED_WIDGET_MODE = "expanded";
-	public static final String HOME_WIDGET_MODE = "home";
-	public static final String SHOW_CLEAR_BUTTON = "showclearbutton";
-	public static final String CLOCK_IS_CLICKABLE = "clockisclickable";
-	public static final String BOLD_HOURS = "boldhours";
-	public static final String BOLD_MINUTES = "boldminutes";
-	public static final String CLOCK_BG_OPACITY = "clockbgopacity";
+    // widget settings - notifications
+    public static final String DISABLE_AUTO_SWITCH = "disable_auto_switch"; // deprecated
 
+    public static final String WIDGET_MODE = "widgetmode";
+    public static final String COLLAPSED_WIDGET_MODE = "collapsed";
+    public static final String EXPANDED_WIDGET_MODE = "expanded";
+    public static final String HOME_WIDGET_MODE = "home";
+    public static final String WIDGET_PRESENT = "widget_present";
+
+    public static final String SHOW_CLEAR_BUTTON = "showclearbutton";
+    public static final String NOTIFICATIONS_ORDER = "order_notifications_by";
+    public static final String NOTIFICATION_STYLE="notification_style";
+    public static final String MAX_LINES="max_lines";
+    public static final String SHOW_ACTIONBAR="show_actionbar";
+    public static final String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
+    public static final String TEXT_COLOR = "notification_text_color";
+    public static final String NOTIFICATION_IS_CLICKABLE = "notification_is_clickable";
+    public static final String NOTIFICATION_ICON_IS_CLICKABLE = "notificationicon_is_clickable";
+    public static final String TITLE_COLOR = "notification_title_color";
+    public static final String CONTENT_COLOR = "notification_content_color";
+    public static final String NOTIFICATION_BG_COLOR = "notification_bg_color";
+    public static final String LAST_WIDGET_MODE = "last_widget_mode";
+    public static final String NOTIFICATION_ICON_BG_COLOR = "notification_icon_bg_color";
+    public static final String SHOW_PERSISTENT_NOTIFICATIONS = "show_persistent";
+    public static final String HIDE_NOTIFICATIONS = "hide_notifications";
+
+    // widget settings - clock
+    public static final String CLOCK_IS_CLICKABLE = "clockisclickable";
+    public static final String BOLD_HOURS = "boldhours";
+    public static final String BOLD_MINUTES = "boldminutes";
+    public static final String CLOCK_BG_OPACITY = "clockbgopacity";
+    public static final String CLOCK_STYLE = "clockstyle";
+    public static final String CLOCK_COLOR = "clock_text_color";
+    public static final String CLOCK_BG_COLOR = "clock_bg_color";
+    public static final String CLOCK_ALARM_COLOR = "clock_alarm_color";
+    public static final String CLOCK_DATE_COLOR = "clock_date_color";
+    public static final String CLOCK_SMALL = "small";
+    public static final String CLOCK_MEDIUM = "medium";
+    public static final String CLOCK_LARGE = "large";
+    public static final String CLOCK_HIDDEN = "clockhidden";
+    public static final String CLOCK_AUTO = "auto";
+
+    // wake up settings
+    private static final String TURNSCREENON = "turnscreenon";
+    private static final String DISABLE_PROXIMITY = "disableproximity";
+    private static final String DELAYED_SCREEON = "delayed_screenon";
     public static final String WAKEUP_MODE = "wakeup_mode";
     public static final String WAKEUP_ALWAYS = "always";
     public static final String WAKEUP_NEVER = "never";
     public static final String WAKEUP_UNCOVERED = "when_uncovered";
     public static final String WAKEUP_NOT_COVERED = "when_not_covered";
-
-    private static final String TURNSCREENON = "turnscreenon";
-    private static final String DISABLE_PROXIMITY = "disableproximity";
-    private static final String DELAYED_SCREEON = "delayed_screenon";
-	public static final String NOTIFICATIONS_ORDER = "order_notifications_by";
-	public static final String CLOCK_STYLE = "clockstyle";
-	public static final String NOTIFICATION_STYLE="notification_style";
-	public static final String MAX_LINES="max_lines";
-	public static final String SHOW_ACTIONBAR="show_actionbar";
-	public static final String NOTIFICATION_BG_OPACITY="notification_bg_opacity";
-	public static final String TEXT_COLOR = "notification_text_color";
-	public static final String CLOCK_COLOR = "clock_text_color";
-	public static final String CLOCK_BG_COLOR = "clock_bg_color";	
-	public static final String CLOCK_ALARM_COLOR = "clock_alarm_color";	
-	public static final String CLOCK_DATE_COLOR = "clock_date_color";
-	public static final String NOTIFICATION_IS_CLICKABLE = "notification_is_clickable";	
-	public static final String NOTIFICATION_ICON_IS_CLICKABLE = "notificationicon_is_clickable";
-	public static final String TITLE_COLOR = "notification_title_color";	
-	public static final String CONTENT_COLOR = "notification_content_color";
-	public static final String NOTIFICATION_BG_COLOR = "notification_bg_color";
-	public static final String LAST_WIDGET_MODE = "last_widget_mode";
-	public static final String DISABLE_AUTO_SWITCH = "disable_auto_switch";
-    public static final String NOTIFICATION_ICON_BG_COLOR = "notification_icon_bg_color";
-    public static final String SHOW_PERSISTENT_NOTIFICATIONS = "show_persistent";
-    public static final String WIDGET_PRESENT = "widget_present";
-    public static final String CLEAR_ON_UNLOCK = "clearonunlock";
-    public static final String SYNC_NOTIFICATIONS = "sync_notifications";
-    public static final String SYNC_NOTIFICATIONS_DISABLED = "none";
-    public static final String SYNC_NOTIFICATIONS_ONEWAY = "oneway";
-    public static final String SYNC_NOTIFICATIONS_TWOWAY = "twoway";
-    public static final String SYNC_NOTIFICATIONS_SMART = "smart";
-    public static final String FORCE_CLEAR_ON_OPEN = "force_clear_on_open";
-    public static final String COLLECT_ON_UNLOCK = "collectonunlock";
-    public static final String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
-    public static final String CLOCK_SMALL = "small";
-    public static final String CLOCK_MEDIUM = "medium";
-    public static final String CLOCK_LARGE = "large";
-    public static final String CLOCK_HIDDEN = "clockhidden";
-    public static final String HIDE_NOTIFICATIONS = "hide_notifications";
-    public static final String CLOCK_AUTO = "auto";
-    public static final String APPS_SETTINGS = "specificapps";
     public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
-    private static final String FIRST_RUN = "first_run";
-    public static final String FP_ENABLED = "fp_enabled";
-
-    public static final boolean DEFAULT_FP_ENABLED = true;
     public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
-    public static final String NILSPLUS_PACKAGE = "com.roymam.android.nilsplus";
-    public static final String USE_MONO_ICON = "use_mono_icon";
+
+    // notification mode
+    public static final String NOTIFICATION_MODE = "notification_mode";
+    public static final String MODE_GROUPED = "grouped";
+    public static final String MODE_SEPARATED = "separated";
+    public static final String DEFAULT_NOTIFICATION_MODE = MODE_SEPARATED;
+
+    // notification icon
+    public static final String NOTIFICATION_ICON = "notification_icon";
+    public static final String NOTIFICATION_MONO_ICON = "mono_icon";
+    public static final String APP_ICON = "app_icon";
+    public static final String DEFAULT_NOTIFICATION_ICON = NOTIFICATION_ICON;
+
+    // auto clear
+    public static final String AUTO_CLEAR = "auto_clear";
+    public static final String WHEN_CLEARED = "when_cleared";
+    public static final String WHEN_APP_IS_OPENED ="when_app_is_opened";
+    public static final String WHEN_NOTIFICATION_IS_OPENED = "when_notification_is_opened";
+    public static final String WHEN_DEVICE_IS_UNLOCKED = "when_device_unlocked";
+
+    // other settings
+    public static final String SYNC_BACK = "sync_back";
+    public static final boolean DEFAULT_SYNC_BACK = true;
+
+    public static final String COLLECT_ON_UNLOCK = "collectonunlock";
+    public static final String APPS_SETTINGS = "specificapps";
+
+    // deprecated
+    private static final String CLEAR_ON_UNLOCK = "clearonunlock";
+    private static final String CLEAR_APP_NOTIFICATIONS = "clear_app_notifications";
+    private static final String FIRST_RUN = "first_run";
+    private static final String SYNC_NOTIFICATIONS = "sync_notifications";
+    private static final String SYNC_NOTIFICATIONS_DISABLED = "none";
+    private static final String SYNC_NOTIFICATIONS_ONEWAY = "oneway";
+    private static final String SYNC_NOTIFICATIONS_TWOWAY = "twoway";
+    private static final String SYNC_NOTIFICATIONS_SMART = "smart";
+    private static final String USE_MONO_ICON = "use_mono_icon";
+
+    // Floating Panel
+    public static final String FP_ENABLED = "fp_enabled";
+    public static final String FP_PACKAGE = "com.roymam.android.nilsplus";
+    public static final boolean DEFAULT_FP_ENABLED = true;
+
     private List<Header> mHeaders = null;
 
     public static boolean shouldHideNotifications(Context context, String widgetMode)
@@ -123,6 +157,87 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             return true;
         else
             return false;
+    }
+
+    public static String getWakeupMode(Context context)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String defaultWakeupMode;
+
+        // setting default according to old settings
+        if (!prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
+            defaultWakeupMode = WAKEUP_NEVER;
+        else
+        if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+            defaultWakeupMode = WAKEUP_ALWAYS;
+        else
+        if (prefs.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
+            defaultWakeupMode = WAKEUP_UNCOVERED;
+        else
+            defaultWakeupMode = WAKEUP_NOT_COVERED;
+
+        return prefs.getString(WAKEUP_MODE, defaultWakeupMode);
+    }
+
+    public static String getNotificationMode(Context context, String packageName)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String mode = DEFAULT_NOTIFICATION_MODE;
+
+        // first see if there is any app specific old settings
+        String multipleEventsHandling = prefs.getString(packageName + "." + "multiple_events_handling", "");
+        if (multipleEventsHandling.equals("show_first") || multipleEventsHandling.equals("show_last"))
+            mode = MODE_SEPARATED;
+        else if (multipleEventsHandling.equals("show_all"))
+            mode = MODE_GROUPED;
+
+        // get app specific settings or global settings if not exists
+        mode = prefs.getString(packageName + "." + NOTIFICATION_MODE, prefs.getString(NOTIFICATION_MODE, mode));
+
+        return mode;
+    }
+
+    private static HashSet<String> getDefaultAutoClear(Context context)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        HashSet<String> defaultAutoClear = new HashSet<String>(Arrays.asList(context.getResources().getStringArray(R.array.auto_clear_default_values)));
+
+        if (prefs.getBoolean(CLEAR_ON_UNLOCK, false))
+            defaultAutoClear.add(WHEN_DEVICE_IS_UNLOCKED);
+
+        if (!prefs.getBoolean(CLEAR_APP_NOTIFICATIONS, true))
+            defaultAutoClear.remove(WHEN_APP_IS_OPENED);
+
+        if (prefs.getString(SYNC_NOTIFICATIONS, SYNC_NOTIFICATIONS_TWOWAY).equals(SYNC_NOTIFICATIONS_DISABLED))
+            defaultAutoClear.remove(WHEN_CLEARED);
+
+        return defaultAutoClear;
+    }
+
+    public static boolean shouldClearOnUnlock(Context context)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        Set<String> autoClear = prefs.getStringSet(AUTO_CLEAR, getDefaultAutoClear(context));
+        return (autoClear.contains(WHEN_DEVICE_IS_UNLOCKED));
+    }
+
+    public static boolean shouldClearWhenAppIsOpened(Context context)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        Set<String> autoClear = prefs.getStringSet(AUTO_CLEAR, getDefaultAutoClear(context));
+        return (autoClear.contains(WHEN_APP_IS_OPENED));
+    }
+
+    public static boolean shouldClearWhenClearedFromNotificationsBar(Context context)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        Set<String> autoClear = prefs.getStringSet(AUTO_CLEAR, getDefaultAutoClear(context));
+        return (autoClear.contains(WHEN_CLEARED));
     }
 
     public static class HowToAddWidgetFragment extends Fragment
@@ -167,42 +282,6 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.preferences);
 
-		    // proximity sensor listener
-	        /*Preference proxPref = findPreference(DISABLE_PROXIMITY);
-	        proxPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-	        {
-				@Override
-				public boolean onPreferenceChange(final Preference preference,
-						Object newValue) 
-				{
-					Boolean value = (Boolean)newValue;
-					if (value == false && Build.MODEL.equals("Nexus 4"))
-					{
-						AlertDialog.Builder builder = new AlertDialog.Builder(preference.getContext());
-						builder.setTitle(R.string.disableproximity_nexus4_warning_title)
-						.setMessage(R.string.disableproximity_nexus4_warning)
-						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() 
-			               {
-			                   public void onClick(DialogInterface dialog, int id) 
-			                   {
-			                	   preference.getEditor().putBoolean(SettingsActivity.DISABLE_PROXIMITY, false).commit();
-			                	   getActivity().recreate();
-			                   }
-			               })
-						.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() 
-			               {
-			                   public void onClick(DialogInterface dialog, int id) 
-			                   {
-			                	   // do nothing
-			                   }
-			               })
-						.show();
-						return false;
-					}
-					return true;
-				}	        	
-	        });
-	        */
             // auto wake up mode
             ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
                     getResources().getStringArray(R.array.wakeup_mode_entries),
@@ -214,58 +293,48 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             listener.setPrefSummary(wakeupPref, currValue);
             wakeupPref.setOnPreferenceChangeListener(listener);
 
-            // notification order by
-	        listener = new ListPreferenceChangeListener(
-	        		getResources().getStringArray(R.array.settings_orderby_entries),
-	        		getResources().getStringArray(R.array.settings_orderby_values));
-	        
-	        Preference orderPref = findPreference(NOTIFICATIONS_ORDER);
-	        currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATIONS_ORDER, "time");
-	        listener.setPrefSummary(orderPref, currValue);
-	        orderPref.setOnPreferenceChangeListener(listener);
-
-            // set up notifications sync
+            // notification mode
             listener = new ListPreferenceChangeListener(
-                    getResources().getStringArray(R.array.sync_notifications_entries),
-                    getResources().getStringArray(R.array.sync_notifications_values));
+                    getResources().getStringArray(R.array.notification_modes_entries),
+                    getResources().getStringArray(R.array.notification_modes_values));
 
-            Preference pref = findPreference(SYNC_NOTIFICATIONS);
-            String syncDefaultValue = SYNC_NOTIFICATIONS_ONEWAY;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                syncDefaultValue = SYNC_NOTIFICATIONS_TWOWAY;
-            currValue = getPreferenceScreen().getSharedPreferences().getString(SYNC_NOTIFICATIONS, syncDefaultValue);
-            listener.setPrefSummary(pref, (String)currValue);
+            Preference pref = findPreference(NOTIFICATION_MODE);
+            currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATION_MODE, DEFAULT_NOTIFICATION_MODE);
+            listener.setPrefSummary(pref, currValue);
             pref.setOnPreferenceChangeListener(listener);
 
-            // disable clear_app_notifications on Android 4.3+
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            {
-                pref = findPreference(CLEAR_APP_NOTIFICATIONS);
-                getPreferenceScreen().removePreference(pref);
-                getPreferenceScreen().getSharedPreferences().edit().putBoolean(CLEAR_APP_NOTIFICATIONS, false).commit();
-            }
+            // notification icon
+            listener = new ListPreferenceChangeListener(
+                    getResources().getStringArray(R.array.notification_icon_entries),
+                    getResources().getStringArray(R.array.notification_icon_values));
+
+            pref = findPreference(NOTIFICATION_ICON);
+            currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATION_ICON, DEFAULT_NOTIFICATION_ICON);
+            listener.setPrefSummary(pref, currValue);
+            pref.setOnPreferenceChangeListener(listener);
+
+            // notification order by
+	        listener = new ListPreferenceChangeListener(
+	        		getResources().getStringArray(R.array.auto_clear_entries),
+	        		getResources().getStringArray(R.array.auto_clear_values));
+
+            pref = findPreference(AUTO_CLEAR);
+            pref.setDefaultValue(getDefaultAutoClear(getActivity()));
+            Set<String> currValues = getPreferenceScreen().getSharedPreferences().getStringSet(AUTO_CLEAR, getDefaultAutoClear(getActivity()));
+            listener.setPrefSummary(pref, currValues);
+            pref.setOnPreferenceChangeListener(listener);
+
+            // notification order by
+            listener = new ListPreferenceChangeListener(
+                    getResources().getStringArray(R.array.settings_orderby_entries),
+                    getResources().getStringArray(R.array.settings_orderby_values));
+
+            pref = findPreference(NOTIFICATIONS_ORDER);
+	        currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATIONS_ORDER, "time");
+	        listener.setPrefSummary(pref, currValue);
+	        pref.setOnPreferenceChangeListener(listener);
         }
 	}
-
-    public static String getWakeupMode(Context context)
-    {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String defaultWakeupMode;
-
-        // setting default according to old settings
-        if (!prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
-            defaultWakeupMode = WAKEUP_NEVER;
-        else
-            if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
-                defaultWakeupMode = WAKEUP_ALWAYS;
-            else
-                if (prefs.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
-                    defaultWakeupMode = WAKEUP_UNCOVERED;
-                else
-                    defaultWakeupMode = WAKEUP_NOT_COVERED;
-
-        return prefs.getString(WAKEUP_MODE, defaultWakeupMode);
-    }
 
     public static class PrefsContactFragment extends PreferenceFragment
 	{
@@ -590,7 +659,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             target.get(2).titleRes = R.string.floating_panel_short;
             target.get(2).summaryRes = R.string.floating_panel_installed;
             Intent nilsPlusSettingsIntent = new Intent();
-            nilsPlusSettingsIntent.setComponent(new ComponentName(NILSPLUS_PACKAGE, NILSPLUS_PACKAGE+".activities.NPSettings"));
+            nilsPlusSettingsIntent.setComponent(new ComponentName(FP_PACKAGE, FP_PACKAGE +".activities.NPSettings"));
             target.get(2).intent = nilsPlusSettingsIntent;
             target.get(2).fragment = null;
 
@@ -638,7 +707,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try
         {
-            PackageInfo info = getPackageManager().getPackageInfo(NILSPLUS_PACKAGE, 0);
+            PackageInfo info = getPackageManager().getPackageInfo(FP_PACKAGE, 0);
             if (info.versionCode < 32) return false;
 
             // if the user hasn't disabled fp yet, mark it as enabled
@@ -708,34 +777,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	protected void onResume() 
 	{
 	    super.onResume();	    
-	    PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
 	protected void onPause() 
 	{
 	    super.onPause();
-	    PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
 	}
-	
-	@Override
-	public void onSharedPreferenceChanged(final SharedPreferences prefs, String key) 
-	{
-        NotificationsProvider ns = NotificationsService.getSharedInstance();
-		/*if ((key.equals(DISABLE_PROXIMITY) || key.equals(TURNSCREENON)) && ns != null)
-        {
-			if (!prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false) &&
-				 prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
-			{
-                ns.getNotificationEventListener().registerProximitySensor();
-			}
-			else 
-			{
-                ns.getNotificationEventListener().stopProximityMontior();
-			}
-        }*/
-	}
-	
+
 	// openAppSettings is launched from the custom checkbox in app specific settings
     public void openAppSettings(View v)
     {

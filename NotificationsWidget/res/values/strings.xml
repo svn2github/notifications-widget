@@ -41,10 +41,38 @@
     <string name="clear_all_from_same_app">Clear all from the same app</string>
     <string name="clear_all_from_same_app_summary">When a notification is opened, clear all of the remaining notifications from the same app</string>
 
+    <string-array name="notification_modes_entries">
+        <item>Grouped (like on Android notifications bar)</item>
+        <item>Separated (like on iPhone)</item>
+    </string-array>
+    <string-array name="notification_modes_values" translatable="false">
+        <item>grouped</item>
+        <item>separated</item>
+    </string-array>
+
+    <string-array name="notification_icon_entries">
+        <item>Notification Large Icon</item>
+        <item>Notification Monochrome Icon</item>
+        <item>App Icon (Coloured)</item>
+    </string-array>
+    <string-array name="notification_icon_values" translatable="false">
+        <item>notification_icon</item>
+        <item>mono_icon</item>
+        <item>app_icon</item>
+    </string-array>
+
+    <!-- auto clear values -->
+    <string name="when_cleared">When cleared from notifications bar</string>
+    <string name="when_app_is_opened">When notification app is opened</string>
+    <string name="when_device_is_unlocked">When device unlocked</string>
+
+    <string name="sync_back">Sync back notifications</string>
+    <string name="sync_back_summary">When notification is cleared on NiLS dismiss it also on Android Notifications Bar (Android 4.3 and above only)</string>
+
     <string-array name="settings_orderby_entries">
         <item>Time (Newest first)</item>
-        <item>Time (Oldest first)</item>
-        <item>Priority</item>
+        <item>Time (Oldest first) - NiLS widget only</item>
+        <item>Priority - NiLS widget only</item>
     </string-array>
     <string-array name="settings_orderby_values" translatable="false">
         <item>time</item>
@@ -61,7 +89,7 @@
     <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched. (Not available on 4.3 or later)</string>
     <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string>
     <string name="disable_auto_switch">Disable auto switch preset</string>
-    <string name="force_clear_on_open">Force clear notifications when opened</string>
+    <string name="force_clear_on_open">Clear notifications when opened</string>
     <string name="force_clear_on_open_summary">Forcibly clear notification when it opened even if the app hasn\'t clear it by itself</string>
 
     <string-array name="sync_notifications_entries">

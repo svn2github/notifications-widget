@@ -17,24 +17,37 @@
                 android:summary="@string/screenon_timeout_summary"/>
     </PreferenceCategory>             
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
-            <CheckBoxPreference 
-                android:title="@string/clearonunlock" 
-                android:key="clearonunlock" 
-                android:enabled="true" 
-                android:defaultValue="false" 
-                android:summary="@string/clearonunlock_summary"/>
+
+        <ListPreference android:key="notification_mode"
+                        android:title="Notification mode"
+                        android:entries="@array/notification_modes_entries"
+                        android:entryValues="@array/notification_modes_values"
+                        android:defaultValue="separated"/>
+
+        <ListPreference android:key="notification_icon"
+            android:title="Notification icon"
+            android:entries="@array/notification_icon_entries"
+            android:entryValues="@array/notification_icon_values"
+            android:defaultValue="notification_icon"/>
+
+        <MultiSelectListPreference android:key="auto_clear"
+            android:title="Auto clear notifications"
+            android:entries="@array/auto_clear_entries"
+            android:entryValues="@array/auto_clear_values"
+            android:defaultValue="@array/auto_clear_default_values"/>
+
+        <CheckBoxPreference
+            android:title="@string/sync_back"
+            android:key="sync_back"
+            android:defaultValue="true"
+            android:summary="@string/sync_back_summary"/>
+
         <CheckBoxPreference
             android:title="@string/collectonunlock"
             android:key="collectonunlock"
             android:enabled="true"
             android:defaultValue="true"
             android:summary="@string/collectonunlock_summary"/>
-        <CheckBoxPreference
-            android:title="@string/use_mono_icon"
-            android:key="use_mono_icon"
-            android:enabled="true"
-            android:defaultValue="false"
-            android:summary="@string/use_mono_icon_summary"/>
 
         <ListPreference android:dialogTitle="@string/order_notifications_by"
     	    			android:entries="@array/settings_orderby_entries" 
@@ -42,37 +55,5 @@
     	    			android:title="@string/order_notifications_by" 
     	    			android:key="order_notifications_by" 
     	    			android:defaultValue="time" />      
-            </PreferenceCategory>
-    <PreferenceCategory android:key="sync" android:title="@string/sync_notifications">
-        <!--
-            TODO:
-            1. Clear notifications when cleared from Android Notifications Bar
-            2. Clear notifications on Android Notifications Bar when cleared from NiLS (4.3)
-            3. Clear notifications when app is opened
-            4. Notifications Mode: Combined / Separated / Last
-        -->
-        <ListPreference android:dialogTitle="@string/sync_notifications"
-            android:entries="@array/sync_notifications_entries"
-            android:entryValues="@array/sync_notifications_values"
-            android:title="@string/sync_notifications"
-            android:key="sync_notifications"
-            android:defaultValue="smart" />
-        <CheckBoxPreference
-            android:title="@string/clear_app_notifications"
-            android:key="clear_app_notifications"
-            android:enabled="true"
-            android:defaultValue="true"
-            android:summary="@string/clear_app_notifications_summary"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:key="advanced" android:title="@string/advanced">
-        <!--<CheckBoxPreference android:key="disable_auto_switch"
-                            android:title="@string/disable_auto_switch"
-                            android:summary="@string/disable_auto_switch_summary"
-                            android:defaultValue="false"/>-->
-        <CheckBoxPreference
-                android:title="@string/force_clear_on_open"
-                android:key="force_clear_on_open"
-                android:defaultValue="false"
-                android:summary="@string/force_clear_on_open_summary"/>
-    </PreferenceCategory>
+        </PreferenceCategory>
 </PreferenceScreen>

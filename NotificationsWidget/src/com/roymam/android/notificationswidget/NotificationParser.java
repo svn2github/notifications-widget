@@ -31,6 +31,7 @@ import com.roymam.android.common.BitmapCache;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class NotificationParser
 {
@@ -55,6 +56,8 @@ public class NotificationParser
     public int inbox_notification_event_8_id = 0;
     public int inbox_notification_event_9_id = 0;
     public int inbox_notification_event_10_id = 0;
+    private int mInboxLayoutId = 0;
+    private int mBigTextLayoutId = 0;
 
     public NotificationParser(Context context)
     {
@@ -62,7 +65,8 @@ public class NotificationParser
         detectNotificationIds();
     }
     
-    public NotificationData parseNotification(Notification n, String packageName, int notificationId, String tag)
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public List<NotificationData> parseNotification(Notification n, String packageName, int notificationId, String tag)
     {
         if (n != null)
         {
@@ -97,11 +101,13 @@ public class NotificationParser
                 opts.outHeight = (int) maxIconSize;
                 opts.outWidth = (int) maxIconSize;
 
-                boolean useMonoIcon = sharedPref.getBoolean(SettingsActivity.USE_MONO_ICON, false);
+                String notificationIcon = sharedPref.getString(packageName + SettingsActivity.NOTIFICATION_ICON,
+                                        sharedPref.getString(SettingsActivity.NOTIFICATION_ICON, SettingsActivity.DEFAULT_NOTIFICATION_ICON));
+
                 if (res != null && info != null)
                 {
                     nd.appicon = BitmapCache.getInstance(context).getBitmap(packageName, n.icon);
-                    if (useMonoIcon)
+                    if (notificationIcon.equals(SettingsActivity.NOTIFICATION_MONO_ICON))
                     {
                         nd.icon = nd.appicon;
                     }
@@ -114,20 +120,10 @@ public class NotificationParser
                         }
                     }
                 }
-                if (n.largeIcon != null && !useMonoIcon && !sharedPref.getBoolean(packageName+"."+AppSettingsActivity.ALWAYS_USE_APP_ICON, false))
+                if (n.largeIcon != null && notificationIcon.equals(SettingsActivity.NOTIFICATION_ICON))
                 {
                     nd.icon = n.largeIcon;
                 }
-
-                // resizing icon to smaller size if needed
-                /*if (nd.appicon != null &&
-                        (nd.appicon.getWidth() > maxIconSize || nd.appicon.getHeight() > maxIconSize))
-                    nd.appicon = Bitmap.createScaledBitmap(nd.appicon, (int) maxIconSize, (int) maxIconSize, false);
-
-                // resizing icon to smaller size if needed
-                if (nd.icon != null &&
-                        (nd.icon.getWidth() > maxIconSize || nd.icon.getHeight() > maxIconSize))
-                    nd.icon = Bitmap.createScaledBitmap(nd.icon, (int) maxIconSize, (int) maxIconSize, false);*/
 
                 // get time of the event
                 if (n.when != 0)
@@ -150,8 +146,7 @@ public class NotificationParser
                 nd.title = null;
                 if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
                 {
-                    getExpandedText(n,nd, sharedPref.getString(nd.packageName + "." + AppSettingsActivity.MULTIPLE_EVENTS_HANDLING, "all"),
-                                          sharedPref.getBoolean(nd.packageName + "." + AppSettingsActivity.TRY_EXTRACT_TITLE, true));
+                    getExpandedText(n,nd);
                     // replace text with content if no text
                     if (nd.text == null || nd.text.equals("") &&
                             nd.content != null && !nd.content.equals(""))
@@ -197,10 +192,92 @@ public class NotificationParser
                     int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));
                     if (apppriority != -9) nd.priority = apppriority;
 
-                    return nd;
+                    // check if this is a multiple events notificatio
+                    String notificationMode = SettingsActivity.getNotificationMode(context, packageName);
+
+                    List<NotificationData> notifications = new ArrayList<NotificationData>();
+                    notifications.add(nd);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && notificationMode.equals(SettingsActivity.MODE_SEPARATED))
+                    {
+                        RemoteViews bigContentView = n.bigContentView;
+                        if (bigContentView.getLayoutId() == mInboxLayoutId)
+                        {
+                            notifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
+                        }
+                    }
+                    return notifications;
                 }
         }
         return null;
+    }
+
+    private List<NotificationData> getMultipleNotificationsFromInboxView(RemoteViews bigContentView, NotificationData baseNotification)
+    {
+        ArrayList<NotificationData> notifications = new ArrayList<NotificationData>();
+        HashMap<Integer, CharSequence> strings = getNotificationStringFromRemoteViews(bigContentView);
+
+        // build event list from notification content
+        ArrayList<CharSequence> events = new ArrayList<CharSequence>();
+        if (strings.containsKey(inbox_notification_event_10_id)) events.add(strings.get(inbox_notification_event_10_id));
+        if (strings.containsKey(inbox_notification_event_9_id)) events.add(strings.get(inbox_notification_event_9_id));
+        if (strings.containsKey(inbox_notification_event_8_id)) events.add(strings.get(inbox_notification_event_8_id));
+        if (strings.containsKey(inbox_notification_event_7_id)) events.add(strings.get(inbox_notification_event_7_id));
+        if (strings.containsKey(inbox_notification_event_6_id)) events.add(strings.get(inbox_notification_event_6_id));
+        if (strings.containsKey(inbox_notification_event_5_id)) events.add(strings.get(inbox_notification_event_5_id));
+        if (strings.containsKey(inbox_notification_event_4_id)) events.add(strings.get(inbox_notification_event_4_id));
+        if (strings.containsKey(inbox_notification_event_3_id)) events.add(strings.get(inbox_notification_event_3_id));
+        if (strings.containsKey(inbox_notification_event_2_id)) events.add(strings.get(inbox_notification_event_2_id));
+        if (strings.containsKey(inbox_notification_event_1_id)) events.add(strings.get(inbox_notification_event_1_id));
+
+        // create a notification for each event
+        for(CharSequence event : events)
+        {
+            NotificationData nd = new NotificationData();
+            nd.icon = baseNotification.icon;
+            nd.appicon = baseNotification.appicon;
+            nd.id = baseNotification.id;
+            nd.packageName = baseNotification.packageName;
+            nd.pinned = baseNotification.pinned;
+            nd.priority = baseNotification.priority;
+            nd.tag = baseNotification.tag;
+            nd.received = baseNotification.received;
+            nd.action = baseNotification.action;
+            nd.title = strings.get(notification_title_id);
+            nd.text = event;
+
+            // extract title from content for first/last event
+            if (event != null)
+            {
+                SpannableStringBuilder ssb = new SpannableStringBuilder(event);
+                // try to split it by text style
+                TextAppearanceSpan[] spans = ssb.getSpans(0, event.length(), TextAppearanceSpan.class);
+                if (spans.length == 2)
+                {
+                    int s0start = ssb.getSpanStart(spans[0]);
+                    int s0end = ssb.getSpanEnd(spans[0]);
+                    nd.content = nd.title;
+                    nd.title = event.subSequence(s0start, s0end).toString();
+                    int s1start = ssb.getSpanStart(spans[1]);
+                    int s1end = ssb.getSpanEnd(spans[1]);
+                    nd.text = event.subSequence(s1start, s1end).toString();
+
+                }
+                else
+                {
+                    // try to split it by ":" delimiter
+                    String[] parts = event.toString().split(":", 2);
+                    if (parts.length == 2)
+                    {
+                        nd.content = nd.title;
+                        nd.title = parts[0];
+                        nd.text = parts[1];
+                    }
+                }
+                notifications.add(nd);
+            }
+        }
+        return notifications;
     }
 
     private boolean shouldIgnore(Notification n, String packageName)
@@ -261,18 +338,18 @@ public class NotificationParser
         return returnArray;
     }
 
-    private void getExpandedText(Notification n, NotificationData nd, String multipleEventsHandling, boolean tryExtractTitle)
+    private void getExpandedText(Notification n, NotificationData nd)
     {
         RemoteViews view = n.contentView;
 
         // first get information from the original content view
-        extractTextFromView(view, nd, multipleEventsHandling, tryExtractTitle);
+        extractTextFromView(view, nd);
 
         // then try get information from the expanded view
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
         {
             view = getBigContentView(n);
-            extractTextFromView(view, nd, multipleEventsHandling, tryExtractTitle);
+            extractTextFromView(view, nd);
         }
     }
 
@@ -287,31 +364,14 @@ public class NotificationParser
         }
     }
 
-    private void extractTextFromView(RemoteViews view, NotificationData nd, String multipleEventsHandling, boolean tryExtractTitle)
+    private void extractTextFromView(RemoteViews view, NotificationData nd)
     {
         CharSequence title = null;
         CharSequence text = null;
         CharSequence content = null;
-        boolean hasParsableContent = true;
-
-        ViewGroup localView = null;
-        /*try
-        {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            localView = (ViewGroup) inflater.inflate(view.getLayoutId(), null);
-
-            view.reapply(context.getApplicationContext(), localView);
-        }
-        catch (Exception exp)
-        {*/
-            hasParsableContent = false;
-        /*}*/
 
         HashMap<Integer, CharSequence> notificationStrings;
-        if (hasParsableContent)
-            notificationStrings = getNotificationStringsFromView(localView);
-        else
-            notificationStrings = getNotificationStringFromRemoteViews(view);
+        notificationStrings = getNotificationStringFromRemoteViews(view);
 
         if (notificationStrings.size() > 0)
         {
@@ -438,36 +498,6 @@ public class NotificationParser
                 }
             }
 
-            if (multipleEventsHandling.equals("first")) content = firstEventStr;
-            else if (multipleEventsHandling.equals("last")) content = lastEventStr;
-
-            // extract title from content for first/last event
-            if ((tryExtractTitle && (multipleEventsHandling.equals("first") || multipleEventsHandling.equals("last")) && content != null))
-            {
-                SpannableStringBuilder ssb = new SpannableStringBuilder(content);
-                // try to split it by text style
-                TextAppearanceSpan[] spans = ssb.getSpans(0, content.length(), TextAppearanceSpan.class);
-                if (spans.length == 2)
-                {
-                    int s0start = ssb.getSpanStart(spans[0]);
-                    int s0end = ssb.getSpanEnd(spans[0]);
-                    title = content.subSequence(s0start, s0end).toString();
-                    int s1start = ssb.getSpanStart(spans[1]);
-                    int s1end = ssb.getSpanEnd(spans[1]);
-                    content = content.subSequence(s1start, s1end).toString();
-                }
-                else
-                {
-                    // try to split it by ":" delimiter
-                    String[] parts = content.toString().split(":", 2);
-                    if (parts.length == 2)
-                    {
-                        title = parts[0];
-                        content = parts[1];
-                    }
-                }
-            }
-
             // if there is no text - make the text to be the content
             if (text == null || text.equals(""))
             {
@@ -504,6 +534,11 @@ public class NotificationParser
             nd.content = content;
         }
     }
+
+    /*
+
+
+     */
 
     // use reflection to extract string from remoteviews object
     private HashMap<Integer, CharSequence> getNotificationStringFromRemoteViews(RemoteViews view)
@@ -692,7 +727,9 @@ public class NotificationParser
             bigtextstyle.bigText("7");
             mBuilder.setContentTitle("8");
             mBuilder.setStyle(bigtextstyle);
-            detectExpandedNotificationsIds(mBuilder.build());
+            n = mBuilder.build();
+            mBigTextLayoutId = n.bigContentView.getLayoutId();
+            detectExpandedNotificationsIds(n);
 
             NotificationCompat.InboxStyle inboxStyle =
                     new NotificationCompat.InboxStyle();
@@ -706,8 +743,9 @@ public class NotificationParser
                 inboxStyle.addLine(events[i]);
             }
             mBuilder.setStyle(inboxStyle);
-
-            detectExpandedNotificationsIds(mBuilder.build());
+            n = mBuilder.build();
+            mInboxLayoutId = n.bigContentView.getLayoutId();
+            detectExpandedNotificationsIds(n);
         }
     }
 

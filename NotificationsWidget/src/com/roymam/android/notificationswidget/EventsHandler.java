@@ -34,7 +34,7 @@ public class EventsHandler extends BroadcastReceiver
                action.equals(WIDGET_LOCKER_UNLOCKED))
            {
                 // clear all notifications if needed
-                if (sharedPref.getBoolean(SettingsActivity.CLEAR_ON_UNLOCK, false))
+                if (SettingsActivity.shouldClearOnUnlock(context))
                 {
                     if (ns != null)
                         ns.clearAllNotifications();
