@@ -26,10 +26,11 @@ public class NotificationData implements Parcelable
     int 	count;
     boolean pinned = false;
     boolean selected = false;
+    boolean deleted = false;
     public Action[] actions = null;
     public int priority;
-
     public String tag;
+
     public NotificationData()
     {
         uid = nextUID;
@@ -50,6 +51,7 @@ public class NotificationData implements Parcelable
         if (text2 == null) text2 = "";
         if (content1 == null) content1 = "";
         if (content2 == null) content2 = "";
+
         boolean titlesdup = title1.toString().trim().equals(title2.toString().trim());
         boolean textdup = text1.toString().trim().startsWith(text2.toString().trim());
         boolean contentsdup = content1.toString().trim().startsWith(content2.toString().trim());
@@ -88,10 +90,11 @@ public class NotificationData implements Parcelable
             action = PendingIntent.CREATOR.createFromParcel(in);
         count = in.readInt();
 
-        boolean[] ba = new boolean[2];
+        boolean[] ba = new boolean[3];
         in.readBooleanArray(ba);
         pinned = ba[0];
         selected = ba[1];
+        deleted = ba[2];
 
         if (in.readInt() != 0)
             actions = in.createTypedArray(Action.CREATOR);
@@ -159,9 +162,10 @@ public class NotificationData implements Parcelable
         }
         dest.writeInt(count);
 
-        boolean[] ba = new boolean[2];
+        boolean[] ba = new boolean[3];
         ba[0] = pinned;
         ba[1] = selected;
+        ba[2] = deleted;
         dest.writeBooleanArray(ba);
 
         if (actions != null)

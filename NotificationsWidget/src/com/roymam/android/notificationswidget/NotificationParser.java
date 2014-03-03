@@ -203,7 +203,9 @@ public class NotificationParser
                         RemoteViews bigContentView = n.bigContentView;
                         if (bigContentView.getLayoutId() == mInboxLayoutId)
                         {
-                            notifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
+                            List<NotificationData> separatedNotifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
+                            // make sure we've at least one notification
+                            if (separatedNotifications.size() > 0) notifications = separatedNotifications;
                         }
                     }
                     return notifications;
@@ -243,6 +245,7 @@ public class NotificationParser
             nd.tag = baseNotification.tag;
             nd.received = baseNotification.received;
             nd.action = baseNotification.action;
+            nd.content = baseNotification.content;
             nd.title = strings.get(notification_title_id);
             nd.text = event;
 
@@ -256,7 +259,6 @@ public class NotificationParser
                 {
                     int s0start = ssb.getSpanStart(spans[0]);
                     int s0end = ssb.getSpanEnd(spans[0]);
-                    nd.content = nd.title;
                     nd.title = event.subSequence(s0start, s0end).toString();
                     int s1start = ssb.getSpanStart(spans[1]);
                     int s1end = ssb.getSpanEnd(spans[1]);
@@ -269,7 +271,6 @@ public class NotificationParser
                     String[] parts = event.toString().split(":", 2);
                     if (parts.length == 2)
                     {
-                        nd.content = nd.title;
                         nd.title = parts[0];
                         nd.text = parts[1];
                     }

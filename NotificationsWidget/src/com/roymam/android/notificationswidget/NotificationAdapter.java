@@ -1,5 +1,6 @@
 package com.roymam.android.notificationswidget;
 
+import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -275,6 +277,7 @@ public class NotificationAdapter implements NotificationEventListener
         context.sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void turnScreenOn()
     {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -285,12 +288,15 @@ public class NotificationAdapter implements NotificationEventListener
 
         if (turnScreenOn && (deviceCovered == null || !deviceCovered))
         {
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             // turn the screen on only if it was off
             if (!pm.isScreenOn())
             {
-                @SuppressWarnings("deprecation")
+                //@SuppressWarnings("deprecation")
                 final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+                //only possible for system apps
+                //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                //    pm.wakeUp(SystemClock.uptimeMillis());
                 wl.acquire();
 
                 // release after 10 seconds
@@ -300,9 +306,11 @@ public class NotificationAdapter implements NotificationEventListener
                     public void run()
                     {
                         wl.release();
+                        //pm.goToSleep(SystemClock.uptimeMillis());
                     }
                 };
-                worker.schedule(task, Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT))), TimeUnit.SECONDS);
+                int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT)));
+                worker.schedule(task, timeout, TimeUnit.SECONDS);
             }
             newNotificationsAvailable = false;
         }

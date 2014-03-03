@@ -164,6 +164,8 @@ public class NotificationsService extends Service implements NotificationsProvid
 
             boolean changed = false;
 
+            boolean ignoreNotification = false;
+
             while (iter.hasNext())
             {
                 NotificationData oldnd = iter.next();
@@ -183,19 +185,30 @@ public class NotificationsService extends Service implements NotificationsProvid
                     changed = !oldnd.isEqual(nd);
                     break;
                 }
+                else // check if the old notification is a duplicate of the current but contains more data than the current - if so - ignore the new one
+                {
+                    if (nd.isSimilar(oldnd))
+                    {
+                        ignoreNotification = true;
+                        updated = false;
+                    }
+                }
             }
 
-            // add the new notification
-            notifications.add(nd);
-
-            // notify that the notification was added
-            if (listener != null)
+            if (!ignoreNotification)
             {
-                if (updated)
-                    listener.onNotificationUpdated(nd, changed);
-                else
-                    listener.onNotificationAdded(nd, true);
-                listener.onNotificationsListChanged();
+                // add the new notification
+                notifications.add(nd);
+
+                // notify that the notification was added
+                if (listener != null)
+                {
+                    if (updated)
+                        listener.onNotificationUpdated(nd, changed);
+                    else
+                        listener.onNotificationAdded(nd, true);
+                    listener.onNotificationsListChanged();
+                }
             }
         }
     }
