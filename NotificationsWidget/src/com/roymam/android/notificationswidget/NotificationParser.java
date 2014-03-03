@@ -201,7 +201,8 @@ public class NotificationParser
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && notificationMode.equals(SettingsActivity.MODE_SEPARATED))
                     {
                         RemoteViews bigContentView = n.bigContentView;
-                        if (bigContentView.getLayoutId() == mInboxLayoutId)
+                        if (bigContentView != null &&
+                            bigContentView.getLayoutId() == mInboxLayoutId)
                         {
                             List<NotificationData> separatedNotifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
                             // make sure we've at least one notification
