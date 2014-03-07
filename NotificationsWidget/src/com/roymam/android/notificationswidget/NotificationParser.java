@@ -176,7 +176,7 @@ public class NotificationParser
 
                     // if still no text ignore it
                     if (nd.title == null && nd.text == null)
-                        return null;
+                        return new ArrayList<NotificationData>();
 
                     nd.id = notificationId;
                     nd.tag = tag;
@@ -212,7 +212,7 @@ public class NotificationParser
                     return notifications;
                 }
         }
-        return null;
+        return new ArrayList<NotificationData>();
     }
 
     private List<NotificationData> getMultipleNotificationsFromInboxView(RemoteViews bigContentView, NotificationData baseNotification)
@@ -270,7 +270,7 @@ public class NotificationParser
                 {
                     // try to split it by ":" delimiter
                     String[] parts = event.toString().split(":", 2);
-                    if (parts.length == 2)
+                    if (parts.length == 2 && parts[1].length()>2) // parts[1].length()>2 special exception for missed calls time 
                     {
                         nd.title = parts[0];
                         nd.text = parts[1];

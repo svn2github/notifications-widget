@@ -37,7 +37,7 @@ public class NotificationData implements Parcelable
         nextUID++;
     }
 
-    public boolean isSimilar(NotificationData nd)
+    public boolean isSimilar(NotificationData nd, boolean compareContent)
     {
         CharSequence title1 = nd.title;
         CharSequence title2 = this.title;
@@ -55,7 +55,7 @@ public class NotificationData implements Parcelable
         boolean titlesdup = title1.toString().trim().equals(title2.toString().trim());
         boolean textdup = text1.toString().trim().startsWith(text2.toString().trim());
         boolean contentsdup = content1.toString().trim().startsWith(content2.toString().trim());
-        boolean allDup = titlesdup && textdup && contentsdup;
+        boolean allDup = titlesdup && textdup && (contentsdup || !compareContent);
 
         if (nd.packageName.equals(this.packageName) && allDup)
         {
@@ -214,6 +214,7 @@ public class NotificationData implements Parcelable
 
     public void cleanup()
     {
+        /*
         if (appicon != null)
         {
             appicon.recycle();
@@ -233,7 +234,7 @@ public class NotificationData implements Parcelable
                 action.drawable.recycle();
                 action.drawable = null;
             }
-        }
+        }*/
     }
 
     public static class Action implements Parcelable

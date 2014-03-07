@@ -2,9 +2,13 @@ package com.roymam.android.notificationswidget;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -22,29 +26,60 @@ public class NiLSAccessibilityService extends AccessibilityService
     private int notificationId = 0;
     private String clearButtonName = "Clear all notifications.";
 
+    private NotificationsService mService;
+    boolean mBound = false;
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection()
+    {
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service)
+        {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            NotificationsService.LocalBinder binder = (NotificationsService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0)
+        {
+            mBound = false;
+        }
+    };
+
     @Override
     protected void onServiceConnected()
     {
         Log.d("NiLS","NiLSAccessibilityService:onServiceConnected");
 
         // start NotificationsService
-        Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-        getApplicationContext().startService(intent);
+        //Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
+        //getApplicationContext().startService(intent);
 
         // create a notification parser
         parser = new NotificationParser(getApplicationContext());
 
         findClearAllButton();
 
-        // notify that the service has been started
-        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
+        // Bind to NotificationsService
+        Intent intent = new Intent(this, NotificationsService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onDestroy()
     {
         Log.d("NiLS","NiLSAccessibilityService:onDestroy");
-        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
+
+        // Unbind from the service
+        if (mBound)
+        {
+            unbindService(mConnection);
+            mBound = false;
+        }
+
         super.onDestroy();
     }
 
@@ -81,29 +116,8 @@ public class NiLSAccessibilityService extends AccessibilityService
                         Notification n = (Notification) accessibilityEvent.getParcelableData();
                         String packageName = accessibilityEvent.getPackageName().toString();
                         int id = notificationId++;
-
-                        if (!parser.isPersistent(n, packageName))
-                        {
-                            Log.d("NiLS","NewNotificationsListener:onNotificationPosted #" + id);
-
-                            List<NotificationData> notifications = parser.parseNotification(n, packageName, id, null);
-                            for (NotificationData nd : notifications)
-                            {
-                                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-                                intent.setAction(NotificationsService.NOTIFICATION_POSTED);
-                                intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, nd);
-                                getApplicationContext().startService(intent);
-                            }
-                        }
-                        else
-                        {
-                            PersistentNotification pn = parser.parsePersistentNotification(n, packageName, 0);
-
-                            Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-                            intent.setAction(NotificationsService.PERSISTENT_NOTIFICATION_POSTED);
-                            intent.putExtra(NotificationsService.EXTRA_NOTIFICATION, pn);
-                            getApplicationContext().startService(intent);
-                        }
+                        Log.d("NiLS","NewNotificationsListener:onNotificationPosted #" + id);
+                        mService.onNotificationPosted(n, packageName, id, null);
                     }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
@@ -163,11 +177,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                             // clear all notifications that didn't appear on status bar
                             for(NotificationData nd : notificationsToRemove)
                             {
-                                Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-                                intent.setAction(NotificationsService.NOTIFICATION_REMOVED);
-                                intent.putExtra(NotificationsService.EXTRA_PACKAGENAME, nd.packageName);
-                                intent.putExtra(NotificationsService.EXTRA_ID, nd.id);
-                                getApplicationContext().startService(intent);
+                                mService.onNotificationRemoved(null, nd.packageName, nd.id);
                             }
                         }
                     }
@@ -186,18 +196,12 @@ public class NiLSAccessibilityService extends AccessibilityService
                                 accessibilityEvent.getContentDescription() != null &&
                                 accessibilityEvent.getContentDescription().equals(clearButtonName))
                             {
-                                clearAllNotifications();
+                                mService.clearAllNotifications();
                             }
                     }
                 }
                 break;
         }
-    }
-
-    public void clearAllNotifications()
-    {
-        NotificationsProvider ns = NotificationsService.getSharedInstance();
-        if (ns != null) ns.clearAllNotifications();
     }
 
     private List<String> recursiveGetStrings(AccessibilityNodeInfo node)

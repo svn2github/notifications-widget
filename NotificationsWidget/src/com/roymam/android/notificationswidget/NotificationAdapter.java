@@ -294,9 +294,7 @@ public class NotificationAdapter implements NotificationEventListener
             {
                 //@SuppressWarnings("deprecation")
                 final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-                //only possible for system apps
-                //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                //    pm.wakeUp(SystemClock.uptimeMillis());
+
                 wl.acquire();
 
                 // release after 10 seconds
@@ -306,7 +304,7 @@ public class NotificationAdapter implements NotificationEventListener
                     public void run()
                     {
                         wl.release();
-                        //pm.goToSleep(SystemClock.uptimeMillis());
+                        turnScreenOff();
                     }
                 };
                 int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT)));
@@ -316,6 +314,13 @@ public class NotificationAdapter implements NotificationEventListener
         }
         else
             newNotificationsAvailable = true;
+    }
+
+    private void turnScreenOff()
+    {
+        Intent screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.cillinsoft.scrnoff");
+        if (screenoffApp != null)
+            context.startActivity(screenoffApp);
     }
 
     // Proximity Sensor Monitoring

@@ -1,9 +1,11 @@
 package com.roymam.android.notificationswidget;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -54,7 +56,13 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d("NiLS","NotificationsService:onCreate");
 
         instance = this;
-        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
+
+        // create a notification parser
+        context = getApplicationContext();
+        parser = new NotificationParser(getApplicationContext());
+        setNotificationEventListener(new NotificationAdapter(context));
+
+        context.sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
         super.onCreate();
     }
 
@@ -110,7 +118,6 @@ public class NotificationsService extends Service implements NotificationsProvid
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         //Log.d("NiLS","NotificationsService:onStartCommand " + intent.getAction());
-
         if (context == null) context = getApplicationContext();
         if (parser == null) parser = new NotificationParser(getApplicationContext());
         if (listener == null) setNotificationEventListener(new NotificationAdapter(context));
@@ -118,7 +125,15 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (intent != null && intent.getAction() != null)
         {
             String action = intent.getAction();
-            if (action.equals(NOTIFICATION_POSTED))
+
+            // cancel notification request from NiLS FP
+            if (action.equals(CANCEL_NOTIFICATION))
+            {
+                int uid = intent.getIntExtra(EXTRA_UID, -1);
+                clearNotification(uid);
+            }
+
+            /*if (action.equals(NOTIFICATION_POSTED))
             {
                 NotificationData notification = intent.getParcelableExtra(EXTRA_NOTIFICATION);
                 addNotification(notification);
@@ -139,15 +154,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                 String packageName = intent.getStringExtra(EXTRA_PACKAGENAME);
                 int id = intent.getIntExtra(EXTRA_ID, -1);
                 removePersistentNotification(packageName, id);
-            }
-            // cancel notification request from NiLS FP
-            else if (action.equals(CANCEL_NOTIFICATION))
-            {
-                int uid = intent.getIntExtra(EXTRA_UID, -1);
-                clearNotification(uid);
-            }
+            }*/
         }
-        return START_STICKY;
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private void addNotification(NotificationData nd)
@@ -176,7 +185,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 // 3. notification is similar to the old one
                 if (oldnd.packageName.equals(nd.packageName)  &&
                     (((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && notificationMode.equals(SettingsActivity.MODE_GROUPED)) ||
-                     oldnd.isSimilar(nd)))
+                     oldnd.isSimilar(nd, true)))
                 {
                     nd.uid = oldnd.uid;
                     iter.remove();
@@ -187,7 +196,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
                 else // check if the old notification is a duplicate of the current but contains more data than the current - if so - ignore the new one
                 {
-                    if (nd.isSimilar(oldnd))
+                    if (nd.isSimilar(oldnd, false))
                     {
                         ignoreNotification = true;
                         updated = false;
@@ -532,9 +541,51 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
+    public void onNotificationPosted(Notification n, String packageName, int id, String tag)
+    {
+        if (!parser.isPersistent(n, packageName))
+        {
+            List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
+            for (NotificationData nd : notifications)
+            {
+                addNotification(nd);
+            }
+        }
+        else
+        {
+            PersistentNotification pn = parser.parsePersistentNotification(n, packageName, id);
+            addPersistentNotification(pn);
+        }
+    }
+
+    public void onNotificationRemoved(Notification n, String packageName, int id)
+    {
+        removeNotification(packageName, id);
+
+        // remove also persistent notification
+        if (n != null && parser.isPersistent(n, packageName))
+        {
+            removePersistentNotification(packageName, id);
+        }
+    }
+
+    // binding stuff
+    //***************
+    private final IBinder mBinder = new LocalBinder();
+
+    public class LocalBinder extends Binder
+    {
+        NotificationsService getService()
+        {
+            // Return this instance of LocalService so clients can call public methods
+            return NotificationsService.this;
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent)
     {
-        return null;
+        return mBinder;
     }
+
 }
