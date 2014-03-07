@@ -27,6 +27,7 @@ public class NotificationData implements Parcelable
     boolean pinned = false;
     boolean selected = false;
     boolean deleted = false;
+    boolean protect = false;
     public Action[] actions = null;
     public int priority;
     public String tag;
@@ -90,11 +91,12 @@ public class NotificationData implements Parcelable
             action = PendingIntent.CREATOR.createFromParcel(in);
         count = in.readInt();
 
-        boolean[] ba = new boolean[3];
+        boolean[] ba = new boolean[4];
         in.readBooleanArray(ba);
         pinned = ba[0];
         selected = ba[1];
         deleted = ba[2];
+        protect = ba[3];
 
         if (in.readInt() != 0)
             actions = in.createTypedArray(Action.CREATOR);
@@ -162,10 +164,11 @@ public class NotificationData implements Parcelable
         }
         dest.writeInt(count);
 
-        boolean[] ba = new boolean[3];
+        boolean[] ba = new boolean[4];
         ba[0] = pinned;
         ba[1] = selected;
         ba[2] = deleted;
+        ba[3] = protect;
         dest.writeBooleanArray(ba);
 
         if (actions != null)

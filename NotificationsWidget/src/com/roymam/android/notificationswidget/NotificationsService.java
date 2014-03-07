@@ -29,11 +29,6 @@ import java.util.ListIterator;
 public class NotificationsService extends Service implements NotificationsProvider
 {
     public static final String CANCEL_NOTIFICATION = "com.roymam.android.nils.cancel_notification";
-    public static final String NOTIFICATION_POSTED = "NOTIFICATION_POSTED";
-    public static final String NOTIFICATION_REMOVED = "NOTIFICATION_REMOVED";
-    public static final String PERSISTENT_NOTIFICATION_POSTED = "PERSISTENT_NOTIFICATION_POSTED";
-    public static final String PERSISTENT_NOTIFICATION_REMOVED = "PERSISTENT_NOTIFICATION_REMOVED";
-    public static final String EXTRA_NOTIFICATION = "EXTRA_NOTIFICATION";
     public static final String EXTRA_PACKAGENAME = "EXTRA_PACKAGENAME";
     public static final String EXTRA_ID = "EXTRA_ID";
     public static final String EXTRA_UID = "EXTRA_UID";
@@ -163,7 +158,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     {
         if (nd != null)
         {
-            Log.d("NiLS","NotificationsService:addNotification #" + nd.id);
+            Log.d("NiLS","NotificationsService:addNotification " + nd.packageName + ":" + nd.id);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String notificationMode = SettingsActivity.getNotificationMode(getApplicationContext(), nd.packageName);
             boolean updated = false;
@@ -188,6 +183,11 @@ public class NotificationsService extends Service implements NotificationsProvid
                      oldnd.isSimilar(nd, true)))
                 {
                     nd.uid = oldnd.uid;
+                    nd.deleted = oldnd.deleted;
+
+                    // protect it from being cleared on next purge command
+                    nd.protect = true;
+
                     iter.remove();
                     oldnd.cleanup();
                     updated = true;
@@ -210,7 +210,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 notifications.add(nd);
 
                 // notify that the notification was added
-                if (listener != null)
+                if (listener != null && !nd.deleted)
                 {
                     if (updated)
                         listener.onNotificationUpdated(nd, changed);
@@ -235,7 +235,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private void removeNotification(String packageName, int id)
     {
-        Log.d("NiLS","NotificationsService:removeNotification #"+id);
+        Log.d("NiLS","NotificationsService:removeNotification  " + packageName + ":" + id);
         boolean sync = SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext());
         if (sync)
         {
@@ -252,8 +252,8 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                 if (nd.packageName.equals(packageName) && nd.id == id && !nd.pinned)
                 {
-                    // remove the notification
-                    iter.remove();
+                    // mark notification as cleared
+                    nd.deleted = true;
 
                     // notify that the notification was cleared
                     clearedNotifications.add(nd);
@@ -297,13 +297,20 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public List<NotificationData> getNotifications()
     {
+        ArrayList<NotificationData> notificationsList = new ArrayList<NotificationData>();
         if (context != null)
         {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String sortBy = prefs.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
-            sortNotificationsList(notifications, sortBy);
+
+            for(NotificationData nd : notifications)
+            {
+                if (!nd.deleted)
+                    notificationsList.add(nd);
+            }
+            sortNotificationsList(notificationsList, sortBy);
         }
-        return notifications;
+        return notificationsList;
     }
 
     @Override
@@ -389,7 +396,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (!nd.pinned)
             {
                 clearedNotifications.add(nd);
-                i.remove();
+                nd.deleted = true;
             }
         }
 
@@ -416,7 +423,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private void cancelNotification(String packageName, String tag, int id)
     {
-        Log.d("NiLS","NotificationsService:cancelNotification #" + id);
+        Log.d("NiLS","NotificationsService:cancelNotification " + packageName + ":" + id);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
             Intent intent = new Intent(context, NewNotificationsListener.class);
@@ -443,7 +450,6 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public synchronized void clearNotificationsForApps(String[] packages)
     {
-        Log.d("NiLS","NotificationsService:clearNotificationsForApps");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
         boolean changed = false;
@@ -451,13 +457,15 @@ public class NotificationsService extends Service implements NotificationsProvid
 
         for(String packageName : packages)
         {
+            Log.d("NiLS","NotificationsService:clearNotificationsForApps " + packageName);
             ListIterator<NotificationData> i = notifications.listIterator();
             while (i.hasNext())
             {
                 NotificationData nd = i.next();
                 if (!nd.pinned && nd.packageName.equals(packageName))
                 {
-                    i.remove();
+                    // mark notification as deleted
+                    nd.deleted = true;
                     changed = true;
                     clearedNotifications.add(nd);
                 }
@@ -486,7 +494,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public synchronized void clearNotification(int uid)
     {
-        Log.d("NiLS","NotificationsService:clearNotification #" + uid);
+        Log.d("NiLS","NotificationsService:clearNotification uid:" + uid);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
@@ -504,7 +512,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                 // store id and package name to search for more notifications with the same id
                 removedNd = nd;
 
-                iter.remove();
+                // mark notification as deleted
+                nd.deleted = true;
+
                 removed = true;
             }
         }
@@ -515,7 +525,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             boolean more = false;
             for(NotificationData nd : notifications)
             {
-                if (nd.id == removedNd.id &&
+                if (nd.id == removedNd.id && !nd.deleted &&
                         nd.packageName.equals(removedNd.packageName))
                     more = true;
             }
@@ -537,7 +547,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
         else
         {
-            Log.d("NiLS","NotificationsService:clearNotificationsForApps - wasn't found");
+            Log.d("NiLS","NotificationsService:clearNotification - wasn't found");
         }
     }
 
@@ -550,11 +560,34 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 addNotification(nd);
             }
+            // after adding all of the new notifications delete all of the old ones that marked as deleted
+            purgeDeletedNotifications(packageName, id);
         }
         else
         {
             PersistentNotification pn = parser.parsePersistentNotification(n, packageName, id);
             addPersistentNotification(pn);
+        }
+    }
+
+    private void purgeDeletedNotifications(String packageName, int id)
+    {
+        Log.d("NiLS","purging deleted notifications "+ packageName + ":" + id);
+
+        Iterator<NotificationData> iter = notifications.iterator();
+        while (iter.hasNext())
+        {
+            NotificationData nd = iter.next();
+            if (nd.packageName.equals(packageName) &&
+                nd.deleted &&
+               !nd.protect &&
+                (nd.id == id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2))
+            {
+                Log.d("NiLS","permenantly removing uid:"+nd.uid);
+                iter.remove();
+            }
+            // make sure next time it won't be protected from deleting
+            nd.protect = false;
         }
     }
 
