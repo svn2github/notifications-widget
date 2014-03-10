@@ -16,10 +16,6 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class NotificationAdapter implements NotificationEventListener
 {
     private Context context = null;
@@ -32,6 +28,7 @@ public class NotificationAdapter implements NotificationEventListener
     public static final String UPDATE_NOTIFICATION = "com.roymam.android.nils.update_notification";
     public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
     private Handler mHandler = null;
+    private PowerManager.WakeLock mWakeLock = null;
 
     public NotificationAdapter(Context context)
     {
@@ -277,6 +274,19 @@ public class NotificationAdapter implements NotificationEventListener
         context.sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
     }
 
+    private Runnable mReleaseWakelock = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            if (mWakeLock != null && mWakeLock.isHeld())
+            {
+                mWakeLock.release();
+            }
+            turnScreenOff();
+        }
+    };
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void turnScreenOn()
     {
@@ -292,23 +302,16 @@ public class NotificationAdapter implements NotificationEventListener
             // turn the screen on only if it was off
             if (!pm.isScreenOn())
             {
-                //@SuppressWarnings("deprecation")
-                final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-
-                wl.acquire();
-
-                // release after 10 seconds
-                final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-                Runnable task = new Runnable()
-                {
-                    public void run()
-                    {
-                        wl.release();
-                        turnScreenOff();
-                    }
-                };
                 int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT)));
-                worker.schedule(task, timeout, TimeUnit.SECONDS);
+
+                if (mWakeLock == null || !mWakeLock.isHeld())
+                {
+                    //@SuppressWarnings("deprecation")
+                    mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+                    mWakeLock.acquire();
+                }
+                mHandler.removeCallbacks(mReleaseWakelock);
+                mHandler.postDelayed(mReleaseWakelock, timeout);
             }
             newNotificationsAvailable = false;
         }

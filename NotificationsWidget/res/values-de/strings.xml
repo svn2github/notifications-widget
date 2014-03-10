@@ -276,8 +276,8 @@
     <string name="widget_help_step_4_body">Wähle das NiLS-Widget aus der Liste, dass fügt das Lockscreen-Widget hinzu</string>
     <string name="loading_title">Show All Apps</string>
     <string name="loading_summary">Click to show all of the installed apps</string>
-    <string name="screenon_timeout">Timeout (seconds)</string>
-    <string name="screenon_timeout_summary">Set minimum timeout before the screen will turn off again (doesn\'t work for all devices)</string>
+    <string name="screenon_timeout">Keep screen on</string>
+    <string name="screenon_timeout_summary">Set number of seconds to keep the screen on. (the device may keep it longer)</string>
 
     <!-- Backup / Restore Settings -->
     <string name="backup_restore">Backup / Restore</string>

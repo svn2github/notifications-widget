@@ -7,10 +7,10 @@ import java.util.Set;
 
 public class ListPreferenceChangeListener implements OnPreferenceChangeListener 
 {			
-	private String[] entries;
-	private String[] values;
+	private CharSequence[] entries;
+	private CharSequence[] values;
 	
-	public ListPreferenceChangeListener(String[] entries, String[] values)
+	public ListPreferenceChangeListener(CharSequence[] entries, CharSequence[] values)
 	{
 		this.entries = entries;
 		this.values = values;

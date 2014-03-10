@@ -9,7 +9,7 @@
     <!-- Settings Page -->
     <string name="generalsettings">General Settings</string>
     <string name="advancedsettings">Advanced Settings</string>
-    <string name="behavior">When notification arrives</string>
+    <string name="behavior">Auto Wake up</string>
     <string name="appearance">Appearance</string>
     <string name="advanced">Advanced</string>
     <string name="notifications">Notifications</string>
@@ -358,8 +358,8 @@
     <string name="widget_help_step_4_body">Choose NiLS widget from the list. this will add it as your lock screen widget.</string>
     <string name="loading_title">Show All Apps</string>
     <string name="loading_summary">Click to show all of the installed apps</string>
-    <string name="screenon_timeout">Timeout (seconds)</string>
-    <string name="screenon_timeout_summary">Set minimum timeout before the screen will turn off again (doesn\'t work for all devices)</string>
+    <string name="screenon_timeout">Keep screen on</string>
+    <string name="screenon_timeout_summary">Set number of seconds to keep the screen on. (the device may keep it longer)</string>
     <string name="backup_restore">Backup / Restore</string>
     <string name="backup_restore_summary">Backup or restore preferences</string>
     <string name="backup">Backup</string>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+        <ListPreference android:key="notification_mode"
+                        android:title="Notification mode"
+                        android:entries="@array/notification_modes_entries"
+                        android:entryValues="@array/notification_modes_values"
+                        android:defaultValue="separated"/>
+
+        <ListPreference android:key="notification_icon"
+            android:title="Notification icon"
+            android:entries="@array/notification_icon_entries"
+            android:entryValues="@array/notification_icon_values"
+            android:defaultValue="notification_icon"/>
+</PreferenceScreen>

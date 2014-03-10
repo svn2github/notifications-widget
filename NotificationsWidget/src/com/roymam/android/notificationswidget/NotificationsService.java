@@ -233,7 +233,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
-    private void removeNotification(String packageName, int id)
+    private void removeNotification(String packageName, int id, boolean logical)
     {
         Log.d("NiLS","NotificationsService:removeNotification  " + packageName + ":" + id);
         boolean sync = SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext());
@@ -252,8 +252,16 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                 if (nd.packageName.equals(packageName) && nd.id == id && !nd.pinned)
                 {
-                    // mark notification as cleared
-                    nd.deleted = true;
+                    if (logical)
+                    {
+                        // mark notification as cleared
+                        nd.deleted = true;
+                    }
+                    else
+                    {
+                        // immediately remove notification
+                        iter.remove();
+                    }
 
                     // notify that the notification was cleared
                     clearedNotifications.add(nd);
@@ -593,7 +601,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     public void onNotificationRemoved(Notification n, String packageName, int id)
     {
-        removeNotification(packageName, id);
+        removeNotification(packageName, id, false);
 
         // remove also persistent notification
         if (n != null && parser.isPersistent(n, packageName))

@@ -1,19 +1,22 @@
 package com.roymam.android.notificationswidget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
+
+import com.roymam.android.common.ListPreferenceChangeListener;
 
 public class AppSettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener 
 {
@@ -28,8 +31,8 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
     private static final String ALWAYS_USE_APP_ICON = "use_app_icon";
 	
 	private String packageName;
-	
-	@Override
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
@@ -47,6 +50,39 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 		
 		super.onCreate(savedInstanceState);
 
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.activity_app_settings, null);
+        setContentView(v);
+
+        addPreferencesFromResource(R.xml.app_specific_settings);
+        PreferenceScreen prefScreen = getPreferenceScreen();
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        for(int i=0; i<prefScreen.getPreferenceCount();i++)
+        {
+            Preference pref = prefScreen.getPreference(i);
+            String key = packageName + "." + pref.getKey();
+
+            if (pref instanceof ListPreference)
+            {
+                ListPreference listPref = ((ListPreference) pref);
+                String globalValue = listPref.getValue();
+                String currValue = sharedPrefs.getString(key, globalValue);
+
+                listPref.setKey(key);
+                listPref.setValue(currValue);
+
+                // set summary from current value
+                ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
+                        listPref.getEntries(), listPref.getEntryValues());
+
+                listener.setPrefSummary(listPref, currValue);
+                listPref.setOnPreferenceChangeListener(listener);
+            }
+        }
+
+
+        /*
 		// add app specific settings
 		PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 		
@@ -148,8 +184,32 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 		//runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
 		//intentPref.setIntent(runAppSpecificSettings);
 		root.addItemFromInflater(clearPref);
-        setPreferenceScreen(root);
+        setPreferenceScreen(root);*/
 	}
+
+    public void resetAppSettings(View v)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
+        prefs.edit().remove(packageName + "." + SettingsActivity.NOTIFICATION_MODE)
+                    .remove(packageName + "." + SettingsActivity.NOTIFICATION_ICON)
+                    .remove(packageName + "." + IGNORE_APP)
+                    .commit();
+
+        removeAppFromAppSpecificSettings(packageName, AppSettingsActivity.this);
+        finish();
+        Intent intent = new Intent(getApplicationContext(), this.getClass());
+        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        overridePendingTransition(0,0);
+    }
+    public void ignoreThisApp(View v)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
+        prefs.edit().putBoolean(packageName+"."+IGNORE_APP, true).commit();
+        addAppToAppSpecificSettings(packageName, getApplicationContext());
+        finish();
+    }
 	
 	public static void removeAppFromAppSpecificSettings(String packageName, Context ctx)
 	{
