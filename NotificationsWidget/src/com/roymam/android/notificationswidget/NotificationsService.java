@@ -2,12 +2,17 @@ package com.roymam.android.notificationswidget;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
@@ -29,10 +34,12 @@ import java.util.ListIterator;
 public class NotificationsService extends Service implements NotificationsProvider
 {
     public static final String CANCEL_NOTIFICATION = "com.roymam.android.nils.cancel_notification";
+    public static final String BIND_NILS_FP = "com.roymam.android.nils.bind_nils_fp";
     public static final String EXTRA_PACKAGENAME = "EXTRA_PACKAGENAME";
     public static final String EXTRA_ID = "EXTRA_ID";
     public static final String EXTRA_UID = "EXTRA_UID";
     public static final String EXTRA_TAG = "EXTRA_TAG";
+    private static final int RECREATE = 1;
 
     private static NotificationsProvider instance;
     private Context context;
@@ -44,6 +51,58 @@ public class NotificationsService extends Service implements NotificationsProvid
     public NotificationsService()
     {
     }
+
+    /** Messenger for communicating with the NiLS FP service. */
+    Messenger mService = null;
+
+    /** Flag indicating whether we have called bind on the service. */
+    boolean mBound;
+
+    /**
+     * Class for interacting with the main interface of the service.
+     */
+    private ServiceConnection mConnection = new ServiceConnection()
+    {
+        public void onServiceConnected(ComponentName className, IBinder service)
+        {
+            // This is called when the connection with the service has been
+            // established, giving us the object we can use to
+            // interact with the service.  We are communicating with the
+            // service using a Messenger, so here we get a client-side
+            // representation of that from the raw IBinder object.
+            Log.d("NiLS", "Connected to NiLS FP Service");
+            mService = new Messenger(service);
+            mBound = true;
+
+            // Create and send a message to the service, using a supported 'what' value
+            Message msg = Message.obtain(null, RECREATE, 0, 0);
+            try
+            {
+                mService.send(msg);
+            }
+            catch (RemoteException e)
+            {
+                e.printStackTrace();
+            }
+
+            // Re-send all of the current notfications
+            for(int i = getNotifications().size()-1; i>=0; i--)
+            {
+                NotificationData nd = getNotifications().get(i);
+                listener.onNotificationAdded(nd, false);
+            }
+
+        }
+
+        public void onServiceDisconnected(ComponentName className)
+        {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            Log.d("NiLS", "Disconnected from NiLS FP Service");
+            mService = null;
+            mBound = false;
+        }
+    };
 
     @Override
     public void onCreate()
@@ -59,6 +118,30 @@ public class NotificationsService extends Service implements NotificationsProvid
 
         context.sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
         super.onCreate();
+
+        bindNiLSFP();
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent)
+    {
+        if (mBound)
+        {
+            unbindService(mConnection);
+            mBound = false;
+        }
+        return super.onUnbind(intent);
+    }
+
+    public void bindNiLSFP()
+    {
+        if (!mBound)
+        {
+            // Try to bind to NiLS FP Service
+            Intent npsIntent = new Intent();
+            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            bindService(npsIntent, mConnection, Context.BIND_AUTO_CREATE);
+        }
     }
 
     @Override
@@ -126,6 +209,11 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 int uid = intent.getIntExtra(EXTRA_UID, -1);
                 clearNotification(uid);
+            }
+
+            if (action.equals(BIND_NILS_FP))
+            {
+                bindNiLSFP();
             }
 
             /*if (action.equals(NOTIFICATION_POSTED))
@@ -257,7 +345,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                         // mark notification as cleared
                         nd.deleted = true;
                     }
-                    else
+                    else if (!nd.deleted) // make sure it hasn't been deleted previously by the user
                     {
                         // immediately remove notification
                         iter.remove();

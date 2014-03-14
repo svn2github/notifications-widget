@@ -62,12 +62,10 @@ public class EventsHandler extends BroadcastReceiver
             }
             else if (intent.getAction().equals(RESEND_ALL_NOTIFICATIONS))
             {
-                if (ns != null)
-                for(int i = ns.getNotifications().size()-1; i>=0; i--)
-                {
-                    NotificationData nd = ns.getNotifications().get(i);
-                    ns.getNotificationEventListener().onNotificationAdded(nd, false);
-                }
+                // request NotificationService to bind NiLS FP service if hasn't bound yet
+                Intent nsIntent = new Intent(context, NotificationsService.class);
+                nsIntent.setAction(NotificationsService.BIND_NILS_FP);
+                context.startService(nsIntent);
             }
             else if (intent.getAction().equals(OPEN_NOTIFICATION))
             {

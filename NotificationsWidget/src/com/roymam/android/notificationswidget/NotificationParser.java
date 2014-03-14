@@ -101,7 +101,7 @@ public class NotificationParser
                 opts.outHeight = (int) maxIconSize;
                 opts.outWidth = (int) maxIconSize;
 
-                String notificationIcon = sharedPref.getString(packageName + SettingsActivity.NOTIFICATION_ICON,
+                String notificationIcon = sharedPref.getString(packageName + "." + SettingsActivity.NOTIFICATION_ICON,
                                         sharedPref.getString(SettingsActivity.NOTIFICATION_ICON, SettingsActivity.DEFAULT_NOTIFICATION_ICON));
 
                 if (res != null && info != null)
