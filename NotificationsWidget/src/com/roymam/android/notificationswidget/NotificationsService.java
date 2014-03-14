@@ -91,7 +91,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                 NotificationData nd = getNotifications().get(i);
                 listener.onNotificationAdded(nd, false);
             }
-
         }
 
         public void onServiceDisconnected(ComponentName className)
@@ -125,6 +124,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public boolean onUnbind(Intent intent)
     {
+        // unbound NiLS FP (if bounded)
         if (mBound)
         {
             unbindService(mConnection);
@@ -714,6 +714,10 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public IBinder onBind(Intent intent)
     {
+        // bound to Accessibility / Notifications service
+        // bind it to NiLS FP
+        bindNiLSFP();
+
         return mBinder;
     }
 
