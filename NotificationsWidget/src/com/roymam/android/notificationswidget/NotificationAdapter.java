@@ -299,20 +299,27 @@ public class NotificationAdapter implements NotificationEventListener
         if (turnScreenOn && (deviceCovered == null || !deviceCovered))
         {
             final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            // turn the screen on only if it was off
-            if (!pm.isScreenOn())
-            {
-                int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT))) * 1000;
 
-                if (mWakeLock == null || !mWakeLock.isHeld())
-                {
-                    //@SuppressWarnings("deprecation")
-                    mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
-                    mWakeLock.acquire();
-                }
+            int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT))) * 1000;
+
+            // turn the screen on only if it was off or acquired by previous wakelock
+            if (!pm.isScreenOn() || mWakeLock != null && mWakeLock.isHeld())
+            {
+                // release previously held wake lock
+                if (mWakeLock != null && mWakeLock.isHeld()) mWakeLock.release();
+
+                // release previously callback
                 mHandler.removeCallbacks(mReleaseWakelock);
+
+                // create and aquire a new wake lock
+                // @SuppressWarnings("deprecation")
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "Notification");
+                mWakeLock.acquire();
+
+                // release wake lock on timeout ends
                 mHandler.postDelayed(mReleaseWakelock, timeout);
             }
+
             newNotificationsAvailable = false;
         }
         else
@@ -322,8 +329,10 @@ public class NotificationAdapter implements NotificationEventListener
     private void turnScreenOff()
     {
         Intent screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.cillinsoft.scrnoff");
-        if (screenoffApp != null)
-            context.startActivity(screenoffApp);
+        if (screenoffApp == null)
+            screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.katecca.screenofflock");
+
+        if (screenoffApp != null) context.startActivity(screenoffApp);
     }
 
     // Proximity Sensor Monitoring
