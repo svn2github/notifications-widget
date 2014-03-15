@@ -41,20 +41,20 @@ public class NotificationAdapter implements NotificationEventListener
         // turn screen on (if needed)
         if (wake)
         {
-            handleWakeupMode();
+            handleWakeupMode(nd.packageName);
         }
         notifyNotificationAdd(nd);
     }
 
-    private void handleWakeupMode()
+    private void handleWakeupMode(final String packageName)
     {
-        String wakeupMode = SettingsActivity.getWakeupMode(context);
+        String wakeupMode = SettingsActivity.getWakeupMode(context, packageName);
 
         if (wakeupMode.equals(SettingsActivity.WAKEUP_ALWAYS))
-            turnScreenOn();
+            turnScreenOn(packageName);
         else
         {
-            registerProximitySensor();
+            registerProximitySensor(packageName);
 
             if (mHandler == null) mHandler = new Handler();
 
@@ -66,12 +66,12 @@ public class NotificationAdapter implements NotificationEventListener
                     if (deviceCovered == null || !deviceCovered)
                     {
                         // the device is not covered or we don't know yet so we turn the screen on
-                        turnScreenOn();
+                        turnScreenOn(packageName);
                         stopProximityMontior();
                     }
                     else  // the device is covered
                     {
-                        String wakeupMode = SettingsActivity.getWakeupMode(context);
+                        String wakeupMode = SettingsActivity.getWakeupMode(context, packageName);
                         // stop proximity monitoring if delayed screen on is inactive, otherwise it will stopped later when uncovered
                         if (!wakeupMode.equals(SettingsActivity.WAKEUP_UNCOVERED))
                             stopProximityMontior();
@@ -86,7 +86,7 @@ public class NotificationAdapter implements NotificationEventListener
     {
         // turn screen on (if needed)
         if (changed)
-            handleWakeupMode();
+            handleWakeupMode(nd.packageName );
 
         notifyNotificationUpdated(nd);
     }
@@ -288,12 +288,12 @@ public class NotificationAdapter implements NotificationEventListener
     };
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void turnScreenOn()
+    private void turnScreenOn(String packageName)
     {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         // check if need to turn screen on
-        String wakeupMode = SettingsActivity.getWakeupMode(context);
+        String wakeupMode = SettingsActivity.getWakeupMode(context, packageName);
         Boolean turnScreenOn = !wakeupMode.equals(SettingsActivity.WAKEUP_NEVER);
 
         if (turnScreenOn && (deviceCovered == null || !deviceCovered))
@@ -339,11 +339,11 @@ public class NotificationAdapter implements NotificationEventListener
     SensorEventListener sensorListener = null;
 
     @Override
-    public void registerProximitySensor()
+    public void registerProximitySensor(final String packageName)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Log.d("NiLS", "registerProximitySensor");
-        String wakeupMode = SettingsActivity.getWakeupMode(context);
+        String wakeupMode = SettingsActivity.getWakeupMode(context, packageName);
 
         if (wakeupMode.equals(SettingsActivity.WAKEUP_NOT_COVERED) || wakeupMode.equals(SettingsActivity.WAKEUP_UNCOVERED))
         {
@@ -373,12 +373,12 @@ public class NotificationAdapter implements NotificationEventListener
                         else if (deviceCovered && !newCoverStatus)
                         {
                             deviceCovered = false;
-                            String wakeupMode = SettingsActivity.getWakeupMode(context);
+                            String wakeupMode = SettingsActivity.getWakeupMode(context, packageName);
 
                             // stop proximity monitoring if delayed screen on is inactive
                             if (wakeupMode.equals(SettingsActivity.WAKEUP_UNCOVERED))
                             {
-                                turnScreenOn();
+                                turnScreenOn(packageName);
                             }
 
                             stopProximityMontior();

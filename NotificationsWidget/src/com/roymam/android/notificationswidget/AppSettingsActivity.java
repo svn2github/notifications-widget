@@ -190,7 +190,8 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
     public void resetAppSettings(View v)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
-        prefs.edit().remove(packageName + "." + SettingsActivity.NOTIFICATION_MODE)
+        prefs.edit().remove(packageName + "." + SettingsActivity.WAKEUP_MODE)
+                    .remove(packageName + "." + SettingsActivity.NOTIFICATION_MODE)
                     .remove(packageName + "." + SettingsActivity.NOTIFICATION_ICON)
                     .remove(packageName + "." + IGNORE_APP)
                     .commit();
@@ -240,13 +241,16 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 		{
 		     if (token.equals(packageName)) hasApp = true;
 		}
-		if (!hasApp)
-		{
-			// add this app to the list of specific apps
-			if (!specificApps.equals(""))
-				specificApps+= ",";
-			specificApps+= packageName; 
-		}
+        // remove it and re-add to the start of the list
+        if (hasApp)
+            removeAppFromAppSpecificSettings(packageName, ctx);
+
+        // add this app to the list of specific apps
+        specificApps = prefs.getString(SettingsActivity.APPS_SETTINGS, "");
+        if (!specificApps.equals(""))
+            specificApps = packageName + "," + specificApps;
+        else
+            specificApps = packageName;
 		
 		prefs.edit().putString("specificapps", specificApps).commit();		
 	}

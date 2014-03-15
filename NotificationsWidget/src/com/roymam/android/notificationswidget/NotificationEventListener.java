@@ -12,6 +12,6 @@ public interface NotificationEventListener
     public void onServiceStarted();
     public void onServiceStopped();
 
-    public void registerProximitySensor();
+    public void registerProximitySensor(String packageName);
     public void stopProximityMontior();
 }

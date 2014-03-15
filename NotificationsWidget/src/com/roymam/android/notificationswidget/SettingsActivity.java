@@ -159,7 +159,7 @@ public class SettingsActivity extends PreferenceActivity
             return false;
     }
 
-    public static String getWakeupMode(Context context)
+    public static String getWakeupMode(Context context, String packageName)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String defaultWakeupMode;
@@ -176,7 +176,7 @@ public class SettingsActivity extends PreferenceActivity
         else
             defaultWakeupMode = WAKEUP_NOT_COVERED;
 
-        return prefs.getString(WAKEUP_MODE, defaultWakeupMode);
+        return prefs.getString(packageName + "." + WAKEUP_MODE, prefs.getString(WAKEUP_MODE, defaultWakeupMode));
     }
 
     public static String getNotificationMode(Context context, String packageName)
@@ -288,7 +288,7 @@ public class SettingsActivity extends PreferenceActivity
                     getResources().getStringArray(R.array.wakeup_mode_values));
 
             Preference wakeupPref = findPreference(WAKEUP_MODE);
-            String currValue = SettingsActivity.getWakeupMode(getActivity());
+            String currValue = SettingsActivity.getWakeupMode(getActivity(), null);
             wakeupPref.setDefaultValue(currValue);
             listener.setPrefSummary(wakeupPref, currValue);
             wakeupPref.setOnPreferenceChangeListener(listener);
