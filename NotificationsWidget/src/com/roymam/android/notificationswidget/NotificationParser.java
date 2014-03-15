@@ -248,6 +248,7 @@ public class NotificationParser
             nd.action = baseNotification.action;
             nd.content = baseNotification.content;
             nd.title = strings.get(notification_title_id);
+            nd.event = true;
             nd.text = event;
 
             // extract title from content for first/last event

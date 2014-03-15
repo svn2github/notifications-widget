@@ -280,6 +280,10 @@ public class NotificationsService extends Service implements NotificationsProvid
                     oldnd.cleanup();
                     updated = true;
                     changed = !oldnd.isEqual(nd);
+
+                    // if it is exact the same notificaiton - keep old received time
+                    if (!changed) nd.received = oldnd.received;
+
                     break;
                 }
                 else // check if the old notification is a duplicate of the current but contains more data than the current - if so - ignore the new one
@@ -340,7 +344,8 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                 if (nd.packageName.equals(packageName) && nd.id == id && !nd.pinned)
                 {
-                    if (logical)
+                    // mark as delete if it's part of multiple events notification
+                    if (logical && nd.event)
                     {
                         // mark notification as cleared
                         nd.deleted = true;
@@ -492,7 +497,12 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (!nd.pinned)
             {
                 clearedNotifications.add(nd);
-                nd.deleted = true;
+
+                // if its event - mark it as deleted
+                if (nd.event)
+                    nd.deleted = true;
+                else // otehrwise remove it immediately
+                    i.remove();
             }
         }
 
@@ -561,7 +571,11 @@ public class NotificationsService extends Service implements NotificationsProvid
                 if (!nd.pinned && nd.packageName.equals(packageName))
                 {
                     // mark notification as deleted
-                    nd.deleted = true;
+                    if (nd.event)
+                        nd.deleted = true;
+                    else
+                        i.remove();
+
                     changed = true;
                     clearedNotifications.add(nd);
                 }
@@ -609,7 +623,10 @@ public class NotificationsService extends Service implements NotificationsProvid
                 removedNd = nd;
 
                 // mark notification as deleted
-                nd.deleted = true;
+                if (nd.event)
+                    nd.deleted = true;
+                else
+                    iter.remove();
 
                 removed = true;
             }
@@ -617,7 +634,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
         if (removed)
         {
-            // search for more notification with the same id - if not found - dismiss the notifcation from android status bar
+            // search for more notification with the same id - if not found - dismiss the notification from android status bar
             boolean more = false;
             for(NotificationData nd : notifications)
             {

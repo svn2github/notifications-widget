@@ -302,7 +302,7 @@ public class NotificationAdapter implements NotificationEventListener
             // turn the screen on only if it was off
             if (!pm.isScreenOn())
             {
-                int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT)));
+                int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT))) * 1000;
 
                 if (mWakeLock == null || !mWakeLock.isHeld())
                 {
