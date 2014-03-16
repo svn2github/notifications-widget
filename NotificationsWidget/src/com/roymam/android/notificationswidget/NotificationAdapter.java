@@ -1,6 +1,8 @@
 package com.roymam.android.notificationswidget;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,6 +17,8 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import java.util.List;
 
 public class NotificationAdapter implements NotificationEventListener
 {
@@ -326,13 +330,49 @@ public class NotificationAdapter implements NotificationEventListener
             newNotificationsAvailable = true;
     }
 
+    private boolean isAppOnForeground(String packageName)
+    {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null)
+        {
+            return false;
+        }
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses)
+        {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void turnScreenOff()
     {
-        Intent screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.cillinsoft.scrnoff");
-        if (screenoffApp == null)
-            screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.katecca.screenofflock");
+        KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        boolean isLocked = km.inKeyguardRestrictedInputMode();
 
-        if (screenoffApp != null) context.startActivity(screenoffApp);
+        if (!isLocked)
+        {
+            // check if another lock screen is currently used
+            String[] lockscreepApps = context.getResources().getStringArray(R.array.lockscreenapps);
+            for (String lockscreen : lockscreepApps)
+            {
+                if (isAppOnForeground(lockscreen))
+                    isLocked = true;
+            }
+        }
+
+        // turn screen of only if the device is still locked
+        if (isLocked)
+        {
+            Intent screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.cillinsoft.scrnoff");
+            if (screenoffApp == null)
+                screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.katecca.screenofflock");
+
+            if (screenoffApp != null) context.startActivity(screenoffApp);
+        }
     }
 
     // Proximity Sensor Monitoring

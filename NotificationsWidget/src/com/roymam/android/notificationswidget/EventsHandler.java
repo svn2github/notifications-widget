@@ -33,14 +33,16 @@ public class EventsHandler extends BroadcastReceiver
            if (action.equals(Intent.ACTION_USER_PRESENT) && !sharedPref.getBoolean("widgetlocker", false) ||
                action.equals(WIDGET_LOCKER_UNLOCKED))
            {
-                // clear all notifications if needed
-                if (SettingsActivity.shouldClearOnUnlock(context))
-                {
-                    if (ns != null)
-                        ns.clearAllNotifications();
-                }
-                   if (action.equals(WIDGET_LOCKER_UNLOCKED))
-                       sharedPref.edit().putBoolean("widgetlocker", true).commit();
+               // stop screen off timer
+               
+               // clear all notifications if needed
+               if (SettingsActivity.shouldClearOnUnlock(context))
+               {
+                   if (ns != null)
+                       ns.clearAllNotifications();
+               }
+               if (action.equals(WIDGET_LOCKER_UNLOCKED))
+                    sharedPref.edit().putBoolean("widgetlocker", true).commit();
            }
            else if (action.equals(WIDGET_LOCKER_LOCKED))
            {

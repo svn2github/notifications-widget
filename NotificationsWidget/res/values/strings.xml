@@ -401,5 +401,21 @@
     <string name="open_android_settings">Open Android Settings</string>
     <string name="tutorial_step_1_title">Enable NiLS Service</string>
 
+    <string-array name="lockscreenapps" translatable="false">
+        <item>com.teslacoilsw.widgetlocker</item>
+        <item>com.jiubang.goscreenlock</item>
+        <item>com.coverscreen.cover</item>
+        <item>com.campmobile.locker</item>
+        <item>com.lockscreen.optimus</item>
+        <item>com.mobint.locker</item>
+        <item>com.slidelock</item>
+        <item>com.celltick.lockscreen</item>
+        <item>com.sparkymobile.sparkylockscreenfull</item>
+        <item>com.sparkymobile.sparkylockscreenlite</item>
+        <item>com.miui.home</item>
+        <item>com.qiigame.flocker.global</item>
+        <item>com.productigeeky.lockerpro</item>
+        <item>com.productigeeky.lockerprolite</item>
+    </string-array>
 
 </resources>
