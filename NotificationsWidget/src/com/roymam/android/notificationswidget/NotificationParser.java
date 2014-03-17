@@ -114,21 +114,19 @@ public class NotificationParser
                     }
                     else
                     {
-                        String iconPack = sharedPref.getString(SettingsActivity.ICON_PACK, SettingsActivity.DEFAULT_NOTIFICATION_ICON);
-                        if (iconPack.equals(SettingsActivity.DEFAULT_ICON_PACK))
-                        {
-                            nd.icon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
-                        }
-                        else
-                        {
-                            // load app icon from icon pack
-                            IconPackManager.IconPack ip = IconPackManager.getInstance(context).getAvailableIconPacks(false).get(iconPack);
-                            nd.icon = ip.getIconForPackage(packageName);
-                        }
-                        if (nd.appicon == null)
-                        {
-                            nd.appicon = nd.icon;
-                        }
+                        nd.icon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
+                    }
+
+                    String iconPack = sharedPref.getString(SettingsActivity.ICON_PACK, SettingsActivity.DEFAULT_NOTIFICATION_ICON);
+                    if (!iconPack.equals(SettingsActivity.DEFAULT_ICON_PACK))
+                    {
+                        // load app icon from icon pack
+                        IconPackManager.IconPack ip = IconPackManager.getInstance(context).getAvailableIconPacks(false).get(iconPack);
+                        nd.icon = ip.getIconForPackage(packageName, nd.icon);
+                    }
+                    if (nd.appicon == null)
+                    {
+                        nd.appicon = nd.icon;
                     }
                 }
                 if (n.largeIcon != null && notificationIcon.equals(SettingsActivity.NOTIFICATION_ICON))
