@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.DialogPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.roymam.android.common.IconPackManager;
 import com.roymam.android.common.ListPreferenceChangeListener;
 import com.roymam.android.common.SwitchPrefsHeaderAdapter;
 
@@ -109,6 +111,8 @@ public class SettingsActivity extends PreferenceActivity
     public static final String NOTIFICATION_MONO_ICON = "mono_icon";
     public static final String APP_ICON = "app_icon";
     public static final String DEFAULT_NOTIFICATION_ICON = NOTIFICATION_ICON;
+    public static final String ICON_PACK = "icon_pack";
+    public static final String DEFAULT_ICON_PACK = "none";
 
     // auto clear
     public static final String AUTO_CLEAR = "auto_clear";
@@ -274,7 +278,8 @@ public class SettingsActivity extends PreferenceActivity
 
     public static class PrefsGeneralFragment extends PreferenceFragment
 	{
-	    @Override
+
+        @Override
 	    public void onCreate(Bundle savedInstanceState) 
 	    {
 	        super.onCreate(savedInstanceState);
@@ -333,6 +338,35 @@ public class SettingsActivity extends PreferenceActivity
 	        currValue = getPreferenceScreen().getSharedPreferences().getString(NOTIFICATIONS_ORDER, "time");
 	        listener.setPrefSummary(pref, currValue);
 	        pref.setOnPreferenceChangeListener(listener);
+
+            // icon pack handling
+            List<String> iconPackEntries = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.icon_pack_entries)));
+            List<String> iconPackValues = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.icon_pack_values)));
+
+            IconPackManager ipm = IconPackManager.getInstance(getActivity());
+            HashMap<String, IconPackManager.IconPack> iconpacks = ipm.getAvailableIconPacks(true);
+
+            for (Entry<String, IconPackManager.IconPack> iconpack : iconpacks.entrySet())
+            {
+                String value  = iconpack.getKey();
+                String entry = iconpack.getValue().name;
+                iconPackEntries.add(entry);
+                iconPackValues.add(value);
+            }
+
+            String[] ipEntries = new String[iconPackEntries.size()];
+            String[] ipValues = new String[iconPackValues.size()];
+
+            iconPackEntries.toArray(ipEntries);
+            iconPackValues.toArray(ipValues);
+            listener = new ListPreferenceChangeListener(ipEntries, ipValues);
+
+            ListPreference iconPackPref = (ListPreference) findPreference(ICON_PACK);
+            currValue = getPreferenceScreen().getSharedPreferences().getString(ICON_PACK, DEFAULT_ICON_PACK);
+            listener.setPrefSummary(iconPackPref, currValue);
+            iconPackPref.setOnPreferenceChangeListener(listener);
+            iconPackPref.setEntries(ipEntries);
+            iconPackPref.setEntryValues(ipValues);
         }
 	}
 

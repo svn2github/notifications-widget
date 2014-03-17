@@ -61,6 +61,13 @@
         <item>app_icon</item>
     </string-array>
 
+    <string-array name="icon_pack_entries">
+        <item>None</item>
+    </string-array>
+    <string-array name="icon_pack_values" translatable="false">
+        <item>none</item>
+    </string-array>
+
     <!-- auto clear values -->
     <string name="when_cleared">When cleared from notifications bar</string>
     <string name="when_app_is_opened">When notification app is opened</string>

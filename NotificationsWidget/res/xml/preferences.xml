@@ -30,6 +30,12 @@
             android:entryValues="@array/notification_icon_values"
             android:defaultValue="notification_icon"/>
 
+        <ListPreference android:key="icon_pack"
+            android:title="Icon Pack"
+            android:entries="@array/icon_pack_entries"
+            android:entryValues="@array/icon_pack_values"
+            android:defaultValue="none"/>
+
         <MultiSelectListPreference android:key="auto_clear"
             android:title="Auto clear notifications"
             android:entries="@array/auto_clear_entries"
