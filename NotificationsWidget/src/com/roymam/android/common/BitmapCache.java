@@ -43,6 +43,16 @@ public class BitmapCache
         return instance;
     }
 
+    public void putBitmap(String key, Bitmap bitmap)
+    {
+        cache.put(key, bitmap);
+    }
+
+    public Bitmap getBitmap(String key)
+    {
+        return cache.get(key);
+    }
+
     public Bitmap getBitmap(String packageName, int resourceId)
     {
         String key = packageName + "#" + resourceId;

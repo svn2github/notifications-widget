@@ -38,7 +38,6 @@ public class IconPackManager
 
         private boolean mLoaded = false;
         private HashMap<String, String> mPackagesDrawables = new HashMap<String, String>();
-        private HashMap<String, Bitmap> mGeneratedBitmaps = new HashMap<String, Bitmap>();
 
         private List<Bitmap> mBackImages = new ArrayList<Bitmap>();
         private Bitmap mMaskImage = null;
@@ -206,9 +205,13 @@ public class IconPackManager
 
         private Bitmap generateBitmap(String appPackageName, Bitmap defaultBitmap)
         {
+            // the key for the cache is the icon pack package name and the app package name
+            String key = packageName + ":" + appPackageName;
+
             // if generated bitmaps cache already contains the package name return it
-            if (mGeneratedBitmaps.containsKey(appPackageName))
-                return mGeneratedBitmaps.get(appPackageName);
+            Bitmap cachedBitmap = BitmapCache.getInstance(mContext).getBitmap(key);
+            if (cachedBitmap != null)
+                return cachedBitmap;
 
             // if no support images in the icon pack return the bitmap itself
             if (mBackImages.size() == 0)
@@ -256,7 +259,7 @@ public class IconPackManager
             }
 
             // store the bitmap in cache
-            mGeneratedBitmaps.put(appPackageName, result);
+            BitmapCache.getInstance(mContext).putBitmap(key, result);
 
             // return it
             return result;
