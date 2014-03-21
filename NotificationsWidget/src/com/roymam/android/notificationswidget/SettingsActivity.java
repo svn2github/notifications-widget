@@ -1,9 +1,11 @@
 package com.roymam.android.notificationswidget;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -23,6 +25,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,6 +147,7 @@ public class SettingsActivity extends PreferenceActivity
     public static final String FP_ENABLED = "fp_enabled";
     public static final String FP_PACKAGE = "com.roymam.android.nilsplus";
     public static final boolean DEFAULT_FP_ENABLED = true;
+    private static final int FIRST_INSTALLED_VERSION = 273;
 
     private List<Header> mHeaders = null;
 
@@ -780,34 +785,63 @@ public class SettingsActivity extends PreferenceActivity
 	{
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (NotificationsService.getSharedInstance() == null)
         {
             finish();
             startActivity(new Intent(getApplicationContext(), StartServiceActivity.class));
-            /*
+        }
+        else
+        {
+            showWhatsNew();
+        }
+    }
+
+    private void showWhatsNew()
+    {
+        CharSequence whatsnewString = "";
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int installedVer = prefs.getInt("installed_version", FIRST_INSTALLED_VERSION);
+        int currentVer;
+
+        // get current version
+        try
+        {
+            currentVer = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (NameNotFoundException e)
+        {
+            // shoudln't happen
+            currentVer = installedVer;
+        }
+
+        // build "what's new" string
+        for (int i=currentVer; i>installedVer; i--)
+        {
+            int id = getResources().getIdentifier("v"+i,"string", getPackageName());
+            if (id > 0)
+                whatsnewString = TextUtils.concat(whatsnewString, Html.fromHtml(getString(id)), "\n");
+        }
+
+        if (!whatsnewString.equals(""))
+        {
+            final int finalCurrentVer = currentVer;
             new AlertDialog.Builder(this)
-                        .setTitle(R.string.nils_service_is_not_running)
-                        .setMessage(R.string.nils_service_enable_instructions)
+                        .setTitle(R.string.whatsnew)
+                        .setMessage(whatsnewString)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                Intent intent = getNotificationsServiesIntent();
-                                startActivity(intent);
+                                // save the updated version code so this dialog won't appear again
+                                prefs.edit().putInt("installed_version", finalCurrentVer).commit();
                             }
                         })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // continue
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();*/
+                        .setIcon(R.drawable.appicon)
+                        .show();
         }
     }
 
-	@Override
+    @Override
 	protected void onResume() 
 	{
 	    super.onResume();	    

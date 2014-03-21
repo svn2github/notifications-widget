@@ -315,5 +315,6 @@
     <string name="use_mono_icon_summary">Always use status bar icon (monochrome) instead of the notification icon</string>
     <string name="open_android_settings">Open Android Settings</string>
     <string name="tutorial_step_1_title">Enable NiLS Service</string>
+    <string name="whatsnew">What\'s new?</string>
 
 </resources>
