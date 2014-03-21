@@ -825,19 +825,17 @@ public class SettingsActivity extends PreferenceActivity
         if (!whatsnewString.equals(""))
         {
             final int finalCurrentVer = currentVer;
-            new AlertDialog.Builder(this)
-                        .setTitle(R.string.whatsnew)
-                        .setMessage(whatsnewString)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                // save the updated version code so this dialog won't appear again
-                                prefs.edit().putInt("installed_version", finalCurrentVer).commit();
-                            }
-                        })
-                        .setIcon(R.drawable.appicon)
-                        .show();
+            AlertDialog.Builder b = new AlertDialog.Builder( this );
+            b.setTitle(R.string.whatsnew)
+             .setMessage(whatsnewString)
+             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                 public void onClick(DialogInterface dialog, int which) {
+                     // save the updated version code so this dialog won't appear again
+                     prefs.edit().putInt("installed_version", finalCurrentVer).commit();
+                 }
+             })
+             .setIcon(R.drawable.appicon)
+             .show();
         }
     }
 

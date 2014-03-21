@@ -117,7 +117,7 @@ public class NotificationParser
                         nd.icon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
                     }
 
-                    String iconPack = sharedPref.getString(SettingsActivity.ICON_PACK, SettingsActivity.DEFAULT_NOTIFICATION_ICON);
+                    String iconPack = sharedPref.getString(SettingsActivity.ICON_PACK, SettingsActivity.DEFAULT_ICON_PACK);
                     if (!iconPack.equals(SettingsActivity.DEFAULT_ICON_PACK))
                     {
                         // load app icon from icon pack
@@ -177,15 +177,16 @@ public class NotificationParser
                     }
                     if (nd.title == null)
                     {
+                        if (nd.text == null)
+                        {
+                            // if both text and title are null - that's non imformative notification - ignore it
+                            return new ArrayList<NotificationData>();
+                        }
                         if (info != null)
                             nd.title = context.getPackageManager().getApplicationLabel(ai);
                         else
                             nd.title = packageName;
                     }
-
-                    // if still no text ignore it
-                    if (nd.title == null && nd.text == null)
-                        return new ArrayList<NotificationData>();
 
                     nd.id = notificationId;
                     nd.tag = tag;
