@@ -17,8 +17,8 @@
 
     <string-array name="wakeup_mode_entries">
         <item>Never</item>
-        <item>When device is not covered</item>
-        <item>When device is uncovered</item>
+        <item>Only if the device is not covered</item>
+        <item>Next time the device is uncovered</item>
         <item>Always</item>
     </string-array>
     <string-array name="wakeup_mode_values">
@@ -77,8 +77,8 @@
     <string name="sync_back_summary">When notification is cleared on NiLS dismiss it also on Android Notifications Bar (Android 4.3 and above only)</string>
 
     <string-array name="settings_orderby_entries">
-        <item>Time (Newest first)</item>
-        <item>Time (Oldest first) - NiLS widget only</item>
+        <item>Newest first</item>
+        <item>Oldest first - NiLS widget only</item>
         <item>Priority - NiLS widget only</item>
     </string-array>
     <string-array name="settings_orderby_values" translatable="false">
