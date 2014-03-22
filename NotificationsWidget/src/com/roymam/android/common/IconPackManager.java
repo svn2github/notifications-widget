@@ -290,8 +290,13 @@ public class IconPackManager
 
             // find apps with intent-filter "com.gau.go.launcherex.theme" and return build the HashMap
             PackageManager pm = mContext.getPackageManager();
-            List<ResolveInfo> rinfo = pm.queryIntentActivities(new Intent("org.adw.launcher.THEMES"), PackageManager.GET_META_DATA);
-            if (rinfo.size() == 0) rinfo = pm.queryIntentActivities(new Intent("com.gau.go.launcherex.theme"), PackageManager.GET_META_DATA);
+
+            List<ResolveInfo> adwlauncherthemes = pm.queryIntentActivities(new Intent("org.adw.launcher.THEMES"), PackageManager.GET_META_DATA);
+            List<ResolveInfo> golauncherthemes = pm.queryIntentActivities(new Intent("com.gau.go.launcherex.theme"), PackageManager.GET_META_DATA);
+
+            // merge those lists
+            List<ResolveInfo> rinfo = new ArrayList<ResolveInfo>(adwlauncherthemes);
+            rinfo.addAll(golauncherthemes);
 
             for(ResolveInfo ri  : rinfo)
             {
