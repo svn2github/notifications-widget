@@ -251,7 +251,7 @@ public class IconPackManager
             }
             else // draw the scaled bitmap without mask
             {
-                mCanvas.drawBitmap(scaledBitmap, (w - (w * mFactor))/2, (h - (h * mFactor))/2, null);
+                mCanvas.drawBitmap(scaledBitmap, (w - scaledBitmap.getWidth())/2, (h - scaledBitmap.getHeight())/2, null);
             }
 
             // paint the front

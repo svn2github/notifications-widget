@@ -117,7 +117,10 @@ public class NiLSAccessibilityService extends AccessibilityService
                         String packageName = accessibilityEvent.getPackageName().toString();
                         int id = notificationId++;
                         Log.d("NiLS","NewNotificationsListener:onNotificationPosted #" + id);
-                        mService.onNotificationPosted(n, packageName, id, null);
+                        if (!mBound)
+                            Log.e("NiLS", "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
+                        else
+                            mService.onNotificationPosted(n, packageName, id, null);
                     }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
@@ -177,7 +180,10 @@ public class NiLSAccessibilityService extends AccessibilityService
                             // clear all notifications that didn't appear on status bar
                             for(NotificationData nd : notificationsToRemove)
                             {
-                                mService.onNotificationRemoved(null, nd.packageName, nd.id);
+                                if (!mBound)
+                                    Log.e("NiLS", "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
+                                else
+                                    mService.onNotificationRemoved(null, nd.packageName, nd.id);
                             }
                         }
                     }
@@ -196,7 +202,10 @@ public class NiLSAccessibilityService extends AccessibilityService
                                 accessibilityEvent.getContentDescription() != null &&
                                 accessibilityEvent.getContentDescription().equals(clearButtonName))
                             {
-                                mService.clearAllNotifications();
+                                if (!mBound)
+                                    Log.e("NiLS", "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
+                                else
+                                    mService.clearAllNotifications();
                             }
                     }
                 }
