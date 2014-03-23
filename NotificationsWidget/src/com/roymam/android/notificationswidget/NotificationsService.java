@@ -730,8 +730,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     @Override
     public IBinder onBind(Intent intent)
-    {
-        // bound to Accessibility / Notifications service
+    {       // bound to Accessibility / Notifications service
         // bind it to NiLS FP
         bindNiLSFP();
 

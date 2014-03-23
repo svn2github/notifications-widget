@@ -389,6 +389,8 @@ public class NotificationAdapter implements NotificationEventListener
                         // if transition happened
                         if (deviceCovered == null || newCoverStatus != deviceCovered)
                         {
+                            if (mHandler == null) mHandler = new Handler();
+
                             deviceCovered = newCoverStatus;
                             if (!deviceCovered)
                             {

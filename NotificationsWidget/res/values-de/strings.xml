@@ -316,5 +316,6 @@
     <string name="open_android_settings">Open Android Settings</string>
     <string name="tutorial_step_1_title">Enable NiLS Service</string>
     <string name="whatsnew">What\'s new?</string>
+    <string name="accessibility_service_not_used_description"><![CDATA[\"This service is no longer used on Android 4.3 and above. Go to Android Settings > Security > Notifications Access and enable NiLS Service there instead.\"]]></string>
 
 </resources>

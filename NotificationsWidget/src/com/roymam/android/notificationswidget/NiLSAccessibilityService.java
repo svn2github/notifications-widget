@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -53,6 +54,12 @@ public class NiLSAccessibilityService extends AccessibilityService
     protected void onServiceConnected()
     {
         Log.d("NiLS","NiLSAccessibilityService:onServiceConnected");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+        {
+            Log.d("NiLS", "Running Android 4.3 and above. ignoring accessibility service");
+            return;
+        }
 
         // start NotificationsService
         //Intent intent = new Intent(getApplicationContext(), NotificationsService.class);

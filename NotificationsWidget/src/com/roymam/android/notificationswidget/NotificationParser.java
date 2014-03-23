@@ -264,6 +264,8 @@ public class NotificationParser
             // extract title from content for first/last event
             if (event != null)
             {
+                // TODO: extract time from the start of the text (if available - e.g Textra, Businins calendar)
+
                 SpannableStringBuilder ssb = new SpannableStringBuilder(event);
                 // try to split it by text style
                 TextAppearanceSpan[] spans = ssb.getSpans(0, event.length(), TextAppearanceSpan.class);
