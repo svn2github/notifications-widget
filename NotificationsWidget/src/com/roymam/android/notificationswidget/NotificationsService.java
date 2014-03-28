@@ -2,6 +2,7 @@ package com.roymam.android.notificationswidget;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     private ArrayList<NotificationData> notifications = new ArrayList<NotificationData>();
     private NotificationParser parser;
     private HashMap<String, PersistentNotification> persistentNotifications = new HashMap<String, PersistentNotification>();
+    private BroadcastReceiver receiver = null;
 
     public NotificationsService()
     {
@@ -100,14 +102,18 @@ public class NotificationsService extends Service implements NotificationsProvid
             Log.d("NiLS", "Disconnected from NiLS FP Service");
             mService = null;
             mBound = false;
+
+            // try to rebind it
+            bindNiLSFP();
         }
     };
 
     @Override
     public void onCreate()
     {
-        Log.d("NiLS","NotificationsService:onCreate");
+        super.onCreate();
 
+        Log.d("NiLS", "NotificationsService:onCreate");
         instance = this;
 
         // create a notification parser
@@ -115,10 +121,13 @@ public class NotificationsService extends Service implements NotificationsProvid
         parser = new NotificationParser(getApplicationContext());
         setNotificationEventListener(new NotificationAdapter(context));
 
-        context.sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
-        super.onCreate();
+        // TBD register a receiver for system broadcasts
+        //receiver = new NotificationsServiceReceiver();
+        //registerReceiver(receiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 
         bindNiLSFP();
+
+        context.sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
     }
 
     @Override
@@ -215,29 +224,6 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 bindNiLSFP();
             }
-
-            /*if (action.equals(NOTIFICATION_POSTED))
-            {
-                NotificationData notification = intent.getParcelableExtra(EXTRA_NOTIFICATION);
-                addNotification(notification);
-            }
-            else if (action.equals(NOTIFICATION_REMOVED))
-            {
-                String packageName = intent.getStringExtra(EXTRA_PACKAGENAME);
-                int id = intent.getIntExtra(EXTRA_ID, -1);
-                removeNotification(packageName, id);
-            }
-            else if (action.equals(PERSISTENT_NOTIFICATION_POSTED))
-            {
-                PersistentNotification pn = intent.getParcelableExtra(EXTRA_NOTIFICATION);
-                addPersistentNotification(pn);
-            }
-            else if (action.equals(PERSISTENT_NOTIFICATION_REMOVED))
-            {
-                String packageName = intent.getStringExtra(EXTRA_PACKAGENAME);
-                int id = intent.getIntExtra(EXTRA_ID, -1);
-                removePersistentNotification(packageName, id);
-            }*/
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -737,4 +723,18 @@ public class NotificationsService extends Service implements NotificationsProvid
         return mBinder;
     }
 
+    private class NotificationsServiceReceiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (intent != null && intent.getAction() != null)
+            {
+                if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
+                {
+                    // TBD
+                }
+            }
+        }
+    }
 }

@@ -33,6 +33,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NotificationParser
 {
@@ -264,8 +266,6 @@ public class NotificationParser
             // extract title from content for first/last event
             if (event != null)
             {
-                // TODO: extract time from the start of the text (if available - e.g Textra, Businins calendar)
-
                 SpannableStringBuilder ssb = new SpannableStringBuilder(event);
                 // try to split it by text style
                 TextAppearanceSpan[] spans = ssb.getSpans(0, event.length(), TextAppearanceSpan.class);
@@ -282,10 +282,27 @@ public class NotificationParser
                 else
                 {
                     // try to split it by ":" delimiter
+                    // first make sure it's not having the time prefix
+                    Pattern timePat = Pattern.compile("^(\\d\\d?:\\d\\d? ([AP]M )?).*");
+                    Matcher match = timePat.matcher(event);
+
+                    if (match.matches())
+                    {
+                        // if it has it - remove it
+                        //String time = match.group(0);
+                        event = match.replaceAll("");
+                    }
+
                     String[] parts = event.toString().split(":", 2);
                     if (parts.length == 2 && parts[1].length()>2) // parts[1].length()>2 special exception for missed calls time 
                     {
-                        nd.title = parts[0];
+                        // a fix for whatsapp group messages
+                        if (nd.packageName.equals("com.whatsapp"))
+                        {
+                            nd.title = parts[0] + " @ " + nd.title;
+                        }
+                        else
+                            nd.title = parts[0];
                         nd.text = parts[1];
                     }
                 }
