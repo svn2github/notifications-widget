@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
@@ -30,7 +31,10 @@ import com.roymam.android.common.BitmapCache;
 import com.roymam.android.common.IconPackManager;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -283,14 +287,32 @@ public class NotificationParser
                 {
                     // try to split it by ":" delimiter
                     // first make sure it's not having the time prefix
-                    Pattern timePat = Pattern.compile("^(\\d\\d?:\\d\\d? ([AP]M )?).*");
+                    String timeRegExp = "^(\\d\\d?:\\d\\d? ([AP]M )?)(.*)";
+
+                    Pattern timePat = Pattern.compile(timeRegExp);
                     Matcher match = timePat.matcher(event);
 
                     if (match.matches())
                     {
-                        // if it has it - remove it
-                        //String time = match.group(0);
-                        event = match.replaceAll("");
+                        // if it has it - set it as the event time
+                        String time = match.group(1);
+                        String timeFormat = "HH:mm";
+                        if (!DateFormat.is24HourFormat(context)) timeFormat = "hh:mm a";
+
+                        SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
+                        try
+                        {
+                            Date d = sdf.parse(time);
+                            nd.received = d.getTime();
+                        }
+                        catch (ParseException e)
+                        {
+                            // shouldn't happen - time is in the right format
+                        }
+
+                        event = match.group(3);
+                        nd.text = event;
+
                     }
 
                     String[] parts = event.toString().split(":", 2);

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
     android:versionCode="287"
-    android:versionName="1.4.287" >
+    android:versionName="1.4.288" >
 
     <uses-sdk
         android:minSdkVersion="14"
