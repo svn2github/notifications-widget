@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notificationActionbar"
+    android:layout_width="match_parent"
+    android:layout_height="28dp"
+    android:layout_weight="0"
+    style="?android:attr/buttonBarStyle"
+    android:orientation="horizontal" >
+
+    	<LinearLayout android:id="@+id/customAction1"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+    	    <ImageView
+    	        android:id="@+id/customAction1Image"
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:src="@android:drawable/ic_menu_close_clear_cancel" 	        
+    	        android:contentDescription="@string/notification_action_1"/>
+
+    	    <TextView
+    	        android:id="@+id/customAction1Text" 	        
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:text="Action 1"
+    	        android:textAppearance="?android:attr/textAppearanceSmall"
+                android:maxLines="1"/>
+    	</LinearLayout>
+	    	
+    	<LinearLayout android:id="@+id/customAction2"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+    	    <ImageView
+    	        android:id="@+id/customAction2Image"
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:src="@android:drawable/ic_menu_close_clear_cancel" 	        
+    	        android:contentDescription="@string/notification_action_2"/>
+
+    	    <TextView
+    	        android:id="@+id/customAction2Text" 	        
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:text="Action 2"
+    	        android:textAppearance="?android:attr/textAppearanceSmall"
+                android:maxLines="1"/>
+    	</LinearLayout>
+
+        <LinearLayout android:id="@+id/actionSettings"
+                      style="?android:attr/buttonBarButtonStyle"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1">
+
+            <ImageView
+                    android:id="@+id/actionSettingsImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_preferences"
+                    android:contentDescription="@string/settings"/>
+
+            <TextView
+                    android:id="@+id/actionSettingsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:maxLines="1"/>
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/actionPin"
+                      style="?android:attr/buttonBarButtonStyle"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1">
+
+            <ImageView
+                    android:id="@+id/actionPinImage"
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pin"
+                    android:contentDescription="@string/pin"/>
+
+            <TextView
+                    android:id="@+id/actionPinText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pin"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:maxLines="1"/>
+        </LinearLayout>
+    <!--
+    	<Button
+    	    android:id="@+id/actionSettings"
+    	    style="?android:attr/buttonBarButtonStyle"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_weight="1"
+    	    android:drawableLeft="@android:drawable/ic_menu_preferences"
+    	    android:drawablePadding="4dp"
+    	    android:gravity="left|center_vertical"
+            android:text="Settings"
+    	    android:textAppearance="?android:attr/textAppearanceSmall"
+            android:maxLines="1"/>
+
+    	<Button
+    	    android:id="@+id/actionPin"
+    	    style="?android:attr/buttonBarButtonStyle"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_weight="1"
+    	    android:drawableLeft="@drawable/pin"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Pin"
+            android:maxLines="1"/>
+-->
+	    <ImageButton
+	        android:id="@+id/actionClear"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:layout_width="32dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0"
+	        android:contentDescription="@string/clear_notification"
+	        android:minWidth="96dp"
+	        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+	</LinearLayout>

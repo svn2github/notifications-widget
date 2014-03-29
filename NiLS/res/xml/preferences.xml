@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:key="behavior" android:title="@string/behavior">
+        <ListPreference
+            android:title="@string/turnscreenon"
+            android:key="wakeup_mode"
+            android:defaultValue="when_not_covered"
+            android:entryValues="@array/wakeup_mode_values"
+            android:entries="@array/wakeup_mode_entries"
+            />
+        <EditTextPreference
+                android:title="@string/screenon_timeout"
+                android:key="turnscreenon_timeout"
+                android:enabled="true"
+                android:defaultValue="10"
+                android:inputType="number"
+                android:summary="@string/screenon_timeout_summary"/>
+    </PreferenceCategory>             
+    <PreferenceCategory android:key="notifications" android:title="@string/notifications">
+
+        <ListPreference android:key="notification_mode"
+                        android:title="Notification mode"
+                        android:entries="@array/notification_modes_entries"
+                        android:entryValues="@array/notification_modes_values"
+                        android:defaultValue="separated"/>
+
+        <ListPreference android:key="notification_icon"
+            android:title="Notification icon"
+            android:entries="@array/notification_icon_entries"
+            android:entryValues="@array/notification_icon_values"
+            android:defaultValue="notification_icon"/>
+
+        <ListPreference android:key="icon_pack"
+            android:title="Icon Pack"
+            android:entries="@array/icon_pack_entries"
+            android:entryValues="@array/icon_pack_values"
+            android:defaultValue="none"/>
+
+        <MultiSelectListPreference android:key="auto_clear"
+            android:title="Auto clear notifications"
+            android:entries="@array/auto_clear_entries"
+            android:entryValues="@array/auto_clear_values"
+            android:defaultValue="@array/auto_clear_default_values"/>
+
+        <CheckBoxPreference
+            android:title="@string/sync_back"
+            android:key="sync_back"
+            android:defaultValue="true"
+            android:summary="@string/sync_back_summary"/>
+
+        <CheckBoxPreference
+            android:title="@string/collectonunlock"
+            android:key="collectonunlock"
+            android:enabled="true"
+            android:defaultValue="true"
+            android:summary="@string/collectonunlock_summary"/>
+
+        <ListPreference android:dialogTitle="@string/order_notifications_by"
+    	    			android:entries="@array/settings_orderby_entries" 
+    	    			android:entryValues="@array/settings_orderby_values" 
+    	    			android:title="@string/order_notifications_by" 
+    	    			android:key="order_notifications_by" 
+    	    			android:defaultValue="time" />      
+        </PreferenceCategory>
+</PreferenceScreen>

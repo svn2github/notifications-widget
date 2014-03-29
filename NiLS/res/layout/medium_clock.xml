@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mediumClock"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_selector"
+    android:clickable="true"
+    android:gravity="center|top"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:text="00"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white"
+            android:textColorLink="@android:color/white"
+            android:textSize="36sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:text=":00"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white"
+            android:textColorLink="@android:color/white"
+            android:textSize="36sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/ampm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AM"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="TUE, APRIL 09"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="2dp"
+                android:id="@+id/alarm_clock_image"
+                android:src="@android:drawable/ic_lock_idle_alarm"/>
+
+        <TextView
+            android:id="@+id/alarmtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="WED 07:00"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+</LinearLayout>

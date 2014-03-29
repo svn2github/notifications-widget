@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.roymam.android.notificationswidget"
+    android:versionCode="288"
+    android:versionName="1.4.288" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- FN integration -->
+    <uses-permission android:name="robj.floating.notifications.DISMISS"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/appicon"
+        android:label="@string/title" >
+        <activity
+            android:name="com.roymam.android.notificationswidget.NotificationActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/title"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Holo" >
+        </activity>
+        <activity
+            android:name="com.roymam.android.notificationswidget.SettingsActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@android:style/Theme.Holo" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.roymam.android.notificationswidget.AppSettingsActivity"
+            android:label="@string/app_specific_settings_title"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Holo" >
+        </activity>
+        <activity
+            android:name="com.roymam.android.notificationswidget.PersistentNotificationSettingsActivity"
+            android:label="@string/persistent_notifications"
+            android:theme="@android:style/Theme.Holo" >
+        </activity>
+        <activity
+            android:name="com.roymam.android.notificationswidget.AppearanceActivity"
+            android:label="@string/title_activity_appearance"
+            android:parentActivityName="com.roymam.android.notificationswidget.SettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.roymam.android.notificationswidget.SettingsActivity" />
+        </activity>
+        <activity
+            android:name="com.roymam.android.notificationswidget.AboutActivity"
+            android:label="@string/menu_about" 
+            android:theme="@android:style/Theme.Holo.Dialog">
+        </activity>
+        <activity android:name=".StartServiceActivity" />
+
+        <!-- The widget provider -->
+        <receiver android:name="com.roymam.android.notificationswidget.NotificationsWidgetProvider" >
+            <intent-filter>
+
+                <!-- widget add/remove events -->
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+
+                <!-- WidgetLocker integration -->
+                <action android:name="com.teslacoilsw.widgetlocker.ENABLE" />
+                <action android:name="com.teslacoilsw.widgetlocker.DISABLE" />
+
+                <!-- internal actions -->
+                <action android:name="com.roymam.android.notificationswidget.update_clock" />
+                <action android:name="com.roymam.android.notificationswidget.switchmode" />
+                <action android:name="com.roymam.android.notificationswidget.performaction" />
+            </intent-filter>
+            <!-- This specifies the widget provider info -->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widgetinfo" />
+        </receiver>
+
+        <receiver android:name=".EventsHandler">
+            <intent-filter>
+                <!-- internal events -->
+                <action android:name="com.roymam.android.nils.service_ready"/>
+                <action android:name="com.roymam.android.nils.service_died"/>
+
+                <!-- locking/unlocking device -->
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.teslacoilsw.widgetlocker.intent.LOCKED" />
+                <action android:name="com.teslacoilsw.widgetlocker.intent.UNLOCKED" />
+
+                <!-- floating notifications -->
+                <action android:name="robj.floating.notifications.dismissed"/>
+
+                <!-- NiLS Floating Panel API -->
+                <action android:name="com.roymam.android.nils.remove_notification"/>
+                <action android:name="com.roymam.android.nils.open_notification"/>
+                <action android:name="com.roymam.android.nils.resend_all_notifications"/>
+                <action android:name="com.roymam.android.nils.ping"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- <service android:name="com.roymam.android.notificationswidget.ClockService"/> -->
+        <service
+            android:name="com.roymam.android.notificationswidget.NotificationsRemoteViewsFactoryService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService" />
+        <service android:name="com.roymam.android.notificationswidget.NotificationsService" android:exported="true"/>
+        <service
+            android:name="com.roymam.android.notificationswidget.NiLSAccessibilityService"
+            android:label="@string/notifications_service"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/notifications_service_config" />
+        </service>
+        <service android:name=".ClockService"/>
+
+        <service android:name="com.roymam.android.notificationswidget.NewNotificationsListener"
+                 android:label="@string/notifications_service"
+                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

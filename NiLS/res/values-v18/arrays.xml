@@ -1,0 +1,13 @@
+<resources>
+    <string-array name="auto_clear_entries">
+        <item>@string/when_cleared</item>
+        <item>@string/when_device_is_unlocked</item>
+    </string-array>
+    <string-array name="auto_clear_values" translatable="false">
+        <item>when_cleared</item>
+        <item>when_device_unlocked</item>
+    </string-array>
+    <string-array name="auto_clear_default_values" translatable="false">
+        <item>when_cleared</item>
+    </string-array>
+</resources>

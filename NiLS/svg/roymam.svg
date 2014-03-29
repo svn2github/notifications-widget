@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="960"
+   height="640"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.1 "
+   sodipodi:docname="RoyMamLogo.svg"
+   inkscape:export-filename="D:\Development\Marmalade\RollyPoly\data\Default.low.png"
+   inkscape:export-xdpi="45"
+   inkscape:export-ydpi="45">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3771">
+      <stop
+         style="stop-color:#000076;stop-opacity:1;"
+         offset="0"
+         id="stop3773" />
+      <stop
+         style="stop-color:#03ff9a;stop-opacity:1;"
+         offset="1"
+         id="stop3775" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.52158203"
+     inkscape:cx="54.321036"
+     inkscape:cy="176.44753"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:showpageshadow="true"
+     borderlayer="true"
+     inkscape:snap-global="true"
+     inkscape:window-width="1280"
+     inkscape:window-height="737"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3759"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-412.36218)">
+    <g
+       id="g3787"
+       transform="matrix(0.23472204,0,0,0.23472204,286.99019,639.72353)"
+       inkscape:export-filename="D:\Development\NotificationsWidget\res\drawable-mdpi\roymam.png"
+       inkscape:export-xdpi="160.99208"
+       inkscape:export-ydpi="160.99208">
+      <path
+         sodipodi:nodetypes="cscccccsszcscc"
+         inkscape:connector-curvature="0"
+         id="path3757"
+         d="m 371.36363,784.27563 c -3.45022,-52.6928 3.43361,-145.69944 49.09091,-155 24.54546,-5 36.81819,15 57.27273,55 l 102.27273,-80 0,135 -32.72728,0 0,-65 -69.54545,60 c -6.59173,5.68699 -13.53429,8.4581 -16.36363,5 -13.9581,-17.0599 -21.62887,-70 -36.81819,-70 -15.18932,0 -24.54545,25 -24.54545,80 25.50034,-0.67785 180,-1.34966 180,0 l 0,35 c 0,0 -122.86679,0.54011 -208.63637,0 z"
+         style="fill:#0053ff;fill-opacity:1;stroke:#0059ff;stroke-width:3.61813617;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         transform="scale(1.0143676,0.98583588)"
+         sodipodi:linespacing="125%"
+         id="text3761"
+         y="793.00995"
+         x="468.46213"
+         style="font-size:22.57338333px;font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#007fff;stroke-width:0.85254145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Intuitive;-inkscape-font-specification:Intuitive Semi-Bold"
+         xml:space="preserve"><tspan
+           style="font-size:45.14676666px;fill:#000000;fill-opacity:1;stroke:#007fff;stroke-width:0.85254145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           y="793.00995"
+           x="468.46213"
+           id="tspan3763"
+           sodipodi:role="line">ROYMAM</tspan></text>
+    </g>
+  </g>
+</svg>

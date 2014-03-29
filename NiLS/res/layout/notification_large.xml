@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/largeNotification"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="visible" >
+
+    <RelativeLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="#ff1d3741" android:id="@+id/notificationIconBG">
+
+        <ImageView
+            android:id="@+id/notificationIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/notification_icon"
+            android:scaleType="fitCenter"
+            android:src="@drawable/appicon" android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/notificationSpinner"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/action_bar"
+            android:src="@drawable/actionspinner" />
+
+    </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/item_selector"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/notificationTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/item_selector"
+                    android:gravity="top"
+                    android:minLines="0"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:scrollHorizontally="false"
+                    android:text="@string/title_demo_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/notificationTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/time_demo_text"
+                    android:textColor="#ff32b6e6"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/notificationText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/item_selector"
+                    android:ellipsize="end"
+                    android:gravity="top"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:scrollHorizontally="true"
+                    android:text="@string/text_demo_text"
+                    android:textColor="#e5e5e1"
+                    android:enabled="false"
+                    android:paddingBottom="2dp"
+                    android:editable="false"
+                    android:linksClickable="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46" >
+
+                <TextView
+                        android:id="@+id/notificationContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/content_demo_text"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:linksClickable="true"
+                        android:ellipsize="end"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom">
+                <ImageView
+                    android:id="@+id/pinIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/pin"
+                    android:src="@drawable/pin"
+                        />
+
+                <TextView
+                    android:id="@+id/notificationCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/count_demo_text"
+                    android:textSize="12sp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
+
+                <ImageView
+                    android:id="@+id/appIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/app_icon"
+                    android:src="@drawable/appicon"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+</LinearLayout>

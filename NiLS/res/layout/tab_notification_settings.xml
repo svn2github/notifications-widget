@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ViewAnimator
+        android:id="@+id/notificationViewFlipper"
+        android:layout_width="304dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center_horizontal"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right" >
+    </ViewAnimator>
+
+    <RadioGroup
+        android:id="@+id/notificationStyleRG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/notificationStyleCompactRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:onClick="onNotificationStyleChanged"
+            android:text="@string/compact" />
+
+        <RadioButton
+            android:id="@+id/notificationStyleNormalRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onNotificationStyleChanged"
+            android:text="@string/normal" />
+
+        <RadioButton
+            android:id="@+id/notificationStyleOriginal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onNotificationStyleChanged"
+            android:text="@string/large" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/bgColorButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05"
+            android:onClick="onNotificationkBGColorClick" >
+
+            <LinearLayout
+                android:id="@+id/bgColorView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@android:color/white"
+                android:tag="notification_bg_color" >
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/bg_color"
+                android:textColorLink="@android:color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/opacity"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="12sp" />
+            
+            <SeekBar
+                android:id="@+id/bgTransparencySeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:tag="notification_bg_opacity" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/titleColorButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="onTitleColorClick" >
+
+            <LinearLayout
+                android:id="@+id/titleColorView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@android:color/white"
+                android:tag="notification_title_color" >
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/title_color"
+                android:textColorLink="@android:color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/textColorButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="onTextColorClick" >
+
+            <LinearLayout
+                android:id="@+id/textColorView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@android:color/white"
+                android:tag="notification_text_color" >
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/text_color"
+                android:textColorLink="@android:color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contentColorButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="onContentColorClick" >
+
+            <LinearLayout
+                android:id="@+id/contentColorView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@android:color/white"
+                android:tag="notification_content_color" >
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/content_color"
+                android:textColorLink="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ToggleButton
+            android:id="@+id/notificationClickableToggle"
+            style="?android:attr/buttonStyleToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="notification_is_clickable"
+            android:text="ToggleButton"
+            android:textOff="@string/clickable"
+            android:textOn="@string/clickable" />
+
+        <ToggleButton
+            android:id="@+id/notificationExpandedToggle"
+            style="?android:attr/buttonStyleToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="useexpandedtext"
+            android:textOff="@string/expanded"
+            android:textOn="@string/expanded" />
+
+        <ToggleButton
+            android:id="@+id/iconClickableToggle"
+            style="?android:attr/buttonStyleToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="notificationicon_is_clickable"
+            android:textOff="@string/icon_menu"
+            android:textOn="@string/icon_menu" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/showActionBarCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onNotificationPrefChanged"
+        android:tag="show_actionbar"
+        android:text="@string/show_actionbar" />
+
+    <CheckBox
+            android:id="@+id/hideNotificationsCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onNotificationPrefChanged"
+            android:tag="hide_notifications"
+            android:text="@string/hide_notifications" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/max_lines_"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/maxLinesSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/max_lines_entries" />
+
+    </LinearLayout>
+    
+</LinearLayout>

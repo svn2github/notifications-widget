@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widetcontainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <LinearLayout
+            android:id="@+id/clockContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="false"
+            android:clickable="true"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+        
+        <ProgressBar
+            android:id="@+id/loadingSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+        
+        <RelativeLayout
+            android:id="@+id/clockbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+                      
+            <LinearLayout
+                android:id="@+id/buttonsBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right" >
+
+                <ImageButton
+                    android:id="@+id/serviceInactiveButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/item_selector"
+                    android:scaleType="fitCenter"
+                    android:src="@android:drawable/ic_dialog_alert"
+                    android:visibility="gone" android:contentDescription="@string/service_inactive_text"/>
+
+                <RelativeLayout
+                    android:id="@+id/clearButton"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/item_selector"
+                    android:visibility="gone" >
+
+                    <ImageView
+                        android:id="@+id/clearButtonImage"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="8dp"
+                        android:contentDescription="@string/clear_all_notifications"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/clear" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/persistentNotificationsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/persistentNotificationsErrorView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/persistent_notifications_error"
+        android:gravity="center"
+        android:visibility="gone"
+        style="@android:style/TextAppearance.DeviceDefault.Small">
+    </TextView>
+
+    <ListView
+        android:id="@+id/notificationsListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2dp"
+        tools:listitem="@layout/listitem_notification" >
+
+    </ListView>
+
+    <FrameLayout
+        android:id="@+id/serviceInactiveView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_horizontal"
+            android:gravity="center"
+            android:text="@string/service_inactive_text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </FrameLayout>
+
+</LinearLayout>

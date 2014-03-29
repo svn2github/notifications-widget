@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/colorPickupView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/color1btn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/black"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/black" />
+
+        <Button
+            android:id="@+id/color2btn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:background="#ffffffff"
+            android:onClick="onColorChoose"
+            android:tag="#ffffffff" />
+
+        <Button
+            android:id="@+id/color3btn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/darker_gray"/>
+
+        <Button
+            android:id="@+id/color4btn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#ff444444"
+            android:onClick="onColorChoose"
+            android:tag="#ff444444" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_blue_dark" 
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_blue_dark"/>
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_blue_light" 
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_blue_light"/>
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_blue_bright"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_blue_bright" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#ff0047AB"
+            android:onClick="onColorChoose"
+            android:tag="#ff0047AB" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_green_dark" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_green_light"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_green_light" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#ff800080"
+            android:onClick="onColorChoose"
+            android:tag="#ff800080" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#ffffff00"
+            android:onClick="onColorChoose"
+            android:tag="#ffffff00" />
+
+    </LinearLayout>
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_orange_dark"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_orange_dark" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_orange_light"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_orange_light" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_dark"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_red_dark" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_light"
+            android:onClick="onColorChoose"
+            android:tag="@android:color/holo_red_light" />
+    </LinearLayout>
+    
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="Transparent" 
+            android:onClick="onColorChoose"
+            android:tag="@android:color/transparent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

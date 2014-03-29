@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v279">
+        <![CDATA[
+            <b>v1.4 - The biggest update in the last months:</b>
+            <br> - Rearrange settings page. simplified access to many features.
+            <br> - Notification mode - you choose between grouped and separated. (replaces \"Multiple Events Handling\" option)
+            <br> - Notification icon - choose between original notification icon, app icon and status bar monochrome icon.
+            <br> - <b>Icon packs support</b> - use almost any icon pack from Google Play instead of the standard notification icon.
+            <br> - Choose whether to turn on screen on per app basis.
+            <br> - Improved stability and memory usage.
+            <br> - Forcibly turn off screen when timeout passes if \"Screen off (by KATECA)\" app is installed and enabled.
+            <br> - Better binding with NiLS Floating Panel service. (solves syncing issues)
+            <br> - All new options affects NiLS Floating Panel too.
+        ]]>
+    </string>
+    <string name="v275">
+    <![CDATA[
+        <b>v1.3.2:</b>
+        <br> - Improved stability when other notifications service are running
+        <br> - Added an option to use monochrome icons.
+        <br> - Improved memory usage.
+    ]]>
+    </string>
+</resources>
