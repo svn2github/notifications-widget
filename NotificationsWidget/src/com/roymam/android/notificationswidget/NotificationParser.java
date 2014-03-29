@@ -319,7 +319,7 @@ public class NotificationParser
                     if (parts.length == 2 && parts[1].length()>2) // parts[1].length()>2 special exception for missed calls time 
                     {
                         // a fix for whatsapp group messages
-                        if (nd.packageName.equals("com.whatsapp"))
+                        if (nd.packageName.equals("com.whatsapp") && nd.title != null && !nd.title.equals("WhatsApp"))
                         {
                             nd.title = parts[0] + " @ " + nd.title;
                         }
