@@ -18,6 +18,8 @@ import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.roymam.android.nilsplus.NPService;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -147,8 +149,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (!mBound)
         {
             // Try to bind to NiLS FP Service
-            Intent npsIntent = new Intent();
-            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            Intent npsIntent = new Intent(context, NPService.class);
             bindService(npsIntent, mConnection, Context.BIND_AUTO_CREATE);
         }
     }
@@ -721,20 +722,5 @@ public class NotificationsService extends Service implements NotificationsProvid
         bindNiLSFP();
 
         return mBinder;
-    }
-
-    private class NotificationsServiceReceiver extends BroadcastReceiver
-    {
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            if (intent != null && intent.getAction() != null)
-            {
-                if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
-                {
-                    // TBD
-                }
-            }
-        }
     }
 }

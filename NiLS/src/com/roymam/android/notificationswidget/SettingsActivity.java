@@ -151,6 +151,14 @@ public class SettingsActivity extends PreferenceActivity
 
     private List<Header> mHeaders = null;
 
+    @Override
+    protected boolean isValidFragment(String fragmentName)
+    {
+        // really dumb method that is required since api level 19, always return true,
+        // there is no such a case that the fragment name won't be valid
+        return true;
+    }
+
     public static boolean shouldHideNotifications(Context context, String widgetMode)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -695,21 +703,22 @@ public class SettingsActivity extends PreferenceActivity
         // check NiLSPlus status
         if (isNiLSPlusInstalled())
         {
-            target.get(2).titleRes = R.string.floating_panel_short;
-            target.get(2).summaryRes = R.string.floating_panel_installed;
-            Intent nilsPlusSettingsIntent = new Intent();
-            nilsPlusSettingsIntent.setComponent(new ComponentName(FP_PACKAGE, FP_PACKAGE +".activities.NPSettings"));
-            target.get(2).intent = nilsPlusSettingsIntent;
-            target.get(2).fragment = null;
-
-            // set switch key and default value
-            target.get(2).extras = new Bundle();
-            target.get(2).extras.putInt(SwitchPrefsHeaderAdapter.HEADER_TYPE, SwitchPrefsHeaderAdapter.HEADER_TYPE_SWITCH);
-            target.get(2).extras.putString(SwitchPrefsHeaderAdapter.HEADER_KEY, FP_ENABLED);
-            target.get(2).extras.putBoolean(SwitchPrefsHeaderAdapter.HEADER_DEFAULT_VALUE, true);
-            target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_ENABLED_MESSAGE, getString(R.string.nils_fp_enabled));
-            target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_DISABLED_MESSAGE, getString(R.string.nils_fp_disabled));
+            // TODO: migrate license from nils floating panel
+            /* Uninstall code:
+            Uri packageUri = Uri.parse("package:com.roymam.android.nilsplus");
+            Intent uninstallIntent =
+                    new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+            startActivity(uninstallIntent);
+            */
         }
+
+        // set switch key and default value for Floating Panel option
+        target.get(2).extras = new Bundle();
+        target.get(2).extras.putInt(SwitchPrefsHeaderAdapter.HEADER_TYPE, SwitchPrefsHeaderAdapter.HEADER_TYPE_SWITCH);
+        target.get(2).extras.putString(SwitchPrefsHeaderAdapter.HEADER_KEY, FP_ENABLED);
+        target.get(2).extras.putBoolean(SwitchPrefsHeaderAdapter.HEADER_DEFAULT_VALUE, true);
+        target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_ENABLED_MESSAGE, getString(R.string.nils_fp_enabled));
+        target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_DISABLED_MESSAGE, getString(R.string.nils_fp_disabled));
 
         // setting last "about" button summary
         String versionString = "";

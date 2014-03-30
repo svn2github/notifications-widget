@@ -20,4 +20,17 @@
     <dimen name="widget_margin_right">8dp</dimen>
     <dimen name="min_expanded_height">200dp</dimen>
     <dimen name="max_icon_size">96dp</dimen>
+	
+	<!-- NiLS FP -->
+	<dimen name="notification_min_height">24dp</dimen>
+    <dimen name="notification_default_row_height">48dp</dimen>
+    <dimen name="notification_default_icon_size">48dp</dimen>
+    <dimen name="notification_default_list_height">204dp</dimen>
+    <dimen name="notification_default_title_size">18sp</dimen>
+    <dimen name="notification_default_text_size">14sp</dimen>
+    <dimen name="notification_default_list_spacing">4dp</dimen>
+
+    <dimen name="notification_icon_size_large">64dp</dimen>
+    <dimen name="notification_icon_size_small">32dp</dimen>
+
 </resources>

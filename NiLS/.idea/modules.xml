@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NotificationsWidget.iml" filepath="$PROJECT_DIR$/NotificationsWidget.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../NiLSPlus/extensions/ColorPickerPreference/ColorPickerPreference.iml" filepath="$PROJECT_DIR$/../NiLSPlus/extensions/ColorPickerPreference/ColorPickerPreference.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NiLS.iml" filepath="$PROJECT_DIR$/NiLS.iml" />
     </modules>
   </component>
 </project>
