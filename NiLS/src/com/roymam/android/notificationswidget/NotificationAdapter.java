@@ -19,6 +19,8 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.roymam.android.nilsplus.NPService;
+
 import java.util.List;
 
 public class NotificationAdapter implements NotificationEventListener
@@ -97,8 +99,7 @@ public class NotificationAdapter implements NotificationEventListener
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
         {
-            Intent npsIntent = new Intent();
-            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            Intent npsIntent = new Intent(context, NPService.class);
             npsIntent.setAction(ADD_NOTIFICATION);
             npsIntent.putExtra("title", nd.title);
             npsIntent.putExtra("text", nd.text);
@@ -135,8 +136,7 @@ public class NotificationAdapter implements NotificationEventListener
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
         {
-            Intent npsIntent = new Intent();
-            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            Intent npsIntent = new Intent(context, NPService.class);
             npsIntent.setAction(UPDATE_NOTIFICATION);
             npsIntent.putExtra("title", nd.title);
             npsIntent.putExtra("text", nd.text);
@@ -175,8 +175,7 @@ public class NotificationAdapter implements NotificationEventListener
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
         {
-            Intent npsIntent = new Intent();
-            npsIntent.setComponent(new ComponentName("com.roymam.android.nilsplus", "com.roymam.android.nilsplus.NPService"));
+            Intent npsIntent = new Intent(context, NPService.class);
             npsIntent.setAction(REMOVE_NOTIFICATION);
             npsIntent.putExtra("id", nd.id);
             npsIntent.putExtra("uid", nd.uid);

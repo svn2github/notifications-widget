@@ -1,7 +1,6 @@
 package com.roymam.android.common;
 
-import android.content.ComponentName;
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -10,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,10 +21,6 @@ import java.util.Map;
 
 public class BackupRestorePreferenceFragment extends PreferenceFragment
 {
-    public static final String NILSPLUS_BACKUP_SERVICE = "com.roymam.android.nilsplus.NPService";
-    public static final String BACKUP_SETTINGS = "com.roymam.android.nils.backup_settings";
-    public static final String RESTORE_SETTINGS = "com.roymam.android.nils.restore_settings";
-
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -40,16 +34,10 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
             public boolean onPreferenceClick(Preference preference)
             {
                 // Backup to a file
-                if (saveSharedPreferencesToFile())
+                if (saveSharedPreferencesToFile(getActivity()))
                     Toast.makeText(getActivity(), getActivity().getString(R.string.backup_success) + getActivity().getExternalFilesDir(null) + "/settings.dat", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getActivity(), getActivity().getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
-
-                // Call Backup method of NiLS+
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName(SettingsActivity.FP_PACKAGE, NILSPLUS_BACKUP_SERVICE));
-                intent.setAction(BACKUP_SETTINGS);
-                getActivity().startService(intent);
                 return true;
             }
         });
@@ -60,29 +48,23 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
             public boolean onPreferenceClick(Preference preference)
             {
                 // Restore from a file
-                if (loadSharedPreferencesFromFile())
+                if (loadSharedPreferencesFromFile(getActivity()))
                     Toast.makeText(getActivity(), getActivity().getString(R.string.restore_success), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getActivity(), getActivity().getString(R.string.restore_failed), Toast.LENGTH_SHORT).show();
-
-                // Call Restore method of NiLS+
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName(SettingsActivity.FP_PACKAGE, NILSPLUS_BACKUP_SERVICE));
-                intent.setAction(RESTORE_SETTINGS);
-                getActivity().startService(intent);
                 return true;
             }
         });
     }
 
-    private boolean saveSharedPreferencesToFile()
+    public static boolean saveSharedPreferencesToFile(Context context)
     {
-        File dst = new File(getActivity().getExternalFilesDir(null),"settings.dat");
+        File dst = new File(context.getExternalFilesDir(null),"settings.dat");
         boolean res = false;
         ObjectOutputStream output = null;
         try {
             output = new ObjectOutputStream(new FileOutputStream(dst));
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             output.writeObject(pref.getAll());
             res = true;
         } catch (FileNotFoundException e)
@@ -111,14 +93,14 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
     }
 
     @SuppressWarnings({ "unchecked" })
-    private boolean loadSharedPreferencesFromFile()
+    public static boolean loadSharedPreferencesFromFile(Context context)
     {
-        File src = new File(getActivity().getExternalFilesDir(null),"settings.dat");
+        File src = new File(context.getExternalFilesDir(null),"settings.dat");
         boolean res = false;
         ObjectInputStream input = null;
         try {
             input = new ObjectInputStream(new FileInputStream(src));
-            SharedPreferences.Editor prefEdit = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+            SharedPreferences.Editor prefEdit = PreferenceManager.getDefaultSharedPreferences(context).edit();
             prefEdit.clear();
             Map<String, ?> entries = (Map<String, ?>) input.readObject();
             for (Map.Entry<String, ?> entry : entries.entrySet())

@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.roymam.android.common.IconPackManager;
 import com.roymam.android.common.ListPreferenceChangeListener;
@@ -45,6 +46,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -789,6 +791,43 @@ public class SettingsActivity extends PreferenceActivity
         super.setListAdapter(new SwitchPrefsHeaderAdapter(this, mHeaders));
     }
 
+    private void importNiLSFPPreferences()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (!prefs.getBoolean("prefs_imported", false))
+        {
+            Context nilsfpCtx = null;
+            try
+            {
+                nilsfpCtx = createPackageContext("com.roymam.android.nilsplus", 0);
+                SharedPreferences nilsfpPrefs = nilsfpCtx.getSharedPreferences("shared_preferences", Context.MODE_WORLD_READABLE);
+
+                // copy preferences
+                Map<String, ?> map = nilsfpPrefs.getAll();
+                for (String key : map.keySet())
+                {
+                    Object x = map.get(key);
+                    if (x instanceof Boolean)
+                        prefs.edit().putBoolean(key, (Boolean) x).commit();
+                    else if (x instanceof Integer)
+                        prefs.edit().putInt(key, (Integer) x).commit();
+                    else if (x instanceof Float)
+                        prefs.edit().putFloat(key, (Float) x).commit();
+                    else if (x instanceof Long)
+                        prefs.edit().putLong(key, (Long) x).commit();
+                    else if (x instanceof String)
+                        prefs.edit().putString(key, (String) x).commit();
+                }
+                prefs.edit().putBoolean("prefs_imported", true).commit();
+                Toast.makeText(getApplicationContext(), "Preferences and license information has been imported successfully from NiLS Floating Panel", Toast.LENGTH_LONG).show();
+            }
+            catch (PackageManager.NameNotFoundException e)
+            {
+                // NiLS FP not available - do not do anything
+            }
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) 
 	{
@@ -801,6 +840,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         else
         {
+            importNiLSFPPreferences();
             showWhatsNew();
         }
     }

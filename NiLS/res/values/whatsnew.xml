@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="v295">
+        <![CDATA[
+            <b>v1.5.295 (alpha) - NiLS FP has been integrated into NiLS</b>
+            <br>You don\'t need both NiLS and NiLS FP apps anymore. NiLS now have Floating Panel too.
+            <br>If you want your settings and license information to be migrated to NiLS you should update NiLS FP to v1.0.6.91 or above.
+            <br>After migrating your settings - you can safely uninstall NiLS FP.
+        ]]>
+    </string>
     <string name="v279">
         <![CDATA[
             <b>v1.4 - The biggest update in the last months:</b>
