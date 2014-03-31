@@ -55,6 +55,8 @@ public class BitmapCache
 
     public Bitmap getBitmap(String packageName, int resourceId)
     {
+        if (resourceId == 0) return null;
+
         String key = packageName + "#" + resourceId;
         // if the bitmap is already on cache
         if (cache.get(key) != null)
