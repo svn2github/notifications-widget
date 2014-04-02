@@ -10,7 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -104,10 +104,6 @@ public class NotificationParser
                     ai = null;
                 }
 
-                BitmapFactory.Options opts = new BitmapFactory.Options();
-                opts.outHeight = (int) maxIconSize;
-                opts.outWidth = (int) maxIconSize;
-
                 String notificationIcon = sharedPref.getString(packageName + "." + SettingsActivity.NOTIFICATION_ICON,
                                         sharedPref.getString(SettingsActivity.NOTIFICATION_ICON, SettingsActivity.DEFAULT_NOTIFICATION_ICON));
 
@@ -138,6 +134,17 @@ public class NotificationParser
                 if (n.largeIcon != null && notificationIcon.equals(SettingsActivity.NOTIFICATION_ICON))
                 {
                     nd.icon = n.largeIcon;
+                }
+
+                // if the icon is too large - resize it to smaller size
+                if (nd.icon != null && (nd.icon.getWidth() > maxIconSize || nd.icon.getHeight() > maxIconSize))
+                {
+                    nd.icon = Bitmap.createScaledBitmap(nd.icon, (int) maxIconSize, (int) maxIconSize, true);
+                }
+
+                if (nd.appicon != null && (nd.appicon.getWidth() > maxIconSize || nd.appicon.getHeight() > maxIconSize))
+                {
+                    nd.appicon = Bitmap.createScaledBitmap(nd.appicon, (int) maxIconSize, (int) maxIconSize, true);
                 }
 
                 // get time of the event
