@@ -4,7 +4,7 @@
 
     <header android:icon="@android:drawable/ic_menu_manage"
             android:fragment="com.roymam.android.notificationswidget.SettingsActivity$PrefsGeneralFragment"
-            android:summary="@string/service_is_inactive"
+            android:summary="@string/service_is_active"
             android:title="@string/service" />
     
     <header
