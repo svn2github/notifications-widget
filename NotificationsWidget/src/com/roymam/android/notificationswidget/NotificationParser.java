@@ -13,6 +13,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableStringBuilder;
@@ -608,19 +610,77 @@ public class NotificationParser
 
         try
         {
-            ArrayList<Object> actions = null;
+            ArrayList<Parcelable> actions = null;
             Field fs = view.getClass().getDeclaredField("mActions");
             if (fs != null)
             {
                 fs.setAccessible(true);
-                actions = (ArrayList<Object>) fs.get(view);
+                actions = (ArrayList<Parcelable>) fs.get(view);
             }
             if (actions != null)
             {
                 final int STRING = 9;
                 final int CHAR_SEQUENCE = 10;
 
-                for(Object action : actions)
+                // Find the setText() and setTime() reflection actions
+                for (Parcelable p : actions)
+                {
+                    Parcel parcel = Parcel.obtain();
+                    p.writeToParcel(parcel, 0);
+                    parcel.setDataPosition(0);
+
+                    // The tag tells which type of action it is (2 is ReflectionAction, from the source)
+                    int tag = parcel.readInt();
+                    if (tag != 2) continue;
+
+                    // View ID
+                    int viewId = parcel.readInt();
+
+                    String methodName = parcel.readString();
+                    if (methodName == null) continue;
+
+                        // Save strings
+                    else if (methodName.equals("setText"))
+                    {
+                        // Parameter type (10 = Character Sequence)
+                        parcel.readInt();
+
+                        // Store the actual string
+                        String t = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(parcel).toString().trim();
+                        notificationText.put(viewId, t);
+                    }
+
+                    parcel.recycle();
+                }
+                /*
+                for (Object action : actions)
+                {
+                    Field innerFields[] = action.getClass().getDeclaredFields();
+
+                    Object value = null;
+                    Integer type = null;
+                    Integer viewId = null;
+                    for (Field field : innerFields)
+                    {
+                        field.setAccessible(true);
+                        if (field.getName().equals("value"))
+                        {
+                            value = field.get(action);
+                        } else if (field.getName().equals("type"))
+                        {
+                            type = field.getInt(action);
+                        } else if (field.getName().equals("viewId"))
+                        {
+                            viewId = field.getInt(action);
+                        }
+                    }
+
+                    if (type == STRING  || type == CHAR_SEQUENCE )
+                    {
+                        notificationText.put(viewId, value.toString());
+                    }
+                }*/
+                /*for(Object action : actions)
                 {
                     if (action.getClass().getName().equals("android.widget.RemoteViews$ReflectionAction"))
                     {
@@ -647,12 +707,14 @@ public class NotificationParser
                         else if (type == STRING)
                             notificationText.put(new Integer(viewId), (String) value);
                     }
-                }
+                }*/
             }
         }
         catch(Exception exp)
         {
+            exp.printStackTrace();
         }
+
         return notificationText;
     }
 
