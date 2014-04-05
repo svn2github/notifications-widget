@@ -293,7 +293,6 @@ public class SettingsActivity extends PreferenceActivity
 
     public static class PrefsGeneralFragment extends PreferenceFragment
 	{
-
         @Override
 	    public void onCreate(Bundle savedInstanceState) 
 	    {
@@ -669,22 +668,6 @@ public class SettingsActivity extends PreferenceActivity
     public void onBuildHeaders(List<Header> target) 
 	{
         loadHeadersFromResource(R.xml.preferences_headers, target);
-
-        // check service status
-        if (NotificationsService.getSharedInstance() != null)
-        {
-            //target.get(0).iconRes = android.R.drawable.presence_online;
-            target.get(0).summaryRes = R.string.service_is_active;
-        }
-        else
-        {
-            //target.get(0).iconRes = android.R.drawable.presence_offline;
-            target.get(0).summaryRes = R.string.service_is_inactive;
-
-            Intent intent = getNotificationsServiesIntent();
-            target.get(0).intent = intent;
-            target.get(0).fragment = null;
-        }
 
         // check widget status
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);

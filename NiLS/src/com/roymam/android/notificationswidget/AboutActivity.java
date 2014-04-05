@@ -29,10 +29,4 @@ public class AboutActivity extends Activity
         
         setTitle(title + " v" + versionString);
 	}
-	
-	public void openAd(View v)
-    {
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.about_ad_url)));
-		startActivity(browserIntent);
-    }
 }

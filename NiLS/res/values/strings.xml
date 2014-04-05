@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Main nils page -->
+    <string name="notifications_service">NiLS Service</string>
+    <string name="service_is_inactive">Enable NiLS service on Android Security Settings to provide notification access so all upcoming notifications will be captured and displayed on NiLS</string>
+    <string name="service_is_active">NiLS Service is running.\nAll upcoming notifications will be captured and displayed on NiLS</string>
+    <string name="enable_service_tip">Find \"NiLS Service\" in the list and enable it, then press the \"Back\" button to go back to NiLS</string>
+
     <!-- General Strings -->
     <string name="title">NiLS</string>
     <string name="settingstitle">NiLS Settings</string>
     <string name="accessibility_service_description">Enable to allow NiLS receive all incoming notifications. The disclaimer displayed when enabling the accessibility service is a standard Android message. This app DOES NOT collect any of your data. Please note that this app doesn\'t have internet access permission so it actually cannot send the data anywhere.</string>
-    <string name="notifications_service">NiLS Service</string>
 
     <!-- Settings Page -->
     <string name="generalsettings">General Settings</string>
@@ -342,11 +347,11 @@
     <string name="clear_notification">Clear Notification</string>
     <string name="open_accessibility_settings">Open Accessibility Settings</string>
 
-    <!-- new settings wizard combination -->
+
+
+
     <string name="service">Global Settings</string>
     <string name="widget">Widget Settings</string>
-    <string name="service_is_inactive">Service is offline.\nclick to activate it.</string>
-    <string name="service_is_active">Service is online.\nclick to change settings.</string>
     <string name="widget_is_not_present">Widget is not present.\nclick to learn how to add it.</string>
     <string name="widget_is_present">Widget is present.\nclick to change settings.</string>
     <string name="persistent_notifications_summary">Add/remove persistent notifications from NiLS widget</string>
@@ -381,7 +386,7 @@
     <string name="hide_clock_when_visible_summary">Hide clock when the persistent notification is visible for this app</string>
 
     <!-- NiLSPlus Integration -->
-    <string name="floating_panel">Floating Panel</string>
+    <string name="floating_panel">Notifications Panel</string>
     <string name="floating_panel_short">Floating Panel</string>
     <string name="floating_panel_not_installed">Swipe gestures, animations, themes and many more features. Click for info.</string>
     <string name="floating_panel_installed">Click to change settings.</string>
@@ -409,6 +414,8 @@
     <string name="tutorial_step_1_title">Enable NiLS Service</string>
     <string name="whatsnew">What\'s new?</string>
     <string name="accessibility_service_not_used_description"><![CDATA[This service is no longer used on Android 4.3 and above. Go to Android Settings > Security > Notifications Access and enable NiLS Service there instead.\]]></string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
 
     <string-array name="lockscreenapps" translatable="false">
         <item>com.teslacoilsw.widgetlocker</item>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="295"
-    android:versionName="1.5.295" >
+    android:versionCode="400"
+    android:versionName="1.5.400" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -151,6 +151,13 @@
             android:name="com.roymam.android.nilsplus.activities.NPSettings"
             android:label="@string/notification_panel_settings"
             android:exported="true">
+        </activity>
+        <activity android:name="com.roymam.android.nilsplus.ui.NiLSActivity"
+                    android:theme="@android:style/Theme.Holo.Light">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service android:name="com.roymam.android.nilsplus.NPService"

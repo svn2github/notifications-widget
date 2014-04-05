@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="nils_service"
+        android:title="@string/notifications_service"
+        android:summaryOn="@string/service_is_active"
+        android:summaryOff="@string/service_is_inactive"
+        android:defaultValue="false"
+        android:layout="@layout/card_switch_layout"
+        />
+
+    <CheckBoxPreference
+        android:key="fp_enabled"
+        android:title="Notification Panel"
+        android:summaryOn="Notification panel is active.\nNotification list will be displayed when the lock screen appears"
+        android:summaryOff="Notification panel is not active"
+        android:defaultValue="true"
+        android:layout="@layout/card_switch_layout"
+        />
+
+    <CheckBoxPreference
+        android:key="screen_off_permission"
+        android:title="Screen Off Permission"
+        android:summary="If you want the display to turn off few seconds after receiving a notification, you must give NiLS administrative permissions"
+        android:defaultValue="false"
+        android:layout="@layout/card_switch_layout"
+        />
+
+    <CheckBoxPreference
+        android:key="auto_hide_service"
+        android:title="Auto Hide Service"
+        android:summary="When enabled, Auto Hide Service will automatically hide Notifications Panel when you pull down Android Notifications Bar"
+        android:defaultValue="false"
+        android:layout="@layout/card_switch_layout"
+        />
+</PreferenceScreen>
