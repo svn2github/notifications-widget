@@ -25,6 +25,8 @@ import android.widget.RemoteViewsService;
 
 import com.roymam.android.notificationswidget.NotificationData.Action;
 
+import java.util.List;
+
 public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsFactory 
 {
 	private Context ctxt=null;
@@ -85,10 +87,12 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		String widgetMode = preferences.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
 
 		if (s != null) 
-		{		   
-		    if (s.getNotifications().size() >0 && position < s.getNotifications().size())
+		{
+            List<NotificationData> notifications = s.getNotifications();
+
+		    if (notifications.size() >0 && position < notifications.size())
 		    {
-		    	NotificationData n = s.getNotifications().get(position);
+		    	NotificationData n = notifications.get(position);
 				
 		    	// set on click intent 
 		    	if (preferences.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true))

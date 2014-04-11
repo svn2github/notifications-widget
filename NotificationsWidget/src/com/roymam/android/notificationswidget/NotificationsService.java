@@ -49,6 +49,8 @@ public class NotificationsService extends Service implements NotificationsProvid
     private NotificationParser parser;
     private HashMap<String, PersistentNotification> persistentNotifications = new HashMap<String, PersistentNotification>();
     private BroadcastReceiver receiver = null;
+    private boolean mDirty = true;
+    private ArrayList<NotificationData> mFilteredNotificationsList;
 
     public NotificationsService()
     {
@@ -286,6 +288,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 // add the new notification
                 notifications.add(nd);
+                mDirty = true;
 
                 // notify that the notification was added
                 if (listener != null && !nd.deleted)
@@ -342,6 +345,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                         iter.remove();
                     }
 
+                    mDirty = true;
+
                     // notify that the notification was cleared
                     clearedNotifications.add(nd);
 
@@ -384,7 +389,10 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public List<NotificationData> getNotifications()
     {
-        ArrayList<NotificationData> notificationsList = new ArrayList<NotificationData>();
+        if (!mDirty)
+            return mFilteredNotificationsList;
+
+        mFilteredNotificationsList = new ArrayList<NotificationData>();
         if (context != null)
         {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -393,11 +401,13 @@ public class NotificationsService extends Service implements NotificationsProvid
             for(NotificationData nd : notifications)
             {
                 if (!nd.deleted)
-                    notificationsList.add(nd);
+                    mFilteredNotificationsList.add(nd);
             }
-            sortNotificationsList(notificationsList, sortBy);
+            sortNotificationsList(mFilteredNotificationsList, sortBy);
         }
-        return notificationsList;
+
+        mDirty = false;
+        return mFilteredNotificationsList;
     }
 
     @Override
@@ -489,6 +499,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     nd.deleted = true;
                 else // otehrwise remove it immediately
                     i.remove();
+                mDirty = true;
             }
         }
 
@@ -562,6 +573,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     else
                         i.remove();
 
+                    mDirty = true;
                     changed = true;
                     clearedNotifications.add(nd);
                 }
@@ -614,6 +626,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 else
                     iter.remove();
 
+                mDirty = true;
                 removed = true;
             }
         }
@@ -682,8 +695,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                !nd.protect &&
                 (nd.id == id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2))
             {
-                Log.d("NiLS","permenantly removing uid:"+nd.uid);
+                Log.d("NiLS","permanently removing uid:"+nd.uid);
                 iter.remove();
+                mDirty = true;
             }
             // make sure next time it won't be protected from deleting
             nd.protect = false;

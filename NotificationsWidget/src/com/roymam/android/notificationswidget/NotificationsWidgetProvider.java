@@ -26,6 +26,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import java.util.List;
+
 public class NotificationsWidgetProvider extends AppWidgetProvider 
 {
 	public static String NOTIFICATION_INDEX = "com.roymam.android.notificationswidget.notification_index";
@@ -72,7 +74,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 		context.stopService(new Intent(context, NotificationsWidgetService.class));
 	}
 
-	public void updateWidget(Context ctx, boolean refreshList)
+	private void updateWidget(Context ctx, boolean refreshList)
 	{
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ctx.getApplicationContext());
 		ComponentName thisWidget = new ComponentName(ctx, NotificationsWidgetProvider.class);
@@ -109,22 +111,24 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     	else if (intent.getAction().equals(PERFORM_ACTION))
     	{
     		NotificationsProvider ns = NotificationsService.getSharedInstance();
-    		int pos = intent.getIntExtra(NOTIFICATION_INDEX, -1);
+            int pos = intent.getIntExtra(NOTIFICATION_INDEX, -1);
     		int action=intent.getIntExtra(NotificationsWidgetProvider.PERFORM_ACTION,-1);
     		    		
     		if (ns!=null)
     		{
+                List<NotificationData> notifications = ns.getNotifications();
+
     			if (action == ACTIONBAR_TOGGLE)
     			{
-                    if (pos >= 0 && pos < ns.getNotifications().size())
+                    if (pos >= 0 && pos < notifications .size())
                     {
-                        NotificationData nd = ns.getNotifications().get(pos);
+                        NotificationData nd = notifications .get(pos);
                         if (nd.selected)
                             nd.selected = false;
                         else
                         {
                             // deselect current first
-                            for(NotificationData nd2 : ns.getNotifications())
+                            for(NotificationData nd2 : notifications )
                             {
                                 nd2.selected = false;
                             }
@@ -134,12 +138,12 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
                         updateWidget(ctx,true);
                     }
     			}
-	    		if (action == CLEAR_ACTION && pos >= 0 && pos < ns.getNotifications().size())
+	    		if (action == CLEAR_ACTION && pos >= 0 && pos < notifications.size())
 	    		{
 	    			ns.clearNotification(ns.getNotifications().get(pos).uid);
                     updateWidget(ctx, true);
 	    		}
-	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < ns.getNotifications().size())
+	    		else if (action == SETTINGS_ACTION && pos >= 0 && pos < notifications.size())
 	    		{
 	    			Intent appSettingsIntent = new Intent(ctx, AppSettingsActivity.class);
 	    			appSettingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -148,9 +152,9 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 					appSettingsIntent.putExtras(settingsExtras);					
 	    			ctx.startActivity(appSettingsIntent);
 	    		}
-	    		else if (action == PIN_ACTION && pos >= 0 && pos < ns.getNotifications().size())
+	    		else if (action == PIN_ACTION && pos >= 0 && pos < notifications.size())
 	    		{
-                    NotificationData nd = ns.getNotifications().get(pos);
+                    NotificationData nd = notifications.get(pos);
                     if (!nd.pinned) nd.pinned = true;
                     else nd.pinned = false;
                     updateWidget(ctx,true);
