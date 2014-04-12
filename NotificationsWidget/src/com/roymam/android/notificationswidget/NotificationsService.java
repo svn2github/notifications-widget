@@ -1,6 +1,8 @@
 package com.roymam.android.notificationswidget;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -8,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -15,6 +19,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -135,6 +140,9 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public boolean onUnbind(Intent intent)
     {
+        Log.d("NiLS", "NotificationsService:onUnbind");
+        saveLog(getApplicationContext());
+
         // unbound NiLS FP (if bounded)
         if (mBound)
         {
@@ -166,11 +174,10 @@ public class NotificationsService extends Service implements NotificationsProvid
         super.onDestroy();
     }
 
-    private void saveLog(Context context)
+    private static void saveLog(Context context)
     {
         // save crash log
-        Log.d("NiLS","NotificationsService:saveLog");
-        Log.d("NiLS", "Service has stopped. saving log file...");
+        Log.d("NiLS", "Something happened. saving log file...");
         try
         {
             // read logcat
@@ -198,6 +205,27 @@ public class NotificationsService extends Service implements NotificationsProvid
             bufferedReader.close();
 
             Log.d("NiLS", "Log file written to "+context.getExternalFilesDir(null)+"/"+filename);
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.appicon)
+                    .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.appicon)).getBitmap())
+                    .setContentTitle("Something went wrong...")
+                    .setContentText("log file was written to "+context.getExternalFilesDir(null)+"/"+filename);
+
+            NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+            bigtextstyle.setBigContentTitle("Something went wrong...");
+            bigtextstyle.bigText("log file was written to "+context.getExternalFilesDir(null)+"/"+filename);
+            mBuilder.setStyle(bigtextstyle);
+
+            Notification n = mBuilder.build();
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Uri uri = Uri.parse("file://"+context.getExternalFilesDir(null)+"/"+filename);
+            intent.setDataAndType(uri, "text/plain");
+
+            n.contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            nm.notify(0, n);
         }
         catch (IOException e)
         {}
@@ -665,20 +693,26 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     public void onNotificationPosted(Notification n, String packageName, int id, String tag)
     {
-        if (!parser.isPersistent(n, packageName))
-        {
-            List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
-            for (NotificationData nd : notifications)
-            {
-                addNotification(nd);
+        try {
+            if (!parser.isPersistent(n, packageName)) {
+                List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
+                for (NotificationData nd : notifications) {
+                    addNotification(nd);
+                }
+                // after adding all of the new notifications delete all of the old ones that marked as deleted
+                purgeDeletedNotifications(packageName, id);
+            } else {
+                PersistentNotification pn = parser.parsePersistentNotification(n, packageName, id);
+                addPersistentNotification(pn);
             }
-            // after adding all of the new notifications delete all of the old ones that marked as deleted
-            purgeDeletedNotifications(packageName, id);
         }
-        else
+        catch(Exception exp)
         {
-            PersistentNotification pn = parser.parsePersistentNotification(n, packageName, id);
-            addPersistentNotification(pn);
+            Log.e("NiLS", "NotificationsService:onNotificationPosted: an exception has occured");
+            exp.printStackTrace();
+            // make sure this isn't NiLS own crash notification
+            if (!(packageName != null && packageName.equals(context.getPackageName())))
+                saveLog(context);
         }
     }
 
@@ -706,12 +740,20 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     public void onNotificationRemoved(Notification n, String packageName, int id)
     {
-        removeNotification(packageName, id, false);
-
-        // remove also persistent notification
-        if (n != null && parser.isPersistent(n, packageName))
+        try
         {
-            removePersistentNotification(packageName, id);
+            removeNotification(packageName, id, false);
+
+            // remove also persistent notification
+            if (n != null && parser.isPersistent(n, packageName)) {
+                removePersistentNotification(packageName, id);
+            }
+        }
+        catch(Exception exp)
+        {
+            Log.e("NiLS", "NotificationsService:onNotificationRemoved: an exception has occured");
+            exp.printStackTrace();
+            saveLog(context);
         }
     }
 
