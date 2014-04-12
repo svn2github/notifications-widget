@@ -35,9 +35,10 @@ public class NotificationAdapter implements NotificationEventListener
     private Handler mHandler = null;
     private PowerManager.WakeLock mWakeLock = null;
 
-    public NotificationAdapter(Context context)
+    public NotificationAdapter(Context context, Handler handler)
     {
         this.context = context;
+        this.mHandler = handler;
     }
 
     @Override

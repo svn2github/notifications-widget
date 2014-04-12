@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -126,7 +127,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         // create a notification parser
         context = getApplicationContext();
         parser = new NotificationParser(getApplicationContext());
-        setNotificationEventListener(new NotificationAdapter(context));
+        setNotificationEventListener(new NotificationAdapter(context, new Handler()));
 
         // TBD register a receiver for system broadcasts
         //receiver = new NotificationsServiceReceiver();
@@ -237,7 +238,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         //Log.d("NiLS","NotificationsService:onStartCommand " + intent.getAction());
         if (context == null) context = getApplicationContext();
         if (parser == null) parser = new NotificationParser(getApplicationContext());
-        if (listener == null) setNotificationEventListener(new NotificationAdapter(context));
+        if (listener == null) setNotificationEventListener(new NotificationAdapter(context, new Handler()));
 
         if (intent != null && intent.getAction() != null)
         {
