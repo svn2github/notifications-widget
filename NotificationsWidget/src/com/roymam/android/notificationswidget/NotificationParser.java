@@ -646,7 +646,7 @@ public class NotificationParser
                         parcel.readInt();
 
                         // Store the actual string
-                        String t = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(parcel).toString().trim();
+                        CharSequence t = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(parcel);
                         notificationText.put(viewId, t);
                     }
 

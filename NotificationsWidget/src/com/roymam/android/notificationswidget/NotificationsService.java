@@ -24,12 +24,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -146,7 +141,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     public boolean onUnbind(Intent intent)
     {
         Log.d("NiLS", "NotificationsService:onUnbind");
-        saveLog(getApplicationContext());
+        saveLog(getApplicationContext(), true);
 
         // unbound NiLS FP (if bounded)
         if (mBound)
@@ -174,19 +169,23 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d("NiLS","NotificationsService:onDestroy");
 
         instance = null;
-        saveLog(getApplicationContext());
+        saveLog(getApplicationContext(),true);
         getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
         super.onDestroy();
     }
 
-    private static void saveLog(Context context)
+    private static void saveLog(Context context, boolean silent)
     {
         // save crash log
         Log.d("NiLS", "Something happened. saving log file...");
         try
         {
             // read logcat
-            Process process = Runtime.getRuntime().exec("logcat -d");
+            Time now = new Time();
+            now.setToNow();
+            String filename = context.getExternalFilesDir(null) + "/" + now.format("%Y-%m-%dT%H:%M:%S")+".log";
+            Process process = Runtime.getRuntime().exec("logcat -d -v time -f " + filename);
+            /*
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             StringBuilder log=new StringBuilder();
@@ -208,29 +207,32 @@ public class NotificationsService extends Service implements NotificationsProvid
             output.flush();
             output.close();
             bufferedReader.close();
-
+*/
             Log.d("NiLS", "Log file written to "+context.getExternalFilesDir(null)+"/"+filename);
 
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.appicon)
-                    .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.appicon)).getBitmap())
-                    .setContentTitle("Something went wrong...")
-                    .setContentText("log file was written to "+context.getExternalFilesDir(null)+"/"+filename);
+            if (!silent)
+            {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.appicon)
+                        .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.appicon)).getBitmap())
+                        .setContentTitle("Something went wrong...")
+                        .setContentText("log file was written to " + context.getExternalFilesDir(null) + "/" + filename);
 
-            NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
-            bigtextstyle.setBigContentTitle("Something went wrong...");
-            bigtextstyle.bigText("log file was written to "+context.getExternalFilesDir(null)+"/"+filename);
-            mBuilder.setStyle(bigtextstyle);
+                NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+                bigtextstyle.setBigContentTitle("Something went wrong...");
+                bigtextstyle.bigText("log file was written to " + context.getExternalFilesDir(null) + "/" + filename);
+                mBuilder.setStyle(bigtextstyle);
 
-            Notification n = mBuilder.build();
+                Notification n = mBuilder.build();
 
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = Uri.parse("file://"+context.getExternalFilesDir(null)+"/"+filename);
-            intent.setDataAndType(uri, "text/plain");
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.parse("file://" + context.getExternalFilesDir(null) + "/" + filename);
+                intent.setDataAndType(uri, "text/plain");
 
-            n.contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.notify(0, n);
+                n.contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                nm.notify(0, n);
+            }
         }
         catch (IOException e)
         {}
@@ -783,7 +785,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             exp.printStackTrace();
             // make sure this isn't NiLS own crash notification
             if (!(packageName != null && packageName.equals(context.getPackageName())))
-                saveLog(context);
+                saveLog(context, false);
         }
     }
 
@@ -833,7 +835,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         {
             Log.e("NiLS", "NotificationsService:onNotificationRemoved: an exception has occured");
             exp.printStackTrace();
-            saveLog(context);
+            saveLog(context, false);
         }
     }
 
