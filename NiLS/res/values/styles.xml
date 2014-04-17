@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="Theme.Transparent" parent="android:Theme">
-    <item name="android:windowIsTranslucent">true</item>
-    <item name="android:windowBackground">@android:color/transparent</item>
-    <item name="android:windowContentOverlay">@null</item>
-    <item name="android:windowNoTitle">true</item>
-    <!-- <item name="android:windowIsFloating">true</item>  -->
-    <item name="android:backgroundDimEnabled">false</item>
-  </style>
+    <style name="Theme.Transparent" parent="android:Theme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="TextAppearance.CardTitle" parent="android:TextAppearance.DeviceDefault.Large">
+        <item name="android:textColor">@drawable/card_title_color</item>
+    </style>
+
+    <style name="TextAppearance.CardSubTitle" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@drawable/card_text_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Text" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@drawable/card_text_color</item>
+    </style>
+
+
 </resources>

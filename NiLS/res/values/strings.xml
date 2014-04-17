@@ -6,6 +6,17 @@
     <string name="service_is_active">NiLS Service is running.\nAll upcoming notifications will be captured and displayed on NiLS</string>
     <string name="enable_service_tip">Find \"NiLS Service\" in the list and enable it, then press the \"Back\" button to go back to NiLS</string>
 
+    <string name="notification_panel">Notification Panel</string>
+    <string name="notification_panel_is_active">Notification panel is active.\nNotification list will be displayed when the lock screen appears</string>
+    <string name="notification_panel_is_inactive">Notification panel is not active</string>
+
+    <string name="auto_hide_service">Auto Hide Service</string>
+    <string name="auto_hide_is_inactive">When enabled, Auto Hide Service will automatically hide Notifications Panel when you pull down Android Notifications Bar</string>
+    <string name="auto_hide_is_active">NiLS Auto Hide Service is enabled. Notification Panel will be automatically hidden when you pull down Android Notifications Bar</string>
+    <string name="enable_auto_hide_service_tip">Find \"NiLS Auto Hide Service\" in the list and enable it, then press the \"Back\" button to go back to NiLS</string>
+    <string name="nilsfp_autohide_service_label">NiLS Auto Hide Service</string>
+    <string name="nilsfp_autohide_service_description">Enable this service to auto hide NiLS Notifications Panel when lock screen is not visible. (e.g. when the notifications bar is pulled down from the status bar)</string>
+
     <!-- General Strings -->
     <string name="title">NiLS</string>
     <string name="settingstitle">NiLS Settings</string>
@@ -79,7 +90,7 @@
     <string name="when_device_is_unlocked">When device unlocked</string>
 
     <string name="sync_back">Sync back notifications</string>
-    <string name="sync_back_summary">When notification is cleared on NiLS dismiss it also on Android Notifications Bar (Android 4.3 and above only)</string>
+    <string name="sync_back_summary">When notification is cleared on NiLS dismiss it also on Android Notifications Bar\n(Android 4.3 and above only)</string>
 
     <string-array name="settings_orderby_entries">
         <item>Newest first</item>
@@ -356,18 +367,22 @@
     <string name="widget_is_present">Widget is present.\nclick to change settings.</string>
     <string name="persistent_notifications_summary">Add/remove persistent notifications from NiLS widget</string>
     <string name="app_specific_settings_summary">Change notifications settings for individual apps</string>
-    <string name="widget_help_no_ls_title">NiLS Requires Android 4.2 and above</string>
-    <string name="widget_help_no_ls_body">Lock screen widgets are supported on Android 4.2 and above.\nHowever you can still use NiLS as an Home Screen Widget or use 3rd party lock screen app such as WidgetLocker.</string>
+    <string name="widget_help_no_ls_title">NiLS Widget Requires Android 4.2 and above</string>
+    <string name="widget_help_no_ls_subtitle">Lock screen widgets are supported on Android 4.2 and above</string>
+    <string name="widget_help_no_ls_body">You can\'t add NiLS widget to your lock screen unless you are using 3rd party lock screen app such as WidgetLocker.</string>
     <string name="widget_help_title">How to add NiLS to the Lock Screen?</string>
-    <string name="widget_help_summary">Requires Android 4.2 and above, might be different on variant devices</string>
-    <string name="widget_help_step_1_title">1. Lock your screen</string>
-    <string name="widget_help_step_1_body">Lock your screen manually using the device power button</string>
-    <string name="widget_help_step_2_title">2. Remove the clock widget</string>
-    <string name="widget_help_step_2_body">Expand the default clock widget by dragging it down, then long press it and drag it up to the \'X Remove\' label\nIf you have Samsung Galaxy S4 You\'ll need first to enable \'Multiple Widgets\' on \'Device Settings\' > \'Lock Screen\'</string>
-    <string name="widget_help_step_3_title">3. Click on the + Button</string>
-    <string name="widget_help_step_3_body">After removing the clock, a + button will appear, click on it.</string>
-    <string name="widget_help_step_4_title">4. Add NiLS Widget</string>
+    <string name="widget_help_summary">Specific insrutctions might be different on variant devices.</string>
+    <string name="widget_help_text">Please refer to your device manual to learn how to add widgets to the lock screen</string>
+    <string name="widget_help_step_1_title">1. Enable lock screen widgets</string>
+    <string name="widget_help_step_1_body">Some devices require you to enable lock screen widgets.\nGo to device Security or Lock Screen settings and enable Lock Screen widgets.\nPlease note that Samsung S4 doesn\'t allow lock screen widgets when lock screen is secured with pin code or pattern lock, Samsung S5 doesn\'t support lock screen widgets at all</string>
+    <string name="widget_help_step_2_title">2. Lock your screen</string>
+    <string name="widget_help_step_2_body">Lock your screen manually using the device power button</string>
+    <string name="widget_help_step_3_title">3. Swipe to the right</string>
+    <string name="widget_help_step_3_body">Swipe the screen to the right, a \'+\' button will appear, click on it.</string>
+    <string name="widget_help_step_4_title">4. Add NiLS widget</string>
     <string name="widget_help_step_4_body">Choose NiLS widget from the list. this will add it as your lock screen widget.</string>
+    <string name="widget_help_step_5_title">5. Make NiLS widget as primary</string>
+    <string name="widget_help_step_5_body">Expand NiLS widget by swiping it down, then drag it to the right to make it primary widget.\nPlease note that HTC one doesn\'t allow widgets to be on the primary lock screen page</string>
     <string name="loading_title">Show All Apps</string>
     <string name="loading_summary">Click to show all of the installed apps</string>
     <string name="screenon_timeout">Keep screen on</string>
@@ -416,6 +431,7 @@
     <string name="accessibility_service_not_used_description"><![CDATA[This service is no longer used on Android 4.3 and above. Go to Android Settings > Security > Notifications Access and enable NiLS Service there instead.\]]></string>
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
+    <string name="sync">Sync</string>
 
     <string-array name="lockscreenapps" translatable="false">
         <item>com.teslacoilsw.widgetlocker</item>

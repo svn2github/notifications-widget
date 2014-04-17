@@ -3,105 +3,165 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
-
-        <TextView
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="@drawable/card_background">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.CardTitle"
+                    android:text="@string/widget_help_title"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.CardSubTitle"
+                    android:text="@string/widget_help_summary"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center"/>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/widget_help_title"
-                android:layout_gravity="center"/>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/widget_help_summary"
+                style="@style/TextAppearance.Text"
+                android:text="@string/widget_help_text"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"/>
-        <TextView
+        </LinearLayout>
+
+        <View android:layout_height="16dp"
+            android:layout_width="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background">
+            <TextView
+                style="@style/TextAppearance.CardSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginTop="16dp"
                 android:text="@string/widget_help_step_1_title"
                 android:layout_gravity="center"/>
-        <TextView
+            <TextView
+                style="@style/TextAppearance.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/widget_help_step_1_body"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"/>
 
-        <TextView
+        </LinearLayout>
+
+        <View android:layout_height="16dp"
+            android:layout_width="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background">
+            <TextView
+                style="@style/TextAppearance.CardSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/widget_help_step_2_title"
                 android:layout_gravity="center"/>
-
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/widget_help_step_2_body"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"/>
+        </LinearLayout>
 
-        <ImageView
-                android:layout_width="160dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center"
-                android:src="@drawable/tutorial_delete"/>
-
-        <TextView
+        <View android:layout_height="16dp"
+            android:layout_width="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background">
+            <TextView
+                style="@style/TextAppearance.CardSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/widget_help_step_3_title"
                 android:layout_gravity="center"/>
-
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/widget_help_step_3_body"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"/>
-
-        <ImageView
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"/>
+            <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:src="@drawable/tutorial_plus"/>
 
-        <TextView
+        </LinearLayout>
+
+        <View android:layout_height="16dp"
+            android:layout_width="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background">
+            <TextView
+                style="@style/TextAppearance.CardSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/widget_help_step_4_title"
                 android:layout_gravity="center"/>
-
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/widget_help_step_4_body"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"/>
-
-        <ImageView
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"/>
+            <ImageView
                 android:layout_width="160dp"
                 android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:src="@drawable/tutorial_widget_add"/>
+        </LinearLayout>
+
+        <View android:layout_height="16dp"
+            android:layout_width="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background">
+            <TextView
+                style="@style/TextAppearance.CardSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/widget_help_step_5_title"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/widget_help_step_5_body"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

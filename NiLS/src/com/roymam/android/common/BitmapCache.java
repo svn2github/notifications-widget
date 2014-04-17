@@ -86,6 +86,12 @@ public class BitmapCache
                 // package not found - return null
                 return null;
             }
+            catch (Exception e)
+            {
+                // other exception - flush error and return null
+                e.printStackTrace();
+                return null;
+            }
 
         }
     }

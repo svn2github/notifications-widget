@@ -21,6 +21,10 @@
     <dimen name="min_expanded_height">200dp</dimen>
     <dimen name="max_icon_size">96dp</dimen>
 	
+    <!-- Card layout -->
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="preview_height">64dp</dimen>
+
 	<!-- NiLS FP -->
 	<dimen name="notification_min_height">24dp</dimen>
     <dimen name="notification_default_row_height">48dp</dimen>

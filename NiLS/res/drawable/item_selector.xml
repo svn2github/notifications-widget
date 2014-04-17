@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <!-- When selected, use blue -->
-    <item android:drawable="@android:color/holo_blue_dark"
+    <item android:drawable="@android:color/holo_blue_bright"
           android:state_pressed="true" />
     <!-- When not selected, use transparent-->
     <item android:drawable="@android:color/transparent"/>

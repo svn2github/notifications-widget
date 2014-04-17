@@ -14,8 +14,10 @@
                 android:enabled="true"
                 android:defaultValue="10"
                 android:inputType="number"
-                android:summary="@string/screenon_timeout_summary"/>
-    </PreferenceCategory>             
+                android:summary="@string/screenon_timeout_summary"
+            />
+    </PreferenceCategory>
+
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
 
         <ListPreference android:key="notification_mode"
@@ -36,6 +38,17 @@
             android:entryValues="@array/icon_pack_values"
             android:defaultValue="none"/>
 
+        <ListPreference android:dialogTitle="@string/order_notifications_by"
+            android:entries="@array/settings_orderby_entries"
+            android:entryValues="@array/settings_orderby_values"
+            android:title="@string/order_notifications_by"
+            android:key="order_notifications_by"
+            android:defaultValue="time"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:key="sync" android:title="@string/sync">
+
         <MultiSelectListPreference android:key="auto_clear"
             android:title="Auto clear notifications"
             android:entries="@array/auto_clear_entries"
@@ -54,12 +67,5 @@
             android:enabled="true"
             android:defaultValue="true"
             android:summary="@string/collectonunlock_summary"/>
-
-        <ListPreference android:dialogTitle="@string/order_notifications_by"
-    	    			android:entries="@array/settings_orderby_entries" 
-    	    			android:entryValues="@array/settings_orderby_values" 
-    	    			android:title="@string/order_notifications_by" 
-    	    			android:key="order_notifications_by" 
-    	    			android:defaultValue="time" />      
-        </PreferenceCategory>
+    </PreferenceCategory>
 </PreferenceScreen>

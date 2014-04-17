@@ -126,7 +126,8 @@ public class NotificationParser
                     {
                         // load app icon from icon pack
                         IconPackManager.IconPack ip = IconPackManager.getInstance(context).getAvailableIconPacks(false).get(iconPack);
-                        nd.icon = ip.getIconForPackage(packageName, nd.icon);
+                        if (ip != null)
+                            nd.icon = ip.getIconForPackage(packageName, nd.icon);
                     }
                     if (nd.appicon == null)
                     {
@@ -646,7 +647,7 @@ public class NotificationParser
                         parcel.readInt();
 
                         // Store the actual string
-                        String t = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(parcel).toString().trim();
+                        CharSequence t = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(parcel);
                         notificationText.put(viewId, t);
                     }
 

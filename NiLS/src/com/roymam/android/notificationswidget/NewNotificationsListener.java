@@ -27,7 +27,13 @@ public class NewNotificationsListener extends NotificationListenerService
                 int id = intent.getIntExtra(NotificationsService.EXTRA_ID, -1);
 
                 Log.d("NiLS","cancel notification #" + id);
-                cancelNotification(packageName, tag, id);
+                try {
+                    cancelNotification(packageName, tag, id);
+                }
+                catch(java.lang.SecurityException exp)
+                {
+                    Log.e("NiLS", "security exception - cannot cancel notification.");
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId);

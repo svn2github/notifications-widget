@@ -719,8 +719,8 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 			clockStyleRG = (RadioGroup) clockSettingsView.findViewById(R.id.clockStyleRG);
 			autoSwitch = (CheckBox)clockSettingsView.findViewById(R.id.autoSizeCheckbox);
 			showClearAll = (CheckBox)clockSettingsView.findViewById(R.id.showClearButtonCheckbox);
-            hideClock = (CheckBox) clockSettingsView.findViewById(R.id.hideClockCheckbox);
-            showPersistent = (CheckBox) clockSettingsView.findViewById(R.id.showPersistentCheckbox);
+            //hideClock = (CheckBox) clockSettingsView.findViewById(R.id.hideClockCheckbox);
+            //showPersistent = (CheckBox) clockSettingsView.findViewById(R.id.showPersistentCheckbox);
 			clockClickable = (ToggleButton)clockSettingsView.findViewById(R.id.clockIsClickableToggle);
 			boldHours = (ToggleButton)clockSettingsView.findViewById(R.id.boldHoursToggle);
 			boldMinutes = (ToggleButton)clockSettingsView.findViewById(R.id.boldMinutesToggle);
@@ -809,7 +809,7 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 				maxLinesSpinner.setSelection(9);
 
             ((CheckBox)getView().findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false));
-            ((CheckBox)getView().findViewById(R.id.hideNotificationsCheckbox)).setChecked(SettingsActivity.shouldHideNotifications(getActivity(), widgetMode));
+            //((CheckBox)getView().findViewById(R.id.hideNotificationsCheckbox)).setChecked(SettingsActivity.shouldHideNotifications(getActivity(), widgetMode));
 		}
 
 		private void setupNotificationStyle() 

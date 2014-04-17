@@ -74,117 +74,12 @@ public class AppSettingsActivity extends PreferenceActivity implements OnSharedP
 
                 // set summary from current value
                 ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
-                        listPref.getEntries(), listPref.getEntryValues());
+                        null, listPref.getEntries(), listPref.getEntryValues());
 
                 listener.setPrefSummary(listPref, currValue);
                 listPref.setOnPreferenceChangeListener(listener);
             }
         }
-
-
-        /*
-		// add app specific settings
-		PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
-		
-		// Blacklist preference
-        CheckBoxPreference ignoreNotificationsPref = new CheckBoxPreference(this);
-        ignoreNotificationsPref.setKey(packageName+"."+IGNORE_APP);
-        ignoreNotificationsPref.setTitle(R.string.ignore_notifications);
-        ignoreNotificationsPref.setSummary(R.string.ignore_notifications_summary);
-        //ignoreNotificationsPref.setDisableDependentsState(true);
-        root.addPreference(ignoreNotificationsPref);
-
-        CheckBoxPreference ignoreEmptyNotificationsPref = new CheckBoxPreference(this);
-        ignoreEmptyNotificationsPref.setKey(packageName+"."+IGNORE_EMPTY_NOTIFICATIONS);
-        ignoreEmptyNotificationsPref.setTitle(R.string.ignore_empty_notifications);
-        ignoreEmptyNotificationsPref.setSummary(R.string.ignore_empty_notifications_summary);
-        ignoreEmptyNotificationsPref.setDefaultValue(false);
-        root.addPreference(ignoreEmptyNotificationsPref);
-        
-        // Show last preference
-        CheckBoxPreference showlastNotificationsPref = new CheckBoxPreference(this);
-        showlastNotificationsPref.setKey(packageName+"."+KEEP_ONLY_LAST);
-        showlastNotificationsPref.setTitle(R.string.show_only_last_notification);
-        showlastNotificationsPref.setSummary(R.string.show_only_last_notification_summary);
-        //showlastNotificationsPref.setDependency(packageName+"."+IGNORE_APP);
-        root.addPreference(showlastNotificationsPref);
-        
-        // Extract expanded text preference
-        CheckBoxPreference useExpandedTextPref = new CheckBoxPreference(this);
-        useExpandedTextPref.setKey(packageName+"."+USE_EXPANDED_TEXT);
-        useExpandedTextPref.setTitle(R.string.extract_expanded_text);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
-		useExpandedTextPref.setDefaultValue(prefs.getBoolean(USE_EXPANDED_TEXT, true));
-        useExpandedTextPref.setSummary(R.string.extract_expanded_text_summary);
-        root.addPreference(useExpandedTextPref);
-
-        // Always use app icon preference
-        CheckBoxPreference useAppIconPref = new CheckBoxPreference(this);
-        useAppIconPref.setKey(packageName+"."+ALWAYS_USE_APP_ICON);
-        useAppIconPref.setTitle(R.string.always_use_app_icon);
-        useAppIconPref.setDefaultValue(false);
-        useAppIconPref.setSummary(R.string.always_use_app_icon_summary);
-        root.addPreference(useAppIconPref);
-
-        // multiple events handling prefrence
-        ListPreference multipleEvents = new ListPreference(this);
-        multipleEvents.setKey(packageName + "." + MULTIPLE_EVENTS_HANDLING);
-        multipleEvents.setTitle(R.string.multiple_events_handling);
-        multipleEvents.setSummary(R.string.multiple_events_handling_summary);
-        multipleEvents.setDefaultValue("all");
-        multipleEvents.setEntries(R.array.settings_multiple_events_entries);
-        multipleEvents.setEntryValues(R.array.settings_multiple_events_values);
-        root.addPreference(multipleEvents);
-
-        CheckBoxPreference tryExtractTitlePref = new CheckBoxPreference(this);
-        tryExtractTitlePref.setKey(packageName+"."+TRY_EXTRACT_TITLE);
-        tryExtractTitlePref.setTitle(R.string.try_extract_title);
-        tryExtractTitlePref.setSummary(R.string.try_extract_title_summary);
-        tryExtractTitlePref.setDefaultValue(true);
-        root.addPreference(tryExtractTitlePref );
-
-        // Show last preference
-        ListPreference overrideAppPriority = new ListPreference(this);
-        overrideAppPriority.setKey(packageName + "." + APP_PRIORITY);
-        overrideAppPriority.setTitle(R.string.set_app_priority);
-        overrideAppPriority.setSummary(R.string.set_app_priority_summary);
-        overrideAppPriority.setDefaultValue("-9");
-        overrideAppPriority.setEntries(R.array.settings_app_priority_entries);
-        overrideAppPriority.setEntryValues(R.array.settings_app_priority_values);
-        root.addPreference(overrideAppPriority);
-
-        // Clear app specific preferences button
-        PreferenceScreen clearPref = getPreferenceManager().createPreferenceScreen(this);
-        clearPref.setTitle(R.string.clear_app_settings);
-        clearPref.setSummary(R.string.clear_app_summary);
-        clearPref.setOnPreferenceClickListener(new OnPreferenceClickListener()
-        {
-			@Override
-			public boolean onPreferenceClick(Preference arg0) 
-			{	
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
-				prefs.edit().remove(packageName+"."+IGNORE_APP)
-				            .remove(packageName+"."+KEEP_ONLY_LAST)
-                            .remove(packageName+"."+MULTIPLE_EVENTS_HANDLING)
-                            .remove(packageName+"."+USE_EXPANDED_TEXT)
-                            .remove(packageName+"."+ALWAYS_USE_APP_ICON)
-                            .remove(packageName+"."+APP_PRIORITY)
-                            .remove(packageName+"."+IGNORE_EMPTY_NOTIFICATIONS)
-                            .remove(packageName+"."+MULTIPLE_EVENTS_HANDLING)
-                        .commit();
-				
-				removeAppFromAppSpecificSettings(packageName, AppSettingsActivity.this);
-				
-				finish();
-				return false;
-			}
-        	
-        });
-		//Intent runAppSpecificSettings = new Intent(this, AppSettingsActivity.class);
-		//runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
-		//intentPref.setIntent(runAppSpecificSettings);
-		root.addItemFromInflater(clearPref);
-        setPreferenceScreen(root);*/
 	}
 
     public void resetAppSettings(View v)

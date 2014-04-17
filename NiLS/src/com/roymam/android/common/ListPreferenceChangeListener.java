@@ -6,12 +6,14 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import java.util.Set;
 
 public class ListPreferenceChangeListener implements OnPreferenceChangeListener 
-{			
-	private CharSequence[] entries;
+{
+    private final CharSequence prefix;
+    private CharSequence[] entries;
 	private CharSequence[] values;
 	
-	public ListPreferenceChangeListener(CharSequence[] entries, CharSequence[] values)
+	public ListPreferenceChangeListener(CharSequence prefix, CharSequence[] entries, CharSequence[] values)
 	{
+        this.prefix = prefix;
 		this.entries = entries;
 		this.values = values;
 	}
@@ -22,7 +24,10 @@ public class ListPreferenceChangeListener implements OnPreferenceChangeListener
 		{
 			if (newValue.contains(values[i]))
 			{
-				prefs.setSummary(entries[i]);
+                if (prefix != null && !prefix.equals(""))
+                    prefs.setSummary(prefix + ":" + entries[i]);
+                else
+				    prefs.setSummary(entries[i]);
 			}
 		}
 	}
@@ -51,7 +56,7 @@ public class ListPreferenceChangeListener implements OnPreferenceChangeListener
             }
         }
 
-        if (summary.length() > 1) summary = summary.substring(0, summary.length()-2);
+        if (summary.length() > 1) summary = summary.substring(0, summary.length()-1);
         pref.setSummary(summary);
     }
 }

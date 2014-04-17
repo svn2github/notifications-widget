@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.roymam.android.common.IconPackManager;
 import com.roymam.android.common.ListPreferenceChangeListener;
 import com.roymam.android.common.SwitchPrefsHeaderAdapter;
+import com.roymam.android.nilsplus.CardPreferenceFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +53,10 @@ import java.util.Set;
 
 public class SettingsActivity extends PreferenceActivity
 {
+    // main settings
+    public static final String NILS_SERVICE = "nils_service";
+    public static final String AUTO_HIDE_SERVICE = "auto_hide_service";
+
     // widget settings - notifications
     public static final String DISABLE_AUTO_SWITCH = "disable_auto_switch"; // deprecated
 
@@ -291,18 +296,19 @@ public class SettingsActivity extends PreferenceActivity
         }
     }
 
-    public static class PrefsGeneralFragment extends PreferenceFragment
+    public static class PrefsGeneralFragment extends CardPreferenceFragment
 	{
         @Override
-	    public void onCreate(Bundle savedInstanceState) 
+	    public void onCreate(Bundle savedInstanceState)
 	    {
 	        super.onCreate(savedInstanceState);
-	        
+
 	        // Load the preferences from an XML resource
 	        addPreferencesFromResource(R.xml.preferences);
 
             // auto wake up mode
             ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
+                    null,
                     getResources().getStringArray(R.array.wakeup_mode_entries),
                     getResources().getStringArray(R.array.wakeup_mode_values));
 
@@ -314,6 +320,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // notification mode
             listener = new ListPreferenceChangeListener(
+                    null,
                     getResources().getStringArray(R.array.notification_modes_entries),
                     getResources().getStringArray(R.array.notification_modes_values));
 
@@ -324,6 +331,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // notification icon
             listener = new ListPreferenceChangeListener(
+                    null,
                     getResources().getStringArray(R.array.notification_icon_entries),
                     getResources().getStringArray(R.array.notification_icon_values));
 
@@ -334,6 +342,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // notification order by
 	        listener = new ListPreferenceChangeListener(
+                    null,
 	        		getResources().getStringArray(R.array.auto_clear_entries),
 	        		getResources().getStringArray(R.array.auto_clear_values));
 
@@ -345,6 +354,7 @@ public class SettingsActivity extends PreferenceActivity
 
             // notification order by
             listener = new ListPreferenceChangeListener(
+                    null,
                     getResources().getStringArray(R.array.settings_orderby_entries),
                     getResources().getStringArray(R.array.settings_orderby_values));
 
@@ -373,7 +383,7 @@ public class SettingsActivity extends PreferenceActivity
 
             iconPackEntries.toArray(ipEntries);
             iconPackValues.toArray(ipValues);
-            listener = new ListPreferenceChangeListener(ipEntries, ipValues);
+            listener = new ListPreferenceChangeListener(null, ipEntries, ipValues);
 
             ListPreference iconPackPref = (ListPreference) findPreference(ICON_PACK);
             currValue = getPreferenceScreen().getSharedPreferences().getString(ICON_PACK, DEFAULT_ICON_PACK);
@@ -387,7 +397,7 @@ public class SettingsActivity extends PreferenceActivity
     public static class PrefsContactFragment extends PreferenceFragment
 	{
 	    @Override
-	    public void onCreate(Bundle savedInstanceState) 
+	    public void onCreate(Bundle savedInstanceState)
 	    {
 	        super.onCreate(savedInstanceState);
 
@@ -401,20 +411,20 @@ public class SettingsActivity extends PreferenceActivity
         Handler handler = new Handler();
 
         @Override
-	    public void onCreate(Bundle savedInstanceState) 
+	    public void onCreate(Bundle savedInstanceState)
 	    {
 	        super.onCreate(savedInstanceState);
 
 	        // add app specific settings
 			final PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-			
-			// Specfic app list 
+
+			// Specfic app list
 			String specificApps = prefs.getString(APPS_SETTINGS, "");
 
             // add apps that already have app specific settings
-			for (String packageName : specificApps.split(",")) 
-			{		
+			for (String packageName : specificApps.split(","))
+			{
 				if (!packageName.equals(""))
 				{
                     prefs.edit().putBoolean(packageName, !prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false)).commit();
@@ -426,20 +436,20 @@ public class SettingsActivity extends PreferenceActivity
                     intentPref.setSummary(packageName);
 
                     // get package title
-					try 
+					try
 					{
 						ApplicationInfo ai = getActivity().getPackageManager().getApplicationInfo(packageName, 0);
 						String appName = getActivity().getPackageManager().getApplicationLabel(ai).toString();
 						if (appName == null) appName = packageName;
 						intentPref.setTitle(appName);
 						intentPref.setIcon(getActivity().getPackageManager().getApplicationIcon(ai));
-					} catch (NameNotFoundException e) 
+					} catch (NameNotFoundException e)
 					{
 						intentPref.setTitle(packageName);
 					}
 			        root.addPreference(intentPref);
                     appsDisplayed.put(packageName, true);
-				}				
+				}
 			}
 
             Preference loading = new Preference(getActivity());
@@ -665,9 +675,25 @@ public class SettingsActivity extends PreferenceActivity
     }
 
     @Override
-    public void onBuildHeaders(List<Header> target) 
+    public void onBuildHeaders(List<Header> target)
 	{
         loadHeadersFromResource(R.xml.preferences_headers, target);
+
+        // check service status
+        if (NotificationsService.getSharedInstance() != null)
+        {
+            //target.get(0).iconRes = android.R.drawable.presence_online;
+            target.get(0).summaryRes = R.string.service_is_active;
+        }
+        else
+        {
+            //target.get(0).iconRes = android.R.drawable.presence_offline;
+            target.get(0).summaryRes = R.string.service_is_inactive;
+
+            Intent intent = getNotificationsServiesIntent();
+            target.get(0).intent = intent;
+            target.get(0).fragment = null;
+        }
 
         // check widget status
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);

@@ -37,9 +37,10 @@ public class NotificationAdapter implements NotificationEventListener
     private Handler mHandler = null;
     private PowerManager.WakeLock mWakeLock = null;
 
-    public NotificationAdapter(Context context)
+    public NotificationAdapter(Context context, Handler handler)
     {
         this.context = context;
+        this.mHandler = handler;
     }
 
     @Override
@@ -279,7 +280,9 @@ public class NotificationAdapter implements NotificationEventListener
 
         final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
-        int timeout = Integer.parseInt(sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT))) * 1000;
+        String timeoutStr = sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT));
+        if (timeoutStr.equals("")) timeoutStr = String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT);
+        int timeout = Integer.parseInt(timeoutStr) * 1000;
 
         // turn the screen on only if it was off or acquired by previous wakelock
         if (!pm.isScreenOn() || mWakeLock != null && mWakeLock.isHeld())

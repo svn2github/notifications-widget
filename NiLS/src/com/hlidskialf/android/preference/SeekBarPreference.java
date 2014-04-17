@@ -40,7 +40,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
   protected View onCreateDialogView() {
     LinearLayout.LayoutParams params;
     LinearLayout layout = new LinearLayout(mContext);
-    layout.setOrientation(LinearLayout.VERTICAL);
+    layout.setOrientation(LinearLayout.HORIZONTAL);
     layout.setPadding(6,6,6,6);
 
     mSplashText = new TextView(mContext);
@@ -49,16 +49,19 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     layout.addView(mSplashText);
 
     mValueText = new TextView(mContext);
-    mValueText.setGravity(Gravity.CENTER_HORIZONTAL);
+    mValueText.setGravity(Gravity.CENTER_VERTICAL);
     mValueText.setTextSize(32);
-    params = new LinearLayout.LayoutParams(
-        LinearLayout.LayoutParams.MATCH_PARENT, 
-        LinearLayout.LayoutParams.WRAP_CONTENT);
-    layout.addView(mValueText, params);
 
     mSeekBar = new SeekBar(mContext);
     mSeekBar.setOnSeekBarChangeListener(this);
-    layout.addView(mSeekBar, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    params.weight = 1;
+    layout.addView(mSeekBar, params);
+    params = new LinearLayout.LayoutParams(
+      LinearLayout.LayoutParams.WRAP_CONTENT,
+      LinearLayout.LayoutParams.MATCH_PARENT);
+    params.weight = 0;
+    //layout.addView(mValueText, params);
 
     if (shouldPersist())
       mValue = getPersistedInt(mDefault);
