@@ -163,7 +163,9 @@ public class NiLSAccessibilityService extends AccessibilityService
                             {
                                 for (NotificationData nd : ns.getNotifications())
                                 {
-                                    if (nd.title.toString().equals(title.toString()))
+                                    if (nd.title != null &&
+                                        title != null &&
+                                        nd.title.toString().equals(title.toString()))
                                     {
                                         notificationsToKeep.put(nd.id, nd);
                                     }

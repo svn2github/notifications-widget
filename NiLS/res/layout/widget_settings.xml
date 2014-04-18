@@ -23,7 +23,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -31,11 +32,12 @@
                         style="@style/TextAppearance.CardTitle"
                         android:layout_weight="1"/>
                     <Switch
+                        android:id="@+id/show_notifications"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"/>
                 </LinearLayout>
-            <include layout="@layout/tab_notification_settings" android:id="@+id/notifications_settings_view"/>
+            <include layout="@layout/tab_notification_settings"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -53,6 +55,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="match_parent"
@@ -61,11 +64,12 @@
                     style="@style/TextAppearance.CardTitle"
                     android:layout_weight="1"/>
                 <Switch
+                    android:id="@+id/show_clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"/>
             </LinearLayout>
-            <include layout="@layout/tab_clock_settings" android:id="@+id/clock_settings_view"/>
+            <include layout="@layout/tab_clock_settings"/>
         </LinearLayout>
 
         <View
@@ -92,11 +96,13 @@
                     style="@style/TextAppearance.CardTitle"
                     android:layout_weight="1"/>
                 <Switch
+                    android:id="@+id/show_persistent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"/>
             </LinearLayout>
             <Button
+                android:id="@+id/persistent_notifications_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Change Persistent Notifications settings"

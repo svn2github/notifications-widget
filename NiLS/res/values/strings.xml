@@ -110,8 +110,6 @@
     <string name="sync_notifications">Sync with notifications bar</string>
     <string name="clear_app_notifications">Clear when app is opened</string>
     <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched. (Not available on 4.3 or later)</string>
-    <string name="disable_auto_switch_summary">Disable auto switch between LS Collapsed and LS Expanded presets on Android 4.2 lock screen</string>
-    <string name="disable_auto_switch">Disable auto switch preset</string>
     <string name="force_clear_on_open">Clear notifications when opened</string>
     <string name="force_clear_on_open_summary">Forcibly clear notification when it opened even if the app hasn\'t clear it by itself</string>
 
@@ -312,14 +310,14 @@
     <string name="expanded">Expanded</string>
 
     <string-array name="widget_mode_entries">
-        <item>LS Collapsed</item>
-        <item>LS Expanded</item>
-        <item>Home</item>
+        <item>Lock Screen Widget (Collapsed)</item>
+        <item>Lock Screen Widget (Expanded)</item>
+        <item>Home Screen Widget</item>
     </string-array>
 
-    <string name="widget_mode_collapsed_desc">On lockscreen when collapsed (4.2+)</string>
-    <string name="widget_mode_expanded_desc">On lockscreen when expanded</string>
-    <string name="widget_mode_home_desc">On home screen</string>
+    <string name="widget_mode_collapsed_desc">Settings for lock screen widget when collapsed</string>
+    <string name="widget_mode_expanded_desc">Settings for lock screen widget when expanded</string>
+    <string name="widget_mode_home_desc">Settings for home screen widget</string>
 
     <!-- Appearance settings strings -->
     <string name="title_demo_text">Notification Title</string>

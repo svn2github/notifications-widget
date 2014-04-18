@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
+        android:id="@+id/notifications_settings_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
         <ViewAnimator
             android:id="@+id/notificationViewFlipper"
-            android:layout_width="304dp"
+            android:layout_width="match_parent"
             android:layout_height="128dp"
             android:layout_gravity="center_horizontal"
             android:inAnimation="@android:anim/slide_in_left"
@@ -26,7 +27,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
-                android:onClick="onNotificationStyleChanged"
                 android:text="@string/compact" />
 
             <RadioButton
@@ -34,7 +34,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onNotificationStyleChanged"
                 android:text="@string/normal" />
 
             <RadioButton
@@ -42,7 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onNotificationStyleChanged"
                 android:text="@string/large" />
 
         </RadioGroup>
@@ -56,8 +54,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.05"
-                android:onClick="onNotificationkBGColorClick" >
+                android:layout_weight="0.05" >
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -111,10 +108,10 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="onTitleColorClick" >
+                android:layout_weight="1">
 
                 <LinearLayout
+                    android:orientation="horizontal"
                     android:id="@+id/titleColorView"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -137,10 +134,10 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="onTextColorClick" >
+                android:layout_weight="1">
 
                 <LinearLayout
+                    android:orientation="horizontal"
                     android:id="@+id/textColorView"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -163,10 +160,10 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="onContentColorClick" >
+                android:layout_weight="1" >
 
                 <LinearLayout
+                    android:orientation="horizontal"
                     android:id="@+id/contentColorView"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -196,7 +193,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onNotificationPrefChanged"
                 android:tag="notification_is_clickable"
                 android:text="ToggleButton"
                 android:textOff="@string/clickable"
@@ -208,7 +204,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onNotificationPrefChanged"
                 android:tag="useexpandedtext"
                 android:textOff="@string/expanded"
                 android:textOn="@string/expanded" />
@@ -219,7 +214,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onNotificationPrefChanged"
                 android:tag="notificationicon_is_clickable"
                 android:textOff="@string/icon_menu"
                 android:textOn="@string/icon_menu" />
@@ -230,7 +224,6 @@
             android:id="@+id/showActionBarCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onNotificationPrefChanged"
             android:tag="show_actionbar"
             android:text="@string/show_actionbar" />
 
