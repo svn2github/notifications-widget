@@ -42,6 +42,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
+                    android:track="@drawable/apptheme_switch_track_holo_light"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_light"
+                    android:checked="true"
                     android:focusable="false"
                     android:clickable="false"/>
             </LinearLayout>

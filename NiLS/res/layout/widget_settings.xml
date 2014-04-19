@@ -35,7 +35,10 @@
                         android:id="@+id/show_notifications"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"/>
+                        android:layout_weight="0"
+                        android:track="@drawable/apptheme_switch_track_holo_light"
+                        android:thumb="@drawable/apptheme_switch_inner_holo_light"
+                        />
                 </LinearLayout>
             <include layout="@layout/tab_notification_settings"/>
         </LinearLayout>
@@ -67,7 +70,10 @@
                     android:id="@+id/show_clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"/>
+                    android:layout_weight="0"
+                    android:track="@drawable/apptheme_switch_track_holo_light"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_light"
+                    />
             </LinearLayout>
             <include layout="@layout/tab_clock_settings"/>
         </LinearLayout>
@@ -99,10 +105,12 @@
                     android:id="@+id/show_persistent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:track="@drawable/apptheme_switch_track_holo_light"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_light"
                     android:layout_weight="0"/>
             </LinearLayout>
             <Button
-                android:id="@+id/persistent_notifications_settings"
+                android:id="@+id/persistent_notifications_settings_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Change Persistent Notifications settings"

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        style="@style/TextAppearance.CardSubTitle"
+        android:text="@string/persistent_notifications_help"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Text"
+        android:text="@string/persistent_notifications_help_details"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"/>
+    <LinearLayout
+        android:id="@+id/no_persistent_notifications"
+        android:background="@drawable/card_background"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.CardSubTitle"
+            android:text="@string/persistent_notifications_no_apps_title"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.Text"
+            android:text="@string/persistent_notifications_no_apps"/>
+    </LinearLayout>
+
+</LinearLayout>

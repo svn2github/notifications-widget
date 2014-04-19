@@ -294,7 +294,9 @@
 
     <string name="how_to_use">How To Use?</string>
     <string name="persistent_notifications_help">How To Use Persistent Notifications?</string>
-    <string name="persistent_notifications_help_details">Persistent notifications are notifications that appear on the status bar and cannot be dismissed (e.g running apps, playing music, etc...)\n\nThis list will be filled with the apps that created persistent notifications, to add a persistent notification to the widget check the box near the app name.\n\nIf there are no apps in the list, run this settings screen later after the persistent notification is refreshed by the app that created it.</string>
+    <string name="persistent_notifications_help_details">Persistent notifications are notifications that appear on the status bar and cannot be dismissed (such as music playback or weather information)\n\nThis list contains the apps that recently created persistent notifications, check the boxes to add those notifications to NiLS widget</string>
+    <string name="persistent_notifications_no_apps_title">No persistent notifications</string>
+    <string name="persistent_notifications_no_apps">There are currently no running apps that create persistent notifications. run the app you want and once you\'ll see its persistent notifications on Android notifications bar, go back to this settings page and you\'ll be able to add it to NiLS widget</string>
 
     <!-- strings for accessibility -->
     <string name="clear_all_notifications">Clear All Notifications</string>
@@ -315,9 +317,9 @@
         <item>Home Screen Widget</item>
     </string-array>
 
-    <string name="widget_mode_collapsed_desc">Settings for lock screen widget when collapsed</string>
-    <string name="widget_mode_expanded_desc">Settings for lock screen widget when expanded</string>
-    <string name="widget_mode_home_desc">Settings for home screen widget</string>
+    <string name="widget_mode_collapsed_desc">Widget Settings</string>
+    <string name="widget_mode_expanded_desc">Widget Settings</string>
+    <string name="widget_mode_home_desc">Widget Settings</string>
 
     <!-- Appearance settings strings -->
     <string name="title_demo_text">Notification Title</string>

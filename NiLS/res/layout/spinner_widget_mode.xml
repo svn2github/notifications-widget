@@ -13,15 +13,14 @@ android:orientation="vertical" >
     android:layout_centerVertical="true">
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/widgetmode_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-6dip"
-        android:layout_marginBottom="-6dip"
+        android:layout_marginBottom="-4dip"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/widgetmode_desc"
+        android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall" />

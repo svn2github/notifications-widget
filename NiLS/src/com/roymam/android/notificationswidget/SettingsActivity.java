@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
-import android.preference.DialogPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -580,14 +579,37 @@ public class SettingsActivity extends PreferenceActivity
         }
     }
 
-	public static class PrefsPersistentNotificationsFragment extends PreferenceFragment
+    public static interface ViewClickable
+    {
+        public void onClick(View v);
+    }
+
+	public static class PrefsPersistentNotificationsFragment extends CardPreferenceFragment implements ViewClickable
 	{
-		@Override
+        private View mNoPersistentNotificationsView;
+        private ArrayList<String> apps = new ArrayList<String>();
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            super.onCreateView(inflater, container, savedInstanceState);
+            View v = inflater.inflate(R.layout.appearance_settings_view, null);
+            ViewGroup header = (ViewGroup) v.findViewById(R.id.preview_container);
+            header.addView(inflater.inflate(R.layout.view_persistent_notifications_help, null));
+            mNoPersistentNotificationsView = v.findViewById(R.id.no_persistent_notifications);
+
+            if (apps.size() > 0)
+                mNoPersistentNotificationsView.setVisibility(View.GONE);
+
+            return v;
+        }
+
+        @Override
 	    public void onCreate(Bundle savedInstanceState)
 	    {
 	        super.onCreate(savedInstanceState);
 
-	        // add app specific settings
+            // add app specific settings
 			PreferenceScreen root = getPreferenceManager().createPreferenceScreen(getActivity());
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -595,7 +617,7 @@ public class SettingsActivity extends PreferenceActivity
 			NotificationsProvider ns = NotificationsService.getSharedInstance();
 			if (ns != null)
     		{
-    			List<String> apps = new ArrayList<String>();
+    			apps = new ArrayList<String>();
 
     			// show first the enabled persistent apps
     			String packages = prefs.getString(PersistentNotificationSettingsActivity.PERSISTENT_APPS, "");
@@ -654,17 +676,22 @@ public class SettingsActivity extends PreferenceActivity
 			        root.addPreference(intentPref);
     			}
 			}
-			DialogPreference howToUse = new DialogPreference(getActivity(), null) {};
-			howToUse.setTitle(R.string.how_to_use);
-			howToUse.setIcon(android.R.drawable.ic_menu_help);
-			howToUse.setDialogTitle(R.string.persistent_notifications_help);
-			howToUse.setDialogMessage(R.string.persistent_notifications_help_details);
-			howToUse.setNegativeButtonText(null);
-			root.addPreference(howToUse);
 
 	        setPreferenceScreen(root);
 	    }
-	}
+
+        @Override
+        public void onClick(View v)
+        {
+            // this is a dirty hack to get the package name within the settings button
+            String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
+
+            // open persistent notification settings
+            Intent runAppSpecificSettings = new Intent(getActivity(), PersistentNotificationSettingsActivity.class);
+            runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+            startActivity(runAppSpecificSettings);
+        }
+    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
