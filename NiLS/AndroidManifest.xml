@@ -44,12 +44,12 @@
             android:name="com.roymam.android.notificationswidget.AppSettingsActivity"
             android:label="@string/app_specific_settings_title"
             android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Holo" >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
             android:name="com.roymam.android.notificationswidget.PersistentNotificationSettingsActivity"
             android:label="@string/persistent_notifications"
-            android:theme="@android:style/Theme.Holo" >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
             android:name="com.roymam.android.notificationswidget.AppearanceActivity"

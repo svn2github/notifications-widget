@@ -4,82 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 
-import com.roymam.android.common.ListPreferenceChangeListener;
-
-public class AppSettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener 
+public class AppSettingsActivity extends SpecificSettingsPreferencesActivity implements OnSharedPreferenceChangeListener
 {
-	public static final String EXTRA_PACKAGE_NAME = "com.roymam.android.notificationswidget.packagename";
 	public static final String IGNORE_APP = "ignoreapp";
-    public static final String IGNORE_EMPTY_NOTIFICATIONS = "ignore_empty_notifications";
-	private static final String KEEP_ONLY_LAST = "showlast";
-    private static final String MULTIPLE_EVENTS_HANDLING = "multiple_events_handling";
-    private static final String TRY_EXTRACT_TITLE = "try_extract_title";
-	public static final String USE_EXPANDED_TEXT = "useexpandedtext";
+    public static final String USE_EXPANDED_TEXT = "useexpandedtext";
 	public static final String APP_PRIORITY = "apppriority";
-    private static final String ALWAYS_USE_APP_ICON = "use_app_icon";
-	
-	private String packageName;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-		packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
-		
-		// get package title
-		try {
-			ApplicationInfo ai = getPackageManager().getApplicationInfo(packageName, 0);
-			String appName = getPackageManager().getApplicationLabel(ai).toString();
-			if (appName == null) appName = packageName;
-			setTitle(appName + " - " + getString(R.string.app_specific_settings_title));
-		} catch (NameNotFoundException e) {
-			setTitle(packageName + " - " + getString(R.string.app_specific_settings_title));
-		}
-		
-		super.onCreate(savedInstanceState);
-
-        LayoutInflater inflater = getLayoutInflater();
-        View v = inflater.inflate(R.layout.activity_app_settings, null);
-        setContentView(v);
-
-        addPreferencesFromResource(R.xml.app_specific_settings);
-        PreferenceScreen prefScreen = getPreferenceScreen();
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        for(int i=0; i<prefScreen.getPreferenceCount();i++)
-        {
-            Preference pref = prefScreen.getPreference(i);
-            String key = packageName + "." + pref.getKey();
-
-            if (pref instanceof ListPreference)
-            {
-                ListPreference listPref = ((ListPreference) pref);
-                String globalValue = listPref.getValue();
-                String currValue = sharedPrefs.getString(key, globalValue);
-
-                listPref.setKey(key);
-                listPref.setValue(currValue);
-
-                // set summary from current value
-                ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
-                        null, listPref.getEntries(), listPref.getEntryValues());
-
-                listener.setPrefSummary(listPref, currValue);
-                listPref.setOnPreferenceChangeListener(listener);
-            }
-        }
+        onCreate(savedInstanceState, R.string.app_specific_settings_title, R.layout.activity_app_settings, R.xml.app_specific_settings);
 	}
 
     public void resetAppSettings(View v)

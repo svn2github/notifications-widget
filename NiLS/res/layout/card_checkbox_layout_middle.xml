@@ -34,6 +34,7 @@
                     android:layout_height="wrap_content"
                     android:text="Title"
                     android:layout_weight="1"
+                    android:paddingBottom="4dp"
                     android:id="@android:id/title"
                     style="@style/TextAppearance.CardSubTitle"/>
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Appearance">
+        <CheckBoxPreference
+            android:key="useexpandedtext"
+            android:title="@string/extract_expanded_text"
+            android:summary="@string/extract_expanded_text_summary"
+            android:defaultValue="true"/>
+        <ListPreference
+            android:key="persistent_notification_height"
+            android:title="@string/notification_height"
+            android:entries="@array/settings_notification_height_entries"
+            android:entryValues="@array/settings_notification_height_values"
+            android:defaultValue="normal"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/integration">
+        <CheckBoxPreference
+            android:key="catch_all_notifications"
+            android:title="@string/catch_all_notifications"
+            android:summary="@string/catch_all_notifications_summary"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="hidewhennotifications"
+            android:title="@string/hide_when_notifications"
+            android:summary="@string/hide_when_notifications_summary"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:key="hide_clock_when_visible"
+            android:title="@string/hide_clock_when_visible"
+            android:summary="@string/hide_clock_when_visible_summary"
+            android:defaultValue="false"/>
+        <ListPreference
+            android:key="pn_timeout"
+            android:title="@string/auto_hide_persistent_notification"
+            android:entries="@array/settings_auto_hide_persistent_notifications_entries"
+            android:entryValues="@array/settings_auto_hide_persistent_notifications_values"
+            android:defaultValue="0"/>
+    </PreferenceCategory>
+</PreferenceScreen>

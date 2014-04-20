@@ -432,6 +432,7 @@
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
     <string name="sync">Sync</string>
+    <string name="integration">Integration</string>
 
     <string-array name="lockscreenapps" translatable="false">
         <item>com.teslacoilsw.widgetlocker</item>
