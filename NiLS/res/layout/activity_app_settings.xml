@@ -7,15 +7,23 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="16dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:layout_marginBottom="5dp"
         android:layout_weight="1"/>
     <Button
+        style="@android:style/Widget.Holo.Light.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:text="@string/ignore_notifications"
         android:onClick="ignoreThisApp"/>
     <Button
+        style="@android:style/Widget.Holo.Light.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"

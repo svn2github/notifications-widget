@@ -12,6 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -405,7 +406,8 @@ public class SettingsActivity extends PreferenceActivity
 	    }
 	}
 
-	public static class PrefsAppSpecificFragment extends PreferenceFragment implements OnPreferenceChangeListener {
+	public static class PrefsAppSpecificFragment extends CardPreferenceFragment implements OnPreferenceChangeListener, ViewClickable
+    {
         HashMap<String, Boolean> appsDisplayed = new HashMap<String, Boolean>();
         Handler handler = new Handler();
 
@@ -422,38 +424,85 @@ public class SettingsActivity extends PreferenceActivity
 			String specificApps = prefs.getString(APPS_SETTINGS, "");
 
             // add apps that already have app specific settings
+            ArrayList<HashMap<String, Object>> apps = new ArrayList<HashMap<String, Object>>();
+
+            // build a list of the current used apps
 			for (String packageName : specificApps.split(","))
 			{
 				if (!packageName.equals(""))
 				{
-                    prefs.edit().putBoolean(packageName, !prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false)).commit();
+                    boolean checked = !prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false);
 
-                    CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());
-                    intentPref.setKey(packageName);
-                    intentPref.setOnPreferenceChangeListener(this);
-                    intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings_app);
-                    intentPref.setSummary(packageName);
+                    prefs.edit().putBoolean(packageName, checked).commit();
 
-                    // get package title
+                    String appName = packageName;
+
+                    // get package information
 					try
 					{
 						ApplicationInfo ai = getActivity().getPackageManager().getApplicationInfo(packageName, 0);
-						String appName = getActivity().getPackageManager().getApplicationLabel(ai).toString();
+						appName = getActivity().getPackageManager().getApplicationLabel(ai).toString();
 						if (appName == null) appName = packageName;
-						intentPref.setTitle(appName);
-						intentPref.setIcon(getActivity().getPackageManager().getApplicationIcon(ai));
-					} catch (NameNotFoundException e)
+
+                        Drawable icon = getActivity().getPackageManager().getApplicationIcon(ai);
+                        HashMap<String, Object> appData = new HashMap<String, Object>();
+
+                        appData.put("package", packageName);
+                        appData.put("title", appName);
+                        appData.put("checked", new Boolean(checked));
+                        appData.put("icon", icon);
+
+                        apps.add(appData);
+                    }
+                    catch (NameNotFoundException e)
 					{
-						intentPref.setTitle(packageName);
+                        // app is no longer installed, ignore it
 					}
-			        root.addPreference(intentPref);
-                    appsDisplayed.put(packageName, true);
 				}
 			}
+
+            // sort apps list - checked apps first
+            Collections.sort(apps, new Comparator<HashMap<String, Object>>()
+            {
+                @Override
+                public int compare(HashMap<String, Object> lhs, HashMap<String, Object> rhs)
+                {
+                    Boolean lchecked = (Boolean) lhs.get("checked");
+                    Boolean rchecked = (Boolean) rhs.get("checked");
+                    String ltitle = (String) lhs.get("title");
+                    String rtitle = (String) rhs.get("title");
+
+                    int bCompare = lchecked.compareTo(rchecked);
+                    if (bCompare == 0)
+                        return ltitle.compareTo(rtitle);
+                    else
+                        return bCompare * -1;
+                }
+            });
+
+            // build preferences list
+            for(HashMap<String, Object> appData : apps)
+            {
+                String packageName = (String) appData.get("package");
+                String title = (String) appData.get("title");
+                Drawable icon = (Drawable) appData.get("icon");
+
+                CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());
+                intentPref.setKey(packageName);
+                intentPref.setOnPreferenceChangeListener(this);
+                intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings);
+                intentPref.setSummary(packageName);
+                intentPref.setTitle(title);
+                intentPref.setIcon(icon);
+
+                root.addPreference(intentPref);
+                appsDisplayed.put(packageName, true);
+            }
 
             Preference loading = new Preference(getActivity());
             loading.setTitle(R.string.loading_title);
             loading.setSummary(R.string.loading_summary);
+            loading.setLayoutResource(R.layout.card_pref_layout);
             loading.setKey("loading");
             loading.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
             {
@@ -465,15 +514,7 @@ public class SettingsActivity extends PreferenceActivity
                 }
             });
             root.addPreference(loading);
-            /*
-			DialogPreference howToUse = new DialogPreference(getActivity(), null) {};
-			howToUse.setTitle(R.string.how_to_use);
-			howToUse.setIcon(android.R.drawable.ic_menu_help);
-			howToUse.setDialogTitle(R.string.app_specific_help);
-			howToUse.setDialogMessage(R.string.app_specific_help_details);
-			howToUse.setNegativeButtonText(null);
-			root.addPreference(howToUse);*/
-	        setPreferenceScreen(root);
+            setPreferenceScreen(root);
 	    }
 
         private void loadAllApps()
@@ -518,7 +559,7 @@ public class SettingsActivity extends PreferenceActivity
                 intentPref.setKey(packageName);
                 intentPref.setDefaultValue(true);
                 intentPref.setOnPreferenceChangeListener(this);
-                intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings_app);
+                intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings);
                 intentPref.setTitle(appName);
                 intentPref.setSummary(packageName);
                 intentPref.setKey(packageName);
@@ -576,6 +617,18 @@ public class SettingsActivity extends PreferenceActivity
             AppSettingsActivity.addAppToAppSpecificSettings(packageName, getActivity());
 
             return true;
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            // this is a dirty hack to get the package name within the settings button
+            String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
+
+            // open persistent notification settings
+            Intent runAppSpecificSettings = new Intent(getActivity(), AppSettingsActivity.class);
+            runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
+            startActivity(runAppSpecificSettings);
         }
     }
 
@@ -644,7 +697,7 @@ public class SettingsActivity extends PreferenceActivity
     				CheckBoxPreference intentPref = new CheckBoxPreference(getActivity());
 					getPreferenceManager();
 					intentPref.setKey(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION);
-					intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings_persistent);
+					intentPref.setLayoutResource(R.layout.checkbox_preference_with_settings);
 					intentPref.setChecked(prefs.getBoolean(packageName + "." + PersistentNotificationSettingsActivity.SHOW_PERSISTENT_NOTIFICATION, false));
 					intentPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 					{
@@ -935,16 +988,4 @@ public class SettingsActivity extends PreferenceActivity
 	{
 	    super.onPause();
 	}
-
-	// openAppSettings is launched from the custom checkbox in app specific settings
-    public void openAppSettings(View v)
-    {
-        // this is a dirty hack to get the package name within the settings button
-        String packageName = ((TextView)((View)v.getParent()).findViewById(android.R.id.summary)).getText().toString();
-
-        // open persistent notification settings
-        Intent runAppSpecificSettings = new Intent(this, AppSettingsActivity.class);
-        runAppSpecificSettings.putExtra(AppSettingsActivity.EXTRA_PACKAGE_NAME, packageName);
-        startActivity(runAppSpecificSettings);
-    }
 }
