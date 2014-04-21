@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 import android.widget.Toast;
 
+import com.roymam.android.nilsplus.CardPreferenceFragment;
 import com.roymam.android.notificationswidget.R;
 
 import java.io.File;
@@ -19,14 +20,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
-public class BackupRestorePreferenceFragment extends PreferenceFragment
+public class BackupRestorePreferenceFragment extends CardPreferenceFragment
 {
+    private static String getBackupFilename(Context context)
+    {
+        return context.getExternalFilesDir(null) + "/settings.dat";
+    }
+
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.backup_restore);
+
+        updateBackupInfo();
 
         findPreference("backup").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
@@ -38,6 +46,7 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
                     Toast.makeText(getActivity(), getActivity().getString(R.string.backup_success) + getActivity().getExternalFilesDir(null) + "/settings.dat", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getActivity(), getActivity().getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
+                updateBackupInfo();
                 return true;
             }
         });
@@ -55,6 +64,25 @@ public class BackupRestorePreferenceFragment extends PreferenceFragment
                 return true;
             }
         });
+    }
+
+    private void updateBackupInfo()
+    {
+        String filename = getBackupFilename(getActivity());
+        File f = new File(filename);
+
+        if (f.exists())
+        {
+            //Time of when the file was last modified in microseconds
+            Long lastModified = f.lastModified();
+            findPreference("last_backup").setSummary(DateFormat.format("yyyy-MM-dd kk:mm", lastModified));
+        }
+        else
+        {
+            findPreference("last_backup").setSummary(R.string.not_available);
+        }
+
+        findPreference("backup_location").setSummary(filename);
     }
 
     public static boolean saveSharedPreferencesToFile(Context context)

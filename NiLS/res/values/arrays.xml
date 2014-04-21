@@ -26,8 +26,8 @@
         <item>@string/app_specific_settings_title</item>
         <item>@string/backup_restore</item>
         <item>@string/about_contactus_title</item>
-        <item>@string/unlock_all_features</item>
         <item>@string/menu_about</item>
+        <item>@string/unlock_all_features</item>
     </string-array>
 
     <string-array name="prefs_icons_array">
@@ -39,7 +39,7 @@
         <item>@drawable/apps</item>
         <item>@drawable/save</item>
         <item>@drawable/email</item>
-        <item>@drawable/unlock</item>
         <item>@drawable/about</item>
+        <item>@drawable/unlock</item>
     </string-array>
 </resources>

@@ -22,7 +22,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.Html;
@@ -394,7 +393,7 @@ public class SettingsActivity extends PreferenceActivity
         }
 	}
 
-    public static class PrefsContactFragment extends PreferenceFragment
+    public static class PrefsContactFragment extends CardPreferenceFragment
 	{
 	    @Override
 	    public void onCreate(Bundle savedInstanceState)

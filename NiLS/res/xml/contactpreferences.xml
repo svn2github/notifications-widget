@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceScreen android:title="@string/contact_ask" android:key="askquestion">
-        <intent android:action="android.intent.action.VIEW"
-            	android:data="@string/about_contactus_email"/>
-    </PreferenceScreen>
-    <PreferenceScreen android:title="@string/contact_request" android:key="requestfeature">
-                <intent android:action="android.intent.action.VIEW"
-            	android:data="@string/contact_request_link"/>
-    </PreferenceScreen>
-    <PreferenceScreen android:title="@string/contact_report" android:key="reportbug">
-                <intent android:action="android.intent.action.VIEW"
-            	android:data="@string/contact_report_link"/>        
-    </PreferenceScreen>
-   
+    <PreferenceCategory android:title="@string/rate_the_app" android:summary="@string/rate_the_app_summary">
+        <PreferenceScreen android:title="@string/rate_us_on_google_play" android:icon="@drawable/playstore">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="market://details?id=com.roymam.android.notificationswidget"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/contact_us" android:summary="@string/contact_summary">
+        <PreferenceScreen android:title="@string/contact_email" android:icon="@drawable/emailblack">
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="@string/about_contactus_email"/>
+        </PreferenceScreen>
+        <PreferenceScreen android:title="@string/contact_community" android:icon="@drawable/gplus">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://plus.google.com/communities/115156552435983276604"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
 </PreferenceScreen>

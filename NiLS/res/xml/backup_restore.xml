@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceScreen android:key="backup" android:title="@string/backup" android:summary="@string/backup_summary"/>
-    <PreferenceScreen android:key="restore" android:title="@string/restore" android:summary="@string/restore_summary"/>
+    <PreferenceCategory android:title="@string/backup_restore">
+        <PreferenceScreen android:key="backup" android:title="@string/backup" android:summary="@string/backup_summary"/>
+        <PreferenceScreen android:key="restore" android:title="@string/restore" android:summary="@string/restore_summary"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/backup_information">
+        <Preference android:key="backup_location" android:title="@string/backup_location_title" android:summary=""/>
+        <Preference android:key="last_backup" android:title="@string/last_backup_title" android:summary=""/>
+        <Preference android:key="backup_comments" android:title="@string/backup_comments_title" android:summary="@string/backup_comments_summary"/>
+    </PreferenceCategory>
 </PreferenceScreen>
