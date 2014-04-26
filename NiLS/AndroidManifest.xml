@@ -53,6 +53,8 @@
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Wallpaper.NoTitleBar"/>
+        <activity android:name="com.roymam.android.nilsplus.activities.StartupWizard"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
 
         <!-- Services -->
         <service android:name="com.roymam.android.notificationswidget.NotificationsRemoteViewsFactoryService"

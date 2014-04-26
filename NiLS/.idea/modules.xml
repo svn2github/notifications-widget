@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../NiLSPlus/extensions/ColorPickerPreference/ColorPickerPreference.iml" filepath="$PROJECT_DIR$/../NiLSPlus/extensions/ColorPickerPreference/ColorPickerPreference.iml" />
+      <module fileurl="file://$PROJECT_DIR$/extensions/ImageViewPlus/ImageViewPlus.iml" filepath="$PROJECT_DIR$/extensions/ImageViewPlus/ImageViewPlus.iml" />
       <module fileurl="file://$PROJECT_DIR$/NiLS.iml" filepath="$PROJECT_DIR$/NiLS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/extensions/ViewPagerIndicator/ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/extensions/ViewPagerIndicator/ViewPagerIndicator.iml" />
     </modules>
   </component>
 </project>

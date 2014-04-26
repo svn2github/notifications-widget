@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start NiLS Service"
+        style="@style/TextAppearance.WizardTitle"
+        android:layout_marginTop="16dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/nils_service"
+        android:layout_gravity="center"
+        android:layout_weight="0.1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NiLS need to get access to your notifications"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        style="@style/TextAppearance.WizardSubTitle"
+        android:layout_weight="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Android Settings and enable NiLS Service to grant this access"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        style="@style/TextAppearance.WizardSubTitle"
+        android:layout_weight="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="After enabling the service, hit the Back button"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        style="@style/TextAppearance.WizardSubTitle"
+        android:layout_weight="0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="0">
+        <Button
+            android:id="@+id/open_android_settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Open Android Settings"
+            style="@style/Button.Wizard"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:layout_marginRight="16dp"
+            />
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:text="Next"
+            android:enabled="false"
+            style="@style/Button.Wizard"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+</LinearLayout>
