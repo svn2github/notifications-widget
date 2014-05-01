@@ -1,5 +1,6 @@
 package com.roymam.android.notificationswidget;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,9 +27,6 @@ import android.util.Log;
 
 import com.roymam.android.nilsplus.NPService;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -824,6 +822,27 @@ public class NotificationsService extends Service implements NotificationsProvid
     // binding stuff
     //***************
     private final IBinder mBinder = new LocalBinder();
+
+    public static boolean isServiceRunning(Context context, Class serviceClass)
+    {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (serviceClass.getName().equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isServiceRunning(Context context)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            return isServiceRunning(context, NewNotificationsListener.class);
+        else
+            return isServiceRunning(context, NiLSAccessibilityService.class);
+    }
 
     public class LocalBinder extends Binder
     {

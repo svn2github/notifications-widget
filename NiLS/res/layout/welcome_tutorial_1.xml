@@ -17,41 +17,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
+        android:layout_margin="16dp"
         android:src="@drawable/screenshot1prototype"/>
-    <!--<RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-        <LinearLayout
-            android:layout_width="140dp"
-            android:layout_height="242dp"
-            android:layout_centerInParent="true">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="fitCenter"
-                android:src="@drawable/screenshot1"
-                android:layout_centerInParent="true" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="160dp"
-            android:layout_height="300dp"
-            android:layout_centerInParent="true">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/phone_prototype"
-                android:scaleType="fitCenter"
-                android:layout_centerInParent="true" />
-        </LinearLayout>
-    </RelativeLayout>-->
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NiLS provides the best way to get and interact with notifications on your lock screen"
+        android:text="NiLS brings you the best way to get and interact with notifications on your lock screen"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginLeft="8dp"
@@ -64,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Let's Get Started"
+        android:layout_margin="16dp"
         style="@style/Button.Wizard"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0" />

@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start NiLS Service"
+        android:text="NiLS is Active"
         style="@style/TextAppearance.WizardTitle"
         android:layout_marginTop="16dp"/>
 
@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/nils_service"
+        android:src="@drawable/screenshot2prototype"
         android:layout_gravity="center"
         android:layout_margin="16dp"
         android:layout_weight="0.1"/>
@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NiLS needs an access to your notifications"
+        android:text="NiLS is now active. all upcoming notifications will appear on your lock screen"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginLeft="8dp"
@@ -35,7 +35,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Android settings and enable NiLS service to grant this access"
+        android:text=""
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginTop="16dp"
@@ -47,7 +47,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hit the &quot;Back&quot; button on your device after enabling the service"
+        android:text=""
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginTop="16dp"
@@ -66,7 +66,7 @@
             android:id="@+id/open_android_settings_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Open Android Settings"
+            android:text="Skip"
             style="@style/Button.Wizard"
             android:layout_gravity="bottom"
             android:layout_weight="1"
@@ -81,7 +81,6 @@
             android:paddingRight="8dp"
             android:paddingLeft="8dp"
             android:text="Next"
-            android:enabled="false"
             style="@style/Button.Wizard"
             android:layout_gravity="bottom"
             android:layout_weight="1"
