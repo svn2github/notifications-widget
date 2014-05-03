@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start NiLS Service"
+        android:text="@string/tutorial_2_title_1"
         style="@style/TextAppearance.WizardTitle"
         android:layout_marginTop="16dp"/>
 
@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NiLS needs an access to your notifications"
+        android:text="@string/tutorial_2_text_1"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginLeft="8dp"
@@ -35,7 +35,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Android settings and enable NiLS service to grant this access"
+        android:text="@string/tutorial_2_text_2"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginTop="16dp"
@@ -47,7 +47,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hit the &quot;Back&quot; button on your device after enabling the service"
+        android:text="@string/tutorial_2_text_3"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginTop="16dp"

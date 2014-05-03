@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="That's All"
+        android:text="@string/tutorial_6_title_1"
         style="@style/TextAppearance.WizardTitle"
         android:layout_marginTop="16dp"/>
 
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tap &quot;Finish&quot; to complete the tutorial, then tap on NiLS icon to get access to many options and customizations\n\nEnjoy the app!"
+        android:text="@string/tutorial_6_text_1"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginLeft="8dp"

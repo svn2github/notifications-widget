@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome"
+        android:text="@string/tutorial_1_title_1"
         style="@style/TextAppearance.WizardTitle"
         android:layout_marginTop="16dp"/>
 
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NiLS brings you the best way to get and interact with notifications on your lock screen"
+        android:text="@string/tutorial_1_text_1"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginLeft="8dp"

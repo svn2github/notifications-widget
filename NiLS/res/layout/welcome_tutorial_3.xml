@@ -16,14 +16,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NiLS is Active"
+                android:text="@string/tutorial_3_title_1"
                 style="@style/TextAppearance.WizardTitle"
                 android:layout_marginTop="16dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NiLS is now active. all upcoming notifications will appear on your lock screen"
+                android:text="@string/tutorial_3_text_1"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"
@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Swipe a notification to the left or to the right to dismiss it"
+                android:text="@string/tutorial_3_text_2"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"
@@ -63,7 +63,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Swipe the notifications list down to dismiss all of the notifications"
+                android:text="@string/tutorial_3_text_3"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"

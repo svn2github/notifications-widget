@@ -16,7 +16,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Opening a Notification"
+                android:text="@string/tutorial_4_title_1"
                 style="@style/TextAppearance.WizardTitle"
                 android:layout_marginTop="16dp"/>
 
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Touch and hold the notification icon to see the available actions"
+                android:text="@string/tutorial_4_text_1"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"
@@ -52,7 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Drag the dots circle to the rightmost action icon to open the notification"
+                android:text="@string/tutorial_4_text_2"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"

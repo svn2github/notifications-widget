@@ -16,7 +16,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Moving and Resizing"
+                android:text="@string/tutorial_5_title_1"
                 style="@style/TextAppearance.WizardTitle"
                 android:layout_marginTop="16dp"/>
 
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Touch and hold the notifications list to move it, release to start resizing it"
+                android:text="@string/tutorial_5_text_1"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"

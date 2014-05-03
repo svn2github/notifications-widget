@@ -26,7 +26,7 @@
             android:id="@+id/skip_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Skip"
+            android:text="@string/tutorial_skip"
             style="@style/Button.Wizard"
             android:layout_weight="0.5"
             />
@@ -34,7 +34,7 @@
             android:id="@+id/open_android_settings_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Open Android Settings"
+            android:text="@string/tutorial_2_open_android_settings"
             style="@style/Button.Wizard"
             android:visibility="gone"
             android:layout_weight="0.25"
@@ -43,7 +43,7 @@
             android:id="@+id/next_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Next"
+            android:text="@string/tutorial_next"
             style="@style/Button.Wizard"
             android:layout_weight="0.5"
             />

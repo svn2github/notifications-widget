@@ -384,20 +384,6 @@
     <string name="loading_summary">Click to show all of the installed apps</string>
     <string name="screenon_timeout">Keep screen on</string>
     <string name="screenon_timeout_summary">Set number of seconds to keep the screen on. (the device may keep it longer)</string>
-    <string name="backup_location_title">Backup file location:</string>
-    <string name="last_backup_title">Last backup:</string>
-    <string name="backup_comments_title">Please note:</string>
-    <string name="backup_comments_summary">The backup file will be deleted when you uninstall NiLS\n</string>
-    <string name="backup_restore">Backup / Restore</string>
-    <string name="backup_restore_summary">Backup or restore preferences</string>
-    <string name="backup">Backup</string>
-    <string name="restore">Restore</string>
-    <string name="backup_summary">Backup settings to sd card</string>
-    <string name="restore_summary">Restore settings from sd card</string>
-    <string name="backup_success">NiLS settings were backed up succesfully to </string>
-    <string name="backup_failed">Failed to backup settings</string>
-    <string name="restore_success">Settings were restored successfully</string>
-    <string name="restore_failed">Failed to restore settings (is there a backup file?)</string>
     <string name="hide_clock_when_visible">Hide clock when visible</string>
     <string name="hide_clock_when_visible_summary">Hide clock when the persistent notification is visible for this app</string>
 
@@ -434,8 +420,26 @@
     <string name="drawer_close">drawer close</string>
     <string name="sync">Sync</string>
     <string name="integration">Integration</string>
+
+    <!-- Backup & Restore -->
+    <string name="backup_location_title">Backup file location:</string>
+    <string name="last_backup_title">Last backup:</string>
+    <string name="backup_comments_title">Please note:</string>
+    <string name="backup_comments_summary">The backup file will be deleted when you uninstall NiLS\n</string>
+    <string name="backup_restore">Backup / Restore</string>
+    <string name="backup_restore_summary">Backup or restore preferences</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="backup_summary">Backup settings to sd card</string>
+    <string name="restore_summary">Restore settings from sd card</string>
+    <string name="backup_success">NiLS settings were backed up succesfully to </string>
+    <string name="backup_failed">Failed to backup settings</string>
+    <string name="restore_success">Settings were restored successfully</string>
+    <string name="restore_failed">Failed to restore settings (is there a backup file?)</string>
     <string name="backup_information">Backup Information</string>
     <string name="not_available">N/A</string>
+
+    <!-- About -->
     <string name="contact_us">Contact Us</string>
     <string name="rate_the_app">Rate the app</string>
     <string name="rate_the_app_summary">If you like the app, good rating and +1s are always welcome.</string>
@@ -446,6 +450,30 @@
     <string name="swipe_to_dismiss_list_view">DashClock - Swipe To Dismiss List View</string>
     <string name="seekbar_preference">RoboBunny - SeekBar Preference</string>
     <string name="colorpicker_preference">Margaritov - ColorPicker Preference</string>
+
+    <!-- Welcome Tutorial -->
+    <string name="tutorial_skip">Skip</string>
+    <string name="tutorial_next">Next</string>
+    <string name="tutorial_1_title_1">Welcome</string>
+    <string name="tutorial_1_text_1">NiLS brings you the best way to get and interact with notifications on your lock screen</string>
+    <string name="tutorial_1_lets_get_started">Let\'s Get Started!</string>
+    <string name="tutorial_2_title_1">Start NiLS Service</string>
+    <string name="tutorial_2_text_1">NiLS needs an access to your notifications</string>
+    <string name="tutorial_2_text_2">Go to Android settings and enable NiLS service to grant this access</string>
+    <string name="tutorial_2_text_3"><![CDATA[Hit the "Back" button on your device after enabling the service]]></string>
+    <string name="tutorial_2_open_android_settings">Open Android Settings</string>
+    <string name="tutorial_3_title_1">NiLS is Active</string>
+    <string name="tutorial_3_text_1">NiLS is now active. all upcoming notifications will appear on your lock screen</string>
+    <string name="tutorial_3_text_2">Swipe a notification to the left or to the right to dismiss it</string>
+    <string name="tutorial_3_text_3">Swipe the notifications list down to dismiss all of the notifications</string>
+    <string name="tutorial_4_title_1">Opening a Notification</string>
+    <string name="tutorial_4_text_1">Touch and hold the notification icon to see the available actions</string>
+    <string name="tutorial_4_text_2">Drag the dots circle to the rightmost action icon to open the notification</string>
+    <string name="tutorial_5_title_1">Moving and Resizing</string>
+    <string name="tutorial_5_text_1">Touch and hold the notifications list to move it, release to start resizing it</string>
+    <string name="tutorial_6_title_1">That\'s All</string>
+    <string name="tutorial_6_text_1"><![CDATA[Tap "Finish" to complete the tutorial, then tap on NiLS icon to get access to many options and customizations\n\nEnjoy the app!]]></string>
+    <string name="tutorial_6_finish">Finish</string>
 
     <string-array name="lockscreenapps" translatable="false">
         <item>com.teslacoilsw.widgetlocker</item>
