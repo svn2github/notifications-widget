@@ -153,6 +153,84 @@ public class SettingsActivity extends PreferenceActivity
     public static final boolean DEFAULT_FP_ENABLED = true;
     private static final int FIRST_INSTALLED_VERSION = 273;
 
+    // settings strings
+    public static final String LOCKSCREEN_APP = "lockscreenapp";
+    public static final String LOCKSCREEN_APP_AUTO = "lockscreenapp_auto";
+    public static final String PRIMARY_TEXT_COLOR = "primary_text_color";
+    public static final String SECONDARY_TEXT_COLOR = "secondary_text_color";
+    public static final String MAIN_BG_COLOR = "main_bg_color";
+    public static final String ICON_BG_COLOR = "icon_bg_color";
+    public static final String ALT_MAIN_BG_COLOR = "alt_main_bg_color";
+    public static final String ALT_ICON_BG_COLOR = "alt_icon_bg_color";
+    public static final String VERTICAL_ALIGNMENT = "yalignment";
+    public static final String FP_MAX_LINES = "maxlines";
+    public static final String MAX_TEXT_LINES = "max_text_lines";
+    public static final String SWIPE_TO_OPEN = "swipe_to_open";
+    public static final String CLICK_TO_OPEN = "click_to_open";
+    public static final String UNLOCK_ON_OPEN = "unlock_on_open";
+    public static final String DONT_HIDE = "dont_hide";
+    public static final String SCREEN_ON_TIMEOUT = "screenon_timeout";
+    public static final String ENABLE_RESIZE_MODE = "enable_resize_mode";
+    public static final String TEMPORARY_UNLOCKED = "temporary_unlocked";
+    public static final String UNLOCKED = "unlocked";
+    public static final String SHOW_NEXT_PREVIEW = "show_next_preview";
+    public static final String THEME = "theme";
+    public static final String ICON_SIZE = "icon_size";
+    public static final String PREVIEW_ICON_SIZE = "preview_icon_size";
+    public static final String HIDE_ON_CLICK = "hide_on_click";
+    public static final String HALO_MODE = "halo_mode";
+    public static final String PREVIEW_HEIGHT = "preview_height";
+    public static final String HEIGHT = "height";
+    public static final String TITLE_FONT_SIZE = "title_size_sp";
+    public static final String TEXT_FONT_SIZE = "text_size_sp";
+    public static final String SINGLE_LINE = "single_line";
+    public static final String SHOW_TIME = "show_time";
+    public static final String FIT_HEIGHT_TO_CONTENT = "fit_height";
+    public static final String SWIPE_DOWN_TO_DISMISS_ALL = "swipe_down_to_dismiss_all" ;
+    public static final String MAIN_BG_OPACITY = "main_bg_opacity";
+
+    // default values
+    public static final int DEFAULT_PRIMARY_TEXT_COLOR = 0xffffffff;
+    public static final int DEFAULT_SECONDARY_TEXT_COLOR = 0xffaaaaaa;
+    public static final int DEFAULT_MAIN_BG_COLOR = 0x80000000;
+    public static final int DEFAULT_ICON_BG_COLOR = 0xff1d3741;
+    public static final int DEFAULT_ALT_MAIN_BG_COLOR = 0x80000000;
+    public static final int DEFAULT_ALT_ICON_BG_COLOR = 0xff1d3741;
+    public static final int DEFAULT_MAX_LINES = 4;
+    public static final int DEFAULT_MAX_TEXT_LINES = 1;
+    public static final boolean DEFAULT_SWIPE_TO_OPEN = false;
+    public static final boolean DEFAULT_DONT_HIDE = false;
+    public static final String DEFAULT_SCREEN_ON_TIMEOUT = "10";
+    public static final boolean DEFAULT_CLICK_TO_OPEN = false;
+    public static final boolean DEFAULT_UNLOCK_ON_OPEN = true;
+    public static final boolean DEFAULT_ENABLE_RESIZE_MODE = true;
+    public static final boolean DEFAULT_UNLOCKED = false;
+    public static final boolean DEFAULT_SHOW_NEXT_PREVIEW = true;
+    public static final String DEFAULT_THEME = "default";
+    public static final int DEFAULT_ICON_SIZE=48;
+    public static final int DEFAULT_ROW_HEIGHT=48;
+    public static final int DEFAULT_SPACING = 4;
+    public static final int DEFAULT_HEIGHT = DEFAULT_ROW_HEIGHT * DEFAULT_MAX_LINES + (DEFAULT_SPACING)*(DEFAULT_MAX_LINES-1);
+    public static final int DEFAULT_PREVIEW_HEIGHT = DEFAULT_HEIGHT;
+    public static final boolean DEFAULT_HALO_MODE = false;
+    public static final boolean DEFAULT_HIDE_ON_CLICK = false;
+    public static final String DEFAULT_LOCKSCREEN_APP_AUTO = "android";
+    public static final String AUTO_LOCKSCREEN_APP = "auto";
+    public static final String DEFAULT_LOCKSCREEN_APP = AUTO_LOCKSCREEN_APP;
+    public static final String STOCK_LOCKSCREEN_PACKAGENAME = "com.android.keyguard";
+    public static final String STOCK_PHONE_PACKAGENAME = "com.android.phone";
+    public static final int DEFAULT_PREVIEW_ICON_SIZE = 64;
+    public static final int DEFAULT_TITLE_FONT_SIZE = 18;
+    public static final int DEFAULT_TEXT_FONT_SIZE = 14;
+    public static final boolean DEFAULT_SINGLE_LINE = false;
+    public static final String DEFAULT_VERTICAL_ALIGNMENT = "top";
+    public static final boolean DEFAULT_SHOW_TIME = false;
+    public static final boolean DEFAULT_FIT_HEIGHT_TO_CONTENT = true;
+    public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
+    public static final int DEFAULT_MAIN_BG_OPACITY = 100;
+    public static final String BLACKLIST_PACKAGENAMES = "com.android.dialer|com.google.android.dialer|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
+    public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
+
     private List<Header> mHeaders = null;
 
     @Override

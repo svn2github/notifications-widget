@@ -809,7 +809,6 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 				maxLinesSpinner.setSelection(9);
 
             ((CheckBox)getView().findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false));
-            //((CheckBox)getView().findViewById(R.id.hideNotificationsCheckbox)).setChecked(SettingsActivity.shouldHideNotifications(getActivity(), widgetMode));
 		}
 
 		private void setupNotificationStyle() 
