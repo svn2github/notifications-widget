@@ -16,14 +16,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NiLS is Active"
+                android:text="Opening a Notification"
                 style="@style/TextAppearance.WizardTitle"
                 android:layout_marginTop="16dp"/>
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/tutorial_touch_icon"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:layout_weight="0"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NiLS is now active. all upcoming notifications will appear on your lock screen"
+                android:text="Touch and hold the notification icon to see the available actions"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"
@@ -35,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/tutorial_dismiss"
+                android:src="@drawable/tutorial_perform_action"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
                 android:layout_weight="0"/>
@@ -43,27 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Swipe a notification to the left or to the right to dismiss it"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                style="@style/TextAppearance.WizardSubTitle"
-                android:layout_weight="0" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/tutorial_dismiss_all"
-                android:layout_gravity="center"
-                android:layout_margin="8dp"
-                android:layout_weight="0"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Swipe the notifications list down to dismiss all of the notifications"
+                android:text="Drag the dots circle to the rightmost action icon to open the notification"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_marginLeft="8dp"

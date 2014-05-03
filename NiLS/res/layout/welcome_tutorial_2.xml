@@ -55,37 +55,4 @@
         android:layout_marginRight="8dp"
         style="@style/TextAppearance.WizardSubTitle"
         android:layout_weight="0" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="16dp"
-        android:layout_weight="0">
-        <Button
-            android:id="@+id/open_android_settings_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Open Android Settings"
-            style="@style/Button.Wizard"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp"
-            android:layout_marginRight="16dp"
-            />
-        <Button
-            android:id="@+id/next_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp"
-            android:text="Next"
-            android:enabled="false"
-            style="@style/Button.Wizard"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
 </LinearLayout>

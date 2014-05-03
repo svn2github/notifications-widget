@@ -15,6 +15,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="@android:style/Holo.Light.ButtonBar">
+        <Button
+            android:id="@+id/skip_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Skip"
+            style="@style/Button.Wizard"
+            android:layout_weight="0.5"
+            />
+        <Button
+            android:id="@+id/open_android_settings_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Open Android Settings"
+            style="@style/Button.Wizard"
+            android:visibility="gone"
+            android:layout_weight="0.25"
+            />
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Next"
+            style="@style/Button.Wizard"
+            android:layout_weight="0.5"
+            />
+    </LinearLayout>
 </LinearLayout>
