@@ -1457,7 +1457,11 @@
       <created>1399124485648</created>
       <updated>1399124485649</updated>
     </task>
-    <option name="localTasksCounter" value="142" />
+    <task id="LOCAL-00142" summary="1. new option - notification privacy.&#10;2. fixed app specific settings.">
+      <created>1399401787826</created>
+      <updated>1399401787827</updated>
+    </task>
+    <option name="localTasksCounter" value="143" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
