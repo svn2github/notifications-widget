@@ -12,10 +12,16 @@
 
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
         <ListPreference android:key="notification_mode"
-                            android:title="Notification mode"
+                            android:title="@string/notification_mode"
                             android:entries="@array/notification_modes_entries"
                             android:entryValues="@array/notification_modes_values"
                             android:defaultValue="separated"/>
+
+        <ListPreference android:key="notification_privacy"
+            android:title="@string/privacy"
+            android:entries="@array/privacy_entries"
+            android:entryValues="@array/privacy_values"
+            android:defaultValue="none"/>
 
         <ListPreference android:key="notification_icon"
             android:title="Notification icon"

@@ -42,4 +42,18 @@
         <item>@drawable/about</item>
         <item>@drawable/unlock</item>
     </string-array>
+
+    <string-array name="privacy_entries">
+        <item>@string/privacy_none</item>
+        <item>@string/privacy_show_title</item>
+        <item>@string/privacy_show_ticker</item>
+        <item>@string/privacy_show_appname</item>
+    </string-array>
+
+    <string-array name="privacy_values">
+        <item>none</item>
+        <item>show_title</item>
+        <item>show_ticker</item>
+        <item>show_appname</item>
+    </string-array>
 </resources>

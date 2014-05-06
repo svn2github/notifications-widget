@@ -84,6 +84,15 @@
         <item>none</item>
     </string-array>
 
+    <string name="notification_mode">Notification mode</string>
+
+    <!-- Privacy Options -->
+    <string name="privacy">Privacy</string>
+    <string name="privacy_none">None</string>
+    <string name="privacy_show_title">Show title only</string>
+    <string name="privacy_show_ticker">Show status bar text only</string>
+    <string name="privacy_show_appname">Show app name only</string>
+
     <!-- auto clear values -->
     <string name="when_cleared">When cleared from notifications bar</string>
     <string name="when_app_is_opened">When notification app is opened</string>

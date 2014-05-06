@@ -31,7 +31,7 @@ public class BackupRestorePreferenceFragment extends CardPreferenceFragment
     {
         super.onCreate(savedInstanceState);
 
-        // Load the preferences from an XML resource
+        // Load the global_settings from an XML resource
         addPreferencesFromResource(R.xml.backup_restore);
 
         updateBackupInfo();

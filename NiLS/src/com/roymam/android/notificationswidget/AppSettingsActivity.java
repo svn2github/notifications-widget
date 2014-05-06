@@ -12,7 +12,7 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
 {
 	public static final String IGNORE_APP = "ignoreapp";
     public static final String USE_EXPANDED_TEXT = "useexpandedtext";
-	public static final String APP_PRIORITY = "apppriority";
+    public static final String APP_PRIORITY = "apppriority";
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -26,6 +26,7 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
         prefs.edit().remove(packageName + "." + SettingsActivity.WAKEUP_MODE)
                     .remove(packageName + "." + SettingsActivity.NOTIFICATION_MODE)
                     .remove(packageName + "." + SettingsActivity.NOTIFICATION_ICON)
+                    .remove(packageName + "." + SettingsActivity.NOTIFICATION_PRIVACY)
                     .remove(packageName + "." + IGNORE_APP)
                     .commit();
 
@@ -103,8 +104,7 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
 	}
 		
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) 
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
 	{
 		if (key.startsWith(packageName))
 		{

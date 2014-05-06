@@ -13,7 +13,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -231,6 +230,14 @@ public class SettingsActivity extends PreferenceActivity
     public static final String BLACKLIST_PACKAGENAMES = "com.android.dialer|com.google.android.dialer|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
     public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
 
+    // privacy options
+    public static final String NOTIFICATION_PRIVACY = "notification_privacy";
+    public static final String PRIVACY_SHOW_TITLE_ONLY = "show_title";
+    public static final String PRIVACY_SHOW_TICKER_ONLY = "show_ticker";
+    public static final String PRIVACY_SHOW_APPNAME_ONLY = "show_appname";
+    public static final String PRIVACY_SHOW_ALL = "none";
+    public static final String DEFAULT_NOTIFICATION_PRIVACY = PRIVACY_SHOW_ALL;
+
     private List<Header> mHeaders = null;
 
     @Override
@@ -339,6 +346,12 @@ public class SettingsActivity extends PreferenceActivity
         return (autoClear.contains(WHEN_CLEARED));
     }
 
+    public static String getPrivacy(Context context, String packageName)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString(packageName + "." + NOTIFICATION_PRIVACY, prefs.getString(NOTIFICATION_PRIVACY, DEFAULT_NOTIFICATION_PRIVACY));
+    }
+
     public static class HowToAddWidgetFragment extends Fragment
     {
         @Override
@@ -351,26 +364,6 @@ public class SettingsActivity extends PreferenceActivity
         }
     }
 
-    public static class InstallNFPFragment extends Fragment
-    {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-        {
-            View v = inflater.inflate(R.layout.view_install_nfp, null);
-            v.findViewById(R.id.getnilsfp_button).setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    String playstoreUrl = "market://details?id=com.roymam.android.nilsplus";
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(playstoreUrl));
-                    startActivity(browserIntent);
-                }
-            });
-            return v;
-        }
-    }
-
     public static class PrefsGeneralFragment extends CardPreferenceFragment
 	{
         @Override
@@ -378,8 +371,8 @@ public class SettingsActivity extends PreferenceActivity
 	    {
 	        super.onCreate(savedInstanceState);
 
-	        // Load the preferences from an XML resource
-	        addPreferencesFromResource(R.xml.preferences);
+	        // Load the global_settings from an XML resource
+	        addPreferencesFromResource(R.xml.global_settings);
 
             // auto wake up mode
             ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
@@ -476,7 +469,7 @@ public class SettingsActivity extends PreferenceActivity
 	    {
 	        super.onCreate(savedInstanceState);
 
-	        // Load the preferences from an XML resource
+	        // Load the global_settings from an XML resource
 	        addPreferencesFromResource(R.xml.contactpreferences);
 	    }
 	}
@@ -555,7 +548,7 @@ public class SettingsActivity extends PreferenceActivity
                 }
             });
 
-            // build preferences list
+            // build global_settings list
             for(HashMap<String, Object> appData : apps)
             {
                 String packageName = (String) appData.get("package");
@@ -765,7 +758,7 @@ public class SettingsActivity extends PreferenceActivity
     					apps.add(packageName);
     			}
 
-    			// build preferences list
+    			// build global_settings list
     			for (final String packageName : apps)
     			{
     				final Context ctx = getActivity();

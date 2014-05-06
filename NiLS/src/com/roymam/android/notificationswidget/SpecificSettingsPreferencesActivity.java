@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.roymam.android.common.ListPreferenceChangeListener;
 import com.roymam.android.nilsplus.CardPreferenceFragment;
 
 public class SpecificSettingsPreferencesActivity extends PreferenceActivity
@@ -26,6 +26,7 @@ public class SpecificSettingsPreferencesActivity extends PreferenceActivity
         super.onCreate(savedInstanceState);
 
         packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
+
         // get package title
         try
         {
@@ -50,24 +51,21 @@ public class SpecificSettingsPreferencesActivity extends PreferenceActivity
 
         for(int i=0; i<prefScreen.getPreferenceCount();i++)
         {
-            Preference pref = prefScreen.getPreference(i);
-            String key = packageName + "." + pref.getKey();
+            PreferenceGroup prefGroup = (PreferenceGroup) prefScreen.getPreference(i);
 
-            if (pref instanceof ListPreference)
-            {
-                ListPreference listPref = ((ListPreference) pref);
-                String globalValue = listPref.getValue();
-                String currValue = sharedPrefs.getString(key, globalValue);
+            for (int j=0; j<prefGroup.getPreferenceCount(); j++) {
+                Preference pref = prefGroup.getPreference(j);
+                String key = packageName + "." + pref.getKey();
 
-                listPref.setKey(key);
-                listPref.setValue(currValue);
+                if (pref instanceof ListPreference)
+                {
+                    ListPreference listPref = ((ListPreference) pref);
+                    String globalValue = listPref.getValue();
+                    String currValue = sharedPrefs.getString(key, globalValue);
 
-                // set summary from current value
-                ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
-                        null, listPref.getEntries(), listPref.getEntryValues());
-
-                listener.setPrefSummary(listPref, currValue);
-                listPref.setOnPreferenceChangeListener(listener);
+                    listPref.setKey(key);
+                    listPref.setValue(currValue);
+                }
             }
         }
 

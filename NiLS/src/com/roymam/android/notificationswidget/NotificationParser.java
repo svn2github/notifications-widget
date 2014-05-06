@@ -170,7 +170,8 @@ public class NotificationParser
                 // extract expanded text
                 nd.text = null;
                 nd.title = null;
-                if (sharedPref.getBoolean(nd.packageName+"."+AppSettingsActivity.USE_EXPANDED_TEXT, sharedPref.getBoolean(AppSettingsActivity.USE_EXPANDED_TEXT, true)))
+                String privacy = SettingsActivity.getPrivacy(context, packageName);
+                if (privacy.equals(SettingsActivity.PRIVACY_SHOW_ALL) || privacy.equals(SettingsActivity.PRIVACY_SHOW_TITLE_ONLY))
                 {
                     getExpandedText(n,nd);
                     // replace text with content if no text
@@ -185,15 +186,34 @@ public class NotificationParser
                     {
                         nd.content = null;
                     }
+
+                    if (nd.title == null && nd.text == null)
+                    {
+                        Log.d("NiLS", "missing text from:" + packageName);
+                        printStringsFromNotification();
+                    }
+
+                    // hide text on private mode
+                    if (privacy.equals(SettingsActivity.PRIVACY_SHOW_TITLE_ONLY))
+                        nd.text = "";
                 }
 
                     // use default notification text & title - if no info found on expanded notification
                     if (nd.text == null)
                     {
-                        nd.text = n.tickerText;
+                        if (privacy.equals(SettingsActivity.PRIVACY_SHOW_APPNAME_ONLY))
+                            nd.text = "";
+                        else
+                            nd.text = n.tickerText;
                     }
+
                     if (nd.title == null)
                     {
+                        if (info != null)
+                            nd.title = context.getPackageManager().getApplicationLabel(ai);
+                        else
+                            nd.title = packageName;
+
                         if (nd.text == null)
                         {
                             // if both text and title are null - that's non informative notification - ignore it
@@ -201,10 +221,6 @@ public class NotificationParser
                             printStringsFromNotification();
                             return new ArrayList<NotificationData>();
                         }
-                        if (info != null)
-                            nd.title = context.getPackageManager().getApplicationLabel(ai);
-                        else
-                            nd.title = packageName;
                     }
                     else if (nd.text == null)
                     {
@@ -475,7 +491,11 @@ public class NotificationParser
             {
                 text = notificationStrings.get(2131296299);
             }
-
+            // CNBC text
+            else if (notificationStrings.containsKey(2131099791))
+            {
+                text = notificationStrings.get(2131099791);
+            }
             // get title string if available
             if (notificationStrings.containsKey(notification_title_id))
             {

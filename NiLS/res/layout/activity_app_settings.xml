@@ -15,18 +15,26 @@
         android:dividerHeight="0dp"
         android:layout_marginBottom="5dp"
         android:layout_weight="1"/>
-    <Button
-        style="@android:style/Widget.Holo.Light.Button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:text="@string/ignore_notifications"
-        android:onClick="ignoreThisApp"/>
-    <Button
-        style="@android:style/Widget.Holo.Light.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:text="@string/clear_app_settings"
-        android:onClick="resetAppSettings"/>
+        android:orientation="horizontal"
+        style="@android:style/Holo.Light.ButtonBar">
+
+        <Button
+            style="@style/Button.Wizard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/ignore_notifications"
+            android:onClick="ignoreThisApp"/>
+        <Button
+            style="@style/Button.Wizard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/clear_app_settings"
+            android:onClick="resetAppSettings"/>
+    </LinearLayout>
+
 </LinearLayout>

@@ -229,7 +229,7 @@ public class NotificationAdapter implements NotificationEventListener
     @Override
     public void onServiceStarted()
     {
-        // first run preferences
+        // first run global_settings
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean firstRun = prefs.getBoolean("com.roymam.android.notificationswidget.firstrun", true);
         prefs.edit().putBoolean("com.roymam.android.notificationswidget.firstrun", false).commit();
