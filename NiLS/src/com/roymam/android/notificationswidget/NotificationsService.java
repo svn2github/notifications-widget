@@ -334,6 +334,9 @@ public class NotificationsService extends Service implements NotificationsProvid
 
             persistentNotifications.put(pn.packageName, pn);
             if (listener != null) listener.onPersistentNotificationAdded(pn);
+
+            if (pn.packageName.equals("com.android.dialer") || pn.packageName.equals("com.google.android.dialer"))
+                context.sendBroadcast(new Intent(NPService.INCOMING_CALL));
         }
     }
 
