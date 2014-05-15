@@ -104,8 +104,11 @@ public class SettingsActivity extends PreferenceActivity
     public static final String WAKEUP_NEVER = "never";
     public static final String WAKEUP_UNCOVERED = "when_uncovered";
     public static final String WAKEUP_NOT_COVERED = "when_not_covered";
-    public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
-    public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
+    public static final String TURNSCREENOFF = "turnscreenoff";
+    public static final String TURNSCREENOFF_DEFAULT = "default";
+
+    //public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
+    //public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
 
     // notification mode
     public static final String NOTIFICATION_MODE = "notification_mode";
@@ -227,7 +230,7 @@ public class SettingsActivity extends PreferenceActivity
     public static final boolean DEFAULT_FIT_HEIGHT_TO_CONTENT = true;
     public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
     public static final int DEFAULT_MAIN_BG_OPACITY = 100;
-    public static final String BLACKLIST_PACKAGENAMES = "com.android.phone|com.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
+    public static final String BLACKLIST_PACKAGENAMES = "com.tbig.playerpro|com.android.phone|com.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
     public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
 
     // privacy options
@@ -364,8 +367,40 @@ public class SettingsActivity extends PreferenceActivity
         }
     }
 
+    /*
+    public static class DeviceAdmin extends DeviceAdminReceiver
+    {
+        void showToast(Context context, String msg)
+        {
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onEnabled(Context context, Intent intent) {
+            showToast(context, "enabled");
+        }
+
+        @Override
+        public CharSequence onDisableRequested(Context context, Intent intent) {
+            return "please don't do this";
+        }
+
+        @Override
+        public void onDisabled(Context context, Intent intent) {
+            showToast(context, "disabled");
+        }
+
+        @Override
+        public void onPasswordChanged(Context context, Intent intent) {
+            showToast(context, "password changed");
+        }
+    }*/
+
     public static class PrefsGeneralFragment extends CardPreferenceFragment
 	{
+        //ComponentName mDeviceAdmin;
+        //DevicePolicyManager mDPM;
+
         @Override
 	    public void onCreate(Bundle savedInstanceState)
 	    {
@@ -373,6 +408,42 @@ public class SettingsActivity extends PreferenceActivity
 
 	        // Load the global_settings from an XML resource
 	        addPreferencesFromResource(R.xml.global_settings);
+
+            //ListPreference autoScreenOff = (ListPreference) findPreference(TURNSCREENOFF);
+            //int curDisplayTimeout = android.provider.Settings.System.getInt(getActivity().getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT,-1);
+            //autoScreenOff.getEntries()[0] = getActivity().getString(R.string.turn_off_default, curDisplayTimeout/1000);
+            //autoScreenOff.setSummary(null);
+            //applyListPrefAutoDescription(autoScreenOff);
+
+            /*autoScreenOff.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+            {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue)
+                {
+                    mDeviceAdmin = new ComponentName(getActivity(), DeviceAdmin.class);
+                    DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getActivity().getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+                    if (!devicePolicyManager.isAdminActive(mDeviceAdmin)) {
+                        // Launch the activity to have the user enable our admin.
+                        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdmin);
+                        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "NiLS needs an extra permission to be able to turn off the screen.\nAfter enabling this permission NiLS will be able to turn the screen off automatically after timeout ends, otherwise every time notification arrives, the display will stay on until the device display timeout ends and this might cause battery draining issues.");
+                        startActivityForResult(intent, NiLSActivity.REQUEST_ADMIN_ENABLE);
+
+                        // return false - don't update checkbox until we're really active
+                        return false;
+                    }
+                    else
+                    {
+                        if (newValue.equals(SettingsActivity.TURNSCREENOFF_DEFAULT))
+                        {
+                            // disable admin access
+                            devicePolicyManager.removeActiveAdmin(mDeviceAdmin);
+                        }
+                        return true;
+                    }
+                }
+            });*/
 
             // auto wake up mode
             ListPreferenceChangeListener listener = new ListPreferenceChangeListener(

@@ -44,6 +44,14 @@
         <item>always</item>
     </string-array>
 
+    <string name="turnscreenoff">Turn off screen</string>
+    <string name="turn_off_default">Device default</string>
+    <string name="turn_off_10">After 10 seconds</string>
+    <string name="turn_off_15">After 15 seconds</string>
+    <string name="turn_off_30">After 30 seconds</string>
+    <string name="turn_off_45">After 45 seconds</string>
+    <string name="turn_off_60">After 60 seconds</string>
+
     <string name="yes">Yes</string>
     <string name="no">No</string>
 

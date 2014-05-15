@@ -1,8 +1,6 @@
 package com.roymam.android.notificationswidget;
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
-import android.app.KeyguardManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,19 +10,20 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.roymam.android.common.SysUtils;
 import com.roymam.android.nilsplus.NPService;
 
 import java.util.List;
 
 public class NotificationAdapter implements NotificationEventListener
 {
+    private final SysUtils mSysUtils;
     private Context context = null;
     private boolean newNotificationsAvailable = false;
     private Boolean deviceCovered = null;
@@ -36,11 +35,13 @@ public class NotificationAdapter implements NotificationEventListener
     public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
     private Handler mHandler = null;
     private PowerManager.WakeLock mWakeLock = null;
+    private int mDeviceTimeout;
 
     public NotificationAdapter(Context context, Handler handler)
     {
         this.context = context;
         this.mHandler = handler;
+        mSysUtils = SysUtils.getInstance(context, handler);
     }
 
     @Override
@@ -259,7 +260,7 @@ public class NotificationAdapter implements NotificationEventListener
         }
         context.sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
     }
-
+/*
     private Runnable mReleaseWakelock = new Runnable()
     {
         @Override
@@ -269,26 +270,40 @@ public class NotificationAdapter implements NotificationEventListener
             {
                 mWakeLock.release();
             }
-            turnScreenOff();
+
+            // restore previous timeout settings
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, mDeviceTimeout);
         }
     };
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+*/
     private void turnScreenOn()
     {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        mSysUtils.turnScreenOn(false);
+
+        /*SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
-        String timeoutStr = sharedPref.getString(SettingsActivity.TURNSCREENON_TIMEOUT, String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT));
-        if (timeoutStr.equals("")) timeoutStr = String.valueOf(SettingsActivity.DEFAULT_TURNSCREENON_TIMEOUT);
-        int timeout = Integer.parseInt(timeoutStr) * 1000;
+        // read timeout preference - default - device settings
+        String timeoutStr = sharedPref.getString(SettingsActivity.TURNSCREENOFF, SettingsActivity.TURNSCREENOFF_DEFAULT);
+        if (timeoutStr.equals("")) timeoutStr = SettingsActivity.TURNSCREENOFF_DEFAULT;
+
+        int timeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT,10);
+        if (!timeoutStr.equals(SettingsActivity.TURNSCREENOFF_DEFAULT))
+            timeout = Integer.parseInt(timeoutStr) * 1000;
 
         // turn the screen on only if it was off or acquired by previous wakelock
         if (!pm.isScreenOn() || mWakeLock != null && mWakeLock.isHeld())
         {
             // release previously held wake lock
-            if (mWakeLock != null && mWakeLock.isHeld()) mWakeLock.release();
+            if (mWakeLock != null && mWakeLock.isHeld())
+                mWakeLock.release();
+            else
+                // store the original device timeout
+                mDeviceTimeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT,10);
+
+            // set device timeout to the desired timeout
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, timeout);
 
             // release previously callback
             mHandler.removeCallbacks(mReleaseWakelock);
@@ -301,7 +316,7 @@ public class NotificationAdapter implements NotificationEventListener
             // release wake lock on timeout ends
             mHandler.postDelayed(mReleaseWakelock, timeout);
         }
-
+*/
         newNotificationsAvailable = false;
     }
 
@@ -323,6 +338,7 @@ public class NotificationAdapter implements NotificationEventListener
         return false;
     }
 
+    /*
     private void turnScreenOff()
     {
         KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -348,7 +364,7 @@ public class NotificationAdapter implements NotificationEventListener
 
             if (screenoffApp != null) context.startActivity(screenoffApp);
         }
-    }
+    }*/
 
     // Proximity Sensor Monitoring
     SensorEventListener sensorListener = null;

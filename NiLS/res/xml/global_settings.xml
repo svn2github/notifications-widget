@@ -8,14 +8,21 @@
             android:entryValues="@array/wakeup_mode_values"
             android:entries="@array/wakeup_mode_entries"
             />
-        <EditTextPreference
+        <ListPreference
+            android:title="@string/turnscreenoff"
+            android:key="turnscreenoff"
+            android:defaultValue="default"
+            android:entryValues="@array/turn_off_values"
+            android:entries="@array/turn_off_entries"/>
+
+<!--        <EditTextPreference
                 android:title="@string/screenon_timeout"
                 android:key="turnscreenon_timeout"
                 android:enabled="true"
                 android:defaultValue="10"
                 android:inputType="number"
                 android:summary="@string/screenon_timeout_summary"
-            />
+            />-->
     </PreferenceCategory>
 
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">

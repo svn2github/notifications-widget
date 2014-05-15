@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
     android:versionCode="400"
-    android:versionName="1.5.400r3" >
+    android:versionName="1.5.400r4" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
 
@@ -149,6 +150,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- Device administration receiever - DISABLED
+        <receiver android:name=".SettingsActivity$DeviceAdmin"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data android:name="android.app.device_admin"
+                android:resource="@xml/nils_device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+        -->
     </application>
 
 </manifest>
