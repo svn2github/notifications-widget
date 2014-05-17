@@ -4,7 +4,6 @@
         <ListPreference
             android:title="@string/turnscreenon"
             android:key="wakeup_mode"
-            android:defaultValue="when_not_covered"
             android:entryValues="@array/wakeup_mode_values"
             android:entries="@array/wakeup_mode_entries"
             />

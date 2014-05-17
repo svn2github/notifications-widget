@@ -23,8 +23,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -230,7 +228,7 @@ public class SettingsActivity extends PreferenceActivity
     public static final boolean DEFAULT_FIT_HEIGHT_TO_CONTENT = true;
     public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
     public static final int DEFAULT_MAIN_BG_OPACITY = 100;
-    public static final String BLACKLIST_PACKAGENAMES = "com.tbig.playerpro|com.android.phone|com.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
+    public static final String BLACKLIST_PACKAGENAMES = "com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
     public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
 
     // privacy options
@@ -240,6 +238,7 @@ public class SettingsActivity extends PreferenceActivity
     public static final String PRIVACY_SHOW_APPNAME_ONLY = "show_appname";
     public static final String PRIVACY_SHOW_ALL = "none";
     public static final String DEFAULT_NOTIFICATION_PRIVACY = PRIVACY_SHOW_ALL;
+    public static final String IMMEDIATE_PROXIMITY = "immediate_proximity";
 
     private List<Header> mHeaders = null;
 
@@ -283,8 +282,14 @@ public class SettingsActivity extends PreferenceActivity
         if (prefs.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
             defaultWakeupMode = WAKEUP_UNCOVERED;
         else
-            defaultWakeupMode = WAKEUP_NOT_COVERED;
-
+        {
+            // if the proximity sensor has immediate response, set wake up mode to use it by default
+            if (prefs.getBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, true))
+                defaultWakeupMode = WAKEUP_NOT_COVERED;
+            else
+                // otherwise - don't use proximity sensor
+                defaultWakeupMode = WAKEUP_ALWAYS;
+        }
         return prefs.getString(packageName + "." + WAKEUP_MODE, prefs.getString(WAKEUP_MODE, defaultWakeupMode));
     }
 
@@ -409,42 +414,6 @@ public class SettingsActivity extends PreferenceActivity
 	        // Load the global_settings from an XML resource
 	        addPreferencesFromResource(R.xml.global_settings);
 
-            //ListPreference autoScreenOff = (ListPreference) findPreference(TURNSCREENOFF);
-            //int curDisplayTimeout = android.provider.Settings.System.getInt(getActivity().getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT,-1);
-            //autoScreenOff.getEntries()[0] = getActivity().getString(R.string.turn_off_default, curDisplayTimeout/1000);
-            //autoScreenOff.setSummary(null);
-            //applyListPrefAutoDescription(autoScreenOff);
-
-            /*autoScreenOff.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-            {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue)
-                {
-                    mDeviceAdmin = new ComponentName(getActivity(), DeviceAdmin.class);
-                    DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getActivity().getSystemService(Context.DEVICE_POLICY_SERVICE);
-
-                    if (!devicePolicyManager.isAdminActive(mDeviceAdmin)) {
-                        // Launch the activity to have the user enable our admin.
-                        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdmin);
-                        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "NiLS needs an extra permission to be able to turn off the screen.\nAfter enabling this permission NiLS will be able to turn the screen off automatically after timeout ends, otherwise every time notification arrives, the display will stay on until the device display timeout ends and this might cause battery draining issues.");
-                        startActivityForResult(intent, NiLSActivity.REQUEST_ADMIN_ENABLE);
-
-                        // return false - don't update checkbox until we're really active
-                        return false;
-                    }
-                    else
-                    {
-                        if (newValue.equals(SettingsActivity.TURNSCREENOFF_DEFAULT))
-                        {
-                            // disable admin access
-                            devicePolicyManager.removeActiveAdmin(mDeviceAdmin);
-                        }
-                        return true;
-                    }
-                }
-            });*/
-
             // auto wake up mode
             ListPreferenceChangeListener listener = new ListPreferenceChangeListener(
                     null,
@@ -455,7 +424,42 @@ public class SettingsActivity extends PreferenceActivity
             String currValue = SettingsActivity.getWakeupMode(getActivity(), null);
             wakeupPref.setDefaultValue(currValue);
             listener.setPrefSummary(wakeupPref, currValue);
-            wakeupPref.setOnPreferenceChangeListener(listener);
+            final ListPreferenceChangeListener finalListener = listener;
+            wakeupPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+            {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue)
+                {
+                    NotificationsService ns = (NotificationsService) NotificationsService.getSharedInstance();
+                    String wakeupMode = (String)newValue;
+
+                    if (wakeupMode.equals(WAKEUP_NOT_COVERED) || wakeupMode.equals(WAKEUP_UNCOVERED))
+                    {
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                        if (!prefs.getBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, true) || wakeupMode.equals(WAKEUP_UNCOVERED)) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle(R.string.battery_usage_warning)
+                                    .setMessage(R.string.battery_usage_warning_summary)
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // continue
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+
+                            if (ns != null) ns.startProximityMonitoring();
+                        }
+                    }
+                    else
+                        // stop proximity monitoring if its running
+                        if (ns != null) ns.stopProximityMonitoring();
+
+                    return finalListener.onPreferenceChange(preference, newValue);
+
+                }
+            });
 
             // notification mode
             listener = new ListPreferenceChangeListener(
@@ -1031,52 +1035,9 @@ public class SettingsActivity extends PreferenceActivity
         }
         else
         {
-            showWhatsNew();
         }
     }
 
-    private void showWhatsNew()
-    {
-        CharSequence whatsnewString = "";
-
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        int installedVer = prefs.getInt("installed_version", FIRST_INSTALLED_VERSION);
-        int currentVer;
-
-        // get current version
-        try
-        {
-            currentVer = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (NameNotFoundException e)
-        {
-            // shoudln't happen
-            currentVer = installedVer;
-        }
-
-        // build "what's new" string
-        for (int i=currentVer; i>installedVer; i--)
-        {
-            int id = getResources().getIdentifier("v"+i,"string", getPackageName());
-            if (id > 0)
-                whatsnewString = TextUtils.concat(whatsnewString, Html.fromHtml(getString(id)), "\n");
-        }
-
-        if (!whatsnewString.equals(""))
-        {
-            final int finalCurrentVer = currentVer;
-            AlertDialog.Builder b = new AlertDialog.Builder( this );
-            b.setTitle(R.string.whatsnew)
-             .setMessage(whatsnewString)
-             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                 public void onClick(DialogInterface dialog, int which) {
-                     // save the updated version code so this dialog won't appear again
-                     prefs.edit().putInt("installed_version", finalCurrentVer).commit();
-                 }
-             })
-             .setIcon(R.drawable.appicon)
-             .show();
-        }
-    }
 
     @Override
 	protected void onResume() 

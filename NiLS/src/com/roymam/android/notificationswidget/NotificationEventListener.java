@@ -2,8 +2,8 @@ package com.roymam.android.notificationswidget;
 
 public interface NotificationEventListener
 {
-    public void onNotificationAdded(NotificationData nd, boolean wake);
-    public void onNotificationUpdated(NotificationData nd, boolean changed);
+    public void onNotificationAdded(NotificationData nd, boolean wake, Boolean covered);
+    public void onNotificationUpdated(NotificationData nd, boolean changed, Boolean covered);
     public void onNotificationCleared(NotificationData nd);
     public void onNotificationsListChanged();
     public void onPersistentNotificationAdded(PersistentNotification pn);

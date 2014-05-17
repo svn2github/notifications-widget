@@ -12,6 +12,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -59,6 +63,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     private boolean mDirty = true;
     private ReadWriteLock lock = new ReentrantReadWriteLock();;
     private ArrayList<NotificationData> mFilteredNotificationsList;
+    private Handler mHandler;
 
     public NotificationsService()
     {
@@ -70,18 +75,13 @@ public class NotificationsService extends Service implements NotificationsProvid
     /** Flag indicating whether we have called bind on the service. */
     boolean mBound;
 
-    /**
-     * Class for interacting with the main interface of the service.
-     */
     private ServiceConnection mConnection = new ServiceConnection()
     {
         public void onServiceConnected(ComponentName className, IBinder service)
         {
             // This is called when the connection with the service has been
             // established, giving us the object we can use to
-            // interact with the service.  We are communicating with the
-            // service using a Messenger, so here we get a client-side
-            // representation of that from the raw IBinder object.
+            // interact with the service.
             Log.d("NiLS", "Connected to NiLS FP Service");
             mService = new Messenger(service);
             mBound = true;
@@ -101,7 +101,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             for(int i = getNotifications().size()-1; i>=0; i--)
             {
                 NotificationData nd = getNotifications().get(i);
-                listener.onNotificationAdded(nd, false);
+                listener.onNotificationAdded(nd, false, mCovered);
             }
         }
 
@@ -129,6 +129,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         // create a notification parser
         context = getApplicationContext();
         parser = new NotificationParser(getApplicationContext());
+        mHandler = new Handler();
         setNotificationEventListener(new NotificationAdapter(context, new Handler()));
 
         // TBD register a receiver for system broadcasts
@@ -137,7 +138,41 @@ public class NotificationsService extends Service implements NotificationsProvid
 
         bindNiLSFP();
 
+        testProximity();
+
         context.sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
+    }
+
+    private Boolean mCovered = null;
+
+    private void testProximity()
+    {
+        Log.d("NiLS", "Testing proximity sensor...");
+
+        startProximityMonitoring();
+
+        // test after 100ms if the proximity sensor status was changed
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                if (mCovered != null) {
+                    Log.d("NiLS", "immediate response");
+                    prefs.edit().putBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, true).commit();
+                    // stop proximity monitoring - there is no need to if the proximity is immediate
+                    stopProximityMonitoring();
+                }
+                else {
+                    Log.d("NiLS", "no response after 100ms");
+                    prefs.edit().putBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, false).commit();
+                }
+
+                // stop proximity monitoring if wakeup mode is always or never
+                String wakeupMode = SettingsActivity.getWakeupMode(context, null);
+                if (wakeupMode.equals(SettingsActivity.WAKEUP_ALWAYS) || wakeupMode.equals(SettingsActivity.WAKEUP_NEVER))
+                    stopProximityMonitoring();
+            }
+        },100);
     }
 
     @Override
@@ -152,6 +187,8 @@ public class NotificationsService extends Service implements NotificationsProvid
             unbindService(mConnection);
             mBound = false;
         }
+        if (listener != null)
+            listener.onServiceStopped();
         return super.onUnbind(intent);
     }
 
@@ -165,6 +202,38 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
+    SensorManager sensorManager;
+    SensorEventListener sensorListener;
+
+    public void startProximityMonitoring()
+    {
+        Log.d("NiLS", "Starting monitoring proximity sensor constantly");
+        sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+        Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        sensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                mCovered = (event.values[0] < event.sensor.getMaximumRange());
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
+
+        sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void stopProximityMonitoring()
+    {
+        Log.d("NiLS", "Stopping monitoring proximity sensor");
+        if (sensorListener != null && sensorManager != null) {
+            sensorManager.unregisterListener(sensorListener);
+            sensorListener = null;
+        }
+    }
+
     @Override
     public void onDestroy()
     {
@@ -173,6 +242,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         instance = null;
         saveLog(getApplicationContext(),true);
         getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
+        stopProximityMonitoring();
         super.onDestroy();
     }
 
@@ -224,7 +294,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         //Log.d("NiLS","NotificationsService:onStartCommand " + intent.getAction());
         if (context == null) context = getApplicationContext();
         if (parser == null) parser = new NotificationParser(getApplicationContext());
-        if (listener == null) setNotificationEventListener(new NotificationAdapter(context, new Handler()));
+        if (listener == null) setNotificationEventListener(new NotificationAdapter(context, mHandler));
 
         if (intent != null && intent.getAction() != null)
         {
@@ -318,9 +388,9 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (listener != null && !nd.deleted && !ignoreNotification)
             {
                 if (updated)
-                    listener.onNotificationUpdated(nd, changed);
+                    listener.onNotificationUpdated(nd, changed, mCovered);
                 else
-                    listener.onNotificationAdded(nd, true);
+                    listener.onNotificationAdded(nd, true, mCovered);
                 listener.onNotificationsListChanged();
             }
         }
@@ -861,7 +931,8 @@ public class NotificationsService extends Service implements NotificationsProvid
     {       // bound to Accessibility / Notifications service
         // bind it to NiLS FP
         bindNiLSFP();
-
+        if (listener != null)
+            listener.onServiceStarted();
         return mBinder;
     }
 }

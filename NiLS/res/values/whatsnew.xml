@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="v295_title">v1.5</string>
     <string name="v295">
         <![CDATA[
-            <b>v1.5.295 (alpha) - NiLS FP has been integrated into NiLS</b>
-            <br>You don\'t need both NiLS and NiLS FP apps anymore. NiLS now have Floating Panel too.
-            <br>If you want your settings and license information to be migrated to NiLS you should update NiLS FP to v1.0.6.91 or above.
-            <br>After migrating your settings - you can safely uninstall NiLS FP.
+            <b>Huge update! so many improvements:</b><br>
+            <br><b>&#8226;	NiLS FP has been integrated into NiLS </b> Reduced memory usage and improved stability. Your settings and license will be automatically imported from NiLS Floating Panel. if it doesn\'t work, please contact support.
+            <br><b>&#8226;	New and improved appearance</b> - access many options and settings easily using the new card base UI and the left navigation drawer.
+            <br><b>&#8226;	Supports ANY lock screen</b> - NiLS now will be displayed on top of any lock screen, the lock screen will be automatically detected when the screen is turned on.
+            <br><b>&#8226;	New privacy options</b> - you can control what information will be displayed for each app.
+            <br><b>&#8226;	Auto screen turn off</b> - you can set screen off timeout option to turn off the screen few seconds after receiving a notification.
+            <br><b>&#8226;	Use any color</b> - Use any color on NiLS widget text and background colors.
+            <br><b>&#8226;	Bug fixes</b> - WhatsApp duplicates, CNBC notifications and many more bug fixes.
         ]]>
     </string>
+    <string name="v279_title">v1.4</string>
     <string name="v279">
         <![CDATA[
-            <b>v1.4 - The biggest update in the last months:</b>
-            <br> - Rearrange settings page. simplified access to many features.
-            <br> - Notification mode - you choose between grouped and separated. (replaces \"Multiple Events Handling\" option)
-            <br> - Notification icon - choose between original notification icon, app icon and status bar monochrome icon.
-            <br> - <b>Icon packs support</b> - use almost any icon pack from Google Play instead of the standard notification icon.
-            <br> - Choose whether to turn on screen on per app basis.
-            <br> - Improved stability and memory usage.
-            <br> - Forcibly turn off screen when timeout passes if \"Screen off (by KATECA)\" app is installed and enabled.
-            <br> - Better binding with NiLS Floating Panel service. (solves syncing issues)
-            <br> - All new options affects NiLS Floating Panel too.
+            <br><b>&#8226; Rearrange settings page.</b> simplified access to many features.
+            <br><b>&#8226; Notification mode</b> - you choose between grouped and separated. (replaces \"Multiple Events Handling\" option)
+            <br><b>&#8226; Notification icon</b> - choose between original notification icon, app icon and status bar monochrome icon.
+            <br><b>&#8226; Icon packs support</b> - use almost any icon pack from Google Play instead of the standard notification icon.
+            <br><b>&#8226; Choose whether to turn on screen on per app basis.</b>
+            <br><b>&#8226; Improved stability and memory usage.</b>
+            <br><b>&#8226; Forcibly turn off screen when timeout passes</b> Requires \"Screen off (by KATECA)\" app to be installed and enabled.
+            <br><b>&#8226; Better binding with NiLS Floating Panel service</b>. Solves syncing issues.
+            <br>All new options affects NiLS Floating Panel too.
         ]]>
     </string>
+    <string name="v275_title">v1.3.2</string>
     <string name="v275">
     <![CDATA[
-        <b>v1.3.2:</b>
-        <br> - Improved stability when other notifications service are running
-        <br> - Added an option to use monochrome icons.
-        <br> - Improved memory usage.
+        <br><b>&#8226; Improved stability when other notifications service are running.</b>
+        <br><b>&#8226; Added an option to use monochrome icons.</b>
+        <br><b>&#8226; Improved memory usage.</b>
     ]]>
     </string>
 </resources>

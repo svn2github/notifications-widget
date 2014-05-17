@@ -43,6 +43,8 @@
         <item>when_uncovered</item>
         <item>always</item>
     </string-array>
+    <string name="battery_usage_warning">Battery Usage Warning</string>
+    <string name="battery_usage_warning_summary">Using this option requires a constant usage of the proximity sensor.\nThis may drain your battery.\nIf you experiencing an high battery usage please choose other wakeup modes.</string>
 
     <string name="turnscreenoff">Turn off screen</string>
     <string name="turn_off_default">Device default</string>
@@ -371,10 +373,6 @@
     <string name="notification_action_2">Notification Action 2</string>
     <string name="clear_notification">Clear Notification</string>
     <string name="open_accessibility_settings">Open Accessibility Settings</string>
-
-
-
-
     <string name="service">Global Settings</string>
     <string name="widget">Widget Settings</string>
     <string name="widget_is_not_present">Widget is not present.\nclick to learn how to add it.</string>
@@ -491,22 +489,4 @@
     <string name="tutorial_6_title_1">That\'s All</string>
     <string name="tutorial_6_text_1"><![CDATA[Tap "Finish" to complete the tutorial, then tap on NiLS icon to get access to many options and customizations\n\nEnjoy the app!]]></string>
     <string name="tutorial_6_finish">Finish</string>
-
-    <string-array name="lockscreenapps" translatable="false">
-        <item>com.teslacoilsw.widgetlocker</item>
-        <item>com.jiubang.goscreenlock</item>
-        <item>com.coverscreen.cover</item>
-        <item>com.campmobile.locker</item>
-        <item>com.lockscreen.optimus</item>
-        <item>com.mobint.locker</item>
-        <item>com.slidelock</item>
-        <item>com.celltick.lockscreen</item>
-        <item>com.sparkymobile.sparkylockscreenfull</item>
-        <item>com.sparkymobile.sparkylockscreenlite</item>
-        <item>com.miui.home</item>
-        <item>com.qiigame.flocker.global</item>
-        <item>com.productigeeky.lockerpro</item>
-        <item>com.productigeeky.lockerprolite</item>
-    </string-array>
-
 </resources>

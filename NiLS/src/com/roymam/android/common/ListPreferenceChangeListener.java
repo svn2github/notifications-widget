@@ -22,7 +22,7 @@ public class ListPreferenceChangeListener implements OnPreferenceChangeListener
 	{
 		for(int i=0;i<values.length;i++)
 		{
-			if (newValue.contains(values[i]))
+			if (newValue != null && newValue.contains(values[i]))
 			{
                 if (prefix != null && !prefix.equals(""))
                     prefs.setSummary(prefix + ":" + entries[i]);
