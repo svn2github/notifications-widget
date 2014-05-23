@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="100dp"
+                 android:layout_height="100dp"
+                 android:layout_alignParentLeft="true"
+                 android:layout_alignParentTop="true"
+                 android:id="@+id/resize_rect">
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rectangle"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                />
+
+        <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/bluecircle"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerInside"
+                android:id="@+id/top_handler"/>
+
+        <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/bluecircle"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerInside"
+                android:id="@+id/bottom_handler"/>
+
+        <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/bluecircle"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:id="@+id/left_handler"/>
+        <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/bluecircle"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:id="@+id/right_handler"/>
+    </RelativeLayout>
+</RelativeLayout>

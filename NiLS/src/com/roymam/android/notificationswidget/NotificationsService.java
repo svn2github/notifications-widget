@@ -1,16 +1,19 @@
 package com.roymam.android.notificationswidget;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -21,17 +24,19 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.roymam.android.nilsplus.NPService;
+import com.roymam.android.common.SysUtils;
+import com.roymam.android.nilsplus.activities.OpenNotificationActivity;
+import com.roymam.android.nilsplus.ui.NPViewManager;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,15 +50,36 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class NotificationsService extends Service implements NotificationsProvider
 {
-    public static final String CANCEL_NOTIFICATION = "com.roymam.android.nils.cancel_notification";
-    public static final String BIND_NILS_FP = "com.roymam.android.nils.bind_nils_fp";
     public static final String EXTRA_PACKAGENAME = "EXTRA_PACKAGENAME";
-    public static final String EXTRA_ID = "EXTRA_ID";
     public static final String EXTRA_UID = "EXTRA_UID";
+    public static final String EXTRA_ID = "EXTRA_ID";
     public static final String EXTRA_TAG = "EXTRA_TAG";
-    private static final int RECREATE = 1;
 
-    private static NotificationsProvider instance;
+    // notification list modification events
+    public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
+    public static final String CANCEL_NOTIFICATION = "com.roymam.android.nils.cancel_notification";
+
+    // lock screen constants
+    public static final String STOCK_LOCKSCREEN_PACKAGENAME = "com.android.keyguard" ;
+
+    // widgetlocker events
+    public static final String WIDGET_LOCKER_UNLOCKED = "com.teslacoilsw.widgetlocker.intent.UNLOCKED";
+    public static final String WIDGET_LOCKER_HIDE = "com.teslacoilsw.widgetlocker.intent.HIDE";
+
+    public static final String WIDGET_LOCKER_PACKAGENAME = "com.teslacoilsw.widgetlocker";
+
+    // go locker events
+    public static final String GO_LOCKER_PACKAGENAME = "com.jiubang.goscreenlock";
+    public static final String GO_LOCKER_UNLOCKED = "com.jiubang.goscreenlock.unlock";
+
+    // other events
+    public static final String CHECK_LSAPP = "com.roymam.android.nils.CHECK_LS";
+    public static final String INCOMING_CALL = "com.roymam.android.nils.INCOMING_CALL";
+
+    private NPReceiver npreceiver = null;
+    private NPViewManager viewManager = null;
+    private NPViewManager.Callbacks mViewManagerCallbacks = null;
+    private SysUtils mSysUtils;
     private Context context;
     private NotificationEventListener listener;
     private ArrayList<NotificationData> mNotifications = new ArrayList<NotificationData>();
@@ -63,60 +89,14 @@ public class NotificationsService extends Service implements NotificationsProvid
     private boolean mDirty = true;
     private ReadWriteLock lock = new ReentrantReadWriteLock();;
     private ArrayList<NotificationData> mFilteredNotificationsList;
-    private Handler mHandler;
+    private final Handler mHandler = new Handler();
 
-    public NotificationsService()
+    // "singleton" like declaration
+    private static NotificationsService instance;
+    public static NotificationsService getSharedInstance()
     {
+        return instance;
     }
-
-    /** Messenger for communicating with the NiLS FP service. */
-    Messenger mService = null;
-
-    /** Flag indicating whether we have called bind on the service. */
-    boolean mBound;
-
-    private ServiceConnection mConnection = new ServiceConnection()
-    {
-        public void onServiceConnected(ComponentName className, IBinder service)
-        {
-            // This is called when the connection with the service has been
-            // established, giving us the object we can use to
-            // interact with the service.
-            Log.d("NiLS", "Connected to NiLS FP Service");
-            mService = new Messenger(service);
-            mBound = true;
-
-            // Create and send a message to the service, using a supported 'what' value
-            Message msg = Message.obtain(null, RECREATE, 0, 0);
-            try
-            {
-                mService.send(msg);
-            }
-            catch (RemoteException e)
-            {
-                e.printStackTrace();
-            }
-
-            // Re-send all of the current notfications
-            for(int i = getNotifications().size()-1; i>=0; i--)
-            {
-                NotificationData nd = getNotifications().get(i);
-                listener.onNotificationAdded(nd, false, mCovered);
-            }
-        }
-
-        public void onServiceDisconnected(ComponentName className)
-        {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            Log.d("NiLS", "Disconnected from NiLS FP Service");
-            mService = null;
-            mBound = false;
-
-            // try to rebind it
-            bindNiLSFP();
-        }
-    };
 
     @Override
     public void onCreate()
@@ -129,20 +109,138 @@ public class NotificationsService extends Service implements NotificationsProvid
         // create a notification parser
         context = getApplicationContext();
         parser = new NotificationParser(getApplicationContext());
-        mHandler = new Handler();
+
+        // set up events listener
         setNotificationEventListener(new NotificationAdapter(context, new Handler()));
 
-        // TBD register a receiver for system broadcasts
-        //receiver = new NotificationsServiceReceiver();
-        //registerReceiver(receiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-
-        bindNiLSFP();
-
+        // set up proximity sensor
         testProximity();
 
+        // set up notifications list
+        NiLSFPCreate();
+
+        // notify world that the service is ready
         context.sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_READY));
     }
 
+
+
+    @Override
+    public boolean onUnbind(Intent intent)
+    {
+        Log.d("NiLS", "NotificationsService:onUnbind");
+        saveLog(getApplicationContext(), true);
+
+        if (listener != null)
+            listener.onServiceStopped();
+
+        // clear notifications and add an error notification
+        notifyUserToEnableTheService();
+
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        Log.d("NiLS","NotificationsService:onDestroy");
+        instance = null;
+
+        // save the recent log into a file
+        saveLog(getApplicationContext(),true);
+
+        // notify world that NiLS service has stopped
+        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
+        Log.w("NiLS", "NiLS FP Service was killed. hiding notifications list.");
+
+        stopProximityMonitoring();
+
+        // cleanup view manager
+        if (viewManager != null)
+        {
+            viewManager.destroy();
+            viewManager = null;
+            mNotifications = null;
+            mViewManagerCallbacks = null;
+        }
+
+        // cleanup broadcast receiever
+        if (npreceiver != null)
+        {
+            unregisterReceiver(npreceiver);
+            npreceiver = null;
+        }
+
+        super.onDestroy();
+    }
+
+    private void notifyUserToEnableTheService()
+    {
+        viewManager.saveNotificationsState();
+        mNotifications.clear();
+        NotificationData ni = new NotificationData();
+        ni.setTitle(getString(R.string.nils_service_is_not_running));
+        ni.setText(getString(R.string.open_nils_to_enable_it));
+        ni.setAppIcon(((BitmapDrawable)getApplicationContext().getResources().getDrawable(R.drawable.nilsfp_icon_mono)).getBitmap());
+        ni.setIcon(((BitmapDrawable)getApplicationContext().getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
+        ni.setPackageName(getApplicationContext().getPackageName());
+
+        Intent startNiLSIntent = getApplicationContext().getPackageManager().getLaunchIntentForPackage("com.roymam.android.notificationswidget");
+        if (startNiLSIntent != null)
+        {
+            ni.setAction(PendingIntent.getActivity(getApplicationContext(), 0, startNiLSIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+        ni.setActions(new NotificationData.Action[0]);
+        ni.setId(0);
+        ni.setReceived(System.currentTimeMillis());
+        mNotifications.add(ni);
+        viewManager.notifyDataChanged();
+        viewManager.animateNotificationsChange();
+    }
+
+    private static void saveLog(Context context, boolean silent)
+    {
+        // save crash log
+        Log.d("NiLS", "Something happened. saving log file...");
+        try
+        {
+            // read logcat
+            Time now = new Time();
+            now.setToNow();
+            String filename = context.getExternalFilesDir(null) + "/" + now.format("%Y-%m-%dT%H:%M:%S")+".log";
+            Runtime.getRuntime().exec("logcat -d -v time -f " + filename);
+
+            Log.d("NiLS", "Log file written to "+context.getExternalFilesDir(null)+"/"+filename);
+
+            if (!silent)
+            {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.appicon)
+                        .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.appicon)).getBitmap())
+                        .setContentTitle("Something went wrong...")
+                        .setContentText("log file was written to " + filename);
+
+                NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+                bigtextstyle.setBigContentTitle("Something went wrong...");
+                bigtextstyle.bigText("log file was written to " + filename);
+                mBuilder.setStyle(bigtextstyle);
+
+                Notification n = mBuilder.build();
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.parse("file://" + context.getExternalFilesDir(null) + "/" + filename);
+                intent.setDataAndType(uri, "text/plain");
+
+                n.contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                nm.notify(0, n);
+            }
+        }
+        catch (IOException e)
+        {}
+    }
+
+    //** Proximity Sensor Monitoring **//
     private Boolean mCovered = null;
 
     private void testProximity()
@@ -173,33 +271,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                     stopProximityMonitoring();
             }
         },100);
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent)
-    {
-        Log.d("NiLS", "NotificationsService:onUnbind");
-        saveLog(getApplicationContext(), true);
-
-        // unbound NiLS FP (if bounded)
-        if (mBound)
-        {
-            unbindService(mConnection);
-            mBound = false;
-        }
-        if (listener != null)
-            listener.onServiceStopped();
-        return super.onUnbind(intent);
-    }
-
-    public void bindNiLSFP()
-    {
-        if (!mBound)
-        {
-            // Try to bind to NiLS FP Service
-            Intent npsIntent = new Intent(context, NPService.class);
-            bindService(npsIntent, mConnection, Context.BIND_AUTO_CREATE);
-        }
     }
 
     SensorManager sensorManager;
@@ -234,92 +305,36 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
-    @Override
-    public void onDestroy()
-    {
-        Log.d("NiLS","NotificationsService:onDestroy");
+    //** End of Proximity Sensor Monitoring **/
 
-        instance = null;
-        saveLog(getApplicationContext(),true);
-        getApplicationContext().sendBroadcast(new Intent(NotificationsProvider.ACTION_SERVICE_DIED));
-        stopProximityMonitoring();
-        super.onDestroy();
-    }
 
-    private static void saveLog(Context context, boolean silent)
-    {
-        // save crash log
-        Log.d("NiLS", "Something happened. saving log file...");
-        try
-        {
-            // read logcat
-            Time now = new Time();
-            now.setToNow();
-            String filename = context.getExternalFilesDir(null) + "/" + now.format("%Y-%m-%dT%H:%M:%S")+".log";
-            Process process = Runtime.getRuntime().exec("logcat -d -v time -f " + filename);
-
-            Log.d("NiLS", "Log file written to "+context.getExternalFilesDir(null)+"/"+filename);
-
-            if (!silent)
-            {
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.appicon)
-                        .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.appicon)).getBitmap())
-                        .setContentTitle("Something went wrong...")
-                        .setContentText("log file was written to " + context.getExternalFilesDir(null) + "/" + filename);
-
-                NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
-                bigtextstyle.setBigContentTitle("Something went wrong...");
-                bigtextstyle.bigText("log file was written to " + context.getExternalFilesDir(null) + "/" + filename);
-                mBuilder.setStyle(bigtextstyle);
-
-                Notification n = mBuilder.build();
-
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                Uri uri = Uri.parse("file://" + context.getExternalFilesDir(null) + "/" + filename);
-                intent.setDataAndType(uri, "text/plain");
-
-                n.contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                nm.notify(0, n);
-            }
-        }
-        catch (IOException e)
-        {}
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        //Log.d("NiLS","NotificationsService:onStartCommand " + intent.getAction());
         if (context == null) context = getApplicationContext();
         if (parser == null) parser = new NotificationParser(getApplicationContext());
         if (listener == null) setNotificationEventListener(new NotificationAdapter(context, mHandler));
 
-        if (intent != null && intent.getAction() != null)
-        {
-            String action = intent.getAction();
+        if (intent.getAction() != null)
+            if (intent.getAction().equals("refresh"))
+        d        updateViewManager();
 
-            // cancel notification request from NiLS FP
-            if (action.equals(CANCEL_NOTIFICATION))
-            {
-                int uid = intent.getIntExtra(EXTRA_UID, -1);
-                clearNotification(uid);
-            }
-
-            if (action.equals(BIND_NILS_FP))
-            {
-                bindNiLSFP();
-            }
-        }
         return super.onStartCommand(intent, flags, startId);
     }
 
+    public void refreshLayout()
+    {
+        viewManager.refreshLayout();
+    }
+
+    //** Notifications Add/Remove Handling **/
     private void addNotification(NotificationData nd)
     {
         if (nd != null)
         {
             Log.d("NiLS","NotificationsService:addNotification " + nd.packageName + ":" + nd.id);
+
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String notificationMode = SettingsActivity.getNotificationMode(getApplicationContext(), nd.packageName);
             boolean updated = false;
@@ -392,6 +407,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 else
                     listener.onNotificationAdded(nd, true, mCovered);
                 listener.onNotificationsListChanged();
+                callUpdateViewManager();
             }
         }
     }
@@ -406,7 +422,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (listener != null) listener.onPersistentNotificationAdded(pn);
 
             if (pn.packageName.equals("com.android.dialer") || pn.packageName.equals("com.google.android.dialer"))
-                context.sendBroadcast(new Intent(NPService.INCOMING_CALL));
+                context.sendBroadcast(new Intent(INCOMING_CALL));
         }
     }
 
@@ -463,8 +479,19 @@ public class NotificationsService extends Service implements NotificationsProvid
                     listener.onNotificationCleared(nd);
                 }
                 listener.onNotificationsListChanged();
+                callUpdateViewManager();
             }
         }
+    }
+
+    private void callUpdateViewManager()
+    {
+        if (viewManager != null)
+            viewManager.saveNotificationsState();
+
+        Intent refreshListIntent = new Intent(context, NotificationsService.class);
+        refreshListIntent.setAction("refresh");
+        startService(refreshListIntent);
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -480,10 +507,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                 listener.onPersistentNotificationCleared(pn);
             }
         }
-    }
-    public static NotificationsProvider getSharedInstance()
-    {
-        return instance;
     }
 
     @Override
@@ -654,25 +677,13 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d("NiLS","NotificationsService:cancelNotification " + packageName + ":" + id);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
-            Intent intent = new Intent(context, NewNotificationsListener.class);
+            Intent intent = new Intent(context, NotificationsListener.class);
             intent.setAction(CANCEL_NOTIFICATION);
             intent.putExtra(EXTRA_PACKAGENAME, packageName);
             intent.putExtra(EXTRA_TAG, tag);
             intent.putExtra(EXTRA_ID, id);
             startService(intent);
         }
-    }
-
-    @Override
-    public void setNotificationEventListener(NotificationEventListener listener)
-    {
-        this.listener = listener;
-    }
-
-    @Override
-    public NotificationEventListener getNotificationEventListener()
-    {
-        return listener;
     }
 
     @Override
@@ -736,6 +747,9 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public synchronized void clearNotification(int uid)
     {
+        if (viewManager != null)
+            viewManager.saveNotificationsState();
+
         Log.d("NiLS","NotificationsService:clearNotification uid:" + uid);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -809,11 +823,22 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 listener.onNotificationCleared(removedNd);
                 listener.onNotificationsListChanged();
+
+                // notify view manager that the data has been changed
+                updateViewManager();
             }
         }
         else
         {
             Log.d("NiLS", "NotificationsService:clearNotification - wasn't found");
+        }
+    }
+
+    private void updateViewManager()
+    {
+        if (viewManager != null) {
+            viewManager.notifyDataChanged();
+            viewManager.animateNotificationsChange();
         }
     }
 
@@ -892,9 +917,40 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
+    //** End of Notifications Add/Remove Handling **/
+
+    @Override
+    public void setNotificationEventListener(NotificationEventListener listener)
+    {
+        this.listener = listener;
+    }
+
+    @Override
+    public NotificationEventListener getNotificationEventListener()
+    {
+        return listener;
+    }
+
     // binding stuff
     //***************
     private final IBinder mBinder = new LocalBinder();
+    public class LocalBinder extends Binder
+    {
+        NotificationsService getService()
+        {
+            // Return this instance of LocalService so clients can call public methods
+            return NotificationsService.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent)
+    {
+        // bound to Accessibility / Notifications service
+        if (listener != null)
+            listener.onServiceStarted();
+        return mBinder;
+    }
 
     public static boolean isServiceRunning(Context context, Class serviceClass)
     {
@@ -912,27 +968,344 @@ public class NotificationsService extends Service implements NotificationsProvid
     public static boolean isServiceRunning(Context context)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            return isServiceRunning(context, NewNotificationsListener.class);
+            return isServiceRunning(context, NotificationsListener.class);
         else
             return isServiceRunning(context, NiLSAccessibilityService.class);
     }
 
-    public class LocalBinder extends Binder
+    private class NPReceiver extends BroadcastReceiver
     {
-        NotificationsService getService()
+        private PendingIntent checkLockScreenPendingIntent = null;
+
+        public void onReceive(Context context, Intent intent)
         {
-            // Return this instance of LocalService so clients can call public methods
-            return NotificationsService.this;
+            try
+            {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+                String lockScreenApp = prefs.getString(SettingsActivity.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
+
+                if(intent.getAction().equals(Intent.ACTION_USER_PRESENT) && lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME) ||
+                        intent.getAction().equals(WIDGET_LOCKER_UNLOCKED) ||
+                        intent.getAction().equals(WIDGET_LOCKER_HIDE) ||
+                        intent.getAction().equals(GO_LOCKER_UNLOCKED) )
+                {
+                    // hide notifications list
+                    hide(false);
+                }
+                else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
+                {
+                    // show notifications when the screen is turned off
+                    NotificationsService.this.viewManager.refreshLayout();
+                    NotificationsService.this.viewManager.show();
+
+                    AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    if (checkLockScreenPendingIntent != null)
+                    {
+                        Log.d("NiLS", "screen is off, stop monitoring for foreground app");
+                        am.cancel(checkLockScreenPendingIntent);
+                        checkLockScreenPendingIntent = null;
+                    }
+
+                }
+                else if (intent.getAction().equals(INCOMING_CALL))
+                {
+                    NotificationsService.this.viewManager.hide(false);
+                }
+                else if (intent.getAction().equals(CHECK_LSAPP) || intent.getAction().equals(Intent.ACTION_SCREEN_ON))
+                {
+                    boolean dontHide = prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE);
+                    if (!dontHide)
+                    {
+                        boolean autoDetect = false;
+
+                        if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
+                        {
+                            Log.d("NiLS", "screen is on, auto detecting lock screen app");
+                            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            checkLockScreenPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(CHECK_LSAPP), PendingIntent.FLAG_UPDATE_CURRENT);
+                            am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, 1000, checkLockScreenPendingIntent);
+                            autoDetect = true;
+
+                            // make sure screen will stay on as needed seconds as defined on settings
+                            mSysUtils.turnScreenOn(true);
+                        }
+                        if (shouldHideNotifications(autoDetect))
+                        {
+                            // hide notifications list if not needed
+                            NotificationsService.this.viewManager.hide(false);
+
+                            Log.d("NiLS", "lock screen is no longer active, stop monitoring");
+                            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            am.cancel(checkLockScreenPendingIntent);
+                            checkLockScreenPendingIntent = null;
+                        }
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                exp.printStackTrace();
+                saveLog(context, false);
+            }
         }
     }
 
     @Override
-    public IBinder onBind(Intent intent)
-    {       // bound to Accessibility / Notifications service
-        // bind it to NiLS FP
-        bindNiLSFP();
-        if (listener != null)
-            listener.onServiceStarted();
-        return mBinder;
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        viewManager.refreshLayout();
+    }
+
+    private boolean shouldHideNotifications(boolean autoDetect)
+    {
+        return shouldHideNotifications(getApplicationContext(), autoDetect);
+    }
+
+    public static boolean shouldHideNotifications(Context context, boolean autoDetect)
+    {
+        String currentApp = getForegroundApp(context);
+        return shouldHideNotifications(context, currentApp, autoDetect);
+    }
+
+    public static boolean shouldHideNotifications(Context context, String currentApp, boolean autoDetect)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // get the current lock screen app (if set)
+        String lockScreenApp = prefs.getString(SettingsActivity.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME );
+        boolean shouldHide = true;
+
+        // if the current app is one of the allowed apps to be on top of the lock screen, hide NiLS
+        if (SettingsActivity.BLACKLIST_PACKAGENAMES.contains(currentApp))
+        {
+            return true;
+        }
+
+        if (autoDetect)
+        {
+            PackageManager pm = context.getPackageManager();
+
+            // check if the current app is a lock screen app
+            if (pm.checkPermission(android.Manifest.permission.DISABLE_KEYGUARD, currentApp) == PackageManager.PERMISSION_GRANTED)
+            {
+                if (!lockScreenApp.equals(currentApp))
+                {
+                    // store current app as the lock screen app until next time
+                    Log.d("NiLS", "new lock screen app detected: " + currentApp);
+                    prefs.edit().putString(SettingsActivity.LOCKSCREEN_APP, currentApp).commit();
+                    lockScreenApp = currentApp;
+                }
+            }
+            else if (isKeyguardLocked(context))
+            {
+                if (!lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME))
+                {
+                    // store current app as the lock screen app until next time
+                    Log.d("NiLS", "stock lock screen app detected");
+                    prefs.edit().putString(SettingsActivity.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME ).commit();
+                    lockScreenApp = STOCK_LOCKSCREEN_PACKAGENAME ;
+                }
+            }
+        }
+
+        // check if the device is secured or the current app is the lock screen app
+        if (lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME ) && isKeyguardLocked(context) || lockScreenApp.equals(currentApp))
+            shouldHide = false;
+
+        return shouldHide;
+    }
+
+    public static String getForegroundApp(Context context)
+    {
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = mActivityManager.getRunningTasks(1);
+        return tasks.get(0).topActivity.getPackageName();
+    }
+
+    private static boolean isAppForground(Context context, String packageName)
+    {
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> l = mActivityManager
+                .getRunningAppProcesses();
+        Iterator<ActivityManager.RunningAppProcessInfo> i = l.iterator();
+        while (i.hasNext())
+        {
+            ActivityManager.RunningAppProcessInfo info = i.next();
+            for (String p : info.pkgList)
+            {
+                if (p.equals(packageName) && info.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isKeyguardLocked(Context context)
+    {
+        KeyguardManager kmanager = (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            return kmanager.isKeyguardLocked();
+        else
+            return kmanager.inKeyguardRestrictedInputMode();
+    }
+
+    public void NiLSFPCreate()
+    {
+        Log.d("NiLS+", "NPService.onCreate()");
+        super.onCreate();
+
+        mNotifications = new ArrayList<NotificationData>();
+        mViewManagerCallbacks = new NPViewManager.Callbacks()
+        {
+            @Override
+            public void onDismissed(NotificationData ni)
+            {
+                clearNotification(ni.getUid());
+            }
+
+            @Override
+            public void onOpen(NotificationData ni)
+            {
+                viewManager.hide(false);
+
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                boolean halo = prefs.getBoolean(SettingsActivity.HALO_MODE, SettingsActivity.DEFAULT_HALO_MODE);
+
+                if (halo)
+                {
+                    openNotificationOnHalo(ni);
+                }
+                else
+                {
+                    // unlock device and open the notification)
+                    Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("action", ni.getAction());
+                    intent.putExtra("package", ni.getPackageName());
+                    intent.putExtra("id", ni.getId());
+                    intent.putExtra("uid", ni.getUid());
+                    intent.putExtra("lockscreen_package", getForegroundApp(getApplicationContext()));
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onAction(NotificationData ni, PendingIntent action, String actionName)
+            {
+                // show the name of the action
+                Toast.makeText(getApplicationContext(), actionName,Toast.LENGTH_SHORT).show();
+
+                if (!isActivity(action))
+                {
+                    // open it in background
+                    try
+                    {
+                        // remove the notification and keep device locked
+                        action.send();
+                        clearNotification(ni.getUid());
+                    } catch (PendingIntent.CanceledException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    // unlock device and open the notification)
+                    Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("action", action);
+                    intent.putExtra("package", ni.getPackageName());
+                    intent.putExtra("id", ni.getId());
+                    intent.putExtra("uid", ni.getUid());
+                    intent.putExtra("lockscreen_package", getForegroundApp(getApplicationContext()));
+                    startActivity(intent);
+                    viewManager.keepScreenOn();
+                    viewManager.hide(false);
+                }
+            };
+        };
+
+        viewManager = new NPViewManager(getApplicationContext(), mViewManagerCallbacks);
+
+        // register receivers
+        npreceiver = new NPReceiver();
+        registerReceiver(npreceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+        registerReceiver(npreceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+        registerReceiver(npreceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
+        registerReceiver(npreceiver, new IntentFilter(WIDGET_LOCKER_UNLOCKED));
+        registerReceiver(npreceiver, new IntentFilter(GO_LOCKER_UNLOCKED));
+        registerReceiver(npreceiver, new IntentFilter(CHECK_LSAPP));
+        registerReceiver(npreceiver, new IntentFilter(INCOMING_CALL));
+        registerReceiver(npreceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
+
+        mSysUtils = SysUtils.getInstance(getApplicationContext(), mHandler);
+    }
+
+    private boolean isActivity(PendingIntent action)
+    {
+        try
+        {
+            // call hidden method of PendingIntent - isActivity
+            Class c = PendingIntent.class;
+            Method m = c.getMethod("isActivity");
+            Object o = m.invoke(action,null);
+            return ((Boolean) o).booleanValue();
+        }
+        catch (Exception exp)
+        {
+            return true;
+        }
+    }
+
+    private void openNotificationOnHalo(NotificationData ni)
+    {
+        Intent haloFlag = new Intent();
+        int flags = Intent.FLAG_RECEIVER_FOREGROUND |
+                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET |
+                Intent.FLAG_ACTIVITY_NO_USER_ACTION |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                0x00002000; // = 277651456
+
+        haloFlag.addFlags(flags);
+
+        try {
+            ni.getAction().send(getApplicationContext(), 0, haloFlag);
+        } catch (PendingIntent.CanceledException e)
+        {
+            // if cannot launch intent, create a new one for the app
+            try
+            {
+                Intent launchIntent = getPackageManager().getLaunchIntentForPackage(ni.getPackageName());
+                launchIntent.addFlags(0x00002000);
+                startActivity(launchIntent);
+            }
+            catch(Exception e2)
+            {
+                // cannot launch intent - do nothing...
+                e2.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Error - cannot launch app:"+ni.getPackageName(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onLowMemory()
+    {
+        Log.w("NiLS", "Low memory warning. NiLS will probably be killed soon.");
+    }
+
+    public void hide(boolean force)
+    {
+        viewManager.hide(force);
+    }
+
+    public void show()
+    {
+        viewManager.show();
     }
 }

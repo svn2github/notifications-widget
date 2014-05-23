@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,7 +30,7 @@ public class NotificationData implements Parcelable
     boolean selected = false;
     boolean deleted = false;
     boolean protect = false;
-    public Action[] actions = null;
+    public Action[] actions = new Action[0];
     public int priority;
     public String tag;
     public boolean event = false;
@@ -337,4 +339,168 @@ public class NotificationData implements Parcelable
         // clear notification from notifications list
         NotificationsService.getSharedInstance().clearNotification(uid);
     }
+
+    // getters and setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
+    public CharSequence getText() {
+        return text;
+    }
+
+    public void setText(CharSequence text) {
+        this.text = text;
+    }
+
+    public CharSequence getTitle() {
+        return title;
+    }
+
+    public void setTitle(CharSequence title) {
+        this.title = title;
+    }
+
+    public CharSequence getContent() {
+        return content;
+    }
+
+    public void setContent(CharSequence content) {
+        this.content = content;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
+    }
+
+    public Bitmap getAppIcon() {
+        return appicon;
+    }
+
+    public void setAppIcon(Bitmap appicon) {
+        this.appicon = appicon;
+    }
+
+    public long getReceived() {
+        return received;
+    }
+
+    public void setReceived(long received) {
+        this.received = received;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public PendingIntent getAction() {
+        return action;
+    }
+
+    public void setAction(PendingIntent action) {
+        this.action = action;
+    }
+
+    public Action[] getActions() {
+        return actions;
+    }
+
+    public void setActions(Action[] actions) {
+        this.actions = actions;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public boolean isEvent() {
+        return event;
+    }
+
+    public void setEvent(boolean event) {
+        this.event = event;
+    }
+
+    public boolean isProtect() {
+        return protect;
+    }
+
+    public void setProtect(boolean protect) {
+        this.protect = protect;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public CharSequence getTimeText(Context ctxt)
+    {
+        // set time
+        Time t = new Time();
+        t.set(received);
+        String timeFormat = "%H:%M";
+        if (!DateFormat.is24HourFormat(ctxt)) timeFormat = "%l:%M%P";
+        return t.format(timeFormat);
+    }
+
 }

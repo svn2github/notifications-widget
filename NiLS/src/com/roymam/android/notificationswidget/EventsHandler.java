@@ -16,8 +16,6 @@ public class EventsHandler extends BroadcastReceiver
     public final static String FN_DISMISS_NOTIFICATIONS = "robj.floating.notifications.dismissed";
     public final static String DISMISS_NOTIFICATIONS = "com.roymam.android.nils.remove_notification";
     public final static String OPEN_NOTIFICATION = "com.roymam.android.nils.open_notification";
-    public final static String RESEND_ALL_NOTIFICATIONS = "com.roymam.android.nils.resend_all_notifications";
-    public final static String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
     public final static String PING = "com.roymam.android.nils.ping";
     public final static String ALIVE = "com.roymam.android.nils.alive";
 
@@ -61,13 +59,6 @@ public class EventsHandler extends BroadcastReceiver
                     String packageName = intent.getStringExtra("package");
                     if (ns != null) ns.clearNotificationsForApps(new String[]{packageName});
                 }
-            }
-            else if (intent.getAction().equals(RESEND_ALL_NOTIFICATIONS))
-            {
-                // request NotificationService to bind NiLS FP service if hasn't bound yet
-                Intent nsIntent = new Intent(context, NotificationsService.class);
-                nsIntent.setAction(NotificationsService.BIND_NILS_FP);
-                context.startService(nsIntent);
             }
             else if (intent.getAction().equals(OPEN_NOTIFICATION))
             {

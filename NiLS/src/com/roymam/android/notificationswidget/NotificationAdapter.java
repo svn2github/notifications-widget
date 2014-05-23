@@ -17,7 +17,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.roymam.android.common.SysUtils;
-import com.roymam.android.nilsplus.NPService;
 
 import java.util.List;
 
@@ -99,98 +98,20 @@ public class NotificationAdapter implements NotificationEventListener
 
     private void notifyNotificationAdd(NotificationData nd)
     {
-        Log.d("Nils", "notification add uid:" + nd.uid);
+        Log.d("NiLS", "notification add uid:" + nd.uid);
 
         // add the package to the app specific settings page
         AppSettingsActivity.addAppToAppSpecificSettings(nd.packageName, context);
-
-        // send notification to nilsplus
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
-        {
-            Intent npsIntent = new Intent(context, NPService.class);
-            npsIntent.setAction(ADD_NOTIFICATION);
-            npsIntent.putExtra("title", nd.title);
-            npsIntent.putExtra("text", nd.text);
-            npsIntent.putExtra("time", nd.received);
-            npsIntent.putExtra("package", nd.packageName);
-            npsIntent.putExtra("id", nd.id);
-            npsIntent.putExtra("uid", nd.uid);
-            npsIntent.putExtra("action", nd.action);
-            npsIntent.putExtra("icon", nd.icon);
-            npsIntent.putExtra("appicon", nd.appicon);
-
-            if (nd.actions != null)
-            {
-                for (int i=0; i<nd.actions.length; i++)
-                {
-                    npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
-                    npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
-                    npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
-                }
-                npsIntent.putExtra("actions",nd.actions.length);
-            }
-            else
-                npsIntent.putExtra("actions",0);
-
-            context.startService(npsIntent);
-        }
     }
 
     private void notifyNotificationUpdated(NotificationData nd)
     {
         Log.d("Nils", "notification update #" + nd.uid);
-
-        // send notification to nilsplus
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
-        {
-            Intent npsIntent = new Intent(context, NPService.class);
-            npsIntent.setAction(UPDATE_NOTIFICATION);
-            npsIntent.putExtra("title", nd.title);
-            npsIntent.putExtra("text", nd.text);
-            npsIntent.putExtra("time", nd.received);
-            npsIntent.putExtra("package", nd.packageName);
-            npsIntent.putExtra("id", nd.id);
-            npsIntent.putExtra("uid", nd.uid);
-            npsIntent.putExtra("action", nd.action);
-            npsIntent.putExtra("icon", nd.icon);
-            npsIntent.putExtra("appicon", nd.appicon);
-
-            if (nd.actions != null)
-            {
-                for (int i=0; i<nd.actions.length; i++)
-                {
-                    npsIntent.putExtra("action"+i+"intent", nd.actions[i].actionIntent);
-                    npsIntent.putExtra("action"+i+"icon", nd.actions[i].drawable);
-                    npsIntent.putExtra("action"+i+"label", nd.actions[i].title);
-                }
-                npsIntent.putExtra("actions",nd.actions.length);
-            }
-            else
-            {
-                npsIntent.putExtra("actions",0);
-            }
-
-            context.startService(npsIntent);
-        }
     }
 
     private void notifyNotificationRemove(NotificationData nd)
     {
-        Log.d("Nils", "notification remove #" + nd.id);
-
-        // send notification to nilsplus
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.getBoolean(SettingsActivity.FP_ENABLED, SettingsActivity.DEFAULT_FP_ENABLED))
-        {
-            Intent npsIntent = new Intent(context, NPService.class);
-            npsIntent.setAction(REMOVE_NOTIFICATION);
-            npsIntent.putExtra("id", nd.id);
-            npsIntent.putExtra("uid", nd.uid);
-            npsIntent.putExtra("package", nd.packageName);
-            context.startService(npsIntent);
-        }
+        Log.d("Nils", "NotificationAdapter:notifyNotificationRemove uid:" + nd.uid);
 
         // notify FloatingNotifications for clearing this notification
         Intent intent = new Intent();

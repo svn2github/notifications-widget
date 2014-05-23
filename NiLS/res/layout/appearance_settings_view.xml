@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:layout_height="match_parent"
+android:layout_width="match_parent">
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="0px"
+    android:layout_weight="1">
+
+    <LinearLayout
+        android:id="@+id/headers"
+        android:orientation="vertical"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/preview_container"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="0dp"/>
+
+        <ListView android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:drawSelectorOnTop="false"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="16dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:listPreferredItemHeight="48dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true" />
+
+        <FrameLayout android:id="@+id/list_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/prefs_frame"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <android.preference.PreferenceFrameLayout android:id="@+id/prefs"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+</LinearLayout>
+</LinearLayout>

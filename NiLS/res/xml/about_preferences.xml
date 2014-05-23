@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/about">
+        <Preference android:key="version"
+                    android:title="@string/title"
+                    android:summary=""/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/opensource_software_used" android:summary="@string/opensource_software_summary">
+        <Preference android:title="NiLS Core - Service &amp; Widget"
+            android:summary="@string/gpl_license_v2">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://code.google.com/p/notifications-widget"/>
+        </Preference>
+        <Preference android:title="@string/swipe_to_dismiss_list_view"
+                          android:summary="@string/apache_license_v2">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://code.google.com/p/dashclock/"/>
+        </Preference>
+        <Preference android:title="@string/seekbar_preference"
+            android:summary="@string/apache_license_v2">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://code.google.com/p/nononsense-notes/"/>
+        </Preference>
+        <Preference android:title="@string/colorpicker_preference"
+            android:summary="@string/apache_license_v2">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/attenzione/android-ColorPickerPreference/"/>
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/debugging">
+        <Preference android:title="@string/view_recent_log">
+            <intent android:targetClass="com.roymam.android.nilsplus.activities.LogViewerActivity"
+                    android:targetPackage="com.roymam.android.notificationswidget"/>
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

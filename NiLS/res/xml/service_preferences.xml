@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Gestures">
+        <CheckBoxPreference
+            android:title="@string/swipe_to_open"
+            android:summary="@string/swipe_to_open_summary"
+            android:key="swipe_to_open"
+            android:defaultValue="false"
+            android:enabled="false"/>
+        <CheckBoxPreference
+            android:title="@string/click_to_open"
+            android:summary="@string/click_to_open_summary"
+            android:key="click_to_open"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:title="@string/swipe_down_to_dismiss_all"
+            android:summary="@string/swipe_down_to_dismiss_all_summary"
+            android:defaultValue="true"
+            android:key="swipe_down_to_dismiss_all"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="More Options">
+        <CheckBoxPreference
+            android:title="@string/hide_on_click"
+            android:summary="@string/hide_on_click_summary"
+            android:defaultValue="false"
+            android:key="hide_on_click"/>
+        <CheckBoxPreference
+            android:title="@string/unlock_on_open"
+            android:summary="@string/unlock_on_open_summary"
+            android:key="unlock_on_open"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:title="Continuous reading mode"
+            android:summary="Show a preview of the next notification when the notification is dismissed in preview mode"
+            android:key="show_next_preview"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:title="@string/dont_hide"
+            android:summary="@string/dont_hide_summary"
+            android:defaultValue="false"
+            android:key="dont_hide"
+            android:enabled="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/advanced">
+        <CheckBoxPreference
+            android:title="@string/halo_mode"
+            android:summary="@string/halo_mode_summary"
+            android:defaultValue="false"
+            android:key="halo_mode"
+            android:enabled="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

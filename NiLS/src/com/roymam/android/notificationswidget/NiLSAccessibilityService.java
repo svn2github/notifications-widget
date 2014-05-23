@@ -8,13 +8,19 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
+
+import com.roymam.android.common.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,12 +60,6 @@ public class NiLSAccessibilityService extends AccessibilityService
     protected void onServiceConnected()
     {
         Log.d("NiLS","NiLSAccessibilityService:onServiceConnected");
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-        {
-            Log.d("NiLS", "Running Android 4.3 and above. ignoring accessibility service");
-            return;
-        }
 
         // start NotificationsService
         //Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
@@ -112,18 +112,21 @@ public class NiLSAccessibilityService extends AccessibilityService
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent)
     {
+        boolean newApi = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2);
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         switch(accessibilityEvent.getEventType())
         {
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
                 if (accessibilityEvent.getParcelableData() != null &&
-                    accessibilityEvent.getParcelableData() instanceof Notification)
+                    accessibilityEvent.getParcelableData() instanceof Notification &&
+                        !newApi)
                     {
                         Notification n = (Notification) accessibilityEvent.getParcelableData();
                         String packageName = accessibilityEvent.getPackageName().toString();
                         int id = notificationId++;
-                        Log.d("NiLS","NewNotificationsListener:onNotificationPosted #" + id);
+                        Log.d("NiLS","NotificationsListener:onNotificationPosted #" + id);
                         if (!mBound)
                             Log.e("NiLS", "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
                         else
@@ -133,18 +136,25 @@ public class NiLSAccessibilityService extends AccessibilityService
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                 if (accessibilityEvent.getPackageName() != null)
                 {
-                    Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED " + accessibilityEvent.getPackageName().toString());
-                    if (!accessibilityEvent.getPackageName().equals("com.android.systemui") &&
-                         SettingsActivity.shouldClearWhenAppIsOpened(getApplicationContext()))
-                    {
-                        NotificationsProvider ns = NotificationsService.getSharedInstance();
-                        if (ns != null) ns.clearNotificationsForApps(new String[]{accessibilityEvent.getPackageName().toString()});
+                    String packageName = accessibilityEvent.getPackageName().toString();
+                    Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED " + packageName);
+                    // auto clear notifications when app is opened (Android < 4.3 only)
+                    if (!newApi) {
+                        if (!packageName.equals("com.android.systemui") &&
+                                SettingsActivity.shouldClearWhenAppIsOpened(getApplicationContext())) {
+                            NotificationsProvider ns = NotificationsService.getSharedInstance();
+                            if (ns != null)
+                                ns.clearNotificationsForApps(new String[]{packageName.toString()});
+                        }
                     }
+                    handleAutoHideWhenWindowChanged(packageName);
                 }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
+                // auto clear notifications when cleared from notifications bar (old api, Android < 4.3)
                 if (accessibilityEvent.getPackageName().equals("com.android.systemui") &&
-                    SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()))
+                    SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()) &&
+                        !newApi)
                 {
                     //Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
                     AccessibilityNodeInfo node = accessibilityEvent.getSource();
@@ -197,11 +207,15 @@ public class NiLSAccessibilityService extends AccessibilityService
                         }
                     }
                 }
+                // auto hide notifications list
+                handleAutoHideWhenWindowContentChanged(accessibilityEvent);
+
                 break;
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
                 if (    accessibilityEvent != null &&
                         accessibilityEvent.getPackageName() != null &&
-                        accessibilityEvent.getPackageName().equals("com.android.systemui"))
+                        accessibilityEvent.getPackageName().equals("com.android.systemui") &&
+                        !newApi)
                 {
                     // clear notifications button clicked
                     if (prefs != null && SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()))
@@ -219,6 +233,68 @@ public class NiLSAccessibilityService extends AccessibilityService
                     }
                 }
                 break;
+        }
+    }
+
+    private void handleAutoHideWhenWindowChanged(String packageName)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        if (packageName != null && mBound)
+        {
+            Log.d("NiLS+", "TYPE_WINDOW_STATE_CHANGED " + packageName);
+
+            boolean dontHide = prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE);
+            boolean isPackageInstaller = packageName.equals("com.android.packageinstaller");
+
+            // request notifications list to hide/show notifications list
+            // force hide when package installer is displayed
+            if (isPackageInstaller)
+            {
+                mService.hide(true);
+            }
+            else if (!dontHide && NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
+            {
+                mService.hide(false);
+            }
+            else
+            {
+                mService.show();
+            }
+        }
+    }
+
+    private void handleAutoHideWhenWindowContentChanged(AccessibilityEvent accessibilityEvent)
+    {
+        CharSequence packageName = accessibilityEvent.getPackageName();
+
+        if (packageName != null)
+        {
+            //Log.d("NiLS+","TYPE_WINDOW_CONTENT_CHANGED " + packageName.toString());
+            // hide FP when WidgetLocker side menu appears
+            if (packageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&
+                    accessibilityEvent.getSource() != null &&
+                    accessibilityEvent.getClassName().equals("android.widget.ListView"))
+            {
+                Rect rect = new Rect();
+                accessibilityEvent.getSource().getBoundsInScreen(rect);
+                if (rect.left >= -BitmapUtils.dpToPx(60))
+                    mService.hide(false);
+                else mService.show();
+            }
+            // hide NiLS when status bar is displayed
+            else if (packageName.equals("com.android.systemui"))
+            {
+                mHiddenBecauseOfSystemUI = true;
+                mService.hide(false);
+            }
+            // show NiLS back the lock screen app is displayed back
+            else if (mHiddenBecauseOfSystemUI &&
+                    !NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
+            {
+                mHiddenBecauseOfSystemUI = false;
+                mService.show();
+            }
         }
     }
 
@@ -256,5 +332,24 @@ public class NiLSAccessibilityService extends AccessibilityService
     @Override
     public void onInterrupt()
     {
+    }
+
+    private boolean mHiddenBecauseOfSystemUI = false;
+
+    @Override
+    public boolean onUnbind(Intent intent)
+    {
+        // Unbind from the service
+        if (mBound)
+        {
+            unbindService(mConnection);
+            mBound = false;
+        }
+        return super.onUnbind(intent);
+    }
+
+    public static boolean isServiceRunning(Context context)
+    {
+        return NotificationsService.isServiceRunning(context, NiLSAccessibilityService.class);
     }
 }

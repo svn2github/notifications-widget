@@ -1,0 +1,1057 @@
+package com.roymam.android.nilsplus.ui;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.os.Handler;
+import android.os.PowerManager;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+
+import com.roymam.android.common.BitmapUtils;
+import com.roymam.android.common.SysUtils;
+import com.roymam.android.notificationswidget.NotificationData;
+import com.roymam.android.notificationswidget.NotificationsService;
+import com.roymam.android.notificationswidget.R;
+import com.roymam.android.notificationswidget.SettingsActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class NPViewManager
+{
+    private static final int EDIT_MODE_PADDING = 32;
+    private final int mAnimationDuration;
+    private ListView mListView;
+    private final Handler mHandler;
+    private final Context mContext;
+    private final Callbacks mCallbacks;
+
+    private final View mResizeRect;
+    private NPListView mNPListView;
+    private PreviewNotificationView mPreviewView;
+    private final View mEditModeView;
+    private final View mTouchAreaView;
+
+    private NotificationData mPreviewItem = null;
+    private int yOffset = 0;
+    private Point mWidgetSize;
+    private Point mWidgetPosition;
+    private final WindowManager mWindowManager;
+    private Point mMaxWidgetSize;
+    private Point mMaxWidgetPosition;
+    private int mPrevHeight = 0;
+    private boolean mVisible = false;
+
+    private Runnable mUpdateTouchAreaSizeToMaximum = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            // update touch area
+            int height = getPreviewHeight();
+            if (height != mPrevHeight)
+            {
+                /*if (mPrevHeight == 0)
+                    safeAddView(mTouchAreaView, getLayoutParams(0));
+                else*/
+                safeUpdateView(mTouchAreaView, getLayoutParams(0));
+
+                mPrevHeight = height;
+            }
+        }
+    };
+
+    private Runnable mUpdateTouchAreaSize = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            /*if (mData.size() == 0)
+            {
+                safeRemoveView(mTouchAreaView);
+                mPrevHeight = 0;
+            }
+            else */
+            {
+                // update touch area
+                //int h = mPreviewItem != null?getMaxLines():mData.size();
+                int height = Math.min(getHeight(), mPreviewItem != null? getPreviewHeight():mNPListView.getItemsHeight());
+                if (height != mPrevHeight)
+                {
+                    /*if (mPrevHeight == 0)
+                        safeAddView(mTouchAreaView, getTouchAreaLayoutParams());
+                    else*/
+                    safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+
+                    mPrevHeight = height;
+                }
+            }
+
+            if (mVisible)
+                mTouchAreaView.setVisibility(View.VISIBLE);
+            else
+                mTouchAreaView.setVisibility(View.GONE);
+        }
+    };
+    private int mPreviewPosition = -1;
+
+    public void destroy()
+    {
+        if (mWakeLock != null && mWakeLock.isHeld())
+        {
+            mWakeLock.release();
+            mWakeLock = null;
+        }
+        mNPListView.cleanup();
+        mPreviewView.cleanup();
+        mEditModeView.setOnTouchListener(null);
+        mResizeRect.setOnTouchListener(null);
+        mTouchAreaView.setOnTouchListener(null);
+        removeAllViews();
+    }
+
+    public boolean isVisible()
+    {
+        return mVisible;
+    }
+
+    public void applyAppearance()
+    {
+        // recreate the adapter to apply the new appearance settings
+        mNPListView.reloadAppearance();
+
+    }
+
+    public void saveNotificationsState()
+    {
+        mNPListView.saveNotificationsState();
+    }
+
+    public void animateNotificationsChange()
+    {
+        mNPListView.animateNotificationsChange();
+    }
+
+    // callbacks
+    public interface Callbacks
+    {
+        public void onDismissed(NotificationData ni);
+        public void onOpen(NotificationData ni);
+        public void onAction(NotificationData ni, PendingIntent action, String actionName);
+    }
+
+    public NPViewManager(Context context, Callbacks callbacks)
+    {
+        // store parameters
+        mContext = context;
+        mCallbacks = callbacks;
+
+        // create an handler for schduling tasks
+        mHandler = new Handler();
+
+        // load system configuration
+        mAnimationDuration = Resources.getSystem().getInteger(android.R.integer.config_shortAnimTime);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
+        // calculate sizes
+        Point maxSize = getWidgetSize();
+        Point maxPos = getWidgetPosition(maxSize);
+
+        // create list view
+        createListView();
+
+        // create the prevmiew view & add the view to the screen
+        mPreviewView = new PreviewNotificationView(mContext, maxSize, maxPos);
+
+        // create edit mode view
+        mEditModeView = View.inflate(mContext, R.layout.editmode, null);
+        mResizeRect = mEditModeView.findViewById(R.id.resize_rect);
+        mEditModeView.setVisibility(View.GONE);
+        mEditModeView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                if (event.getAction() == MotionEvent.ACTION_DOWN)
+                {
+                    disableEditMode();
+                    return true;
+                }
+                else
+                    return false;
+            }
+        });
+
+        mResizeRect.setOnTouchListener(new EditModeTouchListener(mEditModeView, new EditModeTouchListener.Callbacks()
+        {
+            private RelativeLayout.LayoutParams mParams;
+            private int mLeft;
+            private int mRight;
+            public Point mMinSize;
+            public float lasttop;
+            public float lastbottom;
+            private Point mDisplaySize;
+
+            @Override
+            public void onStartResizeHeight()
+            {
+                mDisplaySize = getDisplaySize();
+
+                mWidgetSize = getWidgetSize();
+                mMaxWidgetSize = getWidgetSize();
+                mWidgetPosition = getWidgetPosition(mWidgetSize);
+                mMaxWidgetPosition = getWidgetPosition(mMaxWidgetSize);
+                mMinSize = new Point(BitmapUtils.dpToPx(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsActivity.ICON_SIZE, SettingsActivity.DEFAULT_ICON_SIZE))*2,
+                        BitmapUtils.dpToPx(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsActivity.ICON_SIZE, SettingsActivity.DEFAULT_ICON_SIZE)));
+
+                mParams = new RelativeLayout.LayoutParams(mMaxWidgetSize.x+EDIT_MODE_PADDING*2,mMaxWidgetSize.y+EDIT_MODE_PADDING*2);
+                mParams.leftMargin = mWidgetPosition.x - EDIT_MODE_PADDING;
+                mParams.topMargin = calcYoffset(mWidgetPosition.y, mWidgetSize.y) - EDIT_MODE_PADDING;
+            }
+
+            @Override
+            public void onResizeHeight(float top, float bottom)
+            {
+                lasttop = top;
+                lastbottom = bottom;
+
+                mParams.topMargin = (int) (mMaxWidgetPosition.y - top - EDIT_MODE_PADDING);
+                if (mParams.topMargin < -EDIT_MODE_PADDING) mParams.topMargin = -EDIT_MODE_PADDING;
+                mParams.height = (int) (mMaxWidgetSize.y + bottom + EDIT_MODE_PADDING * 2);
+
+                if (mParams.height < mMinSize.y + EDIT_MODE_PADDING*2)
+                {
+                    mParams.height = mMinSize.y + EDIT_MODE_PADDING*2;
+                    if (top!=0) mParams.topMargin = mMaxWidgetPosition.y + mMaxWidgetSize.y - mMinSize.y - EDIT_MODE_PADDING;
+                }
+
+                mResizeRect.setLayoutParams(mParams);
+            }
+
+            @Override
+            public void onEndResizeHeight()
+            {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+                // store new height
+                prefs.edit().putInt(getRotationMode()+SettingsActivity.HEIGHT, BitmapUtils.pxToDp(mParams.height - EDIT_MODE_PADDING * 2)).commit();
+                mResizeRect.setLayoutParams(mParams);
+
+                // update notifications list widget
+                endWidgetDraggin(-lasttop);
+            }
+
+            @Override
+            public void onStartResizeWidth()
+            {
+                onStartResizeHeight();
+
+                mLeft = mWidgetPosition.x;
+                mRight = mDisplaySize.x - mWidgetSize.x - mLeft;
+            }
+
+            @Override
+            public void onResizeWidth(float left, float right)
+            {
+                mParams.leftMargin = (int) (mLeft + left) - EDIT_MODE_PADDING;
+                if (mParams.leftMargin < -EDIT_MODE_PADDING) mParams.leftMargin = -EDIT_MODE_PADDING;
+                mParams.width = (int) (mDisplaySize.x - mParams.leftMargin - mRight - right) + EDIT_MODE_PADDING;
+                if (mParams.width > mDisplaySize.x - mParams.leftMargin + EDIT_MODE_PADDING)
+                    mParams.width = mDisplaySize.x - mParams.leftMargin + EDIT_MODE_PADDING;
+
+                if (mParams.width < mMinSize.x + EDIT_MODE_PADDING*2)
+                {
+                    mParams.width = mMinSize.x + EDIT_MODE_PADDING*2;
+                    if (left!=0) mParams.leftMargin = mMaxWidgetPosition.x + mMaxWidgetSize.x - mMinSize.x - EDIT_MODE_PADDING;
+                }
+                mResizeRect.setLayoutParams(mParams);
+            }
+
+            @Override
+            public void onCancel()
+            {
+                disableEditMode();
+            }
+
+            @Override
+            public void onEndResizeWidth()
+            {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                prefs.edit().putInt(getRotationMode()+"left_margin", mParams.leftMargin + EDIT_MODE_PADDING)
+                        .putInt(getRotationMode()+"right_margin", mDisplaySize.x - mParams.width - mParams.leftMargin + EDIT_MODE_PADDING)
+                        .commit();
+
+                // update notifications list widget
+                endWidgetDraggin(0);
+            }
+
+        }));
+
+        // create touch area view
+        mTouchAreaView = new RelativeLayout(mContext);
+        mTouchAreaView.setLayoutParams(new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+
+        mTouchAreaView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE && prefs.getBoolean(SettingsActivity.HIDE_ON_CLICK, SettingsActivity.DEFAULT_HIDE_ON_CLICK)) hide(true);
+                if (event.getAction() == MotionEvent.ACTION_DOWN) keepScreenOn();
+
+                if (mPreviewItem != null)
+                    mPreviewView.dispatchTouchEvent(event);
+                else
+                    mListView.dispatchTouchEvent(event);
+                return false;
+            }
+        });
+
+        // add all views to window manager
+        addAllViews();
+
+        // make sure views are hidden by default
+        mNPListView.setVisibility(View.GONE);
+        mPreviewView.setVisibility(View.GONE);
+    }
+
+    public void createListView()
+    {
+        Point size = getWidgetSize();
+        Point pos = getWidgetPosition(size);
+
+        mNPListView = new NPListView(mContext, size, pos, new NPListView.Callbacks()
+        {
+            public float lasty;
+
+            @Override
+            public void notificationCleared(NotificationData ni)
+            {
+                if (mCallbacks != null) mCallbacks.onDismissed(ni);
+                notifyDataChanged();
+            }
+
+            @Override
+            public void notificationOpen(NotificationData ni)
+            {
+                if (mCallbacks != null) mCallbacks.onOpen(ni);
+            }
+
+            @Override
+            public void notificationClicked(NotificationData ni, int position, boolean iconSwiping)
+            {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                if (prefs.getBoolean(SettingsActivity.CLICK_TO_OPEN, SettingsActivity.DEFAULT_CLICK_TO_OPEN))
+                {
+                    notificationOpen(ni);
+                }
+                else
+                {
+                    showNotificationPreview(ni, position, iconSwiping);
+                }
+            }
+
+            @Override
+            public void onTouchAndHold()
+            {
+                disableEditMode();
+                startWidgetDragging();
+            }
+
+            @Override
+            public void onDrag(float x, float y)
+            {
+                lasty = y;
+            }
+
+            @Override
+            public void onTouchRelease()
+            {
+                endWidgetDraggin(lasty);
+            }
+
+            @Override
+            public void notificationRunAction(NotificationData ni, int i)
+            {
+                if (mCallbacks != null) mCallbacks.onAction(ni, ni.getActions()[i].actionIntent, ni.getActions()[i].title.toString());
+            }
+        });
+        mListView = mNPListView.getListView();
+    }
+
+    private Point getDisplaySize()
+    {
+        return getDisplaySize(mContext);
+    }
+
+    public static Point getDisplaySize(Context context)
+    {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        return displaySize;
+    }
+
+    private String getRotationMode()
+    {
+        return getRotationMode(mContext);
+    }
+
+    public static String getRotationMode(Context context)
+    {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        int rotation = display.getRotation();
+        String mode;
+        if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
+            mode = "";
+        else
+            mode = "landscape.";
+
+        // check we currently on non lock screen
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        if (prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE))
+        {
+            // separated mode for notifications list on home screen
+            String lockScreenApp = prefs.getString("lockscreenapp", "auto");
+
+            // if need to auto detect, get the last auto detected app
+            if (lockScreenApp.equals("auto"))
+                lockScreenApp = prefs.getString("lockscreenapp_auto", "android");
+
+            String currentApp = NotificationsService.getForegroundApp(context);
+
+            boolean shouldHideNotificaitons = (!NotificationsService.isKeyguardLocked(context) &&
+                !currentApp.equals(lockScreenApp) ||
+                currentApp.equals(SettingsActivity.STOCK_PHONE_PACKAGENAME));
+
+            if (shouldHideNotificaitons)
+                mode = "home." + mode;
+        }
+
+        return mode;
+    }
+
+    private PowerManager.WakeLock mWakeLock;
+
+    private Runnable mReleaseWakelock = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            if (mWakeLock != null && mWakeLock.isHeld())
+                mWakeLock.release();
+        }
+    };
+
+    public void keepScreenOn()
+    {
+        SysUtils sysUtils = SysUtils.getInstance(mContext,mHandler);
+        sysUtils.turnScreenOn(true);
+    }
+
+    private int calcYoffset(int y, int height)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Point displaySize = getDisplaySize();
+
+        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        int maxHeight = getPreviewHeight();
+
+        int yOffset;
+
+        if (yAlignment.equals("center")) yOffset = y - (maxHeight/2 - height/2);
+        else if (yAlignment.equals("bottom")) yOffset = y - (maxHeight - height);
+        else yOffset = y;
+
+        return yOffset;
+    }
+
+    private void endWidgetDraggin(float yOffset)
+    {
+        // store new offset
+        // calculate sizes
+        Point maxSize = getWidgetSize();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Point displaySize = getDisplaySize();
+
+        int prevYOffset = prefs.getInt(getRotationMode()+"yoffset", displaySize.y / 2 - maxSize.y / 2);
+        prefs.edit().putInt(getRotationMode()+"yoffset", (int) (prevYOffset + yOffset)).commit();
+
+        // calculate updated sizes
+        Point size = getWidgetSize();
+        Point pos = getWidgetPosition(size);
+
+        // update notifications list
+        mNPListView.updateSizeAndPosition(pos, size);
+        mPreviewView.updateSizeAndPosition(pos, size);
+
+        // update touch area
+        safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+
+        // enable edit mode if not enabled already
+        enableEditMode();
+    }
+
+    private void startWidgetDragging()
+    {
+        mWidgetSize = getWidgetSize();
+        mMaxWidgetSize = getWidgetSize();
+        mWidgetPosition = getWidgetPosition(mWidgetSize);
+        mMaxWidgetPosition = getWidgetPosition(mMaxWidgetSize);
+    }
+
+    private void enableEditMode()
+    {
+        mEditModeView.setVisibility(View.VISIBLE);
+        Point size = getWidgetSize();
+        Point pos = getWidgetPosition(size);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size.x+EDIT_MODE_PADDING*2,size.y+EDIT_MODE_PADDING*2);
+        params.leftMargin = pos.x - EDIT_MODE_PADDING;
+        params.topMargin = pos.y - EDIT_MODE_PADDING;
+        mResizeRect.setLayoutParams(params);
+        mResizeRect.setAlpha(1.0f);
+        //mResizeRect.animate().alpha(1.0f).setDuration(mAnimationDuration).setListener(null);
+    }
+
+    private void disableEditMode()
+    {
+        mResizeRect.animate().alpha(0.0f).setDuration(mAnimationDuration).setListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mEditModeView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    public void updateTouchArea()
+    {
+        try
+        {
+            safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+        }
+        catch (Exception exception)
+        {
+            // view already exists - ignore
+        }
+    }
+
+    private void showNotificationPreview(NotificationData ni, int position, boolean iconSwiping)
+    {
+        if (getMaxLines() >= 3)
+        {
+            // update the content of the preview
+            mPreviewView.setContent(ni, new PreviewNotificationView.Callbacks()
+            {
+                @Override
+                public void onDismiss(NotificationData ni)
+                {
+                    if (mCallbacks != null) mCallbacks.onDismissed(ni);
+                    notifyDataChanged();
+                }
+
+                @Override
+                public void onOpen(NotificationData ni)
+                {
+                    if (mCallbacks != null) mCallbacks.onOpen(ni);
+                }
+
+                @Override
+                public void onClick()
+                {
+                    hideNotificationPreview();
+                }
+
+                @Override
+                public void onAction(NotificationData ni, PendingIntent intent, String actionName)
+                {
+                    if (mCallbacks != null) mCallbacks.onAction(ni, intent, actionName);
+                }
+            });
+
+            mPreviewItem = ni;
+            mPreviewPosition = position;
+
+            // calc offset (where to start animation)
+            //yOffset = calcOffset();
+
+            // animation fade out of list view
+            mListView.animate().alpha(0).setDuration(mAnimationDuration).setListener(null);
+
+            View rowView = mListView.getChildAt(position - mListView.getFirstVisiblePosition());
+            Rect rect = new Rect();
+
+            Point size = getWidgetSize();
+            Point pos = getWidgetPosition(size);
+
+            rect.top = (int) (rowView.getY() + pos.y);
+            rect.bottom = rect.top + rowView.getHeight();
+            rect.left = (int) (rowView.getX() + pos.x);
+            rect.right = rect.left + rect.left;
+
+            // animate pop in of the preview view
+            mPreviewView.show(rect);
+
+            // update touch area size
+            if (iconSwiping)
+                mPreviewView.setIconSwiping(true);
+
+            mHandler.postDelayed(mUpdateTouchAreaSizeToMaximum, mAnimationDuration*2);
+        }
+    }
+
+    /*private void safeRemoveView(View v)
+    {
+        try
+        {
+            mWindowManager.removeViewImmediate(v);
+        }
+        catch (Exception exp)
+        {
+            //exp.printStackTrace();
+            // the view probably wasn't attached, ignore this exception
+        }
+    }
+
+    private boolean safeAddView(View v, WindowManager.LayoutParams params)
+    {
+        try
+        {
+            mWindowManager.addView(v, params);
+            return true;
+        }
+        catch (Exception exp)
+        {
+           // exp.printStackTrace();
+            // the view probably was already attached, ignore this exception
+            // and update params
+            safeUpdateView(v, params);
+            return false;
+        }
+    }*/
+
+    public void hide(boolean force)
+    {
+        Log.d("NiLS", "NPViewManager.hide();");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if (!prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE) || force)
+        {
+            //Log.d("NiLS", "Hiding NiLS");
+            // hide preview if visibile
+            if (mPreviewItem != null)
+            {
+                mHandler.postDelayed(mUpdateTouchAreaSize, mAnimationDuration*2);
+            }
+            mNPListView.setVisibility(View.GONE);
+            mTouchAreaView.setVisibility(View.GONE);
+            if (mVisible)
+            {
+                if (mPreviewItem != null)
+                {
+                    mPreviewView.animate().alpha(0).setDuration(mAnimationDuration).setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mPreviewItem = null;
+                            mPreviewView.hideImmediate();
+                        }
+                    });
+                }
+                else
+                {
+                    mNPListView.setVisibility(View.VISIBLE);
+                    mListView.animate().alpha(0).setDuration(mAnimationDuration).setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mNPListView.setVisibility(View.GONE);
+                        }
+                    });
+                }
+                mVisible = false;
+            }
+        }
+
+        // remove persistent notification
+        //NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        //nm.cancel(0);
+    }
+
+    private void removeAllViews()
+    {
+        mWindowManager.removeViewImmediate(mNPListView);
+        mWindowManager.removeViewImmediate(mPreviewView);
+        mWindowManager.removeViewImmediate(mEditModeView);
+        mWindowManager.removeViewImmediate(mTouchAreaView);
+        //safeRemoveView(mNPListView);
+        //safeRemoveView(mPreviewView);
+        //safeRemoveView(mEditModeView);
+    }
+
+    private void addAllViews()
+    {
+        mWindowManager.addView(mNPListView, getFullScreenLayoutParams());
+        mWindowManager.addView(mPreviewView, getFullScreenLayoutParams());
+        mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams());
+        mWindowManager.addView(mEditModeView, getEditModeLayoutParams());
+        /*
+        boolean newViews = true;
+        newViews &= safeAddView(mNPListView, getFullScreenLayoutParams());
+        newViews &= safeAddView(mPreviewView, getFullScreenLayoutParams());
+        newViews &= safeAddView(mTouchAreaView, getTouchAreaLayoutParams());
+        newViews &= safeAddView(mEditModeView, getEditModeLayoutParams());
+        return newViews;*/
+    }
+
+    public void show()
+    {
+        Log.d("NiLS", "NPViewManager.show();");
+        mNPListView.show();
+        hideNotificationPreview();
+        mPreviewView.hideImmediate();
+        mTouchAreaView.setVisibility(View.VISIBLE);
+
+        // hide edit mode if displayed
+        if (mEditModeView.getVisibility() == View.VISIBLE)
+            disableEditMode();
+
+        if (!mVisible)
+        {
+            mVisible = true;
+            mListView.setAlpha(0);
+            mListView.setScaleY(0);
+            mListView.animate().alpha(1).scaleY(1).setDuration(mAnimationDuration).setListener(null);
+        }
+
+        // create persistent notification to prevent NiLS+ to be killed
+        /*NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+                .setSmallIcon(android.R.color.transparent)
+                .setLargeIcon(((BitmapDrawable) mContext.getResources().getDrawable(R.drawable.ic_launcher)).getBitmap())
+                .setContentTitle(mContext.getString(R.string.nils_is_displayed))
+                .setContentText(mContext.getString(R.string.click_to_hide_it));
+
+        /*Notification n = mBuilder.build();
+        Intent hideIntent = new Intent(mContext, NPService.class);
+        hideIntent.setAction(NPService.HIDE_NOTIFICATIONS);
+        n.contentIntent = PendingIntent.getService(mContext, 0, hideIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        n.flags |= Notification.FLAG_ONGOING_EVENT;
+        try {n.priority = Notification.PRIORITY_MIN;} catch (java.lang.NoSuchFieldError exp) {}; // this doesn't work on some devices
+        NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(0, n);*/
+    }
+
+    private WindowManager.LayoutParams getEditModeLayoutParams()
+    {
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT);
+
+        return params;
+    }
+
+    private void hideNotificationPreview()
+    {
+        // animate showing of list view
+        mNPListView.setVisibility(View.VISIBLE);
+        mListView.animate().alpha(1).setDuration(mAnimationDuration).setListener(null);
+
+        // animate hiding preview view
+        mPreviewView.hide(yOffset);
+        mHandler.postDelayed(mUpdateTouchAreaSize, mAnimationDuration*2);
+
+        mPreviewItem = null;
+    }
+
+    private int getHeight()
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        int height = BitmapUtils.dpToPx(prefs.getInt(getRotationMode()+SettingsActivity.HEIGHT, SettingsActivity.DEFAULT_HEIGHT));
+        if (height > 0) return height;
+        else return 0;
+    }
+
+    private int getPreviewHeight()
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return BitmapUtils.dpToPx(prefs.getInt(getRotationMode()+SettingsActivity.PREVIEW_HEIGHT, SettingsActivity.DEFAULT_PREVIEW_HEIGHT));
+    }
+
+    private int getMaxLines()
+    {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsActivity.FP_MAX_LINES, SettingsActivity.DEFAULT_MAX_LINES);
+    }
+
+    private Point getWidgetSize()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Point size = getDisplaySize();
+
+        int leftMargin = prefs.getInt(getRotationMode()+"left_margin", (int) (size.x * 0.05f));
+        int rightMargin = prefs.getInt(getRotationMode()+"right_margin", (int) (size.x * 0.05f));
+        int width = size.x - leftMargin - rightMargin;
+        int height = getHeight();
+
+        //Log.d("NiLS+", "widget size:" + width + "," + height);
+        return new Point(width, height);
+    }
+
+    private int getYoffset()
+    {
+        Point displaySize = getDisplaySize();
+
+        int maxHeight = getHeight();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        int yOffset = prefs.getInt(getRotationMode()+"yoffset", displaySize.y / 2 - maxHeight / 2);
+        return yOffset;
+    }
+
+    private Point getWidgetPosition(Point size)
+    {
+        return getWidgetPosition(size, getYoffset());
+    }
+
+    private Point getWidgetPosition(Point size, int yOffset)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        int maxHeight = getHeight();
+
+        int x,y;
+        x = prefs.getInt(getRotationMode()+"left_margin", (int) (size.x * 0.05f));
+
+        if (yAlignment.equals("center")) y = yOffset + maxHeight/2 - size.y/2;
+        else if (yAlignment.equals("bottom")) y = yOffset + maxHeight - size.y;
+        else y = yOffset;
+
+        //Log.d("NiLS+", "widget pos:" + x + "," + y);
+        return new Point(x,y);
+    }
+
+    private void updateWidgetPosition(int xoffset, int yoffset, float scaleFactor)
+    {
+        Point screenSize = getDisplaySize();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        int maxHeight = mMaxWidgetSize.y;
+
+        // move widget to correct position
+        //mWidgetDragParams.gravity= Gravity.TOP | Gravity.LEFT;
+        //mWidgetDragParams.x = (int) (mWidgetPosition.x - mWidgetSize.x * (scaleFactor - 1) / 2) + xoffset;
+        //mWidgetDragParams.y = (int) (mWidgetPosition.y - mWidgetSize.y * (scaleFactor - 1) / 2) + yoffset;
+
+        int miny,maxy;
+
+        if (yAlignment.equals("center"))
+        {
+            miny = maxHeight/2 - mWidgetSize.y/2;
+            maxy = screenSize.y - mWidgetSize.y/2;
+        }
+        else if (yAlignment.equals("bottom"))
+        {
+            miny = maxHeight - mWidgetSize.y;
+            maxy = screenSize.y - mWidgetSize.y;
+        }
+        else
+        {
+            miny = 0;
+            maxy = screenSize.y - maxHeight;
+        }
+
+        //if (mWidgetDragParams.y < miny) mWidgetDragParams.y = miny;
+        //if (mWidgetDragParams.y > maxy) mWidgetDragParams.y = maxy;
+
+        //safeUpdateView(mNPListView, mWidgetDragParams);
+    }
+
+    private WindowManager.LayoutParams getFullScreenLayoutParams()
+    {
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+        );
+        return params;
+    }
+
+    private WindowManager.LayoutParams getTouchAreaLayoutParams()
+    {
+        Point displaySize = getDisplaySize();
+        Point size = getWidgetSize();
+        size.y = Math.min(size.y, mNPListView.getItemsHeight());
+        Point pos = getWidgetPosition(size);
+
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                size.x,
+                size.y,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT);
+
+        params.gravity= Gravity.TOP | Gravity.LEFT;
+        params.x = pos.x;
+        params.y = pos.y;
+
+        // fix positioning if of limit
+        if (params.x < 0) params.x = 0;
+        if (params.y < 0) params.y = 0;
+        if (params.x > displaySize.x) params.x = displaySize.x;
+        if (params.y > displaySize.y) params.y = displaySize.y;
+        if (params.width > displaySize.x - params.x) params.width = displaySize.x - params.x;
+        if (params.height> displaySize.y - params.y) params.height = displaySize.y - params.y;
+
+        return params;
+    }
+
+    private WindowManager.LayoutParams getLayoutParams(int padding)
+    {
+        Point displaySize = getDisplaySize();
+        Point size = getWidgetSize();
+        Point pos = getWidgetPosition(size);
+
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                size.x + padding * 2,
+                size.y + padding * 2,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT);
+
+        params.gravity= Gravity.TOP | Gravity.LEFT;
+        params.x = pos.x - padding;
+        params.y = pos.y - padding;
+
+        // fix positioning if of limit
+        if (params.x < 0) params.x = 0;
+        if (params.y < 0) params.y = 0;
+        if (params.x > displaySize.x) params.x = displaySize.x;
+        if (params.y > displaySize.y) params.y = displaySize.y;
+        if (params.width > displaySize.x - params.x) params.width = displaySize.x - params.x;
+        if (params.height> displaySize.y - params.y) params.height = displaySize.y - params.y;
+
+        return params;
+    }
+
+    private void safeUpdateView(View v, WindowManager.LayoutParams params)
+    {
+        try
+        {
+            mWindowManager.updateViewLayout(v, params);
+        }
+        catch(Exception exp)
+        {
+            exp.printStackTrace();
+            // view wasn't exist, there is no need updating it
+        }
+    }
+
+    public void notifyDataChanged()
+    {
+        mNPListView.notifyDataChanged();
+
+        mHandler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Point size = getWidgetSize();
+                Point pos = getWidgetPosition(size);
+                mNPListView.updateSizeAndPosition(pos, size);
+            }
+        }, 0);
+
+        if (mPreviewItem == null)
+        {
+            // schedule update view after the animation
+            mHandler.postDelayed(mUpdateTouchAreaSize, mAnimationDuration*2);
+        }
+        else
+        {
+            List<NotificationData> data = new ArrayList<NotificationData>();
+            if (NotificationsService.getSharedInstance() != null)
+                data = NotificationsService.getSharedInstance().getNotifications();
+
+            // check if the preview item still exists
+            boolean exists = false;
+            for (NotificationData ni : data)
+                if (ni == mPreviewItem) exists = true;
+
+            // close preview if the item is no longer exists
+            if (!exists)
+            {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+                if (prefs.getBoolean(SettingsActivity.SHOW_NEXT_PREVIEW, SettingsActivity.DEFAULT_SHOW_NEXT_PREVIEW))
+                {
+                    final List<NotificationData> finalData = data;
+                    mHandler.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                if (mVisible)
+                                {
+                                    // show next or prev item if there is
+                                    if (mPreviewPosition < finalData.size())
+                                        showNotificationPreview(finalData.get(mPreviewPosition), mPreviewPosition, false);
+                                    else if (mPreviewPosition - 1 >= 0)
+                                        showNotificationPreview(finalData.get(mPreviewPosition - 1), mPreviewPosition - 1, false);
+                                    else
+                                        hideNotificationPreview();
+                                }
+                            }
+                        }, mAnimationDuration);
+                }
+                else
+                    hideNotificationPreview();
+            }
+        }
+    }
+
+    public void refreshLayout()
+    {
+        // calculate updated sizes
+        Point size = getWidgetSize();
+        Point pos = getWidgetPosition(size);
+
+        // update notifications list
+        mNPListView.updateSizeAndPosition(pos, size);
+        mPreviewView.updateSizeAndPosition(pos, size);
+
+        // update touch area
+        safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+    }
+}

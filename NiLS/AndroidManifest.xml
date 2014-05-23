@@ -54,17 +54,19 @@
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Wallpaper.NoTitleBar"/>
-        <activity android:name="com.roymam.android.nilsplus.activities.StartupWizard"
+        <activity android:name="com.roymam.android.nilsplus.activities.StartupWizardActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-        <activity android:name="com.roymam.android.nilsplus.activities.WhatsNew"
+        <activity android:name="com.roymam.android.nilsplus.activities.WhatsNewActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+        <activity android:name="com.roymam.android.nilsplus.activities.LogViewerActivity"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:label="@string/view_recent_log"/>
 
         <!-- Services -->
-        <service android:name="com.roymam.android.notificationswidget.NotificationsRemoteViewsFactoryService"
-            android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService" />
+
+        <!-- Main Service -->
         <service android:name="com.roymam.android.notificationswidget.NotificationsService"/>
+        <!-- NiLS Accessibility Service (for Android < 4.3 and for Auto Hide service -->
         <service android:name="com.roymam.android.notificationswidget.NiLSAccessibilityService"
             android:label="@string/notifications_service"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
@@ -76,29 +78,28 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/notifications_service_config" />
         </service>
-        <service android:name=".ClockService"/>
-        <service android:name="com.roymam.android.notificationswidget.NewNotificationsListener"
-                 android:label="@string/notifications_service"
-                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+
+        <!-- NiLS Notiications Listener (for Android >= 4.3 -->
+        <service android:name=".NotificationsListener"
+            android:label="@string/notifications_service"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <!-- widget stuff -->
+        <service android:name="com.roymam.android.notificationswidget.NotificationsRemoteViewsFactoryService"
+        android:exported="false"
+        android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name="com.roymam.android.notificationswidget.NotificationsWidgetService" />
+        <service android:name=".ClockService"/>
+
+        <!-- NiLS FP remains - TODO need to be merged -->
         <service android:name="com.roymam.android.nilsplus.NPService">
             <intent-filter>
                 <action android:name="com.roymam.android.nils.service"/>
             </intent-filter>
-        </service>
-        <service android:name="com.roymam.android.nilsplus.NiLSFPAutoHideService"
-            android:label="@string/nilsfp_autohide_service_label"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/nilsfp_autohide_service_config" />
         </service>
 
         <!-- Receivers -->
@@ -125,6 +126,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widgetinfo" />
         </receiver>
+
+        <!-- TODO: merge with NiLS FP events handler -->
         <receiver android:name=".EventsHandler">
             <intent-filter>
                 <!-- internal events -->
@@ -146,22 +149,13 @@
                 <action android:name="com.roymam.android.nils.ping"/>
             </intent-filter>
         </receiver>
+
+        <!-- TODO - remove it - it is no longer needed -->
         <receiver android:name="com.roymam.android.nilsplus.NPServiceStarter">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
             </intent-filter>
         </receiver>
-
-        <!-- Device administration receiever - DISABLED
-        <receiver android:name=".SettingsActivity$DeviceAdmin"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data android:name="android.app.device_admin"
-                android:resource="@xml/nils_device_admin" />
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-        </receiver>
-        -->
     </application>
 
 </manifest>

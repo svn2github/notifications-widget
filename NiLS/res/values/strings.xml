@@ -13,7 +13,7 @@
     <string name="auto_hide_service">Auto Hide Service</string>
     <string name="auto_hide_is_inactive">When enabled, Auto Hide Service will automatically hide Notifications Panel when you pull down Android Notifications Bar</string>
     <string name="auto_hide_is_active">NiLS Auto Hide Service is enabled. Notification Panel will be automatically hidden when you pull down Android Notifications Bar</string>
-    <string name="enable_auto_hide_service_tip">Find \"NiLS Auto Hide Service\" in the list and enable it, then press the \"Back\" button to go back to NiLS</string>
+    <string name="enable_auto_hide_service_tip">Find \"NiLS Service\" in the list and enable it, then press the \"Back\" button to go back to NiLS</string>
     <string name="nilsfp_autohide_service_label">NiLS Auto Hide Service</string>
     <string name="nilsfp_autohide_service_description">Enable this service to auto hide NiLS Notifications Panel when lock screen is not visible. (e.g. when the notifications bar is pulled down from the status bar)</string>
 
@@ -113,8 +113,8 @@
 
     <string-array name="settings_orderby_entries">
         <item>Newest first</item>
-        <item>Oldest first - NiLS widget only</item>
-        <item>Priority - NiLS widget only</item>
+        <item>Oldest first</item>
+        <item>Notification Priority</item>
     </string-array>
     <string-array name="settings_orderby_values" translatable="false">
         <item>time</item>
@@ -416,6 +416,7 @@
     <string name="try_extract_title_summary">When multiple events is set to \"Show First\" or \"Show Last\" try to extract the event title from the event text (e.g instead of \"X new emails\")</string>
     <string name="nils_service_is_not_running">NiLS Service is not running</string>
     <string name="nils_service_enable_instructions">Click OK to go to Android settings, then find \"NiLS Service\" there and enable it.</string>
+    <string name="open_nils_to_enable_it">Please open NiLS app to enable it</string>
     <string name="nilsfp_title">Floating Notifications Panel</string>
     <string name="nilsfp_description">NiLS Floating Panel is an extension that creates a floating notifications panel over your lock screen</string>
     <string name="main_features">Main Features:</string>
@@ -465,8 +466,11 @@
     <string name="swipe_to_dismiss_list_view">DashClock - Swipe To Dismiss List View</string>
     <string name="seekbar_preference">RoboBunny - SeekBar Preference</string>
     <string name="colorpicker_preference">Margaritov - ColorPicker Preference</string>
+    <string name="debugging">Debug</string>
+    <string name="view_recent_log">View recent log</string>
 
     <!-- Welcome Tutorial -->
+    <string name="show_welcome_tutorial">Show Welcome Tutorial</string>
     <string name="tutorial_skip">Skip</string>
     <string name="tutorial_next">Next</string>
     <string name="tutorial_1_title_1">Welcome</string>

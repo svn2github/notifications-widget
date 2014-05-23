@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000ff">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:id="@+id/pull_to_dismiss"
+            android:layout_alignParentTop="true">
+
+        <LinearLayout android:id="@+id/pull_to_dismiss_view"
+                      android:orientation="horizontal"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerInParent="true">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingRight="4dp"
+                    android:src="@android:drawable/arrow_down_float"
+                    />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Pull down to dismiss all"
+                    android:gravity="center_vertical"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/release_to_dismiss_view"
+                      android:orientation="horizontal"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerInParent="true">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingRight="4dp"
+                    android:src="@android:drawable/ic_notification_clear_all"
+                    />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Release to dismiss all"
+                    android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/notifications_listview_container"
+        android:layout_height="@dimen/notification_default_list_height"
+        android:layout_width="match_parent"
+        android:layout_alignParentEnd="false">
+    </RelativeLayout>
+</RelativeLayout>

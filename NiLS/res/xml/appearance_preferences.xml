@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:robobunny="http://robobunny.com">
+    <PreferenceCategory
+        android:key="colors_category"
+        android:title="Colors &amp; Transparency">
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:title="@string/primary_text_color"
+            android:summary="@string/primary_text_color_summary"
+            android:key="primary_text_color"
+            android:defaultValue="0xffffffff"
+            hexValue="true"
+            />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:title="@string/secondary_text_color"
+            android:summary="@string/secondary_text_color_summary"
+            android:key="secondary_text_color"
+            android:defaultValue="0xffaaaaaa"
+            hexValue="true"
+            />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:title="@string/background_color"
+            android:summary="@string/background_color_summary"
+            android:key="main_bg_color"
+            android:defaultValue="0x80000000"
+            alphaSlider="true"
+            android:enabled="false"
+            hexValue="true"
+            />
+        <com.robobunny.SeekBarPreference
+            android:key="main_bg_opacity"
+            android:title="Background opacity"
+            robobunny:min="0" android:max="100"
+            android:defaultValue="100"/>
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:title="@string/icon_background_color"
+            android:summary="@string/icon_background_color_summary"
+            android:key="icon_bg_color"
+            android:defaultValue="0xff1d3741"
+            alphaSlider="true"
+            android:enabled="false"
+            hexValue="true"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/sizes">
+        <com.robobunny.SeekBarPreference
+            android:key="title_size_sp"
+            android:title="@string/title_font_size"
+            robobunny:min="4" android:max="64"
+            android:defaultValue="18"/>
+        <com.robobunny.SeekBarPreference
+            android:key="text_size_sp"
+            android:title="@string/text_font_size"
+            robobunny:min="4" android:max="64"
+            android:defaultValue="14"/>
+        <ListPreference
+            android:key="max_text_lines"
+            android:title="@string/notification_size"
+            android:defaultValue="1"
+            android:entries="@array/height_entries"
+            android:entryValues="@array/height_values"
+            android:enabled="false"/>
+        <CheckBoxPreference
+            android:key="fit_height"
+            android:title="@string/fit_height"
+            android:summary="@string/fit_height_summary"
+            android:defaultValue="true"
+            android:enabled="false"/>
+        <CheckBoxPreference
+            android:key="single_line"
+            android:title="@string/single_line"
+            android:summary="@string/single_line_summary"
+            android:defaultValue="false"
+            android:enabled="false"/>
+        <com.robobunny.SeekBarPreference
+            android:key="icon_size"
+            android:title="@string/icon_size"
+            robobunny:min="24" android:max="64"
+            robobunny:unitsRight="dp"
+            android:defaultValue="48"
+            android:enabled="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Layout &amp; Alignment">
+        <ListPreference android:title="@string/vertical_alignment"
+                        android:key="yalignment"
+                        android:entries="@array/yalignment_entries"
+                        android:entryValues="@array/yalignment_values"
+                        android:defaultValue="top"/>
+        <CheckBoxPreference android:title="@string/show_time"
+            android:key="show_time"
+            android:defaultValue="false"
+            android:summary="@string/show_time_summary"/>
+        <CheckBoxPreference android:title="@string/enable_resize_mode"
+                            android:key="enable_resize_mode"
+                            android:defaultValue="true"
+                    android:summary="@string/enable_resize_mode_summary"/>
+    </PreferenceCategory>
+</PreferenceScreen>
