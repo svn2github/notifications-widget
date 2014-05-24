@@ -107,13 +107,13 @@ public class NotificationParser
                     ai = null;
                 }
 
-                String notificationIcon = sharedPref.getString(packageName + "." + SettingsActivity.NOTIFICATION_ICON,
-                                        sharedPref.getString(SettingsActivity.NOTIFICATION_ICON, SettingsActivity.DEFAULT_NOTIFICATION_ICON));
+                String notificationIcon = sharedPref.getString(packageName + "." + SettingsManager.NOTIFICATION_ICON,
+                                        sharedPref.getString(SettingsManager.NOTIFICATION_ICON, SettingsManager.DEFAULT_NOTIFICATION_ICON));
 
                 if (res != null && info != null)
                 {
                     nd.appicon = BitmapCache.getInstance(context).getBitmap(packageName, n.icon);
-                    if (notificationIcon.equals(SettingsActivity.NOTIFICATION_MONO_ICON))
+                    if (notificationIcon.equals(SettingsManager.NOTIFICATION_MONO_ICON))
                     {
                         nd.icon = nd.appicon;
                     }
@@ -122,8 +122,8 @@ public class NotificationParser
                         nd.icon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
                     }
 
-                    String iconPack = sharedPref.getString(SettingsActivity.ICON_PACK, SettingsActivity.DEFAULT_ICON_PACK);
-                    if (!iconPack.equals(SettingsActivity.DEFAULT_ICON_PACK))
+                    String iconPack = sharedPref.getString(SettingsManager.ICON_PACK, SettingsManager.DEFAULT_ICON_PACK);
+                    if (!iconPack.equals(SettingsManager.DEFAULT_ICON_PACK))
                     {
                         // load app icon from icon pack
                         IconPackManager.IconPack ip = IconPackManager.getInstance(context).getAvailableIconPacks(false).get(iconPack);
@@ -135,7 +135,7 @@ public class NotificationParser
                         nd.appicon = nd.icon;
                     }
                 }
-                if (n.largeIcon != null && notificationIcon.equals(SettingsActivity.NOTIFICATION_ICON))
+                if (n.largeIcon != null && notificationIcon.equals(SettingsManager.NOTIFICATION_ICON))
                 {
                     nd.icon = n.largeIcon;
                 }
@@ -170,8 +170,8 @@ public class NotificationParser
                 // extract expanded text
                 nd.text = null;
                 nd.title = null;
-                String privacy = SettingsActivity.getPrivacy(context, packageName);
-                if (privacy.equals(SettingsActivity.PRIVACY_SHOW_ALL) || privacy.equals(SettingsActivity.PRIVACY_SHOW_TITLE_ONLY))
+                String privacy = SettingsManager.getPrivacy(context, packageName);
+                if (privacy.equals(SettingsManager.PRIVACY_SHOW_ALL) || privacy.equals(SettingsManager.PRIVACY_SHOW_TITLE_ONLY))
                 {
                     getExpandedText(n,nd);
                     // replace text with content if no text
@@ -194,14 +194,14 @@ public class NotificationParser
                     }
 
                     // hide text on private mode
-                    if (privacy.equals(SettingsActivity.PRIVACY_SHOW_TITLE_ONLY))
+                    if (privacy.equals(SettingsManager.PRIVACY_SHOW_TITLE_ONLY))
                         nd.text = "";
                 }
 
                     // use default notification text & title - if no info found on expanded notification
                     if (nd.text == null)
                     {
-                        if (privacy.equals(SettingsActivity.PRIVACY_SHOW_APPNAME_ONLY))
+                        if (privacy.equals(SettingsManager.PRIVACY_SHOW_APPNAME_ONLY))
                             nd.text = "";
                         else
                             nd.text = n.tickerText;
@@ -244,12 +244,12 @@ public class NotificationParser
                     if (apppriority != -9) nd.priority = apppriority;
 
                     // check if this is a multiple events notificatio
-                    String notificationMode = SettingsActivity.getNotificationMode(context, packageName);
+                    String notificationMode = SettingsManager.getNotificationMode(context, packageName);
 
                     List<NotificationData> notifications = new ArrayList<NotificationData>();
                     notifications.add(nd);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && notificationMode.equals(SettingsActivity.MODE_SEPARATED))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && notificationMode.equals(SettingsManager.MODE_SEPARATED))
                     {
                         RemoteViews bigContentView = n.bigContentView;
                         if (bigContentView != null &&
@@ -387,7 +387,7 @@ public class NotificationParser
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        if (!prefs.getBoolean(SettingsActivity.COLLECT_ON_UNLOCK, true) &&
+        if (!prefs.getBoolean(SettingsManager.COLLECT_ON_UNLOCK, true) &&
             !km.inKeyguardRestrictedInputMode() &&
             !prefs.getBoolean("widgetlocker", false) ||
                 prefs.getBoolean(packageName + "." + AppSettingsActivity.IGNORE_APP, false) ||
@@ -715,7 +715,7 @@ public class NotificationParser
     private void detectNotificationIds()
     {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.appicon)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("1")
                 .setContentText("2")
                 .setContentInfo("3")

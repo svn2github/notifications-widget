@@ -39,6 +39,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazon.inapp.purchasing.BasePurchasingObserver;
+import com.amazon.inapp.purchasing.GetUserIdResponse;
+import com.amazon.inapp.purchasing.Item;
+import com.amazon.inapp.purchasing.ItemDataResponse;
+import com.amazon.inapp.purchasing.Offset;
+import com.amazon.inapp.purchasing.PurchaseResponse;
+import com.amazon.inapp.purchasing.PurchaseUpdatesResponse;
+import com.amazon.inapp.purchasing.PurchasingManager;
+import com.amazon.inapp.purchasing.Receipt;
 import com.roymam.android.common.BackupRestorePreferenceFragment;
 import com.roymam.android.common.util.IabHelper;
 import com.roymam.android.common.util.IabResult;
@@ -48,7 +57,7 @@ import com.roymam.android.nilsplus.activities.StartupWizardActivity;
 import com.roymam.android.nilsplus.activities.WhatsNewActivity;
 import com.roymam.android.nilsplus.fragments.AboutPreferencesFragment;
 import com.roymam.android.notificationswidget.NotificationsService;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 import com.roymam.android.nilsplus.fragments.AppearancePreferencesFragment;
 import com.roymam.android.nilsplus.fragments.MainPrefsFragment;
 import com.roymam.android.nilsplus.fragments.ServicePreferencesFragment;
@@ -58,7 +67,7 @@ import com.roymam.android.notificationswidget.R;
 
 import java.util.Map;
 
-import static com.roymam.android.notificationswidget.SettingsActivity.*;
+import static com.roymam.android.notificationswidget.SettingsManager.*;
 
 public class NiLSActivity extends Activity
 {
@@ -69,6 +78,7 @@ public class NiLSActivity extends Activity
     private ActionBarDrawerToggle mDrawerToggle;
     private Fragment fragment;
     private ServiceConnection mLicenseServiceConnection = null;
+    private boolean mAmazonInAppAvailable = false;
 
     public void replaceFragment(Fragment fragment)
     {
@@ -143,7 +153,7 @@ public class NiLSActivity extends Activity
             {
                 // check if the app wasn't already upgraded
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                if (prefs.getBoolean(SettingsActivity.UNLOCKED, false))
+                if (prefs.getBoolean(SettingsManager.UNLOCKED, false))
                 {
                     // return an empty view - so the user won't see the "upgrade" button
                     holder.titleView.setText(null);
@@ -191,7 +201,7 @@ public class NiLSActivity extends Activity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // show welcome wizard if it's first run
-        boolean showWelcomeWizard = prefs.getBoolean(SettingsActivity.SHOW_WELCOME_WIZARD, true);
+        boolean showWelcomeWizard = prefs.getBoolean(SettingsManager.SHOW_WELCOME_WIZARD, true);
         if (showWelcomeWizard)
         {
             showWelcomeTutorial();
@@ -400,6 +410,9 @@ public class NiLSActivity extends Activity
             startActivity(intent);
             finish();
         }
+
+        if (mAmazonInAppAvailable)
+            PurchasingManager.initiateGetUserIdRequest();
     }
 
     @Override
@@ -480,62 +493,134 @@ public class NiLSActivity extends Activity
 
     private void initIAP()
     {
-        // init google play billing
-        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5Qtf07QZPyzuTa0H1M8Uiz+vHPa3f491xDzkeaCYmnGU6nN8simZ6/TXdxd6NRqjkafM8p/HuDku9nNApl4R3NzpTg+2Y/ifX7nkXO/o7AZyN3PArJ/oiATNjXQGHn5RzDykaKu3JZXa7+Yin3L8zCNzymP0W3SCk0i4AMFBPkMXaj7SwNsmmrn2hNaNPVImfFtdIgUvP5DqJ2nzAE5fyAvj3+e+BdhqreDjmFEhwOhRUm1Cnz2ZjzsnQ/qcwOlPYcHRfzTkra5aXwfUKb5h4YxMPIVhtDTCr42bVvowBXF91TfCJIpPsuPKxrf15+PF/jJyMUKkJWc9KwHaRB0FwIDAQAB";
+        boolean isAmazonBuild = getResources().getBoolean(R.bool.amazon);
 
-        // compute your public key and store it in base64EncodedPublicKey
-        mHelper = new IabHelper(this, base64EncodedPublicKey);
-        mIAPAvailable = false;
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener()
+        if (isAmazonBuild)
         {
-            public void onIabSetupFinished(IabResult result)
-            {
-                if (!result.isSuccess())
-                {
-                    // Oh noes, there was a problem.
-                    Log.d("NiLS+", "Problem setting up In-app Billing: " + result);
+            PurchasingManager.registerObserver(new BasePurchasingObserver(getApplicationContext()) {
+                public String currentUserID;
+
+                @Override
+                public void onSdkAvailable(boolean isSandboxMode) {
+                    Log.d("NiLS", "onSdkAvailable isSandboxMode:"+isSandboxMode);
+                    mAmazonInAppAvailable = true;
                 }
-                else
-                {
-                    // Hooray, IAB is fully set up!
-                    mIAPAvailable = true;
-                    mHelper.queryInventoryAsync(new IabHelper.QueryInventoryFinishedListener()
+
+                @Override
+                public void onGetUserIdResponse(GetUserIdResponse response) {
+                    if (response.getUserIdRequestStatus() == GetUserIdResponse.GetUserIdRequestStatus.SUCCESSFUL) {
+                        currentUserID = response.getUserId();
+                        Log.d("NiLS", "onGetUserIdResponse success:"+currentUserID);
+                        PurchasingManager.initiatePurchaseUpdatesRequest(Offset.BEGINNING);
+                    }
+                    else
                     {
-                        @Override
-                        public void onQueryInventoryFinished(IabResult result, Inventory inv)
-                        {
-                            if (result.isFailure())
-                            {
-                                // handle error
-                                Log.d("NiLS+", "IAP Failed:" + result.getResponse());
-                            }
-                            else
-                            {
-                                // does the user have the premium upgrade?
-                                if (inv.hasPurchase(SKU_UPGRADE) && inv.getPurchase(SKU_UPGRADE).getPurchaseState()==0)
-                                {
-                                    upgradeNow();
-                                }
-                                else
-                                {
-                                    // check if NiLS Unlocker is installed
-                                    if (isPackageInstalled("com.roymam.android.nilsplus"))
-                                    {
-                                        // TODO: check NiLS+ version and notify user if version is too early
-                                        checkNiLSPlusLicense();
-                                    }
-                                    else
-                                    {
-                                        // if not - downgrade immediate
-                                        downgradeNow();
-                                    }
-                                }
-                            }
-                        }
-                    });
+                        Log.d("NiLS", "onGetUserIdResponse failed");
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void onPurchaseResponse(PurchaseResponse response) {
+                            final PurchaseResponse.PurchaseRequestStatus status = response.getPurchaseRequestStatus();
+                            Log.d("NiLS", "onPurchaseResponse status:" + status.name());
+                            if (status == PurchaseResponse.PurchaseRequestStatus.SUCCESSFUL ||
+                                status == PurchaseResponse.PurchaseRequestStatus.ALREADY_ENTITLED)
+                                {
+                                    Receipt receipt = response.getReceipt();
+                                    Item.ItemType itemType = receipt.getItemType();
+                                    String sku = receipt.getSku();
+                                    String purchaseToken = receipt.getPurchaseToken();
+
+                                    if (sku.equals(SKU_UPGRADE))
+                                        upgradeNow();
+                                }
+                            else if (status == PurchaseResponse.PurchaseRequestStatus.FAILED)
+                            {
+                                // unknown error - show dialog message
+                                showDialog(getString(R.string.unlock_all_features), getString(R.string.upgrade_failed_message)+"\n"+status.toString());
+                            }
+                }
+
+                @Override
+                public void onItemDataResponse(ItemDataResponse itemDataResponse) {
+
+                }
+
+                @Override
+                public void onPurchaseUpdatesResponse(PurchaseUpdatesResponse response) {
+                    switch (response.getPurchaseUpdatesRequestStatus()) {
+                        case SUCCESSFUL:
+                            // Check for revoked SKUs
+                            for (final String sku : response.getRevokedSkus()) {
+                                Log.v("NiLS", "Revoked Sku:" + sku);
+                                if (sku.equals(SKU_UPGRADE)) {
+                                    Log.d("NiLS", "onPurchaseUpdatesResponse revoke found. downgrading");
+                                    downgradeNow();
+                                }
+                            }
+
+                            // Process receipts
+                            for (final Receipt receipt : response.getReceipts()) {
+                                switch (receipt.getItemType()) {
+                                    case ENTITLED: // Re-entitle the customer
+                                        if (receipt.getSku().equals(SKU_UPGRADE)) {
+                                            Log.d("NiLS", "onPurchaseUpdatesResponse entitled found. upgrading");
+                                            upgradeNow();
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case FAILED:
+                            Log.d("NiLS", "onPurchaseUpdatesResponse failed");
+                            // Provide the user access to any previously persisted entitlements.
+                            break;
+                    }
+                }
+            });
+        }
+        else {
+            // init google play billing
+            String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5Qtf07QZPyzuTa0H1M8Uiz+vHPa3f491xDzkeaCYmnGU6nN8simZ6/TXdxd6NRqjkafM8p/HuDku9nNApl4R3NzpTg+2Y/ifX7nkXO/o7AZyN3PArJ/oiATNjXQGHn5RzDykaKu3JZXa7+Yin3L8zCNzymP0W3SCk0i4AMFBPkMXaj7SwNsmmrn2hNaNPVImfFtdIgUvP5DqJ2nzAE5fyAvj3+e+BdhqreDjmFEhwOhRUm1Cnz2ZjzsnQ/qcwOlPYcHRfzTkra5aXwfUKb5h4YxMPIVhtDTCr42bVvowBXF91TfCJIpPsuPKxrf15+PF/jJyMUKkJWc9KwHaRB0FwIDAQAB";
+
+            // compute your public key and store it in base64EncodedPublicKey
+            mHelper = new IabHelper(this, base64EncodedPublicKey);
+            mIAPAvailable = false;
+            mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                public void onIabSetupFinished(IabResult result) {
+                    if (!result.isSuccess()) {
+                        // Oh noes, there was a problem.
+                        Log.d("NiLS", "Problem setting up In-app Billing: " + result);
+                    } else {
+                        // Hooray, IAB is fully set up!
+                        mIAPAvailable = true;
+                        mHelper.queryInventoryAsync(new IabHelper.QueryInventoryFinishedListener() {
+                            @Override
+                            public void onQueryInventoryFinished(IabResult result, Inventory inv) {
+                                if (result.isFailure()) {
+                                    // handle error
+                                    Log.d("NiLS", "IAP Failed:" + result.getResponse());
+                                } else {
+                                    // does the user have the premium upgrade?
+                                    if (inv.hasPurchase(SKU_UPGRADE) && inv.getPurchase(SKU_UPGRADE).getPurchaseState() == 0) {
+                                        upgradeNow();
+                                    } else {
+                                        // check if NiLS Unlocker is installed
+                                        if (isPackageInstalled("com.roymam.android.nilsplus")) {
+                                            checkNiLSPlusLicense();
+                                        } else {
+                                            // if not - downgrade immediate
+                                            downgradeNow();
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 
     /** Command to the service to request a license */
@@ -587,7 +672,15 @@ public class NiLSActivity extends Activity
                 mService = null;
             }
         };
-        bindService(licenseService, mLicenseServiceConnection, Context.BIND_AUTO_CREATE);
+        try
+        {
+            bindService(licenseService, mLicenseServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+        catch(Exception exp)
+        {
+            Log.d("NiLS","cannot communicate with NiLS Unlocker");
+            exp.printStackTrace();
+        }
     }
 
     private void importNiLSFPPreferences()
@@ -629,7 +722,11 @@ public class NiLSActivity extends Activity
 
     public void requestUnlockApp()
     {
-        if (mIAPAvailable && mHelper != null)
+        if (mAmazonInAppAvailable)
+        {
+            PurchasingManager.initiatePurchaseRequest(SKU_UPGRADE);
+        }
+        else if (mIAPAvailable && mHelper != null)
         {
             mHelper.launchPurchaseFlow(this, SKU_UPGRADE, 10001, new IabHelper.OnIabPurchaseFinishedListener()
             {
@@ -669,9 +766,9 @@ public class NiLSActivity extends Activity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // save the upgrade state and update the UI
-        if  (!prefs.getBoolean(SettingsActivity.UNLOCKED, false))
+        if  (!prefs.getBoolean(SettingsManager.UNLOCKED, false))
         {
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(SettingsActivity.UNLOCKED, true).commit();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(SettingsManager.UNLOCKED, true).commit();
             recreate();
         }
     }
@@ -681,9 +778,9 @@ public class NiLSActivity extends Activity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // save the upgrade state and update the UI
-        if  (prefs.getBoolean(SettingsActivity.UNLOCKED, false))
+        if  (prefs.getBoolean(SettingsManager.UNLOCKED, false))
         {
-            prefs.edit().putBoolean(SettingsActivity.UNLOCKED, false).commit();
+            prefs.edit().putBoolean(SettingsManager.UNLOCKED, false).commit();
             recreate();
         }
     }

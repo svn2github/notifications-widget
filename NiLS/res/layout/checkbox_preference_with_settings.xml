@@ -12,7 +12,7 @@ android:gravity="center_vertical" android:paddingRight="?android:attr/scrollbarS
         android:contentDescription="@string/app_icon"
         android:scaleType="fitCenter"
         android:layout_gravity="center"
-        android:src="@drawable/appicon" />
+        android:src="@drawable/ic_launcher" />
 
 <RelativeLayout android:layout_width="0dp"
     android:layout_height="wrap_content" android:layout_marginLeft="15dip"

@@ -75,6 +75,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     // other events
     public static final String CHECK_LSAPP = "com.roymam.android.nils.CHECK_LS";
     public static final String INCOMING_CALL = "com.roymam.android.nils.INCOMING_CALL";
+    public static final String DEVICE_UNLOCKED = "com.roymam.android.nils.UNLOCKED";
 
     private NPReceiver npreceiver = null;
     private NPViewManager viewManager = null;
@@ -215,8 +216,8 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (!silent)
             {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.appicon)
-                        .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.appicon)).getBitmap())
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_nils_icon_mono)).getBitmap())
                         .setContentTitle("Something went wrong...")
                         .setContentText("log file was written to " + filename);
 
@@ -256,18 +257,18 @@ public class NotificationsService extends Service implements NotificationsProvid
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 if (mCovered != null) {
                     Log.d("NiLS", "immediate response");
-                    prefs.edit().putBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, true).commit();
+                    prefs.edit().putBoolean(SettingsManager.IMMEDIATE_PROXIMITY, true).commit();
                     // stop proximity monitoring - there is no need to if the proximity is immediate
                     stopProximityMonitoring();
                 }
                 else {
                     Log.d("NiLS", "no response after 100ms");
-                    prefs.edit().putBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, false).commit();
+                    prefs.edit().putBoolean(SettingsManager.IMMEDIATE_PROXIMITY, false).commit();
                 }
 
                 // stop proximity monitoring if wakeup mode is always or never
-                String wakeupMode = SettingsActivity.getWakeupMode(context, null);
-                if (wakeupMode.equals(SettingsActivity.WAKEUP_ALWAYS) || wakeupMode.equals(SettingsActivity.WAKEUP_NEVER))
+                String wakeupMode = SettingsManager.getWakeupMode(context, null);
+                if (wakeupMode.equals(SettingsManager.WAKEUP_ALWAYS) || wakeupMode.equals(SettingsManager.WAKEUP_NEVER))
                     stopProximityMonitoring();
             }
         },100);
@@ -316,9 +317,9 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (parser == null) parser = new NotificationParser(getApplicationContext());
         if (listener == null) setNotificationEventListener(new NotificationAdapter(context, mHandler));
 
-        if (intent.getAction() != null)
+        if (intent != null && intent.getAction() != null)
             if (intent.getAction().equals("refresh"))
-        d        updateViewManager();
+                updateViewManager();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -336,7 +337,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             Log.d("NiLS","NotificationsService:addNotification " + nd.packageName + ":" + nd.id);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String notificationMode = SettingsActivity.getNotificationMode(getApplicationContext(), nd.packageName);
+            String notificationMode = SettingsManager.getNotificationMode(getApplicationContext(), nd.packageName);
             boolean updated = false;
 
             // remove old notification
@@ -359,7 +360,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     // 2. Android <4.3 - notification mode is "grouped" and the notification has the same package
                     // 3. notification is similar to the old one
                     if (oldnd.packageName.equals(nd.packageName) &&
-                            (((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && notificationMode.equals(SettingsActivity.MODE_GROUPED)) ||
+                            (((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && notificationMode.equals(SettingsManager.MODE_GROUPED)) ||
                                     oldnd.isSimilar(nd, true))) {
                         nd.uid = oldnd.uid;
                         nd.deleted = oldnd.deleted;
@@ -429,7 +430,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     private void removeNotification(String packageName, int id, boolean logical)
     {
         Log.d("NiLS","NotificationsService:removeNotification  " + packageName + ":" + id);
-        boolean sync = SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext());
+        boolean sync = SettingsManager.shouldClearWhenClearedFromNotificationsBar(getApplicationContext());
         if (sync)
         {
             boolean cleared = false;
@@ -519,7 +520,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (context != null)
         {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            String sortBy = prefs.getString(SettingsActivity.NOTIFICATIONS_ORDER, "time");
+            String sortBy = prefs.getString(SettingsManager.NOTIFICATIONS_ORDER, "time");
             Object[] arr;
 
             Lock r = lock.readLock();
@@ -621,7 +622,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     {
         Log.d("NiLS","NotificationsService:clearAllNotifications");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
+        boolean syncback = prefs.getBoolean(SettingsManager.SYNC_BACK, SettingsManager.DEFAULT_SYNC_BACK);
 
         ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
 
@@ -690,7 +691,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     public synchronized void clearNotificationsForApps(String[] packages)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
+        boolean syncback = prefs.getBoolean(SettingsManager.SYNC_BACK, SettingsManager.DEFAULT_SYNC_BACK);
         boolean changed = false;
         ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
 
@@ -753,7 +754,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d("NiLS","NotificationsService:clearNotification uid:" + uid);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean syncback = prefs.getBoolean(SettingsActivity.SYNC_BACK, SettingsActivity.DEFAULT_SYNC_BACK);
+        boolean syncback = prefs.getBoolean(SettingsManager.SYNC_BACK, SettingsManager.DEFAULT_SYNC_BACK);
 
         // first, find it on list
         boolean removed = false;
@@ -983,15 +984,25 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                String lockScreenApp = prefs.getString(SettingsActivity.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
+                String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
 
                 if(intent.getAction().equals(Intent.ACTION_USER_PRESENT) && lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME) ||
                         intent.getAction().equals(WIDGET_LOCKER_UNLOCKED) ||
                         intent.getAction().equals(WIDGET_LOCKER_HIDE) ||
-                        intent.getAction().equals(GO_LOCKER_UNLOCKED) )
+                        intent.getAction().equals(GO_LOCKER_UNLOCKED) ||
+                        intent.getAction().equals(DEVICE_UNLOCKED))
                 {
                     // hide notifications list
                     hide(false);
+
+                    // clear all notifications if needed
+                    if (SettingsManager.shouldClearOnUnlock(context))
+                    {
+                        clearAllNotifications();
+                    }
+
+                    // keep the screen the default timeout
+                    mSysUtils.turnScreenOn(true, true);
                 }
                 else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
                 {
@@ -1014,7 +1025,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
                 else if (intent.getAction().equals(CHECK_LSAPP) || intent.getAction().equals(Intent.ACTION_SCREEN_ON))
                 {
-                    boolean dontHide = prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE);
+                    boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
                     if (!dontHide)
                     {
                         boolean autoDetect = false;
@@ -1032,13 +1043,11 @@ public class NotificationsService extends Service implements NotificationsProvid
                         }
                         if (shouldHideNotifications(autoDetect))
                         {
-                            // hide notifications list if not needed
-                            NotificationsService.this.viewManager.hide(false);
-
                             Log.d("NiLS", "lock screen is no longer active, stop monitoring");
                             AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
                             am.cancel(checkLockScreenPendingIntent);
                             checkLockScreenPendingIntent = null;
+                            sendBroadcast(new Intent(DEVICE_UNLOCKED));
                         }
                     }
                 }
@@ -1073,11 +1082,11 @@ public class NotificationsService extends Service implements NotificationsProvid
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // get the current lock screen app (if set)
-        String lockScreenApp = prefs.getString(SettingsActivity.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME );
+        String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME );
         boolean shouldHide = true;
 
         // if the current app is one of the allowed apps to be on top of the lock screen, hide NiLS
-        if (SettingsActivity.BLACKLIST_PACKAGENAMES.contains(currentApp))
+        if (SettingsManager.BLACKLIST_PACKAGENAMES.contains(currentApp))
         {
             return true;
         }
@@ -1093,7 +1102,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     // store current app as the lock screen app until next time
                     Log.d("NiLS", "new lock screen app detected: " + currentApp);
-                    prefs.edit().putString(SettingsActivity.LOCKSCREEN_APP, currentApp).commit();
+                    prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
                     lockScreenApp = currentApp;
                 }
             }
@@ -1103,7 +1112,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     // store current app as the lock screen app until next time
                     Log.d("NiLS", "stock lock screen app detected");
-                    prefs.edit().putString(SettingsActivity.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME ).commit();
+                    prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME ).commit();
                     lockScreenApp = STOCK_LOCKSCREEN_PACKAGENAME ;
                 }
             }
@@ -1171,7 +1180,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-                boolean halo = prefs.getBoolean(SettingsActivity.HALO_MODE, SettingsActivity.DEFAULT_HALO_MODE);
+                boolean halo = prefs.getBoolean(SettingsManager.HALO_MODE, SettingsManager.DEFAULT_HALO_MODE);
 
                 if (halo)
                 {

@@ -49,7 +49,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
     public void onEnabled(Context context) 
     {    
        super.onEnabled(context);
-       PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(SettingsActivity.WIDGET_PRESENT, true).commit();
+       PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(SettingsManager.WIDGET_PRESENT, true).commit();
     }
     
     @Override
@@ -69,7 +69,7 @@ public class NotificationsWidgetProvider extends AppWidgetProvider
 	public void onDisabled(Context context) 
 	{
 		NotificationsWidgetService.widgetActive = false;
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(SettingsActivity.WIDGET_PRESENT, false).commit();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(SettingsManager.WIDGET_PRESENT, false).commit();
 		super.onDisabled(context);
 		context.stopService(new Intent(context, NotificationsWidgetService.class));
 	}

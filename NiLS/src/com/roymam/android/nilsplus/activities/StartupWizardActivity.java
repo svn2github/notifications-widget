@@ -55,7 +55,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
         finish();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        prefs.edit().putBoolean(SettingsActivity.SHOW_WELCOME_WIZARD, false).commit();
+        prefs.edit().putBoolean(SettingsManager.SHOW_WELCOME_WIZARD, false).commit();
         startActivity(new Intent(getApplicationContext(), NiLSActivity.class));
     }
 
@@ -120,7 +120,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
             @Override
             public void onClick(View v)
             {
-                Intent intent = com.roymam.android.notificationswidget.SettingsActivity.getNotificationsServiesIntent();
+                Intent intent = SettingsManager.getNotificationsServiesIntent();
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), R.string.enable_service_tip, Toast.LENGTH_LONG).show();
             }

@@ -2,7 +2,6 @@ package com.roymam.android.nilsplus.fragments;
 
 import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,9 +44,8 @@ import com.roymam.android.common.BitmapUtils;
 import com.roymam.android.nilsplus.ui.NiLSActivity;
 import com.roymam.android.notificationswidget.AppSettingsActivity;
 import com.roymam.android.notificationswidget.NotificationsWidgetProvider;
-import com.roymam.android.notificationswidget.PersistentNotificationSettingsActivity;
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 import net.margaritov.preference.colorpicker.AlphaPatternDrawable;
 import net.margaritov.preference.colorpicker.ColorPickerDialog;
@@ -96,10 +94,10 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 if (isChecked) {
                     clockSettingsView.setVisibility(View.VISIBLE);
-                    prefs.edit().putBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false).commit();
+                    prefs.edit().putBoolean(widgetMode + "." + SettingsManager.CLOCK_HIDDEN, false).commit();
                 } else {
                     clockSettingsView.setVisibility(View.GONE);
-                    prefs.edit().putBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, true).commit();
+                    prefs.edit().putBoolean(widgetMode + "." + SettingsManager.CLOCK_HIDDEN, true).commit();
                 }
             }
         });
@@ -196,12 +194,12 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
                 if (isChecked)
                 {
                     notificationsSettingsView.setVisibility(View.VISIBLE);
-                    prefs.edit().putBoolean(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS, false).commit();
+                    prefs.edit().putBoolean(widgetMode + "." + SettingsManager.HIDE_NOTIFICATIONS, false).commit();
                 }
                 else
                 {
                     notificationsSettingsView.setVisibility(View.GONE);
-                    prefs.edit().putBoolean(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS, true).commit();
+                    prefs.edit().putBoolean(widgetMode + "." + SettingsManager.HIDE_NOTIFICATIONS, true).commit();
                 }
             }
         });
@@ -252,10 +250,10 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 if (isChecked) {
                     persistentNotificationsSettingsButton.setVisibility(View.VISIBLE);
-                    prefs.edit().putBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true).commit();
+                    prefs.edit().putBoolean(widgetMode + "." + SettingsManager.SHOW_PERSISTENT_NOTIFICATIONS, true).commit();
                 } else {
                     persistentNotificationsSettingsButton.setVisibility(View.GONE);
-                    prefs.edit().putBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, false).commit();
+                    prefs.edit().putBoolean(widgetMode + "." + SettingsManager.SHOW_PERSISTENT_NOTIFICATIONS, false).commit();
                 }
             }
         });
@@ -276,7 +274,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        boolean showPersistentBool = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true);
+        boolean showPersistentBool = prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_PERSISTENT_NOTIFICATIONS, true);
         showPersistent.setChecked(showPersistentBool);
         if (!showPersistentBool)
         {
@@ -292,7 +290,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
     }
 
     // selected widget mode
-    private static String 	 widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
+    private static String 	 widgetMode = SettingsManager.COLLAPSED_WIDGET_MODE;
 
     // fragements
     private int updateViewId = 0;
@@ -337,7 +335,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
     public static ViewGroup contentColorButton;
     public static SeekBar notificationBgClockOpacitySlider;
     public static Spinner maxLinesSpinner;
-    private SettingsActivity.PrefsPersistentNotificationsFragment persistentNotificationsFragment;
+    private SettingsManager.PrefsPersistentNotificationsFragment persistentNotificationsFragment;
 
     private void setupActionBar()
     {
@@ -355,11 +353,11 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
 
         // select the last widget mode that was changed
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String widgetMode = prefs.getString(SettingsActivity.LAST_WIDGET_MODE, SettingsActivity.EXPANDED_WIDGET_MODE);
+        String widgetMode = prefs.getString(SettingsManager.LAST_WIDGET_MODE, SettingsManager.EXPANDED_WIDGET_MODE);
         int itemPosition;
-        if (widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE))
+        if (widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE))
             itemPosition = 0;
-        else if (widgetMode.equals(SettingsActivity.EXPANDED_WIDGET_MODE))
+        else if (widgetMode.equals(SettingsManager.EXPANDED_WIDGET_MODE))
             itemPosition = 1;
         else
             itemPosition = 2;
@@ -376,21 +374,21 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
         switch(id)
         {
             case R.id.radioSmallClock:
-                clockStyle = SettingsActivity.CLOCK_SMALL;
+                clockStyle = SettingsManager.CLOCK_SMALL;
                 position = 0;
                 break;
             case R.id.radioMedium:
-                clockStyle = SettingsActivity.CLOCK_MEDIUM;
+                clockStyle = SettingsManager.CLOCK_MEDIUM;
                 position = 1;
                 break;
             case R.id.radioLargeClock:
-                clockStyle = SettingsActivity.CLOCK_LARGE;
+                clockStyle = SettingsManager.CLOCK_LARGE;
                 position = 2;
                 break;
         }
         clockStyleView.setDisplayedChild(position);
         autoSwitch.setChecked(false);
-        prefs.edit().putString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, clockStyle).commit();
+        prefs.edit().putString(widgetMode + "." + SettingsManager.CLOCK_STYLE, clockStyle).commit();
 
         refreshPreview();
 
@@ -421,7 +419,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
                 break;
         }
         notificationStyleView.setDisplayedChild(position);
-        prefs.edit().putString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, notificationStyle).commit();
+        prefs.edit().putString(widgetMode + "." + SettingsManager.NOTIFICATION_STYLE, notificationStyle).commit();
         refreshPreview();
 
         // refresh widget
@@ -431,7 +429,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
     public void onAutoSwitchChanged(View v)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String clockStyle = SettingsActivity.CLOCK_AUTO;
+        String clockStyle = SettingsManager.CLOCK_AUTO;
         boolean checked = ((CheckBox)v).isChecked();
 
         if (!checked)
@@ -440,18 +438,18 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             switch(id)
             {
                 case R.id.radioSmallClock:
-                    clockStyle = SettingsActivity.CLOCK_SMALL;
+                    clockStyle = SettingsManager.CLOCK_SMALL;
                     break;
                 case R.id.radioMedium:
-                    clockStyle = SettingsActivity.CLOCK_MEDIUM;
+                    clockStyle = SettingsManager.CLOCK_MEDIUM;
                     break;
                 case R.id.radioLargeClock:
-                    clockStyle = SettingsActivity.CLOCK_LARGE;
+                    clockStyle = SettingsManager.CLOCK_LARGE;
                     break;
             }
         }
 
-        prefs.edit().putString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, clockStyle).commit();
+        prefs.edit().putString(widgetMode + "." + SettingsManager.CLOCK_STYLE, clockStyle).commit();
         refreshPreview();
 
         // refresh widget
@@ -762,26 +760,26 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             setupClockStyle();
 
             // setup checkboxes
-            showClearAll.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE) ? false : true));
+            showClearAll.setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE) ? false : true));
 
-            boolean hideClock = prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false);
+            boolean hideClock = prefs.getBoolean(widgetMode + "." + SettingsManager.CLOCK_HIDDEN, false);
             showClock.setChecked(!hideClock);
             if (hideClock) clockSettingsView.setVisibility(View.GONE);
 
             // setup toggles
-            clockClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_IS_CLICKABLE, true));
-            boldHours.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.BOLD_HOURS, true));
-            boldMinutes.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.BOLD_MINUTES, false));
+            clockClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.CLOCK_IS_CLICKABLE, true));
+            boldHours.setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.BOLD_HOURS, true));
+            boldMinutes.setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.BOLD_MINUTES, false));
 
             // setup opacity slider
-            int opacity = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_OPACITY, 0);
+            int opacity = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_BG_OPACITY, 0);
             bgClockOpacitySlider.setProgress(opacity);
 
             // setup color buttons
-            int bgColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_COLOR, Color.BLACK);
-            int clockColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_COLOR, Color.WHITE);
-            int dateColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_DATE_COLOR, Color.WHITE);
-            int alarmColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.GRAY);
+            int bgColor = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_BG_COLOR, Color.BLACK);
+            int clockColor = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_COLOR, Color.WHITE);
+            int dateColor = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_DATE_COLOR, Color.WHITE);
+            int alarmColor = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_ALARM_COLOR, Color.GRAY);
             bgColorView.setBackgroundColor(bgColor);
             clockColorView.setBackgroundColor(clockColor);
             dateColorView.setBackgroundColor(dateColor);
@@ -795,30 +793,30 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
             // clock style
-            String defaultClockStyle = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?
-                    SettingsActivity.CLOCK_AUTO :
-                    prefs.getString(SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_STYLE);
+            String defaultClockStyle = widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?
+                    SettingsManager.CLOCK_AUTO :
+                    prefs.getString(SettingsManager.CLOCK_STYLE, SettingsManager.CLOCK_STYLE);
 
-            String clockStyle = prefs.getString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, defaultClockStyle);
+            String clockStyle = prefs.getString(widgetMode + "." + SettingsManager.CLOCK_STYLE, defaultClockStyle);
 
             autoSwitch.setChecked(false);
 
-            if (clockStyle.equals(SettingsActivity.CLOCK_SMALL))
+            if (clockStyle.equals(SettingsManager.CLOCK_SMALL))
             {
                 clockStyleRG.check(R.id.radioSmallClock);
                 clockStyleView.setDisplayedChild(0);
             }
-            else if (clockStyle.equals(SettingsActivity.CLOCK_MEDIUM))
+            else if (clockStyle.equals(SettingsManager.CLOCK_MEDIUM))
             {
                 clockStyleRG.check(R.id.radioMedium);
                 clockStyleView.setDisplayedChild(1);
             }
-            else if (clockStyle.equals(SettingsActivity.CLOCK_LARGE))
+            else if (clockStyle.equals(SettingsManager.CLOCK_LARGE))
             {
                 clockStyleRG.check(R.id.radioLargeClock);
                 clockStyleView.setDisplayedChild(2);
             }
-            else if (clockStyle.equals(SettingsActivity.CLOCK_AUTO))
+            else if (clockStyle.equals(SettingsManager.CLOCK_AUTO))
             {
                 clockStyleRG.check(R.id.radioLargeClock);
                 autoSwitch.setChecked(true);
@@ -835,35 +833,35 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             setupNotificationStyle();
 
             // setup toggles
-            notificationClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true));
+            notificationClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.NOTIFICATION_IS_CLICKABLE, true));
             useExpandedText.setChecked(prefs.getBoolean(widgetMode + "." + AppSettingsActivity.USE_EXPANDED_TEXT, true));
-            iconClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_ICON_IS_CLICKABLE, true));
+            iconClickable.setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.NOTIFICATION_ICON_IS_CLICKABLE, true));
 
             // setup opacity slider
-            int defaultOpacity = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?0:50;
-            int opacity = prefs.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_OPACITY, defaultOpacity);
+            int defaultOpacity = widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?0:50;
+            int opacity = prefs.getInt(widgetMode + "." + SettingsManager.NOTIFICATION_BG_OPACITY, defaultOpacity);
             notificationBgClockOpacitySlider.setProgress(opacity);
 
             // setup color buttons
-            int bgColor = prefs.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_COLOR, Color.BLACK);
-            int titleColor = prefs.getInt(widgetMode + "." + SettingsActivity.TITLE_COLOR, Color.WHITE);
-            int textColor = prefs.getInt(widgetMode + "." + SettingsActivity.TEXT_COLOR, Color.LTGRAY);
-            int contentColor = prefs.getInt(widgetMode + "." + SettingsActivity.CONTENT_COLOR, Color.DKGRAY);
+            int bgColor = prefs.getInt(widgetMode + "." + SettingsManager.NOTIFICATION_BG_COLOR, Color.BLACK);
+            int titleColor = prefs.getInt(widgetMode + "." + SettingsManager.TITLE_COLOR, Color.WHITE);
+            int textColor = prefs.getInt(widgetMode + "." + SettingsManager.TEXT_COLOR, Color.LTGRAY);
+            int contentColor = prefs.getInt(widgetMode + "." + SettingsManager.CONTENT_COLOR, Color.DKGRAY);
             notificationBgColorView.setBackgroundColor(bgColor);
             titleColorView.setBackgroundColor(titleColor);
             textColorView.setBackgroundColor(textColor);
             contentColorView.setBackgroundColor(contentColor);
 
             // setup number of lines
-            int maxLines = prefs.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
+            int maxLines = prefs.getInt(widgetMode + "." + SettingsManager.MAX_LINES, 1);
             if (maxLines <= 9)
                 maxLinesSpinner.setSelection(maxLines-1);
             else
                 maxLinesSpinner.setSelection(9);
 
-            ((CheckBox)notificationsSettingsView.findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false));
+            ((CheckBox)notificationsSettingsView.findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_ACTIONBAR, false));
 
-            boolean hideNotifications = SettingsActivity.shouldHideNotifications(getActivity(), widgetMode);
+            boolean hideNotifications = SettingsManager.shouldHideNotifications(getActivity(), widgetMode);
             showNotifications.setChecked(!hideNotifications);
             if (hideNotifications) notificationsSettingsView.setVisibility(View.GONE);
         }
@@ -874,10 +872,10 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
             // clock style
-            String defaultNotificationStyle = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?
+            String defaultNotificationStyle = widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?
                     "compact" : "normal";
 
-            String notificationStyle = prefs.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, defaultNotificationStyle);
+            String notificationStyle = prefs.getString(widgetMode + "." + SettingsManager.NOTIFICATION_STYLE, defaultNotificationStyle);
 
             if (notificationStyle.equals("compact"))
             {
@@ -901,7 +899,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
         {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(view.getContext());
             // setup number of lines
-            int maxLines = prefs.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
+            int maxLines = prefs.getInt(widgetMode + "." + SettingsManager.MAX_LINES, 1);
             if (maxLines <= 9)
                 maxLinesSpinner.setSelection(maxLines-1);
             else
@@ -944,9 +942,9 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
             if (pos <9)
-                prefs.edit().putInt(widgetMode + "." + SettingsActivity.MAX_LINES, pos+1).commit();
+                prefs.edit().putInt(widgetMode + "." + SettingsManager.MAX_LINES, pos+1).commit();
             else
-                prefs.edit().putInt(widgetMode + "." + SettingsActivity.MAX_LINES, 999).commit();
+                prefs.edit().putInt(widgetMode + "." + SettingsManager.MAX_LINES, 999).commit();
 
             refreshPreview();
             // refresh widget
@@ -1011,7 +1009,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             NiLSActivity activity = (NiLSActivity) getActivity();
 
             // Insert the fragment by replacing any existing fragment
-            activity.replaceFragment(new SettingsActivity.PrefsPersistentNotificationsFragment());
+            activity.replaceFragment(new SettingsManager.PrefsPersistentNotificationsFragment());
             activity.getActionBar().setDisplayShowTitleEnabled(true);
             activity.setTitle(R.string.persistent_notifications);
             activity.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -1038,15 +1036,15 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
         switch (position)
         {
             case 0:
-                widgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
+                widgetMode = SettingsManager.COLLAPSED_WIDGET_MODE;
                 descId = R.string.widget_mode_collapsed_desc;
                 break;
             case 1:
-                widgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
+                widgetMode = SettingsManager.EXPANDED_WIDGET_MODE;
                 descId = R.string.widget_mode_expanded_desc;
                 break;
             case 2:
-                widgetMode = SettingsActivity.HOME_WIDGET_MODE;
+                widgetMode = SettingsManager.HOME_WIDGET_MODE;
                 descId = R.string.widget_mode_home_desc;
                 break;
         }

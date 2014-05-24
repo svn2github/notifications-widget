@@ -21,14 +21,13 @@ import android.widget.RelativeLayout;
 import com.roymam.android.notificationswidget.NotificationData;
 import com.roymam.android.notificationswidget.NotificationsService;
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 import com.roymam.android.nilsplus.ui.theme.Theme;
 import com.roymam.android.nilsplus.ui.theme.ThemeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 
 public class NPListView extends RelativeLayout
 {
@@ -57,7 +56,7 @@ public class NPListView extends RelativeLayout
 
         // set vertical alignment
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        String yAlignment = prefs.getString(SettingsManager.VERTICAL_ALIGNMENT, SettingsManager.DEFAULT_VERTICAL_ALIGNMENT);
 
         mlistViewParams = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -361,7 +360,7 @@ public class NPListView extends RelativeLayout
                                 if (NotificationsService.getSharedInstance() != null)
                                     data = NotificationsService.getSharedInstance().getNotifications();
 
-                                boolean isSwipeToOpenEnabled = prefs.getBoolean(SettingsActivity.SWIPE_TO_OPEN, SettingsActivity.DEFAULT_SWIPE_TO_OPEN);
+                                boolean isSwipeToOpenEnabled = prefs.getBoolean(SettingsManager.SWIPE_TO_OPEN, SettingsManager.DEFAULT_SWIPE_TO_OPEN);
                                 saveNotificationsState();
                                 for (int position : reverseSortedPositions)
                                 {

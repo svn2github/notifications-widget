@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.roymam.android.common.BitmapUtils;
 import com.roymam.android.notificationswidget.NotificationData;
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 import com.roymam.android.nilsplus.ui.theme.Theme;
 import com.roymam.android.nilsplus.ui.theme.ThemeManager;
 
@@ -77,8 +77,8 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     public void updateSizeAndPosition(Point pos, Point size)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        mPrimaryTextColor = prefs.getInt(SettingsActivity.PRIMARY_TEXT_COLOR, SettingsActivity.DEFAULT_PRIMARY_TEXT_COLOR);
-        mIconSize = prefs.getInt(SettingsActivity.PREVIEW_ICON_SIZE, SettingsActivity.DEFAULT_PREVIEW_ICON_SIZE);
+        mPrimaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
+        mIconSize = prefs.getInt(SettingsManager.PREVIEW_ICON_SIZE, SettingsManager.DEFAULT_PREVIEW_ICON_SIZE);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size.x, size.y);
         params.leftMargin = pos.x;
@@ -100,7 +100,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
         // set vertical alignment of the preview box
         LayoutParams bgParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        String yAlignment = prefs.getString(SettingsManager.VERTICAL_ALIGNMENT, SettingsManager.DEFAULT_VERTICAL_ALIGNMENT);
 
         if (yAlignment.equals("center"))
             bgParams.addRule(CENTER_VERTICAL);
@@ -314,10 +314,10 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // set appearance settings and theme
-        mPrimaryTextColor = prefs.getInt(SettingsActivity.PRIMARY_TEXT_COLOR, SettingsActivity.DEFAULT_PRIMARY_TEXT_COLOR);
-        int secondaryTextColor = prefs.getInt(SettingsActivity.SECONDARY_TEXT_COLOR, SettingsActivity.DEFAULT_SECONDARY_TEXT_COLOR);
-        mNotificationBGColor = prefs.getInt(SettingsActivity.MAIN_BG_COLOR, SettingsActivity.DEFAULT_MAIN_BG_COLOR);
-        int iconBGColor = prefs.getInt(SettingsActivity.ICON_BG_COLOR, SettingsActivity.DEFAULT_ICON_BG_COLOR);
+        mPrimaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
+        int secondaryTextColor = prefs.getInt(SettingsManager.SECONDARY_TEXT_COLOR, SettingsManager.DEFAULT_SECONDARY_TEXT_COLOR);
+        mNotificationBGColor = prefs.getInt(SettingsManager.MAIN_BG_COLOR, SettingsManager.DEFAULT_MAIN_BG_COLOR);
+        int iconBGColor = prefs.getInt(SettingsManager.ICON_BG_COLOR, SettingsManager.DEFAULT_ICON_BG_COLOR);
 
         this.ni = ni;
         this.mCallbacks = callbacks;
@@ -329,19 +329,19 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         mPreviewTitle.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
         mPreviewText.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
         mPreviewTime.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
-        mPreviewTitle.setTextSize(prefs.getInt(SettingsActivity.TITLE_FONT_SIZE, SettingsActivity.DEFAULT_TITLE_FONT_SIZE));
-        mPreviewText.setTextSize(prefs.getInt(SettingsActivity.TEXT_FONT_SIZE, SettingsActivity.DEFAULT_TEXT_FONT_SIZE));
-        mPreviewTime.setTextSize(prefs.getInt(SettingsActivity.TEXT_FONT_SIZE, SettingsActivity.DEFAULT_TEXT_FONT_SIZE));
+        mPreviewTitle.setTextSize(prefs.getInt(SettingsManager.TITLE_FONT_SIZE, SettingsManager.DEFAULT_TITLE_FONT_SIZE));
+        mPreviewText.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
+        mPreviewTime.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
         Bitmap icon = NotificationAdapter.createThemedIcon(ni.getIcon(), theme, (int) context.getResources().getDimension(R.dimen.notification_icon_size_large));
         mPreviewIcon.setImageDrawable(new BitmapDrawable(getResources(), icon));
 
         if (theme.iconBg != null)
-            theme.iconBg.setAlpha(255 * prefs.getInt(SettingsActivity.MAIN_BG_OPACITY, SettingsActivity.DEFAULT_MAIN_BG_OPACITY) / 100);
+            theme.iconBg.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
 
         mPreviewIconImageBG.setImageDrawable(theme.iconBg);
         mPreviewIconImageFG.setImageDrawable(theme.iconFg);
         if (theme.previewTextBG != null)
-            theme.previewTextBG.setAlpha(255 * prefs.getInt(SettingsActivity.MAIN_BG_OPACITY, SettingsActivity.DEFAULT_MAIN_BG_OPACITY) / 100);
+            theme.previewTextBG.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
         mNotificationContent.setBackgroundDrawable(theme.previewTextBG);
         mPreviewTime.setText(ni.getTimeText(context));
 
@@ -355,7 +355,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         // apply theme
         if (theme.previewBG != null)
         {
-            theme.previewBG.setAlpha(255 * prefs.getInt(SettingsActivity.MAIN_BG_OPACITY, SettingsActivity.DEFAULT_MAIN_BG_OPACITY) / 100);
+            theme.previewBG.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
             mPreviewBackground.setBackgroundDrawable(theme.previewBG);
         }
 
@@ -406,7 +406,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             mVelocityTracker.addMovement(event);
 
             // store pref for use later
-            mIsSwipeToOpenEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsActivity.SWIPE_TO_OPEN, SettingsActivity.DEFAULT_SWIPE_TO_OPEN);
+            mIsSwipeToOpenEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SettingsManager.SWIPE_TO_OPEN, SettingsManager.DEFAULT_SWIPE_TO_OPEN);
         }
         else if (event.getAction() == MotionEvent.ACTION_MOVE)
         {

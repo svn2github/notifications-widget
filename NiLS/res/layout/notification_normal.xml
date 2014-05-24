@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/notification_icon"
             android:scaleType="fitCenter"
-            android:src="@drawable/appicon" android:layout_centerInParent="true"/>
+            android:src="@drawable/ic_launcher" android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/notificationSpinner"
@@ -118,7 +118,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="@string/app_icon"
-                    android:src="@drawable/appicon"
+                    android:src="@drawable/ic_nils_icon_mono"
                     android:paddingLeft="2dp"
                     android:paddingRight="2dp"/>
                 </LinearLayout>

@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 
 import com.roymam.android.nilsplus.CardPreferenceFragment;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 public class NiLSPreferenceFragment extends CardPreferenceFragment
 {
@@ -17,7 +17,7 @@ public class NiLSPreferenceFragment extends CardPreferenceFragment
 
         // unlock premium features
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        boolean unlocked =  prefs.getBoolean(SettingsActivity.UNLOCKED, SettingsActivity.DEFAULT_UNLOCKED);
+        boolean unlocked =  prefs.getBoolean(SettingsManager.UNLOCKED, SettingsManager.DEFAULT_UNLOCKED);
         recursiveUnlockPremiumFeatures(prefsScreen, unlocked);
     }
 

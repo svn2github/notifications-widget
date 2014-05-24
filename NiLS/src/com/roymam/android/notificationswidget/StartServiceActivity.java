@@ -15,7 +15,7 @@ public class StartServiceActivity extends Activity
 
     public void openAndroidSettings(View view)
     {
-        Intent intent = SettingsActivity.getNotificationsServiesIntent();
+        Intent intent = SettingsManager.getNotificationsServiesIntent();
         startActivity(intent);
     }
 
@@ -27,7 +27,7 @@ public class StartServiceActivity extends Activity
         if (NotificationsService.getSharedInstance() != null)
         {
             finish();
-            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            startActivity(new Intent(getApplicationContext(), SettingsManager.class));
         }
     }
 }

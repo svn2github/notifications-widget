@@ -60,7 +60,7 @@ public class NotificationsWidgetService extends Service
 			
 			if (action == ACTION_RENDER_WIDGETS)   
 			{
-				if (prefs.getBoolean(SettingsActivity.DISABLE_AUTO_SWITCH, false))
+				if (prefs.getBoolean(SettingsManager.DISABLE_AUTO_SWITCH, false))
 				{
 					widgetExpanded = true;
 				}
@@ -82,7 +82,7 @@ public class NotificationsWidgetService extends Service
 				{					
 					int hostCategory = intent.getIntExtra(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD);
 					
-					if (!prefs.getBoolean(SettingsActivity.DISABLE_AUTO_SWITCH, false))
+					if (!prefs.getBoolean(SettingsManager.DISABLE_AUTO_SWITCH, false))
 					{
 						boolean isExpanded = intent.getBooleanExtra(NotificationsWidgetService.IS_EXPANDED, true);
 					    
@@ -98,23 +98,23 @@ public class NotificationsWidgetService extends Service
 						widgetExpanded = true;
 					}
 					    
-					String lastWidgetMode = prefs.getString(SettingsActivity.WIDGET_MODE +"." + appWidgetId, "");
-					String newWidgetMode = SettingsActivity.HOME_WIDGET_MODE;
+					String lastWidgetMode = prefs.getString(SettingsManager.WIDGET_MODE +"." + appWidgetId, "");
+					String newWidgetMode = SettingsManager.HOME_WIDGET_MODE;
 					
 					if (widgetExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
 					{
-						newWidgetMode = SettingsActivity.EXPANDED_WIDGET_MODE;
+						newWidgetMode = SettingsManager.EXPANDED_WIDGET_MODE;
 					}
 					else if (!widgetExpanded && hostCategory == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD)
 					{
-						newWidgetMode = SettingsActivity.COLLAPSED_WIDGET_MODE;
+						newWidgetMode = SettingsManager.COLLAPSED_WIDGET_MODE;
 					}
 					
 					// if mode has been changed
 					if (!lastWidgetMode.equals(newWidgetMode))
 					{
-						prefs.edit().putString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, newWidgetMode)
-									.putString(SettingsActivity.LAST_WIDGET_MODE, newWidgetMode).commit();												
+						prefs.edit().putString(SettingsManager.WIDGET_MODE + "." + appWidgetId, newWidgetMode)
+									.putString(SettingsManager.LAST_WIDGET_MODE, newWidgetMode).commit();
 						
 						updateWidget(appWidgetId);
 						// notify widget that it should be refreshed
@@ -130,7 +130,7 @@ public class NotificationsWidgetService extends Service
 	private void updateWidget(int widgetId) 
 	{
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+		String widgetMode = prefs.getString(SettingsManager.WIDGET_MODE + "." + widgetId, SettingsManager.EXPANDED_WIDGET_MODE);
 
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
 
@@ -143,10 +143,10 @@ public class NotificationsWidgetService extends Service
 		
 		// update clock
         clockRV.removeAllViews(R.id.clockContainer);
-		boolean hideClock = prefs.getBoolean(widgetMode + "." + SettingsActivity.CLOCK_HIDDEN, false);
+		boolean hideClock = prefs.getBoolean(widgetMode + "." + SettingsManager.CLOCK_HIDDEN, false);
 
         // check if need to hide the clock because of persistent notifications
-        if (prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true))
+        if (prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_PERSISTENT_NOTIFICATIONS, true))
         {
             NotificationsProvider ns = NotificationsService.getSharedInstance();
             if (ns != null)
@@ -170,8 +170,8 @@ public class NotificationsWidgetService extends Service
 		}
 		
 		// set clock bg color
-	    int bgColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_COLOR, Color.BLACK);		    
-	    int alpha = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_BG_OPACITY, 0);
+	    int bgColor = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_BG_COLOR, Color.BLACK);
+	    int alpha = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_BG_OPACITY, 0);
 	    bgColor = Color.argb(alpha * 255 / 100, Color.red(bgColor), Color.green(bgColor), Color.blue(bgColor));
         clockRV.setInt(R.id.clockContainer, "setBackgroundColor", bgColor);
 
@@ -179,7 +179,7 @@ public class NotificationsWidgetService extends Service
 		persistentNotificationsRV.removeAllViews(R.id.persistentNotificationsView);
         persistentNotificationsRV.setInt(R.id.persistentNotificationsView, "setBackgroundColor", bgColor);
 
-        if (prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_PERSISTENT_NOTIFICATIONS, true))
+        if (prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_PERSISTENT_NOTIFICATIONS, true))
         {
             RemoteViews[] persistentNotifications = getPersistentNotifications();
             for(RemoteViews pn : persistentNotifications)
@@ -189,7 +189,7 @@ public class NotificationsWidgetService extends Service
         }
 		
 		// set up notifications list
-        if (SettingsActivity.shouldHideNotifications(getApplicationContext(), widgetMode))
+        if (SettingsManager.shouldHideNotifications(getApplicationContext(), widgetMode))
         {
             notificationsRV.setViewVisibility(R.id.notificationsListView, View.GONE);
         }
@@ -286,8 +286,8 @@ public class NotificationsWidgetService extends Service
 	    	notificationsCount = ns.getNotifications().size();
 	    }
 	    
-	    String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + appWidgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
-	    if (prefs.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true))
+	    String widgetMode = prefs.getString(SettingsManager.WIDGET_MODE + "." + appWidgetId, SettingsManager.EXPANDED_WIDGET_MODE);
+	    if (prefs.getBoolean(widgetMode + "." + SettingsManager.NOTIFICATION_IS_CLICKABLE, true))
 	    {
 	    	Intent clickIntent=new Intent(this, NotificationActivity.class);
 	    	PendingIntent clickPI=PendingIntent.getActivity(this, 0,
@@ -302,7 +302,7 @@ public class NotificationsWidgetService extends Service
 	    	widget.setPendingIntentTemplate(R.id.notificationsListView, clickPI);    	   
 	    }
 	    
-	    boolean showClearButton = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?false:true);
+	    boolean showClearButton = prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?false:true);
 	    widget.setViewVisibility(R.id.clearButton, showClearButton?View.VISIBLE:View.GONE);
 	    // hide clear button if no notifications are displayed
 	    if (notificationsCount == 0)
@@ -326,8 +326,8 @@ public class NotificationsWidgetService extends Service
 	private String getNotificationStyle(int widgetId) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);		
-		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
-		String notificationsStyle = prefs.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?"compact":"normal");
+		String widgetMode = prefs.getString(SettingsManager.WIDGET_MODE + "." + widgetId, SettingsManager.EXPANDED_WIDGET_MODE);
+		String notificationsStyle = prefs.getString(widgetMode + "." + SettingsManager.NOTIFICATION_STYLE, widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?"compact":"normal");
 		return notificationsStyle;
 	}
 
@@ -335,15 +335,15 @@ public class NotificationsWidgetService extends Service
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		NotificationsProvider ns = NotificationsService.getSharedInstance();
-		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+		String widgetMode = prefs.getString(SettingsManager.WIDGET_MODE + "." + widgetId, SettingsManager.EXPANDED_WIDGET_MODE);
 		
 		// hide clock if required
-	    String clockstyle = prefs.getString(widgetMode + "." + SettingsActivity.CLOCK_STYLE, SettingsActivity.CLOCK_AUTO);
+	    String clockstyle = prefs.getString(widgetMode + "." + SettingsManager.CLOCK_STYLE, SettingsManager.CLOCK_AUTO);
 	    String notificationsStyle = getNotificationStyle(widgetId);
 	    int notificationsCount = 0;
 	    if (ns != null) notificationsCount  = ns.getNotifications().size();
 
-	    if (clockstyle.equals(SettingsActivity.CLOCK_AUTO))
+	    if (clockstyle.equals(SettingsManager.CLOCK_AUTO))
 	    {
 	    	int largeClockLimit;
 	    	int mediumClockLimit;
@@ -377,12 +377,12 @@ public class NotificationsWidgetService extends Service
     			largeClockLimit--;
     			mediumClockLimit--;
     		}
-	    	if (notificationsCount < largeClockLimit || SettingsActivity.shouldHideNotifications(getApplicationContext(), widgetMode))
-	    		clockstyle = SettingsActivity.CLOCK_LARGE;
+	    	if (notificationsCount < largeClockLimit || SettingsManager.shouldHideNotifications(getApplicationContext(), widgetMode))
+	    		clockstyle = SettingsManager.CLOCK_LARGE;
 	    	else if (notificationsCount < mediumClockLimit)
-	    		clockstyle = SettingsActivity.CLOCK_MEDIUM;
+	    		clockstyle = SettingsManager.CLOCK_MEDIUM;
 	    	else
-	    		clockstyle = SettingsActivity.CLOCK_SMALL;
+	    		clockstyle = SettingsManager.CLOCK_SMALL;
 	    }
 	    return clockstyle;
 	}
@@ -503,12 +503,12 @@ public class NotificationsWidgetService extends Service
 		
 		RemoteViews clock;
 		int clockId; 
-		if (type.equals(SettingsActivity.CLOCK_SMALL))
+		if (type.equals(SettingsManager.CLOCK_SMALL))
 		{
 			clock = new RemoteViews(this.getPackageName(), R.layout.small_clock);
 			clockId = R.id.smallClock;
 		}
-		else if (type.equals(SettingsActivity.CLOCK_MEDIUM))
+		else if (type.equals(SettingsManager.CLOCK_MEDIUM))
 		{
 			clock = new RemoteViews(this.getPackageName(), R.layout.medium_clock);	
 			clockId = R.id.mediumClock;
@@ -539,11 +539,11 @@ public class NotificationsWidgetService extends Service
 	    String datestr = DateFormat.getLongDateFormat(this).format(t.toMillis(true));
 	    clock.setTextViewText(R.id.date, datestr.toUpperCase(Locale.getDefault()));
 	    
-	    String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+	    String widgetMode = prefs.getString(SettingsManager.WIDGET_MODE + "." + widgetId, SettingsManager.EXPANDED_WIDGET_MODE);
 
-        int clockColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_COLOR, Color.WHITE);
-        int dateColor = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_DATE_COLOR, Color.WHITE);
-        int alarmColor  = prefs.getInt(widgetMode + "." + SettingsActivity.CLOCK_ALARM_COLOR, Color.GRAY);
+        int clockColor = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_COLOR, Color.WHITE);
+        int dateColor = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_DATE_COLOR, Color.WHITE);
+        int alarmColor  = prefs.getInt(widgetMode + "." + SettingsManager.CLOCK_ALARM_COLOR, Color.GRAY);
 
         // display next alarm if needed
         String nextAlarm = Settings.System.getString(getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
@@ -574,8 +574,8 @@ public class NotificationsWidgetService extends Service
 	    if (alarmColor == Color.TRANSPARENT)
 	    	clock.setViewVisibility(R.id.alarmtime, View.GONE);
 	    
-	    boolean boldHours = prefs.getBoolean(widgetMode + "." + SettingsActivity.BOLD_HOURS, true);
-	    boolean boldMinutes = prefs.getBoolean(widgetMode + "." + SettingsActivity.BOLD_MINUTES, false);
+	    boolean boldHours = prefs.getBoolean(widgetMode + "." + SettingsManager.BOLD_HOURS, true);
+	    boolean boldMinutes = prefs.getBoolean(widgetMode + "." + SettingsManager.BOLD_MINUTES, false);
 	    
 	    String hoursStr = t.format(hourFormat);
     	SpannableString s = new SpannableString(hoursStr); 
@@ -610,12 +610,12 @@ public class NotificationsWidgetService extends Service
 	    // set up filler for clear button
 	    if (ns != null &&
 	    	ns.getNotifications().size() > 0 &&
-                prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE) ? false : true))
+                prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_CLEAR_BUTTON, widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE) ? false : true))
 	    	clock.setViewVisibility(R.id.clearButtonFiller, View.VISIBLE);
 	    else
 	    	clock.setViewVisibility(R.id.clearButtonFiller, View.GONE);
 	    
-	    if (prefs.getBoolean(widgetMode +"." + SettingsActivity.CLOCK_IS_CLICKABLE, true))
+	    if (prefs.getBoolean(widgetMode +"." + SettingsManager.CLOCK_IS_CLICKABLE, true))
 	    {
             PendingIntent pi = getClockAppIntent();
             if (pi != null)

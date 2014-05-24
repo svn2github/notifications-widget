@@ -14,7 +14,7 @@ import com.roymam.android.nilsplus.CardPreferenceFragment;
 import com.roymam.android.notificationswidget.NiLSAccessibilityService;
 import com.roymam.android.notificationswidget.NotificationsService;
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 public class MainPrefsFragment extends CardPreferenceFragment
 {
@@ -59,20 +59,20 @@ public class MainPrefsFragment extends CardPreferenceFragment
         addPreferencesFromResource(R.xml.main_preferences);
 
         mContext = getActivity();
-        mPrefNiLSService = (CheckBoxPreference) findPreference(SettingsActivity.NILS_SERVICE);
+        mPrefNiLSService = (CheckBoxPreference) findPreference(SettingsManager.NILS_SERVICE);
         mPrefNiLSService.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
         {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue)
             {
-                Intent intent = SettingsActivity.getNotificationsServiesIntent();
+                Intent intent = SettingsManager.getNotificationsServiesIntent();
                 startActivity(intent);
                 Toast.makeText(getActivity(), R.string.enable_service_tip, Toast.LENGTH_LONG).show();
                 return false;
             }
         });
 
-        mPrefAutoHideService = (CheckBoxPreference) findPreference(SettingsActivity.AUTO_HIDE_SERVICE);
+        mPrefAutoHideService = (CheckBoxPreference) findPreference(SettingsManager.AUTO_HIDE_SERVICE);
         mPrefAutoHideService.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
         {
             @Override

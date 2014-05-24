@@ -6,7 +6,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 public class Theme extends ThemeInfo
 {
@@ -46,13 +46,13 @@ public class Theme extends ThemeInfo
 
     public static Theme getDefault(Context context)
     {
-        Theme t = new Theme(SettingsActivity.DEFAULT_THEME, "Default");
-        t.titleColor = SettingsActivity.DEFAULT_PRIMARY_TEXT_COLOR;
-        t.textColor = SettingsActivity.DEFAULT_SECONDARY_TEXT_COLOR;
-        t.bgColor = SettingsActivity.DEFAULT_MAIN_BG_COLOR;
-        t.iconBGColor = SettingsActivity.DEFAULT_ICON_BG_COLOR;
-        t.altBgColor = SettingsActivity.DEFAULT_MAIN_BG_COLOR;
-        t.altIconBGColor = SettingsActivity.DEFAULT_ICON_BG_COLOR;
+        Theme t = new Theme(SettingsManager.DEFAULT_THEME, "Default");
+        t.titleColor = SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR;
+        t.textColor = SettingsManager.DEFAULT_SECONDARY_TEXT_COLOR;
+        t.bgColor = SettingsManager.DEFAULT_MAIN_BG_COLOR;
+        t.iconBGColor = SettingsManager.DEFAULT_ICON_BG_COLOR;
+        t.altBgColor = SettingsManager.DEFAULT_MAIN_BG_COLOR;
+        t.altIconBGColor = SettingsManager.DEFAULT_ICON_BG_COLOR;
         t.iconSize = context.getResources().getDimension(R.dimen.notification_default_icon_size);
         t.notificationSpacing = context.getResources().getDimension(R.dimen.notification_default_list_spacing);
         t.titleFontSize = context.getResources().getDimension(R.dimen.notification_default_title_size);

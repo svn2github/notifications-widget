@@ -20,7 +20,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
@@ -45,7 +44,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class SettingsActivity extends PreferenceActivity
+public class SettingsManager
 {
     // main settings
     public static final String NILS_SERVICE = "nils_service";
@@ -240,26 +239,16 @@ public class SettingsActivity extends PreferenceActivity
     public static final String DEFAULT_NOTIFICATION_PRIVACY = PRIVACY_SHOW_ALL;
     public static final String IMMEDIATE_PROXIMITY = "immediate_proximity";
 
-    private List<Header> mHeaders = null;
-
-    @Override
-    protected boolean isValidFragment(String fragmentName)
-    {
-        // really dumb method that is required since api level 19, always return true,
-        // there is no such a case that the fragment name won't be valid
-        return true;
-    }
-
     public static boolean shouldHideNotifications(Context context, String widgetMode)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        boolean fpEnabled = prefs.getBoolean(SettingsActivity.FP_ENABLED, false);
-        boolean overrideHideNotifications = prefs.getAll().containsKey(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS);
-        boolean hideNotifications = prefs.getBoolean(widgetMode + "." + SettingsActivity.HIDE_NOTIFICATIONS, false);
+        boolean fpEnabled = prefs.getBoolean(SettingsManager.FP_ENABLED, false);
+        boolean overrideHideNotifications = prefs.getAll().containsKey(widgetMode + "." + SettingsManager.HIDE_NOTIFICATIONS);
+        boolean hideNotifications = prefs.getBoolean(widgetMode + "." + SettingsManager.HIDE_NOTIFICATIONS, false);
 
         if ((fpEnabled && !overrideHideNotifications &&
-                (widgetMode.equals(SettingsActivity.EXPANDED_WIDGET_MODE) || widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)))
+                (widgetMode.equals(SettingsManager.EXPANDED_WIDGET_MODE) || widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)))
                 ||
                 hideNotifications)
             return true;
@@ -273,18 +262,18 @@ public class SettingsActivity extends PreferenceActivity
         String defaultWakeupMode;
 
         // setting default according to old settings
-        if (!prefs.getBoolean(SettingsActivity.TURNSCREENON, true))
+        if (!prefs.getBoolean(SettingsManager.TURNSCREENON, true))
             defaultWakeupMode = WAKEUP_NEVER;
         else
-        if (prefs.getBoolean(SettingsActivity.DISABLE_PROXIMITY, false))
+        if (prefs.getBoolean(SettingsManager.DISABLE_PROXIMITY, false))
             defaultWakeupMode = WAKEUP_ALWAYS;
         else
-        if (prefs.getBoolean(SettingsActivity.DELAYED_SCREEON, false))
+        if (prefs.getBoolean(SettingsManager.DELAYED_SCREEON, false))
             defaultWakeupMode = WAKEUP_UNCOVERED;
         else
         {
             // if the proximity sensor has immediate response, set wake up mode to use it by default
-            if (prefs.getBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, true))
+            if (prefs.getBoolean(SettingsManager.IMMEDIATE_PROXIMITY, true))
                 defaultWakeupMode = WAKEUP_NOT_COVERED;
             else
                 // otherwise - don't use proximity sensor
@@ -372,35 +361,6 @@ public class SettingsActivity extends PreferenceActivity
         }
     }
 
-    /*
-    public static class DeviceAdmin extends DeviceAdminReceiver
-    {
-        void showToast(Context context, String msg)
-        {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onEnabled(Context context, Intent intent) {
-            showToast(context, "enabled");
-        }
-
-        @Override
-        public CharSequence onDisableRequested(Context context, Intent intent) {
-            return "please don't do this";
-        }
-
-        @Override
-        public void onDisabled(Context context, Intent intent) {
-            showToast(context, "disabled");
-        }
-
-        @Override
-        public void onPasswordChanged(Context context, Intent intent) {
-            showToast(context, "password changed");
-        }
-    }*/
-
     public static class PrefsGeneralFragment extends CardPreferenceFragment
 	{
         //ComponentName mDeviceAdmin;
@@ -421,7 +381,7 @@ public class SettingsActivity extends PreferenceActivity
                     getResources().getStringArray(R.array.wakeup_mode_values));
 
             Preference wakeupPref = findPreference(WAKEUP_MODE);
-            String currValue = SettingsActivity.getWakeupMode(getActivity(), null);
+            String currValue = SettingsManager.getWakeupMode(getActivity(), null);
             wakeupPref.setDefaultValue(currValue);
             listener.setPrefSummary(wakeupPref, currValue);
             final ListPreferenceChangeListener finalListener = listener;
@@ -437,7 +397,7 @@ public class SettingsActivity extends PreferenceActivity
                     {
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-                        if (!prefs.getBoolean(SettingsActivity.IMMEDIATE_PROXIMITY, true) || wakeupMode.equals(WAKEUP_UNCOVERED)) {
+                        if (!prefs.getBoolean(SettingsManager.IMMEDIATE_PROXIMITY, true) || wakeupMode.equals(WAKEUP_UNCOVERED)) {
                             new AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.battery_usage_warning)
                                     .setMessage(R.string.battery_usage_warning_summary)
@@ -889,85 +849,6 @@ public class SettingsActivity extends PreferenceActivity
         }
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus)
-    {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus)
-            invalidateHeaders();
-    }
-
-    @Override
-    public void onBuildHeaders(List<Header> target)
-	{
-        loadHeadersFromResource(R.xml.preferences_headers, target);
-
-        // check service status
-        if (NotificationsService.getSharedInstance() != null)
-        {
-            //target.get(0).iconRes = android.R.drawable.presence_online;
-            target.get(0).summaryRes = R.string.service_is_active;
-        }
-        else
-        {
-            //target.get(0).iconRes = android.R.drawable.presence_offline;
-            target.get(0).summaryRes = R.string.service_is_inactive;
-
-            Intent intent = getNotificationsServiesIntent();
-            target.get(0).intent = intent;
-            target.get(0).fragment = null;
-        }
-
-        // check widget status
-        AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
-        ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
-        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(WIDGET_PRESENT, false) || widgetIds.length > 0)
-        {
-            //target.get(1).iconRes = android.R.drawable.presence_online;
-            target.get(1).summaryRes = R.string.widget_is_present;
-        }
-        else
-        {
-            //target.get(1).iconRes = android.R.drawable.presence_offline;
-            target.get(1).summaryRes = R.string.widget_is_not_present;
-            target.get(1).fragment = "com.roymam.android.notificationswidget.SettingsActivity$HowToAddWidgetFragment";
-        }
-
-        // check NiLSPlus status
-        if (isNiLSPlusInstalled())
-        {
-            // TODO: migrate license from nils floating panel
-            /* Uninstall code:
-            Uri packageUri = Uri.parse("package:com.roymam.android.nilsplus");
-            Intent uninstallIntent =
-                    new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-            startActivity(uninstallIntent);
-            */
-        }
-
-        // set switch key and default value for Floating Panel option
-        target.get(2).extras = new Bundle();
-        target.get(2).extras.putInt(SwitchPrefsHeaderAdapter.HEADER_TYPE, SwitchPrefsHeaderAdapter.HEADER_TYPE_SWITCH);
-        target.get(2).extras.putString(SwitchPrefsHeaderAdapter.HEADER_KEY, FP_ENABLED);
-        target.get(2).extras.putBoolean(SwitchPrefsHeaderAdapter.HEADER_DEFAULT_VALUE, true);
-        target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_ENABLED_MESSAGE, getString(R.string.nils_fp_enabled));
-        target.get(2).extras.putString(SwitchPrefsHeaderAdapter.SWITCH_DISABLED_MESSAGE, getString(R.string.nils_fp_disabled));
-
-        // setting last "about" button summary
-        String versionString = "";
-    	try 
-    	{
-    		versionString = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-	        target.get(target.size()-1).summary = getText(R.string.version) + " " + versionString;
-	        		
-		} catch (NameNotFoundException e) 
-		{
-		}
-
-        mHeaders = target;
-    }
-
     public static Intent getNotificationsServiesIntent()
     {
         Intent intent;
@@ -983,71 +864,4 @@ public class SettingsActivity extends PreferenceActivity
 
         return intent;
     }
-
-    private boolean isNiLSPlusInstalled()
-    {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        try
-        {
-            PackageInfo info = getPackageManager().getPackageInfo(FP_PACKAGE, 0);
-            if (info.versionCode < 32) return false;
-
-            // if the user hasn't disabled fp yet, mark it as enabled
-            if (!prefs.getAll().containsKey(SettingsActivity.FP_ENABLED))
-                prefs.edit().putBoolean(SettingsActivity.FP_ENABLED, true).commit();
-        } catch (PackageManager.NameNotFoundException e)
-        {
-            // if nils fp was uninstalled - removed this preference
-            prefs.edit().remove(SettingsActivity.FP_ENABLED).commit();
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void setListAdapter(ListAdapter adapter)
-    {
-        int i, count;
-
-        if (mHeaders == null)
-        {
-            mHeaders = new ArrayList<Header>();
-            // When the saved state provides the list of headers,
-            // onBuildHeaders is not called
-            // so we build it from the adapter given, then use our own adapter
-            count = adapter.getCount();
-            for (i = 0; i < count; ++i)
-                mHeaders.add((Header) adapter.getItem(i));
-        }
-
-        super.setListAdapter(new SwitchPrefsHeaderAdapter(this, mHeaders));
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) 
-	{
-        super.onCreate(savedInstanceState);
-
-        if (NotificationsService.getSharedInstance() == null)
-        {
-            finish();
-            startActivity(new Intent(getApplicationContext(), StartServiceActivity.class));
-        }
-        else
-        {
-        }
-    }
-
-
-    @Override
-	protected void onResume() 
-	{
-	    super.onResume();	    
-	}
-
-	@Override
-	protected void onPause() 
-	{
-	    super.onPause();
-	}
 }

@@ -25,7 +25,7 @@ import com.roymam.android.common.BitmapUtils;
 import com.roymam.android.notificationswidget.NotificationData;
 import com.roymam.android.notificationswidget.NotificationsService;
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 import com.roymam.android.nilsplus.ui.theme.Theme;
 import com.roymam.android.nilsplus.ui.theme.ThemeManager;
 
@@ -114,29 +114,29 @@ public class NotificationAdapter extends BaseAdapter
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        int primaryTextColor = prefs.getInt(SettingsActivity.PRIMARY_TEXT_COLOR, SettingsActivity.DEFAULT_PRIMARY_TEXT_COLOR);
-        int secondaryTextColor = prefs.getInt(SettingsActivity.SECONDARY_TEXT_COLOR, SettingsActivity.DEFAULT_SECONDARY_TEXT_COLOR);
-        int notificationBGColor = prefs.getInt(SettingsActivity.MAIN_BG_COLOR, SettingsActivity.DEFAULT_MAIN_BG_COLOR);
-        int iconBGColor = prefs.getInt(SettingsActivity.ICON_BG_COLOR, SettingsActivity.DEFAULT_ICON_BG_COLOR);
-        int altNotificationBGColor = prefs.getInt(SettingsActivity.ALT_MAIN_BG_COLOR, SettingsActivity.DEFAULT_ALT_MAIN_BG_COLOR);
-        int altIconBGColor = prefs.getInt(SettingsActivity.ALT_ICON_BG_COLOR, SettingsActivity.DEFAULT_ALT_ICON_BG_COLOR);
+        int primaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
+        int secondaryTextColor = prefs.getInt(SettingsManager.SECONDARY_TEXT_COLOR, SettingsManager.DEFAULT_SECONDARY_TEXT_COLOR);
+        int notificationBGColor = prefs.getInt(SettingsManager.MAIN_BG_COLOR, SettingsManager.DEFAULT_MAIN_BG_COLOR);
+        int iconBGColor = prefs.getInt(SettingsManager.ICON_BG_COLOR, SettingsManager.DEFAULT_ICON_BG_COLOR);
+        int altNotificationBGColor = prefs.getInt(SettingsManager.ALT_MAIN_BG_COLOR, SettingsManager.DEFAULT_ALT_MAIN_BG_COLOR);
+        int altIconBGColor = prefs.getInt(SettingsManager.ALT_ICON_BG_COLOR, SettingsManager.DEFAULT_ALT_ICON_BG_COLOR);
 
-        Bitmap icon = NotificationAdapter.createThemedIcon(item.getIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsActivity.ICON_SIZE, SettingsActivity.DEFAULT_ICON_SIZE)));
+        Bitmap icon = NotificationAdapter.createThemedIcon(item.getIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)));
         holder.ivImage.setImageDrawable(new BitmapDrawable(icon));
         holder.tvTitle.setText(item.getTitle() != null ? item.getTitle().toString() : null);
         holder.tvTitle.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault_Medium);
-        holder.tvTitle.setTextSize(prefs.getInt(SettingsActivity.TITLE_FONT_SIZE, SettingsActivity.DEFAULT_TITLE_FONT_SIZE));
+        holder.tvTitle.setTextSize(prefs.getInt(SettingsManager.TITLE_FONT_SIZE, SettingsManager.DEFAULT_TITLE_FONT_SIZE));
         holder.tvTime.setText(item.getTimeText(context));
         holder.tvTime.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault_Small);
-        holder.tvTime.setTextSize(prefs.getInt(SettingsActivity.TEXT_FONT_SIZE, SettingsActivity.DEFAULT_TEXT_FONT_SIZE));
-        holder.tvTime.setVisibility(prefs.getBoolean(SettingsActivity.SHOW_TIME, SettingsActivity.DEFAULT_SHOW_TIME) ? View.VISIBLE : View.GONE);
+        holder.tvTime.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
+        holder.tvTime.setVisibility(prefs.getBoolean(SettingsManager.SHOW_TIME, SettingsManager.DEFAULT_SHOW_TIME) ? View.VISIBLE : View.GONE);
         holder.tvDescription.setText(item.getText() != null ? item.getText().toString() : null);
         holder.tvDescription.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault_Small);
-        int textSizeSp = prefs.getInt(SettingsActivity.TEXT_FONT_SIZE, SettingsActivity.DEFAULT_TEXT_FONT_SIZE);
+        int textSizeSp = prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE);
         holder.tvDescription.setTextSize(textSizeSp);
-        int maxLines = Integer.parseInt(prefs.getString(SettingsActivity.MAX_TEXT_LINES, String.valueOf(SettingsActivity.DEFAULT_MAX_TEXT_LINES)));
+        int maxLines = Integer.parseInt(prefs.getString(SettingsManager.MAX_TEXT_LINES, String.valueOf(SettingsManager.DEFAULT_MAX_TEXT_LINES)));
         holder.tvTitle.setLines(1);
-        boolean fitToText = prefs.getBoolean(SettingsActivity.FIT_HEIGHT_TO_CONTENT, SettingsActivity.DEFAULT_FIT_HEIGHT_TO_CONTENT);
+        boolean fitToText = prefs.getBoolean(SettingsManager.FIT_HEIGHT_TO_CONTENT, SettingsManager.DEFAULT_FIT_HEIGHT_TO_CONTENT);
         if (!fitToText && maxLines > -1)
             holder.tvDescription.setLines(maxLines);
         else if (maxLines > -1)
@@ -153,7 +153,7 @@ public class NotificationAdapter extends BaseAdapter
         holder.vIconBG.setBackgroundColor(even?altIconBGColor:iconBGColor);
 
         // handle single line
-        boolean singleLine = item.getText() == null || item.getText().equals("") || prefs.getBoolean(SettingsActivity.SINGLE_LINE, SettingsActivity.DEFAULT_SINGLE_LINE);
+        boolean singleLine = item.getText() == null || item.getText().equals("") || prefs.getBoolean(SettingsManager.SINGLE_LINE, SettingsManager.DEFAULT_SINGLE_LINE);
         if (singleLine)
         {
             holder.tvDescription.setVisibility(View.GONE);
@@ -195,29 +195,29 @@ public class NotificationAdapter extends BaseAdapter
             if (theme.timeTypeface != null) holder.tvTime.setTypeface(theme.titleTypeface);
 
             // if "fit to content" is enabled, we need to reload background drawables every item again and again because the height can be different
-            if (prefs.getBoolean(SettingsActivity.FIT_HEIGHT_TO_CONTENT, SettingsActivity.DEFAULT_FIT_HEIGHT_TO_CONTENT))
+            if (prefs.getBoolean(SettingsManager.FIT_HEIGHT_TO_CONTENT, SettingsManager.DEFAULT_FIT_HEIGHT_TO_CONTENT))
                 ThemeManager.getInstance(context).reloadDrawables();
             if (theme.background != null)
             {
                 Drawable background = even?theme.altBackground:theme.background;
-                    background.setAlpha(255 * prefs.getInt(SettingsActivity.MAIN_BG_OPACITY, SettingsActivity.DEFAULT_MAIN_BG_OPACITY) / 100);
+                    background.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
                 //noinspection deprecation
                 holder.vNotificationBG.setBackgroundDrawable(background);
             }
 
             Drawable textBG = even ? theme.altTextBG : theme.textBG;
-            if (textBG != null) textBG.setAlpha(255 * prefs.getInt(SettingsActivity.MAIN_BG_OPACITY, SettingsActivity.DEFAULT_MAIN_BG_OPACITY) / 100);
+            if (textBG != null) textBG.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
             holder.vTextBG.setBackgroundDrawable(textBG);
             Drawable iconBgImage = even?theme.altIconBg:theme.iconBg;
             if (iconBgImage != null)
-                iconBgImage.setAlpha(255 * prefs.getInt(SettingsActivity.MAIN_BG_OPACITY, SettingsActivity.DEFAULT_MAIN_BG_OPACITY) / 100);
+                iconBgImage.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
             holder.vIconBgImage.setImageDrawable(iconBgImage);
             holder.vIconFgImage.setImageDrawable(theme.iconFg);
         }
 
         ViewGroup.LayoutParams vparams = holder.vIconBG.getLayoutParams();
-        vparams.width = BitmapUtils.dpToPx(prefs.getInt(SettingsActivity.ICON_SIZE, SettingsActivity.DEFAULT_ICON_SIZE));
-        vparams.height = BitmapUtils.dpToPx(prefs.getInt(SettingsActivity.ICON_SIZE, SettingsActivity.DEFAULT_ICON_SIZE));
+        vparams.width = BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE));
+        vparams.height = BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE));
         holder.vIconBG.setLayoutParams(vparams);
 
         // set width

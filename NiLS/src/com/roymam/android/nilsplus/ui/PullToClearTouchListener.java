@@ -11,7 +11,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 public class PullToClearTouchListener implements View.OnTouchListener
 {
@@ -86,7 +86,7 @@ public class PullToClearTouchListener implements View.OnTouchListener
             mTouchStartY = motionEvent.getRawY();
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            boolean resizeModeEnabled = prefs.getBoolean(SettingsActivity.ENABLE_RESIZE_MODE, SettingsActivity.DEFAULT_ENABLE_RESIZE_MODE);
+            boolean resizeModeEnabled = prefs.getBoolean(SettingsManager.ENABLE_RESIZE_MODE, SettingsManager.DEFAULT_ENABLE_RESIZE_MODE);
 
             if (resizeModeEnabled)
             {
@@ -113,7 +113,7 @@ public class PullToClearTouchListener implements View.OnTouchListener
             }
 
             // handling pulling down to clear
-            boolean swipeDownToDismiss = prefs.getBoolean(SettingsActivity.SWIPE_DOWN_TO_DISMISS_ALL, SettingsActivity.DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL);
+            boolean swipeDownToDismiss = prefs.getBoolean(SettingsManager.SWIPE_DOWN_TO_DISMISS_ALL, SettingsManager.DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL);
             if (swipeDownToDismiss &&
                     listView != null && listView.getCount() > 0 &&
                     listView.getFirstVisiblePosition() == 0 &&

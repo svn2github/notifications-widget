@@ -28,25 +28,8 @@ public class EventsHandler extends BroadcastReceiver
            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
            String action = intent.getAction();
-           if (action.equals(Intent.ACTION_USER_PRESENT) && !sharedPref.getBoolean("widgetlocker", false) ||
-               action.equals(WIDGET_LOCKER_UNLOCKED))
-           {
-               // stop screen off timer
-               
-               // clear all notifications if needed
-               if (SettingsActivity.shouldClearOnUnlock(context))
-               {
-                   if (ns != null)
-                       ns.clearAllNotifications();
-               }
-               if (action.equals(WIDGET_LOCKER_UNLOCKED))
-                    sharedPref.edit().putBoolean("widgetlocker", true).commit();
-           }
-           else if (action.equals(WIDGET_LOCKER_LOCKED))
-           {
-               sharedPref.edit().putBoolean("widgetlocker", true).commit();
-           }
-           else if (action.equals(DISMISS_NOTIFICATIONS) || action.equals(FN_DISMISS_NOTIFICATIONS))
+
+            if (action.equals(DISMISS_NOTIFICATIONS) || action.equals(FN_DISMISS_NOTIFICATIONS))
             {
                 int uid = intent.getIntExtra("uid", -1);
                 if (uid != -1)

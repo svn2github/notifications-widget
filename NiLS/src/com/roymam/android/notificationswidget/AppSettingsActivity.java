@@ -23,10 +23,10 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
     public void resetAppSettings(View v)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppSettingsActivity.this);
-        prefs.edit().remove(packageName + "." + SettingsActivity.WAKEUP_MODE)
-                    .remove(packageName + "." + SettingsActivity.NOTIFICATION_MODE)
-                    .remove(packageName + "." + SettingsActivity.NOTIFICATION_ICON)
-                    .remove(packageName + "." + SettingsActivity.NOTIFICATION_PRIVACY)
+        prefs.edit().remove(packageName + "." + SettingsManager.WAKEUP_MODE)
+                    .remove(packageName + "." + SettingsManager.NOTIFICATION_MODE)
+                    .remove(packageName + "." + SettingsManager.NOTIFICATION_ICON)
+                    .remove(packageName + "." + SettingsManager.NOTIFICATION_PRIVACY)
                     .remove(packageName + "." + IGNORE_APP)
                     .commit();
 
@@ -50,7 +50,7 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
-		String specficApps = prefs.getString(SettingsActivity.APPS_SETTINGS, "");
+		String specficApps = prefs.getString(SettingsManager.APPS_SETTINGS, "");
 		String updatedSpecificApps = "";
 		for(String app:specficApps.split(","))
 		{
@@ -62,14 +62,14 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
 					updatedSpecificApps+=","+app;
 			}
 		}
-		prefs.edit().putString(SettingsActivity.APPS_SETTINGS, updatedSpecificApps).commit();
+		prefs.edit().putString(SettingsManager.APPS_SETTINGS, updatedSpecificApps).commit();
 	}
 	
 	public static void addAppToAppSpecificSettings(String packageName, Context ctx)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	
-		String specificApps = prefs.getString(SettingsActivity.APPS_SETTINGS, "");
+		String specificApps = prefs.getString(SettingsManager.APPS_SETTINGS, "");
 		boolean hasApp = false;
 		for (String token : specificApps.split(",")) 
 		{
@@ -80,7 +80,7 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
             removeAppFromAppSpecificSettings(packageName, ctx);
 
         // add this app to the list of specific apps
-        specificApps = prefs.getString(SettingsActivity.APPS_SETTINGS, "");
+        specificApps = prefs.getString(SettingsManager.APPS_SETTINGS, "");
         if (!specificApps.equals(""))
             specificApps = packageName + "," + specificApps;
         else
@@ -108,7 +108,7 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
 	{
 		if (key.startsWith(packageName))
 		{
-			String specificApps = sharedPreferences.getString(SettingsActivity.APPS_SETTINGS, "");
+			String specificApps = sharedPreferences.getString(SettingsManager.APPS_SETTINGS, "");
 			boolean hasApp = false;
 			for (String token : specificApps.split(",")) 
 			{

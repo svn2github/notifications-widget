@@ -28,7 +28,7 @@ import com.roymam.android.common.SysUtils;
 import com.roymam.android.notificationswidget.NotificationData;
 import com.roymam.android.notificationswidget.NotificationsService;
 import com.roymam.android.notificationswidget.R;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,8 +217,8 @@ public class NPViewManager
                 mMaxWidgetSize = getWidgetSize();
                 mWidgetPosition = getWidgetPosition(mWidgetSize);
                 mMaxWidgetPosition = getWidgetPosition(mMaxWidgetSize);
-                mMinSize = new Point(BitmapUtils.dpToPx(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsActivity.ICON_SIZE, SettingsActivity.DEFAULT_ICON_SIZE))*2,
-                        BitmapUtils.dpToPx(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsActivity.ICON_SIZE, SettingsActivity.DEFAULT_ICON_SIZE)));
+                mMinSize = new Point(BitmapUtils.dpToPx(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE))*2,
+                        BitmapUtils.dpToPx(PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)));
 
                 mParams = new RelativeLayout.LayoutParams(mMaxWidgetSize.x+EDIT_MODE_PADDING*2,mMaxWidgetSize.y+EDIT_MODE_PADDING*2);
                 mParams.leftMargin = mWidgetPosition.x - EDIT_MODE_PADDING;
@@ -250,7 +250,7 @@ public class NPViewManager
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
                 // store new height
-                prefs.edit().putInt(getRotationMode()+SettingsActivity.HEIGHT, BitmapUtils.pxToDp(mParams.height - EDIT_MODE_PADDING * 2)).commit();
+                prefs.edit().putInt(getRotationMode()+ SettingsManager.HEIGHT, BitmapUtils.pxToDp(mParams.height - EDIT_MODE_PADDING * 2)).commit();
                 mResizeRect.setLayoutParams(mParams);
 
                 // update notifications list widget
@@ -317,7 +317,7 @@ public class NPViewManager
             {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                if (event.getAction() == MotionEvent.ACTION_OUTSIDE && prefs.getBoolean(SettingsActivity.HIDE_ON_CLICK, SettingsActivity.DEFAULT_HIDE_ON_CLICK)) hide(true);
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE && prefs.getBoolean(SettingsManager.HIDE_ON_CLICK, SettingsManager.DEFAULT_HIDE_ON_CLICK)) hide(true);
                 if (event.getAction() == MotionEvent.ACTION_DOWN) keepScreenOn();
 
                 if (mPreviewItem != null)
@@ -362,7 +362,7 @@ public class NPViewManager
             public void notificationClicked(NotificationData ni, int position, boolean iconSwiping)
             {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                if (prefs.getBoolean(SettingsActivity.CLICK_TO_OPEN, SettingsActivity.DEFAULT_CLICK_TO_OPEN))
+                if (prefs.getBoolean(SettingsManager.CLICK_TO_OPEN, SettingsManager.DEFAULT_CLICK_TO_OPEN))
                 {
                     notificationOpen(ni);
                 }
@@ -433,7 +433,7 @@ public class NPViewManager
         // check we currently on non lock screen
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        if (prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE))
+        if (prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE))
         {
             // separated mode for notifications list on home screen
             String lockScreenApp = prefs.getString("lockscreenapp", "auto");
@@ -446,7 +446,7 @@ public class NPViewManager
 
             boolean shouldHideNotificaitons = (!NotificationsService.isKeyguardLocked(context) &&
                 !currentApp.equals(lockScreenApp) ||
-                currentApp.equals(SettingsActivity.STOCK_PHONE_PACKAGENAME));
+                currentApp.equals(SettingsManager.STOCK_PHONE_PACKAGENAME));
 
             if (shouldHideNotificaitons)
                 mode = "home." + mode;
@@ -478,7 +478,7 @@ public class NPViewManager
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         Point displaySize = getDisplaySize();
 
-        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        String yAlignment = prefs.getString(SettingsManager.VERTICAL_ALIGNMENT, SettingsManager.DEFAULT_VERTICAL_ALIGNMENT);
         int maxHeight = getPreviewHeight();
 
         int yOffset;
@@ -660,7 +660,7 @@ public class NPViewManager
     {
         Log.d("NiLS", "NPViewManager.hide();");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (!prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE) || force)
+        if (!prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE) || force)
         {
             //Log.d("NiLS", "Hiding NiLS");
             // hide preview if visibile
@@ -733,39 +733,25 @@ public class NPViewManager
 
     public void show()
     {
-        Log.d("NiLS", "NPViewManager.show();");
-        mNPListView.show();
-        hideNotificationPreview();
-        mPreviewView.hideImmediate();
-        mTouchAreaView.setVisibility(View.VISIBLE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if (prefs.getBoolean(SettingsManager.FP_ENABLED, true)) {
+            Log.d("NiLS", "NPViewManager.show();");
+            mNPListView.show();
+            hideNotificationPreview();
+            mPreviewView.hideImmediate();
+            mTouchAreaView.setVisibility(View.VISIBLE);
 
-        // hide edit mode if displayed
-        if (mEditModeView.getVisibility() == View.VISIBLE)
-            disableEditMode();
+            // hide edit mode if displayed
+            if (mEditModeView.getVisibility() == View.VISIBLE)
+                disableEditMode();
 
-        if (!mVisible)
-        {
-            mVisible = true;
-            mListView.setAlpha(0);
-            mListView.setScaleY(0);
-            mListView.animate().alpha(1).scaleY(1).setDuration(mAnimationDuration).setListener(null);
+            if (!mVisible) {
+                mVisible = true;
+                mListView.setAlpha(0);
+                mListView.setScaleY(0);
+                mListView.animate().alpha(1).scaleY(1).setDuration(mAnimationDuration).setListener(null);
+            }
         }
-
-        // create persistent notification to prevent NiLS+ to be killed
-        /*NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
-                .setSmallIcon(android.R.color.transparent)
-                .setLargeIcon(((BitmapDrawable) mContext.getResources().getDrawable(R.drawable.ic_launcher)).getBitmap())
-                .setContentTitle(mContext.getString(R.string.nils_is_displayed))
-                .setContentText(mContext.getString(R.string.click_to_hide_it));
-
-        /*Notification n = mBuilder.build();
-        Intent hideIntent = new Intent(mContext, NPService.class);
-        hideIntent.setAction(NPService.HIDE_NOTIFICATIONS);
-        n.contentIntent = PendingIntent.getService(mContext, 0, hideIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        n.flags |= Notification.FLAG_ONGOING_EVENT;
-        try {n.priority = Notification.PRIORITY_MIN;} catch (java.lang.NoSuchFieldError exp) {}; // this doesn't work on some devices
-        NotificationManager nm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(0, n);*/
     }
 
     private WindowManager.LayoutParams getEditModeLayoutParams()
@@ -796,7 +782,7 @@ public class NPViewManager
     private int getHeight()
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        int height = BitmapUtils.dpToPx(prefs.getInt(getRotationMode()+SettingsActivity.HEIGHT, SettingsActivity.DEFAULT_HEIGHT));
+        int height = BitmapUtils.dpToPx(prefs.getInt(getRotationMode()+ SettingsManager.HEIGHT, SettingsManager.DEFAULT_HEIGHT));
         if (height > 0) return height;
         else return 0;
     }
@@ -804,12 +790,12 @@ public class NPViewManager
     private int getPreviewHeight()
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return BitmapUtils.dpToPx(prefs.getInt(getRotationMode()+SettingsActivity.PREVIEW_HEIGHT, SettingsActivity.DEFAULT_PREVIEW_HEIGHT));
+        return BitmapUtils.dpToPx(prefs.getInt(getRotationMode()+ SettingsManager.PREVIEW_HEIGHT, SettingsManager.DEFAULT_PREVIEW_HEIGHT));
     }
 
     private int getMaxLines()
     {
-        return PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsActivity.FP_MAX_LINES, SettingsActivity.DEFAULT_MAX_LINES);
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getInt(SettingsManager.FP_MAX_LINES, SettingsManager.DEFAULT_MAX_LINES);
     }
 
     private Point getWidgetSize()
@@ -845,7 +831,7 @@ public class NPViewManager
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        String yAlignment = prefs.getString(SettingsManager.VERTICAL_ALIGNMENT, SettingsManager.DEFAULT_VERTICAL_ALIGNMENT);
         int maxHeight = getHeight();
 
         int x,y;
@@ -864,7 +850,7 @@ public class NPViewManager
         Point screenSize = getDisplaySize();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String yAlignment = prefs.getString(SettingsActivity.VERTICAL_ALIGNMENT, SettingsActivity.DEFAULT_VERTICAL_ALIGNMENT);
+        String yAlignment = prefs.getString(SettingsManager.VERTICAL_ALIGNMENT, SettingsManager.DEFAULT_VERTICAL_ALIGNMENT);
         int maxHeight = mMaxWidgetSize.y;
 
         // move widget to correct position
@@ -1014,7 +1000,7 @@ public class NPViewManager
             {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                if (prefs.getBoolean(SettingsActivity.SHOW_NEXT_PREVIEW, SettingsActivity.DEFAULT_SHOW_NEXT_PREVIEW))
+                if (prefs.getBoolean(SettingsManager.SHOW_NEXT_PREVIEW, SettingsManager.DEFAULT_SHOW_NEXT_PREVIEW))
                 {
                     final List<NotificationData> finalData = data;
                     mHandler.postDelayed(new Runnable()

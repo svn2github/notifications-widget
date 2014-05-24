@@ -269,6 +269,7 @@
     <string name="show_persistent_notifications">Show persistent notification</string>
     <string name="show_persistent_notifications_summary">Show persistent notification from this app</string>
     <string name="notification_height">Persistent notification size</string>
+    <string name="persistent_notifications_error">There was a problem to load the persistent notifications\n please remove some persistent notifications and try again</string>
 
     <string-array name="settings_notification_height_entries">
         <item>Small</item>
@@ -404,30 +405,6 @@
 
     <!-- NiLSPlus Integration -->
     <string name="floating_panel">Notifications Panel</string>
-    <string name="floating_panel_short">Floating Panel</string>
-    <string name="floating_panel_not_installed">Swipe gestures, animations, themes and many more features. Click for info.</string>
-    <string name="floating_panel_installed">Click to change settings.</string>
-    <string name="download_fp_googleplay">Download &amp; Install <a href="https://play.google.com/store/apps/details?id=com.roymam.android.nilsplus">NiLS Floating Panel</a> from Google Play</string>
-    <string name="enable_fp_tester_googleplay">Enable <a href="https://play.google.com/apps/testing/com.roymam.android.nilsplus">Tester Mode</a> on Google Play</string>
-    <string name="join_nils_community">Join <a href="https://plus.google.com/u/0/communities/115156552435983276604">NiLS Official Community</a> on Google+</string>
-    <string name="nils_fp_disabled">NiLS Floating Panel is disabled. NiLS will stop sending events to NiLS Floating Panel app.</string>
-    <string name="nils_fp_enabled">NiLS Floating Panel is enabled. NiLS will start sending events to NiLS Floating Panel app.</string>
-    <string name="try_extract_title">Try to extract title from event</string>
-    <string name="try_extract_title_summary">When multiple events is set to \"Show First\" or \"Show Last\" try to extract the event title from the event text (e.g instead of \"X new emails\")</string>
-    <string name="nils_service_is_not_running">NiLS Service is not running</string>
-    <string name="nils_service_enable_instructions">Click OK to go to Android settings, then find \"NiLS Service\" there and enable it.</string>
-    <string name="open_nils_to_enable_it">Please open NiLS app to enable it</string>
-    <string name="nilsfp_title">Floating Notifications Panel</string>
-    <string name="nilsfp_description">NiLS Floating Panel is an extension that creates a floating notifications panel over your lock screen</string>
-    <string name="main_features">Main Features:</string>
-    <string name="nilsfp_feature_1">Provides swiping gestures such as Swipe to dismiss</string>
-    <string name="nilsfp_feature_2">Highly customizable and supports beautiful 3rd-party themes</string>
-    <string name="nilsfp_feature_3">Runs on top of the lock screen without the need of lock screen widgets support</string>
-    <string name="nilsfp_feature_4">Works with almost any lock screen including WidgetLocker, GoLocker, Cover and all of the stock lock screens</string>
-    <string name="nilsfp_getit">Get it Now!</string>
-    <string name="persistent_notifications_error">There was a problem to load the persistent notifications\n please remove some persistent notifications and try again</string>
-    <string name="use_mono_icon">Use status bar icon</string>
-    <string name="use_mono_icon_summary">Always use status bar icon (monochrome) instead of the notification icon</string>
     <string name="open_android_settings">Open Android Settings</string>
     <string name="tutorial_step_1_title">Enable NiLS Service</string>
     <string name="whatsnew">What\'s new?</string>
@@ -436,6 +413,146 @@
     <string name="drawer_close">drawer close</string>
     <string name="sync">Sync</string>
     <string name="integration">Integration</string>
+
+    <string name="swipe_to_open">Swipe right to open</string>
+    <string name="swipe_to_open_summary">When enabled, swiping notification to the right will open the notification</string>
+    <string name="dont_hide">Always visible</string>
+    <string name="dont_hide_summary">Keep notifications list visible, even if you unlock the device.</string>
+
+    <!-- Appearance Settings -->
+    <string name="appearance_summary">Change appearance settings</string>
+    <string-array name="yalignment_entries">
+        <item>Top</item>
+        <item>Center</item>
+        <item>Bottom</item>
+    </string-array>
+    <string-array name="yalignment_values">
+        <item>top</item>
+        <item>center</item>
+        <item>bottom</item>
+    </string-array>
+    <string-array name="height_entries">
+        <item>1 Line</item>
+        <item>2 Lines</item>
+        <item>3 Lines</item>
+        <item>4 Lines</item>
+        <item>5 Lines</item>
+        <item>6 Lines</item>
+        <item>7 Lines</item>
+        <item>8 Lines</item>
+        <item>9 Lines</item>
+        <item>Unlimited</item>
+    </string-array>
+    <string-array name="height_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="font_size_entries">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="font_size_values" translatable="false">
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
+
+    <!-- About -->
+    <string name="about">About</string>
+    <string name="timeout">Timeout (seconds)</string>
+    <string name="timeout_summary">Set how long will the screen stay on when interacting with notifications list
+    </string>
+    <string name="click_to_open">Click to open</string>
+    <string name="click_to_open_summary">When enabled, clicking on a notification will open it. when
+        disabled, clicking on a notification will show a preview
+    </string>
+    <string name="unlock_on_open">Unlock on open</string>
+    <string name="unlock_on_open_summary">Unlocks device when notification is opened. (works only on
+        stock lock screen without security enabled)
+    </string>
+    <string name="interaction">Interaction</string>
+    <string name="general_settings_summary">Change interactions and other general preferences
+    </string>
+    <string name="beta_unlock_all_features">BETA - Unlock All Features</string>
+    <string name="beta_unlock_all_features_summary">Temporary unlock all features to allow beta testing</string>
+    <string name="unlock_all_features">Unlock All Features</string>
+    <string name="unlock_all_features_summary">Purchase NiLS Floating Panel to unlock all features permanently</string>
+    <string name="nils_is_displayed">NiLS Floating Panel is displayed</string>
+    <string name="click_to_hide_it">Click to hide it</string>
+
+    <!-- Backup / Restore Settings -->
+    <string name="default_theme">Default</string>
+    <string name="halo_mode">Use Halo if supported</string>
+    <string name="halo_mode_summary">Open notification in Halo window if supported by the rom (doesn\'t work with native lock screen)</string>
+    <string name="preview_title">Notification Title</string>
+    <string name="preview_text">Notification Description Line 1\nNotification Description Line 2\nThe next lines will be empty</string>
+    <string name="hide_on_click">Hide on outside tap</string>
+    <string name="hide_on_click_summary">Hide notifications list when tapping outside of the notifications list</string>
+    <string name="notification_panel_settings">Floating Panel Settings</string>
+    <string name="icon_size">Icon Size</string>
+    <string name="title_font_size">Primary Font Size</string>
+    <string name="title_font_size_summary">Notification title font size</string>
+    <string name="text_font_size">Secondary Font Size</string>
+    <string name="text_font_size_summary">Notification text font size</string>
+    <string name="primary_text_color">Primary Text Color</string>
+    <string name="primary_text_color_summary">Notification title color</string>
+    <string name="secondary_text_color">Secondary Text Color</string>
+    <string name="secondary_text_color_summary">Notification text color</string>
+    <string name="background_color">Background Color</string>
+    <string name="background_color_summary"><![CDATA[Notification background color & transparency]]></string>
+    <string name="icon_background_color">Icon Background Color</string>
+    <string name="icon_background_color_summary"><![CDATA[Notification icon background color & transparency]]></string>
+    <string name="vertical_alignment">Vertical Alignment</string>
+    <string name="enable_resize_mode">Enable Resize Mode</string>
+    <string name="enable_resize_mode_summary">When enabled, touch and hold notifications list on the lock screen to change size and position</string>
+    <string name="theme">Theme</string>
+    <string name="sizes">Sizes</string>
+    <string name="notification_size">Notification Size</string>
+    <string name="notification_size_summary">Number of displayed text lines</string>
+    <string name="single_line_summary"><![CDATA[Show title & text in the same line]]></string>
+    <string name="single_line">Single line</string>
+    <string name="upgrade_failed_message">Upgrade has failed. you won\'t be charged. Error message:</string>
+    <string name="preview_time">12:34</string>
+    <string name="show_time">Show time</string>
+    <string name="show_time_summary">Show the time of the notification</string>
+    <string name="fit_height">Fit height to content</string>
+    <string name="fit_height_summary">Fit notification height to the text content</string>
+    <string name="opensource_software_used">Open Source Software</string>
+            <string name="unlock_all_features_dialog"><![CDATA[Purchase NiLS Premium to unlock all features including:
+\n- 3rd Party Themes
+\n- Background Color and Transparency
+\n- Font & Icon sizes
+\n- Multiple lines
+\n- Swipe right to open
+\nand many more...
+\n
+\nClick Purchase to get it now!]]></string>
+    <string name="purchase">Purchase</string>
+    <string name="later">Maybe Later</string>
+    <string name="swipe_down_to_dismiss_all">Swipe down to dismiss all</string>
+    <string name="swipe_down_to_dismiss_all_summary">Swipe the notifications list down to dismiss all of the notifications at once</string>
+    <string name="dont_show_again">Don\'t Show Again</string>
+
+    <!-- Themes -->
+    <string-array name="themes_entries">
+        <item>Default Theme</item>
+        <item>Get More Themes...</item>
+    </string-array>
+
+    <string-array name="themes_values">
+        <item>default</item>
+        <item>more</item>
+    </string-array>
+
 
     <!-- Backup & Restore -->
     <string name="backup_location_title">Backup file location:</string>
@@ -493,4 +610,8 @@
     <string name="tutorial_6_title_1">That\'s All</string>
     <string name="tutorial_6_text_1"><![CDATA[Tap "Finish" to complete the tutorial, then tap on NiLS icon to get access to many options and customizations\n\nEnjoy the app!]]></string>
     <string name="tutorial_6_finish">Finish</string>
+
+    <!-- Other stuff -->
+    <string name="nils_service_is_not_running">NiLS Service is not running</string>
+    <string name="open_nils_to_enable_it">Open NiLS app to enable it</string>
 </resources>

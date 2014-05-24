@@ -26,7 +26,7 @@ import com.roymam.android.common.BitmapUtils;
 import com.roymam.android.common.ListPreferenceChangeListener;
 import com.roymam.android.notificationswidget.NotificationData;
 import com.roymam.android.notificationswidget.NotificationsService;
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 import com.roymam.android.nilsplus.ui.NiLSActivity;
 import com.roymam.android.nilsplus.ui.NotificationAdapter;
 import com.roymam.android.nilsplus.ui.theme.Theme;
@@ -155,18 +155,18 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
 
         // load current theme
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String currTheme = prefs.getString(SettingsActivity.THEME, SettingsActivity.DEFAULT_THEME);
+        String currTheme = prefs.getString(SettingsManager.THEME, SettingsManager.DEFAULT_THEME);
 
-        if (!currTheme.equals(SettingsActivity.DEFAULT_THEME))
+        if (!currTheme.equals(SettingsManager.DEFAULT_THEME))
             mTheme = ThemeManager.getInstance(getActivity()).loadTheme(currTheme);
         else
             mTheme = Theme.getDefault(getActivity());
 
         if (mTheme != null && mTheme.background != null)
-            ((PreferenceGroup) getPreferenceScreen().findPreference("colors_category")).removePreference(findPreference(SettingsActivity.MAIN_BG_COLOR));
+            ((PreferenceGroup) getPreferenceScreen().findPreference("colors_category")).removePreference(findPreference(SettingsManager.MAIN_BG_COLOR));
         if (mTheme == null ||
             (mTheme.background == null && mTheme.previewBG == null && mTheme.textBG == null && mTheme.previewTextBG == null))
-            ((PreferenceGroup) getPreferenceScreen().findPreference("colors_category")).removePreference(findPreference(SettingsActivity.MAIN_BG_OPACITY));
+            ((PreferenceGroup) getPreferenceScreen().findPreference("colors_category")).removePreference(findPreference(SettingsManager.MAIN_BG_OPACITY));
 
     }
 
@@ -177,7 +177,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
         // load theme list
         CharSequence[] entries = getResources().getStringArray(R.array.themes_entries);
         CharSequence[] values = getResources().getStringArray(R.array.themes_values);
-        String currTheme = prefs.getString(SettingsActivity.THEME, SettingsActivity.DEFAULT_THEME);
+        String currTheme = prefs.getString(SettingsManager.THEME, SettingsManager.DEFAULT_THEME);
 
         // load available themes as entries in this list
         List<ThemeInfo> themes = ThemeManager.getInstance(getActivity()).getAvailableThemes();
@@ -202,7 +202,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
             mThemes[i]=values[i-themes.size()];
         }
 
-        if (!prefs.getBoolean(SettingsActivity.UNLOCKED, false))
+        if (!prefs.getBoolean(SettingsManager.UNLOCKED, false))
             newEntries[i-1] = newEntries[i-1] + " (Premium)";
 
         ArrayAdapter<CharSequence> list = new ArrayAdapter<CharSequence> (getActivity(), R.layout.spinner_theme_select, android.R.id.text1, newEntries);
@@ -219,7 +219,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         TextView description = (TextView) mPreviewView.findViewById(R.id.notification_text);
-        if (prefs.getBoolean(SettingsActivity.FIT_HEIGHT_TO_CONTENT, SettingsActivity.DEFAULT_FIT_HEIGHT_TO_CONTENT))
+        if (prefs.getBoolean(SettingsManager.FIT_HEIGHT_TO_CONTENT, SettingsManager.DEFAULT_FIT_HEIGHT_TO_CONTENT))
             description.setMaxLines(maxLines);
         else
             description.setLines(maxLines);
@@ -262,27 +262,27 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
             listener.onPreferenceChange(preference, newValue);
         }
 
-        if (preference.getKey().equals(SettingsActivity.MAIN_BG_COLOR) ||
-            preference.getKey().equals(SettingsActivity.ICON_BG_COLOR) ||
-            preference.getKey().equals(SettingsActivity.PRIMARY_TEXT_COLOR)  ||
-            preference.getKey().equals(SettingsActivity.SECONDARY_TEXT_COLOR))
+        if (preference.getKey().equals(SettingsManager.MAIN_BG_COLOR) ||
+            preference.getKey().equals(SettingsManager.ICON_BG_COLOR) ||
+            preference.getKey().equals(SettingsManager.PRIMARY_TEXT_COLOR)  ||
+            preference.getKey().equals(SettingsManager.SECONDARY_TEXT_COLOR))
         {
             //reload = true;
 
             // apply background color also on alternate colors
-            if (preference.getKey().equals(SettingsActivity.MAIN_BG_COLOR))
-                prefs.edit().putInt(SettingsActivity.ALT_MAIN_BG_COLOR, (Integer) newValue).commit();
-            if (preference.getKey().equals(SettingsActivity.ICON_BG_COLOR))
-                prefs.edit().putInt(SettingsActivity.ALT_ICON_BG_COLOR, (Integer) newValue).commit();
+            if (preference.getKey().equals(SettingsManager.MAIN_BG_COLOR))
+                prefs.edit().putInt(SettingsManager.ALT_MAIN_BG_COLOR, (Integer) newValue).commit();
+            if (preference.getKey().equals(SettingsManager.ICON_BG_COLOR))
+                prefs.edit().putInt(SettingsManager.ALT_ICON_BG_COLOR, (Integer) newValue).commit();
         }
-        else if (preference.getKey().equals(SettingsActivity.MAX_TEXT_LINES))
+        else if (preference.getKey().equals(SettingsManager.MAX_TEXT_LINES))
         {
             // set max lines for description field
             int maxLines = Integer.parseInt((String) newValue);
             setMaxLines(maxLines);
             return true;
         }
-        else if (preference.getKey().equals(SettingsActivity.VERTICAL_ALIGNMENT))
+        else if (preference.getKey().equals(SettingsManager.VERTICAL_ALIGNMENT))
         {
             // recreate the view
             Context context = getActivity().getApplicationContext();
@@ -299,22 +299,22 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
 
     public void setTheme(String newTheme)
     {
-        if (!newTheme.equals(SettingsActivity.DEFAULT_THEME))
+        if (!newTheme.equals(SettingsManager.DEFAULT_THEME))
             mTheme = ThemeManager.getInstance(getActivity()).loadTheme(newTheme);
         else
             mTheme = Theme.getDefault(getActivity());
 
         // update colors from theme
-        getPreferenceScreen().getEditor().putInt(SettingsActivity.PRIMARY_TEXT_COLOR, mTheme.titleColor).
-                putInt(SettingsActivity.SECONDARY_TEXT_COLOR, mTheme.textColor).
-                putInt(SettingsActivity.MAIN_BG_COLOR, mTheme.bgColor).
-                putInt(SettingsActivity.ICON_BG_COLOR, mTheme.iconBGColor).
-                putInt(SettingsActivity.ALT_MAIN_BG_COLOR, mTheme.altBgColor).
-                putInt(SettingsActivity.ALT_ICON_BG_COLOR, mTheme.altIconBGColor).
-                putInt(SettingsActivity.ICON_SIZE, BitmapUtils.pxToDp((int) mTheme.iconSize)).
-                putInt(SettingsActivity.TITLE_FONT_SIZE, BitmapUtils.pxToSp((int) mTheme.titleFontSize)).
-                putInt(SettingsActivity.TEXT_FONT_SIZE, BitmapUtils.pxToSp((int) mTheme.textFontSize)).
-                                         putString(SettingsActivity.THEME, newTheme).commit();
+        getPreferenceScreen().getEditor().putInt(SettingsManager.PRIMARY_TEXT_COLOR, mTheme.titleColor).
+                putInt(SettingsManager.SECONDARY_TEXT_COLOR, mTheme.textColor).
+                putInt(SettingsManager.MAIN_BG_COLOR, mTheme.bgColor).
+                putInt(SettingsManager.ICON_BG_COLOR, mTheme.iconBGColor).
+                putInt(SettingsManager.ALT_MAIN_BG_COLOR, mTheme.altBgColor).
+                putInt(SettingsManager.ALT_ICON_BG_COLOR, mTheme.altIconBGColor).
+                putInt(SettingsManager.ICON_SIZE, BitmapUtils.pxToDp((int) mTheme.iconSize)).
+                putInt(SettingsManager.TITLE_FONT_SIZE, BitmapUtils.pxToSp((int) mTheme.titleFontSize)).
+                putInt(SettingsManager.TEXT_FONT_SIZE, BitmapUtils.pxToSp((int) mTheme.textFontSize)).
+                                         putString(SettingsManager.THEME, newTheme).commit();
 
         updatePreview(true, true);
         //loadPreferences();
@@ -343,7 +343,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
             {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                if (prefs.getBoolean(SettingsActivity.UNLOCKED, false))
+                if (prefs.getBoolean(SettingsManager.UNLOCKED, false))
                 {
                     setTheme(newTheme);
                 }

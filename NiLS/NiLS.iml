@@ -25,6 +25,15 @@
     <orderEntry type="module" module-name="ColorPickerPreference" />
     <orderEntry type="module" module-name="ViewPagerIndicator" />
     <orderEntry type="module" module-name="ImageViewPlus" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/in-app-purchasing-1.0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

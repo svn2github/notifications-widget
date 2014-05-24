@@ -11,9 +11,6 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -141,7 +138,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                     // auto clear notifications when app is opened (Android < 4.3 only)
                     if (!newApi) {
                         if (!packageName.equals("com.android.systemui") &&
-                                SettingsActivity.shouldClearWhenAppIsOpened(getApplicationContext())) {
+                                SettingsManager.shouldClearWhenAppIsOpened(getApplicationContext())) {
                             NotificationsProvider ns = NotificationsService.getSharedInstance();
                             if (ns != null)
                                 ns.clearNotificationsForApps(new String[]{packageName.toString()});
@@ -153,7 +150,7 @@ public class NiLSAccessibilityService extends AccessibilityService
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 // auto clear notifications when cleared from notifications bar (old api, Android < 4.3)
                 if (accessibilityEvent.getPackageName().equals("com.android.systemui") &&
-                    SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()) &&
+                    SettingsManager.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()) &&
                         !newApi)
                 {
                     //Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
@@ -218,7 +215,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                         !newApi)
                 {
                     // clear notifications button clicked
-                    if (prefs != null && SettingsActivity.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()))
+                    if (prefs != null && SettingsManager.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()))
                     {
                         if (accessibilityEvent.getClassName() != null &&
                                 accessibilityEvent.getClassName().equals(android.widget.ImageView.class.getName()) &&
@@ -244,7 +241,7 @@ public class NiLSAccessibilityService extends AccessibilityService
         {
             Log.d("NiLS+", "TYPE_WINDOW_STATE_CHANGED " + packageName);
 
-            boolean dontHide = prefs.getBoolean(SettingsActivity.DONT_HIDE, SettingsActivity.DEFAULT_DONT_HIDE);
+            boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
             boolean isPackageInstaller = packageName.equals("com.android.packageinstaller");
 
             // request notifications list to hide/show notifications list

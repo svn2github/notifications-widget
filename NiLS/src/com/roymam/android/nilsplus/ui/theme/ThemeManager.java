@@ -11,7 +11,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -206,9 +206,9 @@ public class ThemeManager
     public Theme getCurrentTheme()
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String currTheme = prefs.getString(SettingsActivity.THEME, SettingsActivity.DEFAULT_THEME);
+        String currTheme = prefs.getString(SettingsManager.THEME, SettingsManager.DEFAULT_THEME);
 
-        if (currTheme.equals(SettingsActivity.DEFAULT_THEME)) return Theme.getDefault(mContext);
+        if (currTheme.equals(SettingsManager.DEFAULT_THEME)) return Theme.getDefault(mContext);
 
         if (mCurrentTheme == null || !mCurrentTheme.packageName.equals(currTheme))
         {

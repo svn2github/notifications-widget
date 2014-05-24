@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.roymam.android.notificationswidget.SettingsActivity;
+import com.roymam.android.notificationswidget.SettingsManager;
 
 public class SysUtils
 {
@@ -36,23 +36,35 @@ public class SysUtils
     private boolean shouldChangeDeviceTimeout()
     {
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String timeoutStr = sharedPref.getString(SettingsActivity.TURNSCREENOFF, SettingsActivity.TURNSCREENOFF_DEFAULT);
-        return (!timeoutStr.equals("") && !timeoutStr.equals(SettingsActivity.TURNSCREENOFF_DEFAULT));
+        String timeoutStr = sharedPref.getString(SettingsManager.TURNSCREENOFF, SettingsManager.TURNSCREENOFF_DEFAULT);
+        return (!timeoutStr.equals("") && !timeoutStr.equals(SettingsManager.TURNSCREENOFF_DEFAULT));
     }
 
     public void turnScreenOn(boolean force)
+    {
+        turnScreenOn(force, false);
+    }
+
+    public void turnScreenOn(boolean force, boolean defaultTimeout)
     {
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
         Log.d("NiLS", "turnScreenOn requested, force:" + force);
         // read timeout preference - default - device settings
-        String timeoutStr = sharedPref.getString(SettingsActivity.TURNSCREENOFF, SettingsActivity.TURNSCREENOFF_DEFAULT);
-        if (timeoutStr.equals("")) timeoutStr = SettingsActivity.TURNSCREENOFF_DEFAULT;
-
         int newTimeout = 0;
-        if (!timeoutStr.equals(SettingsActivity.TURNSCREENOFF_DEFAULT))
-            newTimeout = Integer.parseInt(timeoutStr) * 1000;
+        if (!defaultTimeout)
+        {
+            String timeoutStr = sharedPref.getString(SettingsManager.TURNSCREENOFF, SettingsManager.TURNSCREENOFF_DEFAULT);
+            if (timeoutStr.equals("")) timeoutStr = SettingsManager.TURNSCREENOFF_DEFAULT;
+            if (!timeoutStr.equals(SettingsManager.TURNSCREENOFF_DEFAULT))
+                newTimeout = Integer.parseInt(timeoutStr) * 1000;
+        }
+        else
+        {
+            // use device default timeout if requested
+            newTimeout = sharedPref.getInt("device_timeout", 0);
+        }
 
         // turn the screen on only if it was off or acquired by previous wakelock
         if (!pm.isScreenOn() || mWakeLock != null && mWakeLock.isHeld() || force)
@@ -133,11 +145,11 @@ public class SysUtils
         {
             int currTimeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, -1);
             // read timeout preference - default - device settings
-            String timeoutStr = prefs.getString(SettingsActivity.TURNSCREENOFF, SettingsActivity.TURNSCREENOFF_DEFAULT);
-            if (timeoutStr.equals("")) timeoutStr = SettingsActivity.TURNSCREENOFF_DEFAULT;
+            String timeoutStr = prefs.getString(SettingsManager.TURNSCREENOFF, SettingsManager.TURNSCREENOFF_DEFAULT);
+            if (timeoutStr.equals("")) timeoutStr = SettingsManager.TURNSCREENOFF_DEFAULT;
 
             int newTimeout = 0;
-            if (!timeoutStr.equals(SettingsActivity.TURNSCREENOFF_DEFAULT))
+            if (!timeoutStr.equals(SettingsManager.TURNSCREENOFF_DEFAULT))
                 newTimeout = Integer.parseInt(timeoutStr) * 1000;
 
             if (currTimeout == newTimeout)

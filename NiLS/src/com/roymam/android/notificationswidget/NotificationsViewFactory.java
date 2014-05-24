@@ -84,7 +84,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.listitem_notification);	
 		NotificationsProvider s = NotificationsService.getSharedInstance();
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctxt);
-		String widgetMode = preferences.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+		String widgetMode = preferences.getString(SettingsManager.WIDGET_MODE + "." + widgetId, SettingsManager.EXPANDED_WIDGET_MODE);
 
 		if (s != null) 
 		{
@@ -95,7 +95,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		    	NotificationData n = notifications.get(position);
 				
 		    	// set on click intent 
-		    	if (preferences.getBoolean(widgetMode + "." + SettingsActivity.NOTIFICATION_IS_CLICKABLE, true))
+		    	if (preferences.getBoolean(widgetMode + "." + SettingsManager.NOTIFICATION_IS_CLICKABLE, true))
 		    	{
 					Intent i=new Intent();
 					Bundle extras=new Bundle();			
@@ -107,7 +107,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				createActionBar(row,position,n);
 				
 				// set notification style
-				String notStyle = preferences.getString(widgetMode + "." + SettingsActivity.NOTIFICATION_STYLE, widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?"compact":"normal");
+				String notStyle = preferences.getString(widgetMode + "." + SettingsManager.NOTIFICATION_STYLE, widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?"compact":"normal");
 				RemoteViews styleView;
 				
 				if (notStyle.equals("large"))
@@ -124,18 +124,18 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				}
 
 				// fill notification with text
-				int maxLines = preferences.getInt(widgetMode + "." + SettingsActivity.MAX_LINES, 1);
+				int maxLines = preferences.getInt(widgetMode + "." + SettingsManager.MAX_LINES, 1);
 
 				fillNotificationWithText(styleView, n, notStyle, maxLines);
 
-				int bgColor = preferences.getInt(widgetMode + "." +SettingsActivity.NOTIFICATION_BG_COLOR, Color.BLACK);			
-				int defaultOpacity = widgetMode.equals(SettingsActivity.COLLAPSED_WIDGET_MODE)?0:50;
-				int opacity = preferences.getInt(widgetMode + "." + SettingsActivity.NOTIFICATION_BG_OPACITY, defaultOpacity);
+				int bgColor = preferences.getInt(widgetMode + "." + SettingsManager.NOTIFICATION_BG_COLOR, Color.BLACK);
+				int defaultOpacity = widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?0:50;
+				int opacity = preferences.getInt(widgetMode + "." + SettingsManager.NOTIFICATION_BG_OPACITY, defaultOpacity);
 				row.setInt(R.id.notificationBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, Color.red(bgColor), Color.green(bgColor), Color.blue(bgColor)));
 
                 if (!notStyle.equals("compact"))
                 {
-                    int iconBgColor = preferences.getInt(widgetMode + "." +SettingsActivity.NOTIFICATION_ICON_BG_COLOR, Color.argb(255, 29, 55, 65));
+                    int iconBgColor = preferences.getInt(widgetMode + "." + SettingsManager.NOTIFICATION_ICON_BG_COLOR, Color.argb(255, 29, 55, 65));
                     styleView.setInt(R.id.notificationIconBG, "setBackgroundColor", Color.argb(opacity * 255 / 100, Color.red(iconBgColor), Color.green(iconBgColor), Color.blue(iconBgColor)));
                 }
 
@@ -158,7 +158,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 				row.addView(R.id.notificationContainer, styleView);
 								
 				// set action bar intent
-				if (preferences.getBoolean(widgetMode + "." +SettingsActivity.NOTIFICATION_ICON_IS_CLICKABLE, true))
+				if (preferences.getBoolean(widgetMode + "." + SettingsManager.NOTIFICATION_ICON_IS_CLICKABLE, true))
 				{
 					styleView.setViewVisibility(R.id.notificationSpinner, View.VISIBLE);
 					Intent editModeIntent = new Intent(NotificationsWidgetProvider.PERFORM_ACTION);					
@@ -193,10 +193,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	private void fillNotificationWithText(RemoteViews n, NotificationData nd, String type, int maxLines) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
-		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
-		int titleColor = prefs.getInt(widgetMode + "." +SettingsActivity.TITLE_COLOR, Color.WHITE);
-		int textColor = prefs.getInt(widgetMode + "." +SettingsActivity.TEXT_COLOR, Color.LTGRAY);
-		int contentColor = prefs.getInt(widgetMode + "." +SettingsActivity.CONTENT_COLOR, Color.DKGRAY);
+		String widgetMode = prefs.getString(SettingsManager.WIDGET_MODE + "." + widgetId, SettingsManager.EXPANDED_WIDGET_MODE);
+		int titleColor = prefs.getInt(widgetMode + "." + SettingsManager.TITLE_COLOR, Color.WHITE);
+		int textColor = prefs.getInt(widgetMode + "." + SettingsManager.TEXT_COLOR, Color.LTGRAY);
+		int contentColor = prefs.getInt(widgetMode + "." + SettingsManager.CONTENT_COLOR, Color.DKGRAY);
 
 		n.setImageViewBitmap(R.id.notificationIcon, nd.icon);
 		n.setImageViewBitmap(R.id.appIcon, nd.appicon);
@@ -277,10 +277,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 	private void createActionBar(RemoteViews row, int position, NotificationData n) 
 	{
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
-		String widgetMode = prefs.getString(SettingsActivity.WIDGET_MODE + "." + widgetId, SettingsActivity.EXPANDED_WIDGET_MODE);
+		String widgetMode = prefs.getString(SettingsManager.WIDGET_MODE + "." + widgetId, SettingsManager.EXPANDED_WIDGET_MODE);
 
 		row.removeAllViews(R.id.actionbarContainer);
-		boolean alwaysShowActionBar = prefs.getBoolean(widgetMode + "." + SettingsActivity.SHOW_ACTIONBAR, false);
+		boolean alwaysShowActionBar = prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_ACTIONBAR, false);
 
         if (n.selected ||
 			alwaysShowActionBar && n.actions != null && n.actions.length > 0)

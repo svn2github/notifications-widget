@@ -11,7 +11,7 @@
                 android:layout_height="16dp"
                 android:contentDescription="@string/app_icon"
                 android:scaleType="fitCenter"
-                android:src="@drawable/appicon" />
+                android:src="@drawable/ic_nils_icon_mono" />
 
             <TextView
                 android:id="@+id/notificationText"

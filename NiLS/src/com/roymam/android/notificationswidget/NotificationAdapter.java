@@ -56,18 +56,18 @@ public class NotificationAdapter implements NotificationEventListener
 
     private void handleWakeupMode(final String packageName, Boolean deviceCovered)
     {
-        String wakeupMode = SettingsActivity.getWakeupMode(context, packageName);
+        String wakeupMode = SettingsManager.getWakeupMode(context, packageName);
 
         // set covered status (if we got it)
         mDeviceCovered = deviceCovered;
 
-        if (wakeupMode.equals(SettingsActivity.WAKEUP_ALWAYS))
+        if (wakeupMode.equals(SettingsManager.WAKEUP_ALWAYS))
             turnScreenOn();
-        else if (!wakeupMode.equals(SettingsActivity.WAKEUP_NEVER))
+        else if (!wakeupMode.equals(SettingsManager.WAKEUP_NEVER))
         {
             registerProximitySensor(packageName);
             if (mHandler == null) mHandler = new Handler();
-            if (wakeupMode.equals(SettingsActivity.WAKEUP_NOT_COVERED))
+            if (wakeupMode.equals(SettingsManager.WAKEUP_NOT_COVERED))
             {
                 // if wakeup mode is when not covered, stop proximity monitoring after few seconds
                 mHandler.postDelayed(new Runnable()
@@ -259,9 +259,9 @@ public class NotificationAdapter implements NotificationEventListener
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Log.d("NiLS", "registerProximitySensor");
-        String wakeupMode = SettingsActivity.getWakeupMode(context, packageName);
+        String wakeupMode = SettingsManager.getWakeupMode(context, packageName);
 
-        if (wakeupMode.equals(SettingsActivity.WAKEUP_NOT_COVERED) || wakeupMode.equals(SettingsActivity.WAKEUP_UNCOVERED))
+        if (wakeupMode.equals(SettingsManager.WAKEUP_NOT_COVERED) || wakeupMode.equals(SettingsManager.WAKEUP_UNCOVERED))
         {
             final SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
             final Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
