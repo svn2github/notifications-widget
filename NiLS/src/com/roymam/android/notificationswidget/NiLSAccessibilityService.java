@@ -239,8 +239,6 @@ public class NiLSAccessibilityService extends AccessibilityService
 
         if (packageName != null && mBound)
         {
-            Log.d("NiLS+", "TYPE_WINDOW_STATE_CHANGED " + packageName);
-
             boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
             boolean isPackageInstaller = packageName.equals("com.android.packageinstaller");
 
@@ -250,9 +248,11 @@ public class NiLSAccessibilityService extends AccessibilityService
             {
                 mService.hide(true);
             }
-            else if (!dontHide && NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
+            else if (NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
             {
-                mService.hide(false);
+                sendBroadcast(new Intent(NotificationsService.DEVICE_UNLOCKED));
+                if (!dontHide)
+                    mService.hide(false);
             }
             else
             {
@@ -265,9 +265,9 @@ public class NiLSAccessibilityService extends AccessibilityService
     {
         CharSequence packageName = accessibilityEvent.getPackageName();
 
-        if (packageName != null)
+        if (packageName != null && mBound)
         {
-            //Log.d("NiLS+","TYPE_WINDOW_CONTENT_CHANGED " + packageName.toString());
+            Log.d("NiLS","TYPE_WINDOW_CONTENT_CHANGED " + packageName.toString());
             // hide FP when WidgetLocker side menu appears
             if (packageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&
                     accessibilityEvent.getSource() != null &&
@@ -275,6 +275,7 @@ public class NiLSAccessibilityService extends AccessibilityService
             {
                 Rect rect = new Rect();
                 accessibilityEvent.getSource().getBoundsInScreen(rect);
+                Log.d("NiLS", "RECT.LEFT:"+rect.left);
                 if (rect.left >= -BitmapUtils.dpToPx(60))
                     mService.hide(false);
                 else mService.show();

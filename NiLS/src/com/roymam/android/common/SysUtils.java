@@ -52,31 +52,29 @@ public class SysUtils
 
         Log.d("NiLS", "turnScreenOn requested, force:" + force);
         // read timeout preference - default - device settings
-        int newTimeout = 0;
+        int newTimeout = 5000;
+        String timeoutStr = sharedPref.getString(SettingsManager.TURNSCREENOFF, SettingsManager.TURNSCREENOFF_DEFAULT);
+        if (timeoutStr.equals("")) timeoutStr = SettingsManager.TURNSCREENOFF_DEFAULT;
+        boolean deviceDefault = (timeoutStr.equals(SettingsManager.TURNSCREENOFF_DEFAULT));
+
         if (!defaultTimeout)
         {
-            String timeoutStr = sharedPref.getString(SettingsManager.TURNSCREENOFF, SettingsManager.TURNSCREENOFF_DEFAULT);
-            if (timeoutStr.equals("")) timeoutStr = SettingsManager.TURNSCREENOFF_DEFAULT;
-            if (!timeoutStr.equals(SettingsManager.TURNSCREENOFF_DEFAULT))
+            if (!deviceDefault)
                 newTimeout = Integer.parseInt(timeoutStr) * 1000;
         }
         else
         {
-            // use device default timeout if requested
-            newTimeout = sharedPref.getInt("device_timeout", 0);
+            // if default timeout requested and NiLS is configured to keep default - use device settings
+            if (deviceDefault)
+                newTimeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, newTimeout);
+            else
+                // if NiLS changed device default, use the stored value
+                newTimeout = sharedPref.getInt("device_timeout", newTimeout);
         }
 
         // turn the screen on only if it was off or acquired by previous wakelock
         if (!pm.isScreenOn() || mWakeLock != null && mWakeLock.isHeld() || force)
         {
-            // set device timeout to the desired timeout
-            storeDeviceTimeout();
-            if (shouldChangeDeviceTimeout())
-            {
-                Log.d("NiLS", "setting new timeout:" + newTimeout);
-                Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, newTimeout);
-            }
-
             // create the release wake lock runnable
             if (mReleaseWakelock == null) {
                 mReleaseWakelock = new Runnable() {
@@ -87,9 +85,6 @@ public class SysUtils
                             Log.d("NiLS", "releasing wake lock");
                             mWakeLock.release();
                         }
-
-                        restoreDeviceTimeout();
-                        resetDeviceTimeout();
                     }
                 };
             }
@@ -133,6 +128,26 @@ public class SysUtils
             Log.d("NiLS", "storing device timeout:" + deviceTimeout);
             prefs.edit().putInt("device_timeout", deviceTimeout).commit();
         }
+        else
+        {
+            Log.d("NiLS", "device timeout already stored (" + deviceTimeout + ")");
+        }
+    }
+
+    public void setDeviceTimeout()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String timeoutStr = prefs.getString(SettingsManager.TURNSCREENOFF, SettingsManager.TURNSCREENOFF_DEFAULT);
+        if (timeoutStr.equals("")) timeoutStr = SettingsManager.TURNSCREENOFF_DEFAULT;
+        boolean deviceDefault = (timeoutStr.equals(SettingsManager.TURNSCREENOFF_DEFAULT));
+
+        if (!deviceDefault)
+        {
+            int newTimeout = Integer.parseInt(timeoutStr) * 1000;
+            Log.d("NiLS", "changing device timeout to " + newTimeout);
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, newTimeout);
+        }
     }
 
     public void restoreDeviceTimeout()
@@ -158,6 +173,7 @@ public class SysUtils
                 {
                     Log.d("NiLS", "restoring device timeout:" + deviceTimeout);
                     Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, deviceTimeout);
+                    resetDeviceTimeout();
                 }
             }
             else

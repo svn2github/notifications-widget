@@ -75,6 +75,8 @@ public class WhatsNewActivity extends Activity implements ViewPager.OnPageChange
             }
         }
 
+        if (fragments.size() == 0) finishWhatsNew();
+
         setContentView(R.layout.tutorial_layout);
         mViewPager = (LimitedViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new WizardPageAdapter(getFragmentManager()));
