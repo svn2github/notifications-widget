@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -134,7 +135,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                 if (accessibilityEvent.getPackageName() != null)
                 {
                     String packageName = accessibilityEvent.getPackageName().toString();
-                    Log.d("NiLS", "TYPE_WINDOW_STATE_CHANGED " + packageName);
+                    Log.d("NiLS", "window state has been changed:" + packageName);
                     // auto clear notifications when app is opened (Android < 4.3 only)
                     if (!newApi) {
                         if (!packageName.equals("com.android.systemui") &&
@@ -250,13 +251,12 @@ public class NiLSAccessibilityService extends AccessibilityService
             }
             else if (NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
             {
-                sendBroadcast(new Intent(NotificationsService.DEVICE_UNLOCKED));
                 if (!dontHide)
                     mService.hide(false);
             }
             else
             {
-                mService.show();
+                mService.show(false);
             }
         }
     }
@@ -267,7 +267,7 @@ public class NiLSAccessibilityService extends AccessibilityService
 
         if (packageName != null && mBound)
         {
-            Log.d("NiLS","TYPE_WINDOW_CONTENT_CHANGED " + packageName.toString());
+            Log.d("NiLS","window content has been changed:" + packageName.toString());
             // hide FP when WidgetLocker side menu appears
             if (packageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&
                     accessibilityEvent.getSource() != null &&
@@ -277,8 +277,13 @@ public class NiLSAccessibilityService extends AccessibilityService
                 accessibilityEvent.getSource().getBoundsInScreen(rect);
                 Log.d("NiLS", "RECT.LEFT:"+rect.left);
                 if (rect.left >= -BitmapUtils.dpToPx(60))
+                {
                     mService.hide(false);
-                else mService.show();
+                }
+                else
+                {
+                    mService.show(false);
+                }
             }
             // hide NiLS when status bar is displayed
             else if (packageName.equals("com.android.systemui"))
@@ -291,7 +296,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                     !NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
             {
                 mHiddenBecauseOfSystemUI = false;
-                mService.show();
+                mService.show(false);
             }
         }
     }

@@ -104,9 +104,6 @@ public class SettingsManager
     public static final String TURNSCREENOFF = "turnscreenoff";
     public static final String TURNSCREENOFF_DEFAULT = "default";
 
-    //public static final String TURNSCREENON_TIMEOUT = "turnscreenon_timeout";
-    //public static final int DEFAULT_TURNSCREENON_TIMEOUT = 10;
-
     // notification mode
     public static final String NOTIFICATION_MODE = "notification_mode";
     public static final String MODE_GROUPED = "grouped";
@@ -127,6 +124,10 @@ public class SettingsManager
     public static final String WHEN_APP_IS_OPENED ="when_app_is_opened";
     public static final String WHEN_NOTIFICATION_IS_OPENED = "when_notification_is_opened";
     public static final String WHEN_DEVICE_IS_UNLOCKED = "when_device_unlocked";
+
+    // auto detect lock screen
+    public static final String  AUTO_DETECT_LOCKSCREEN_APP="auto_detect_lock_screen_app";
+    public static final boolean AUTO_DETECT_LOCKSCREEN_APP_DEFAULT=true;
 
     // other settings
     public static final String SYNC_BACK = "sync_back";
@@ -227,7 +228,7 @@ public class SettingsManager
     public static final boolean DEFAULT_FIT_HEIGHT_TO_CONTENT = true;
     public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
     public static final int DEFAULT_MAIN_BG_OPACITY = 100;
-    public static final String BLACKLIST_PACKAGENAMES = "com.android.dialer|com.klinker.android.evolve_sms|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
+    public static final String BLACKLIST_PACKAGENAMES = "com.android.dialer|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
     public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
 
     // privacy options
@@ -494,8 +495,33 @@ public class SettingsManager
             iconPackPref.setOnPreferenceChangeListener(listener);
             iconPackPref.setEntries(ipEntries);
             iconPackPref.setEntryValues(ipValues);
+
+            // auto lock screen detection
+            CheckBoxPreference autoDetectLockScreenAppPref = (CheckBoxPreference) findPreference(AUTO_DETECT_LOCKSCREEN_APP);
+            String currentLockScreenApp = getCurrentLockScreenAppName();
+            String currentLockScreenAppString = getResources().getString(R.string.current_lock_screen_app, currentLockScreenApp);
+            autoDetectLockScreenAppPref.setSummary(currentLockScreenAppString);
         }
-	}
+
+        private String getCurrentLockScreenAppName()
+        {
+            String currentLSApp = getString(R.string.stock_lock_screen);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String currentLSpackagename = prefs.getString(LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
+
+            if (!currentLSpackagename.equals(STOCK_LOCKSCREEN_PACKAGENAME))
+            try {
+                PackageManager pm = getActivity().getPackageManager();
+                ApplicationInfo ai = pm.getApplicationInfo(currentLSpackagename, 0);
+                currentLSApp = pm.getApplicationLabel(ai).toString();
+            } catch (NameNotFoundException e)
+            {
+                currentLSApp = "Unknown";
+            }
+
+            return currentLSApp;
+        }
+    }
 
     public static class PrefsContactFragment extends CardPreferenceFragment
 	{

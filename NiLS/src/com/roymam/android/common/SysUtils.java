@@ -50,7 +50,6 @@ public class SysUtils
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
-        Log.d("NiLS", "turnScreenOn requested, force:" + force);
         // read timeout preference - default - device settings
         int newTimeout = 5000;
         String timeoutStr = sharedPref.getString(SettingsManager.TURNSCREENOFF, SettingsManager.TURNSCREENOFF_DEFAULT);
@@ -101,13 +100,10 @@ public class SysUtils
             // release wake lock on timeout ends
             if (mReleaseWakelock != null && mPendingCallback)
             {
-                Log.d("NiLS", "pending callback found, remove it");
-
                 // release previously callback
                 handler.removeCallbacks(mReleaseWakelock);
             }
 
-            Log.d("NiLS", "posting delayed callback within " + newTimeout);
             handler.postDelayed(mReleaseWakelock, newTimeout);
             mPendingCallback = true;
         }
@@ -117,7 +113,7 @@ public class SysUtils
         }
     }
 
-    public void storeDeviceTimeout()
+    private void storeDeviceTimeout()
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int deviceTimeout = prefs.getInt("device_timeout", -1);
@@ -144,6 +140,10 @@ public class SysUtils
 
         if (!deviceDefault)
         {
+            // store current device timeout
+            storeDeviceTimeout();
+
+            // set the new (shorter) one
             int newTimeout = Integer.parseInt(timeoutStr) * 1000;
             Log.d("NiLS", "changing device timeout to " + newTimeout);
             Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, newTimeout);
@@ -183,7 +183,7 @@ public class SysUtils
         }
         else
         {
-            Log.d("NiLS", "I don't know what the timeout was...");
+            Log.d("NiLS", "restore device timeout called but device timeout wasn't stored. ignoring.");
         }
     }
 

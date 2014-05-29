@@ -13,15 +13,6 @@
             android:defaultValue="default"
             android:entryValues="@array/turn_off_values"
             android:entries="@array/turn_off_entries"/>
-
-<!--        <EditTextPreference
-                android:title="@string/screenon_timeout"
-                android:key="turnscreenon_timeout"
-                android:enabled="true"
-                android:defaultValue="10"
-                android:inputType="number"
-                android:summary="@string/screenon_timeout_summary"
-            />-->
     </PreferenceCategory>
 
     <PreferenceCategory android:key="notifications" android:title="@string/notifications">
@@ -60,7 +51,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:key="sync" android:title="@string/sync">
-
         <MultiSelectListPreference android:key="auto_clear"
             android:title="Auto clear notifications"
             android:entries="@array/auto_clear_entries"
@@ -79,5 +69,14 @@
             android:enabled="true"
             android:defaultValue="true"
             android:summary="@string/collectonunlock_summary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:key="advanced" android:title="@string/advanced">
+        <CheckBoxPreference
+            android:key="auto_detect_lock_screen_app"
+            android:title="@string/auto_detect_lock_screen"
+            android:summary="@string/current_lock_screen_app"
+            android:defaultValue="true"
+            />
     </PreferenceCategory>
 </PreferenceScreen>

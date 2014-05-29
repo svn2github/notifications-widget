@@ -985,7 +985,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
                 String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
-                Log.d("NiLS", "current lock screen app:"  + lockScreenApp);
 
                 if(intent.getAction().equals(Intent.ACTION_USER_PRESENT) && lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME) ||
                         intent.getAction().equals(WIDGET_LOCKER_UNLOCKED) ||
@@ -995,14 +994,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     // restore original device timeout
                     mSysUtils.restoreDeviceTimeout();
-
-                    boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
-
-                    // hide notifications list
-                    if (!dontHide)
-                    {
-                        hide(false);
-                    }
+                    hide(false);
 
                     // clear all notifications if needed
                     if (SettingsManager.shouldClearOnUnlock(context))
@@ -1016,11 +1008,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
                 {
                     // store current device timeout settings
-                    mSysUtils.storeDeviceTimeout();
-
-                    // show notifications when the screen is turned off
-                    NotificationsService.this.viewManager.refreshLayout();
-                    show();
+                    mSysUtils.setDeviceTimeout();
 
                     AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
                     if (checkLockScreenPendingIntent != null)
@@ -1029,52 +1017,51 @@ public class NotificationsService extends Service implements NotificationsProvid
                         am.cancel(checkLockScreenPendingIntent);
                         checkLockScreenPendingIntent = null;
                     }
-
                 }
                 else if (intent.getAction().equals(INCOMING_CALL))
                 {
                     hide(false);
                 }
-                else if (intent.getAction().equals(CHECK_LSAPP) || intent.getAction().equals(Intent.ACTION_SCREEN_ON))
-                {
-                    boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
-                    if (!dontHide)
-                    {
-                        boolean autoDetect = false;
-                        boolean accessibilityServiceIsActive = NiLSAccessibilityService.isServiceRunning(context);
+                else if (intent.getAction().equals(CHECK_LSAPP) || intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    boolean autoDetect = false;
+                    boolean accessibilityServiceIsActive = NiLSAccessibilityService.isServiceRunning(context);
 
-                        if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
-                        {
-                            mSysUtils.setDeviceTimeout();
-                            Log.d("NiLS", "screen is on, auto detecting lock screen app");
-                            detectLockScreenApp(context);
+                    if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                        Log.d("NiLS", "ACTION_SCREEN_ON - auto detecting lock screen app");
+                        detectLockScreenApp(context);
 
-                            // if the accessibility service is not running start monitoring the active app
-                            if (!accessibilityServiceIsActive)
-                            {
-                                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                                checkLockScreenPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(CHECK_LSAPP), PendingIntent.FLAG_UPDATE_CURRENT);
-                                am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500, 500, checkLockScreenPendingIntent);
-                            }
-
-                            // make sure screen will stay on as needed seconds as defined on settings
-                            mSysUtils.turnScreenOn(true);
-                        }
-                        // if the accessiblity service is not running - try to detect the current app
+                        // if the accessibility service is not running start monitoring the active app
                         if (!accessibilityServiceIsActive) {
-                            if (shouldHideNotifications(autoDetect)) {
-                                if (checkLockScreenPendingIntent != null) {
-                                    Log.d("NiLS", "lock screen is no longer active, stop monitoring");
-                                    AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                                    am.cancel(checkLockScreenPendingIntent);
-                                    checkLockScreenPendingIntent = null;
-                                }
-                                // send a broadcast the device is unlocked and hide notifications list immediatly
-                                sendBroadcast(new Intent(DEVICE_UNLOCKED));
-                                hide(false);
-                            } else {
-                                show();
+                            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            checkLockScreenPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(CHECK_LSAPP), PendingIntent.FLAG_UPDATE_CURRENT);
+                            am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500, 500, checkLockScreenPendingIntent);
+                        }
+
+                        // make sure screen will stay on as needed seconds as defined on settings
+                        mSysUtils.turnScreenOn(true);
+                    }
+
+                    // if the accessibility service is not running - try to detect the current app
+                    if (shouldHideNotifications(autoDetect)) {
+                        if (!accessibilityServiceIsActive)
+                        {
+                            if (checkLockScreenPendingIntent != null) {
+                                Log.d("NiLS", "lock screen is no longer active, stop monitoring");
+                                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                                am.cancel(checkLockScreenPendingIntent);
+                                checkLockScreenPendingIntent = null;
                             }
+                            hide(false);
+                        }
+                        // send a broadcast the device is unlocked and hide notifications list immediately
+                        sendBroadcast(new Intent(DEVICE_UNLOCKED));
+
+                    } else {
+                        if (!accessibilityServiceIsActive)
+                        {
+                            // show notifications when the screen is turned on and the lock screen is displayed
+                            viewManager.refreshLayout();
+                            show(true);
                         }
                     }
                 }
@@ -1090,32 +1077,29 @@ public class NotificationsService extends Service implements NotificationsProvid
     private static void detectLockScreenApp(Context context)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String currentApp = getForegroundApp(context);
-        String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
-        PackageManager pm = context.getPackageManager();
 
-        // check if the current app is a lock screen app
-        if (pm.checkPermission(android.Manifest.permission.DISABLE_KEYGUARD, currentApp) == PackageManager.PERMISSION_GRANTED)
-        {
-            if (!lockScreenApp.equals(currentApp))
-            {
-                // store current app as the lock screen app until next time
-                Log.d("NiLS", "new lock screen app detected: " + currentApp);
-                prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
-                lockScreenApp = currentApp;
-            }
-        }
-        else // when the device is secured - than the stock lock screen is currently used
-            if (isKeyguardLocked(context))
-            {
-                if (!lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME))
-                {
+        if (prefs.getBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, SettingsManager.AUTO_DETECT_LOCKSCREEN_APP_DEFAULT )) {
+            String currentApp = getForegroundApp(context);
+            String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
+            PackageManager pm = context.getPackageManager();
+
+            // check if the current app is a lock screen app
+            if (pm.checkPermission(android.Manifest.permission.DISABLE_KEYGUARD, currentApp) == PackageManager.PERMISSION_GRANTED) {
+                if (!lockScreenApp.equals(currentApp)) {
                     // store current app as the lock screen app until next time
-                    Log.d("NiLS", "stock lock screen app detected");
-                    prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME ).commit();
-                    lockScreenApp = STOCK_LOCKSCREEN_PACKAGENAME ;
+                    Log.d("NiLS", "new lock screen app detected: " + currentApp);
+                    prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
                 }
-            }
+            } else // when the device is secured - than the stock lock screen is currently used
+                if (isKeyguardLocked(context)) {
+                    if (!lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME)) {
+                        // store current app as the lock screen app until next time
+                        Log.d("NiLS", "stock lock screen app detected");
+                        prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME).commit();
+                        lockScreenApp = STOCK_LOCKSCREEN_PACKAGENAME;
+                    }
+                }
+        }
     }
 
     @Override
@@ -1137,7 +1121,6 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     public static boolean shouldHideNotifications(Context context, String currentApp, boolean autoDetect)
     {
-        Log.d("NiLS", "shouldHideNotifications currentApp:"+currentApp+" autoDetect:"+autoDetect);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // get the current lock screen app (if set)
@@ -1287,6 +1270,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         registerReceiver(npreceiver, new IntentFilter(CHECK_LSAPP));
         registerReceiver(npreceiver, new IntentFilter(INCOMING_CALL));
         registerReceiver(npreceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
+        registerReceiver(npreceiver, new IntentFilter(DEVICE_UNLOCKED));
 
         mSysUtils = SysUtils.getInstance(getApplicationContext(), mHandler);
     }
@@ -1351,9 +1335,9 @@ public class NotificationsService extends Service implements NotificationsProvid
             viewManager.hide(force);
     }
 
-    public void show()
+    public void show(boolean immediate)
     {
         if (!viewManager.isVisible())
-            viewManager.show();
+            viewManager.show(immediate);
     }
 }

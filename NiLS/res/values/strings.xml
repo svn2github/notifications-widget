@@ -122,6 +122,9 @@
         <item>priority</item>
     </string-array>
 
+    <string name="auto_detect_lock_screen">Auto detect lock screen app</string>
+    <string name="current_lock_screen_app">Current lock screen app:%s</string>
+    <string name="stock_lock_screen">Android (Stock)</string>
     <string name="experimental">Experimental </string>
     <string name="max_lines">Maximum text lines</string>
     <string name="show_full_notification">Show full notification content</string>
@@ -131,19 +134,6 @@
     <string name="clear_app_notifications_summary">Automatically clear app notifications when it launched. (Not available on 4.3 or later)</string>
     <string name="force_clear_on_open">Clear notifications when opened</string>
     <string name="force_clear_on_open_summary">Forcibly clear notification when it opened even if the app hasn\'t clear it by itself</string>
-
-    <string-array name="sync_notifications_entries">
-        <item>Disabled</item>
-        <item>One-way sync</item>
-        <item>Two-way sync (Android 4.3+)</item>
-        <item>Smart (Two-way + History)</item>
-    </string-array>
-    <string-array name="sync_notifications_values" translatable="false">
-        <item>none</item>
-        <item>oneway</item>
-        <item>twoway</item>
-        <item>smart</item>
-</string-array>
 
     <string-array name="max_lines_entries">
         <item>1</item>

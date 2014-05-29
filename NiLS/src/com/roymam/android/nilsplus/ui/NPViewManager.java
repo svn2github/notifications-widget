@@ -731,10 +731,11 @@ public class NPViewManager
         return newViews;*/
     }
 
-    public void show()
+    public void show(boolean immediate)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (prefs.getBoolean(SettingsManager.FP_ENABLED, true)) {
+        if (prefs.getBoolean(SettingsManager.FP_ENABLED, true))
+        {
             Log.d("NiLS", "NPViewManager.show();");
             mNPListView.show();
             hideNotificationPreview();
@@ -745,11 +746,14 @@ public class NPViewManager
             if (mEditModeView.getVisibility() == View.VISIBLE)
                 disableEditMode();
 
-            if (!mVisible) {
+            if (!mVisible)
+            {
                 mVisible = true;
-                mListView.setAlpha(0);
-                mListView.setScaleY(0);
-                mListView.animate().alpha(1).scaleY(1).setDuration(mAnimationDuration).setListener(null);
+                if (!immediate) {
+                    mListView.setAlpha(0);
+                    mListView.setScaleY(0);
+                    mListView.animate().alpha(1).scaleY(1).setDuration(mAnimationDuration).setListener(null);
+                }
             }
         }
     }
