@@ -324,9 +324,9 @@ public class NotificationsService extends Service implements NotificationsProvid
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void refreshLayout()
+    public void refreshLayout(boolean recreate)
     {
-        viewManager.refreshLayout();
+        viewManager.refreshLayout(recreate);
     }
 
     //** Notifications Add/Remove Handling **/
@@ -1060,7 +1060,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                         if (!accessibilityServiceIsActive)
                         {
                             // show notifications when the screen is turned on and the lock screen is displayed
-                            viewManager.refreshLayout();
+                            viewManager.refreshLayout(false);
                             show(true);
                         }
                     }
@@ -1105,7 +1105,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public void onConfigurationChanged(Configuration newConfig)
     {
-        viewManager.refreshLayout();
+        viewManager.refreshLayout(false);
     }
 
     private boolean shouldHideNotifications(boolean autoDetect)

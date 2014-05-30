@@ -1031,8 +1031,12 @@ public class NPViewManager
         }
     }
 
-    public void refreshLayout()
+    public void refreshLayout(boolean recreate)
     {
+        // re-create adapter
+        if (recreate)
+            mNPListView.reloadAppearance();
+
         // calculate updated sizes
         Point size = getWidgetSize();
         Point pos = getWidgetPosition(size);

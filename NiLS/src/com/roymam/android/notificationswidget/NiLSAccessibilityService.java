@@ -267,6 +267,8 @@ public class NiLSAccessibilityService extends AccessibilityService
 
         if (packageName != null && mBound)
         {
+            if (packageName.equals("android")) packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
+
             Log.d("NiLS","window content has been changed:" + packageName.toString());
             // hide FP when WidgetLocker side menu appears
             if (packageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&
@@ -275,7 +277,6 @@ public class NiLSAccessibilityService extends AccessibilityService
             {
                 Rect rect = new Rect();
                 accessibilityEvent.getSource().getBoundsInScreen(rect);
-                Log.d("NiLS", "RECT.LEFT:"+rect.left);
                 if (rect.left >= -BitmapUtils.dpToPx(60))
                 {
                     mService.hide(false);

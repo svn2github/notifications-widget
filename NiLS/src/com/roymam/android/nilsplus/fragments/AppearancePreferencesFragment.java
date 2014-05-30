@@ -126,7 +126,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
         super.onPause();
 
         // ask notifications panel to redraw itself
-        NotificationsService.getSharedInstance().refreshLayout();
+        NotificationsService.getSharedInstance().refreshLayout(true);
     }
 
     private void loadPreferences()
