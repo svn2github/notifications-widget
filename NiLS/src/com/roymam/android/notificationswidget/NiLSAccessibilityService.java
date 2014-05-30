@@ -234,6 +234,8 @@ public class NiLSAccessibilityService extends AccessibilityService
         }
     }
 
+    private boolean mLocked = false;
+
     private void handleAutoHideWhenWindowChanged(String packageName)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -241,6 +243,7 @@ public class NiLSAccessibilityService extends AccessibilityService
         if (packageName != null && mBound)
         {
             boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
+            boolean shouldHide = NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false);
             boolean isPackageInstaller = packageName.equals("com.android.packageinstaller");
 
             // request notifications list to hide/show notifications list
@@ -249,7 +252,7 @@ public class NiLSAccessibilityService extends AccessibilityService
             {
                 mService.hide(true);
             }
-            else if (NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
+            else if (shouldHide)
             {
                 if (!dontHide)
                     mService.hide(false);
@@ -258,6 +261,16 @@ public class NiLSAccessibilityService extends AccessibilityService
             {
                 mService.show(false);
             }
+
+            // notify if device was unlocked
+            if (mLocked && shouldHide)
+                sendBroadcast(new Intent(NotificationsService.DEVICE_UNLOCKED));
+
+            // store new locked status
+            if (shouldHide)
+                mLocked = false;
+            else
+                mLocked = true;
         }
     }
 
@@ -269,7 +282,6 @@ public class NiLSAccessibilityService extends AccessibilityService
         {
             if (packageName.equals("android")) packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
 
-            Log.d("NiLS","window content has been changed:" + packageName.toString());
             // hide FP when WidgetLocker side menu appears
             if (packageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&
                     accessibilityEvent.getSource() != null &&
@@ -279,10 +291,12 @@ public class NiLSAccessibilityService extends AccessibilityService
                 accessibilityEvent.getSource().getBoundsInScreen(rect);
                 if (rect.left >= -BitmapUtils.dpToPx(60))
                 {
+                    Log.d("NiLS","window content has been changed:" + packageName.toString());
                     mService.hide(false);
                 }
                 else
                 {
+                    Log.d("NiLS","window content has been changed:" + packageName.toString());
                     mService.show(false);
                 }
             }
@@ -290,6 +304,7 @@ public class NiLSAccessibilityService extends AccessibilityService
             else if (packageName.equals("com.android.systemui"))
             {
                 mHiddenBecauseOfSystemUI = true;
+                Log.d("NiLS","window content has been changed:" + packageName.toString());
                 mService.hide(false);
             }
             // show NiLS back the lock screen app is displayed back
@@ -297,6 +312,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                     !NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
             {
                 mHiddenBecauseOfSystemUI = false;
+                Log.d("NiLS","window content has been changed:" + packageName.toString());
                 mService.show(false);
             }
         }

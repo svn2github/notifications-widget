@@ -181,6 +181,10 @@ public class NotificationAdapter implements NotificationEventListener
             {
                 AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(widgetIds[i], R.id.notificationsListView);
             }
+            // refresh Notifications Panel
+            Intent intent = new Intent(context, NotificationsService.class);
+            intent.setAction("refresh");
+            context.startService(intent);
         }
         context.sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
     }

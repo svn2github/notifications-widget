@@ -153,7 +153,7 @@ public class NPListView extends RelativeLayout
         updateSizeAndPosition(mMaxPos,mMaxSize);
     }
 
-    HashMap<Long, Integer> mItemIdTopMap;
+    HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
 
     public void saveNotificationsState()
     {
