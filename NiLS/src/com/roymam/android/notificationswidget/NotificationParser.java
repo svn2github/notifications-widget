@@ -298,6 +298,8 @@ public class NotificationParser
         if (strings.containsKey(notification_text_id)) events.add(strings.get(notification_text_id));
         if (strings.containsKey(big_notification_content_text)) events.add(strings.get(big_notification_content_text));
 
+        int eventsOrder = 0;
+
         // create a notification for each event
         for(CharSequence event : events)
         {
@@ -309,7 +311,7 @@ public class NotificationParser
             nd.pinned = baseNotification.pinned;
             nd.priority = baseNotification.priority;
             nd.tag = baseNotification.tag;
-            nd.received = baseNotification.received;
+            nd.received = baseNotification.received + eventsOrder;
             nd.action = baseNotification.action;
             nd.content = baseNotification.content;
             nd.title = strings.get(notification_title_id);
@@ -352,7 +354,7 @@ public class NotificationParser
                         try
                         {
                             Date d = sdf.parse(time);
-                            nd.received = d.getTime();
+                            nd.received = d.getTime() + eventsOrder;
                         }
                         catch (ParseException e)
                         {
@@ -379,6 +381,7 @@ public class NotificationParser
                 }
                 notifications.add(nd);
             }
+            eventsOrder++;
         }
         return notifications;
     }

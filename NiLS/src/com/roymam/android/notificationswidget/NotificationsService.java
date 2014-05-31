@@ -94,6 +94,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     // "singleton" like declaration
     private static NotificationsService instance;
+
     public static NotificationsService getSharedInstance()
     {
         return instance;
@@ -422,8 +423,8 @@ public class NotificationsService extends Service implements NotificationsProvid
             persistentNotifications.put(pn.packageName, pn);
             if (listener != null) listener.onPersistentNotificationAdded(pn);
 
-            if (pn.packageName.equals("com.android.dialer") || pn.packageName.equals("com.google.android.dialer"))
-                context.sendBroadcast(new Intent(INCOMING_CALL));
+            //if (pn.packageName.equals("com.android.dialer") || pn.packageName.equals("com.google.android.dialer"))
+            //    context.sendBroadcast(new Intent(INCOMING_CALL));
         }
     }
 
@@ -994,6 +995,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     // restore original device timeout
                     mSysUtils.restoreDeviceTimeout();
+                    Log.d("NiLS",intent.getAction());
                     hide(false);
 
                     // clear all notifications if needed
@@ -1018,10 +1020,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                         checkLockScreenPendingIntent = null;
                     }
                 }
-                else if (intent.getAction().equals(INCOMING_CALL))
-                {
-                    hide(false);
-                }
                 else if (intent.getAction().equals(CHECK_LSAPP) || intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                     boolean autoDetect = false;
                     boolean accessibilityServiceIsActive = NiLSAccessibilityService.isServiceRunning(context);
@@ -1042,9 +1040,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                     }
 
                     // if the accessibility service is not running - try to detect the current app
-                    if (shouldHideNotifications(autoDetect)) {
-                        if (!accessibilityServiceIsActive)
-                        {
+                    if (!accessibilityServiceIsActive)
+                    {
+                        if (shouldHideNotifications(autoDetect)) {
                             if (checkLockScreenPendingIntent != null) {
                                 Log.d("NiLS", "lock screen is no longer active, stop monitoring");
                                 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -1055,10 +1053,16 @@ public class NotificationsService extends Service implements NotificationsProvid
                         }
                         // send a broadcast the device is unlocked and hide notifications list immediately
                         sendBroadcast(new Intent(DEVICE_UNLOCKED));
+                    }
+                    else
+                    {
+                        // check if the last detected package name is not the lock screen app
+                        String lastPackage = prefs.getString(NiLSAccessibilityService.LAST_OPENED_WINDOW_PACKAGENAME, SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME);
 
-                    } else {
-                        if (!accessibilityServiceIsActive)
-                        {
+                        if (shouldHideNotifications(context, lastPackage, false))
+                            // if it is not the lock screen app - call "unlock" method
+                            sendBroadcast(new Intent(DEVICE_UNLOCKED));
+                        else {
                             // show notifications when the screen is turned on and the lock screen is displayed
                             viewManager.refreshLayout(false);
                             show(true);

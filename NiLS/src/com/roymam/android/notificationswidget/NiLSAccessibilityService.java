@@ -27,6 +27,7 @@ import java.util.List;
 
 public class NiLSAccessibilityService extends AccessibilityService
 {
+    public static final String LAST_OPENED_WINDOW_PACKAGENAME = "last_opened_window_packagename";
     private NotificationParser parser;
     private int notificationId = 0;
     private String clearButtonName = "Clear all notifications.";
@@ -255,7 +256,9 @@ public class NiLSAccessibilityService extends AccessibilityService
             else if (shouldHide)
             {
                 if (!dontHide)
+                {
                     mService.hide(false);
+                }
             }
             else
             {
@@ -264,13 +267,17 @@ public class NiLSAccessibilityService extends AccessibilityService
 
             // notify if device was unlocked
             if (mLocked && shouldHide)
+            {
                 sendBroadcast(new Intent(NotificationsService.DEVICE_UNLOCKED));
+            }
 
             // store new locked status
             if (shouldHide)
                 mLocked = false;
             else
                 mLocked = true;
+
+            prefs.edit().putString(LAST_OPENED_WINDOW_PACKAGENAME, packageName).commit();
         }
     }
 
