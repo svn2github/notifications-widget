@@ -287,7 +287,7 @@ public class NiLSAccessibilityService extends AccessibilityService
 
         if (packageName != null && mBound)
         {
-            if (packageName.equals("android")) packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
+            //if (packageName.equals("android")) packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
 
             // hide FP when WidgetLocker side menu appears
             if (packageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&

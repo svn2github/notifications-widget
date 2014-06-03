@@ -498,28 +498,34 @@ public class SettingsManager
 
             // auto lock screen detection
             CheckBoxPreference autoDetectLockScreenAppPref = (CheckBoxPreference) findPreference(AUTO_DETECT_LOCKSCREEN_APP);
-            String currentLockScreenApp = getCurrentLockScreenAppName();
+            String currentLockScreenApp = getCurrentLockScreenAppName(getActivity());
             String currentLockScreenAppString = getResources().getString(R.string.current_lock_screen_app, currentLockScreenApp);
             autoDetectLockScreenAppPref.setSummary(currentLockScreenAppString);
         }
 
-        private String getCurrentLockScreenAppName()
+        public static String getAppName(Context context, String packageName)
         {
-            String currentLSApp = getString(R.string.stock_lock_screen);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String appName = context.getString(R.string.stock_lock_screen);
+
+            if (!packageName.equals(STOCK_LOCKSCREEN_PACKAGENAME))
+                try {
+                    PackageManager pm = context.getPackageManager();
+                    ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+                    appName = pm.getApplicationLabel(ai).toString();
+                } catch (NameNotFoundException e)
+                {
+                    appName = "Unknown";
+                }
+
+            return appName;
+        }
+
+        public static String getCurrentLockScreenAppName(Context context)
+        {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String currentLSpackagename = prefs.getString(LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
 
-            if (!currentLSpackagename.equals(STOCK_LOCKSCREEN_PACKAGENAME))
-            try {
-                PackageManager pm = getActivity().getPackageManager();
-                ApplicationInfo ai = pm.getApplicationInfo(currentLSpackagename, 0);
-                currentLSApp = pm.getApplicationLabel(ai).toString();
-            } catch (NameNotFoundException e)
-            {
-                currentLSApp = "Unknown";
-            }
-
-            return currentLSApp;
+            return getAppName(context, currentLSpackagename);
         }
     }
 

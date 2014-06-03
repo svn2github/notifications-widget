@@ -29,8 +29,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import com.roymam.android.common.PopupDialog;
 import com.roymam.android.common.SysUtils;
 import com.roymam.android.nilsplus.activities.OpenNotificationActivity;
 import com.roymam.android.nilsplus.ui.NPViewManager;
@@ -47,6 +49,8 @@ import java.util.ListIterator;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import javax.xml.datatype.Duration;
 
 public class NotificationsService extends Service implements NotificationsProvider
 {
@@ -1026,10 +1030,10 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                     if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                         Log.d("NiLS", "ACTION_SCREEN_ON - auto detecting lock screen app");
-                        detectLockScreenApp(context);
 
                         // if the accessibility service is not running start monitoring the active app
                         if (!accessibilityServiceIsActive) {
+                            detectLockScreenApp(context);
                             AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
                             checkLockScreenPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(CHECK_LSAPP), PendingIntent.FLAG_UPDATE_CURRENT);
                             am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500, 500, checkLockScreenPendingIntent);
@@ -1058,6 +1062,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     {
                         // check if the last detected package name is not the lock screen app
                         String lastPackage = prefs.getString(NiLSAccessibilityService.LAST_OPENED_WINDOW_PACKAGENAME, SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME);
+                        detectLockScreenApp(context, lastPackage);
 
                         if (shouldHideNotifications(context, lastPackage, false))
                             // if it is not the lock screen app - call "unlock" method
@@ -1080,30 +1085,62 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private static void detectLockScreenApp(Context context)
     {
+        String currentApp = getForegroundApp(context);
+        detectLockScreenApp(context, currentApp);
+    }
+
+    private static void detectLockScreenApp(Context context, final String currentApp)
+    {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (prefs.getBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, SettingsManager.AUTO_DETECT_LOCKSCREEN_APP_DEFAULT )) {
-            String currentApp = getForegroundApp(context);
             String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
             PackageManager pm = context.getPackageManager();
 
             // check if the current app is a lock screen app
             if (pm.checkPermission(android.Manifest.permission.DISABLE_KEYGUARD, currentApp) == PackageManager.PERMISSION_GRANTED) {
-                if (!lockScreenApp.equals(currentApp)) {
+                if (!lockScreenApp.equals(currentApp) && !SettingsManager.BLACKLIST_PACKAGENAMES.contains(currentApp)) {
                     // store current app as the lock screen app until next time
                     Log.d("NiLS", "new lock screen app detected: " + currentApp);
-                    prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
+
+                    popupLockScreenChangedDialog(context, currentApp);
                 }
-            } else // when the device is secured - than the stock lock screen is currently used
+            } else // when the device is secured - then the stock lock screen is currently used
                 if (isKeyguardLocked(context)) {
                     if (!lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME)) {
                         // store current app as the lock screen app until next time
                         Log.d("NiLS", "stock lock screen app detected");
-                        prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME).commit();
-                        lockScreenApp = STOCK_LOCKSCREEN_PACKAGENAME;
+
+                        popupLockScreenChangedDialog(context, STOCK_LOCKSCREEN_PACKAGENAME);
                     }
                 }
         }
+    }
+
+    private static PopupDialog pd = null;
+
+    private static void popupLockScreenChangedDialog(final Context context, final String currentApp)
+    {
+        if (pd == null) pd = PopupDialog.create(context);
+        pd.setTitle(context.getString(R.string.new_lock_screen_detected, SettingsManager.PrefsGeneralFragment.getAppName(context, currentApp)))
+          .setText(context.getString(R.string.new_lock_screen_detected_text, SettingsManager.PrefsGeneralFragment.getCurrentLockScreenAppName(context)))
+          .setPositiveButton(context.getString(R.string.change), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                        prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
+                        if (NotificationsService.getSharedInstance() != null)
+                            NotificationsService.getSharedInstance().show(false);
+                        pd.hide();
+                    }
+                })
+                .setNegativeButton(context.getString(R.string.keep), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pd.hide();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -1132,10 +1169,13 @@ public class NotificationsService extends Service implements NotificationsProvid
         boolean shouldHide = true;
 
         // if the current app is one of the allowed apps to be on top of the lock screen, hide NiLS
-        if (SettingsManager.BLACKLIST_PACKAGENAMES.contains(currentApp))
+        if (NiLSAccessibilityService.isServiceRunning(context) && SettingsManager.BLACKLIST_PACKAGENAMES.contains(currentApp))
         {
             return true;
         }
+        // never show it on top of the dialer app
+        else if (!NiLSAccessibilityService.isServiceRunning(context) && currentApp.equals("com.android.dialer"))
+            return true;
 
         if (autoDetect)
         {

@@ -1093,7 +1093,10 @@ public class AppearanceActivity extends Activity implements OnNavigationListener
 			descId = R.string.widget_mode_home_desc;
 			break;
 		}
-		((TextView) findViewById(R.id.widgetmode_desc)).setText(descId);
+
+        TextView widgetModeDesc = (TextView) findViewById(R.id.widgetmode_desc);
+        if (widgetModeDesc != null) widgetModeDesc.setText(descId);
+
 		if (clockSettingsFragment!=null)
 		{					
 			clockSettingsFragment.loadSettings();

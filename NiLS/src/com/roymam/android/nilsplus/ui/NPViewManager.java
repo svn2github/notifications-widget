@@ -324,7 +324,7 @@ public class NPViewManager
                     mPreviewView.dispatchTouchEvent(event);
                 else
                     mListView.dispatchTouchEvent(event);
-                return false;
+                    return false;
             }
         });
 

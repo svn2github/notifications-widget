@@ -376,7 +376,8 @@ public class NiLSActivity extends Activity
         super.onSaveInstanceState(outState);
         if (fragment != null)
         {
-            getFragmentManager().putFragment(outState, "fragment", fragment);
+            if (!(fragment instanceof PrefsPersistentNotificationsFragment))
+                getFragmentManager().putFragment(outState, "fragment", fragment);
         }
     }
 

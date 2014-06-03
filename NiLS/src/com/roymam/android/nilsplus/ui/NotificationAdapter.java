@@ -67,8 +67,21 @@ public class NotificationAdapter extends BaseAdapter
     @Override
     public NotificationData getItem(int position)
     {
-        if (NotificationsService.getSharedInstance() != null)
-            return NotificationsService.getSharedInstance().getNotifications().get(position);
+        if (NotificationsService.getSharedInstance() != null) {
+            List<NotificationData> notifications = NotificationsService.getSharedInstance().getNotifications();
+            if (position < notifications.size())
+                return notifications.get(position);
+            else {
+                // the list has probably been changed without notifying TODO: find where
+                notifyDataSetChanged();
+
+                // return the last item
+                if (notifications.size() > 0)
+                    return notifications.get(notifications.size()-1);
+                else
+                    return null;
+            }
+        }
         else
             return null;
     }
