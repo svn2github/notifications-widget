@@ -22,6 +22,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -30,6 +31,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.roymam.android.common.PopupDialog;
@@ -49,8 +51,6 @@ import java.util.ListIterator;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import javax.xml.datatype.Duration;
 
 public class NotificationsService extends Service implements NotificationsProvider
 {
@@ -182,7 +182,6 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private void notifyUserToEnableTheService()
     {
-        viewManager.saveNotificationsState();
         mNotifications.clear();
         NotificationData ni = new NotificationData();
         ni.setTitle(getString(R.string.nils_service_is_not_running));
@@ -201,7 +200,6 @@ public class NotificationsService extends Service implements NotificationsProvid
         ni.setReceived(System.currentTimeMillis());
         mNotifications.add(ni);
         viewManager.notifyDataChanged();
-        viewManager.animateNotificationsChange();
     }
 
     private static void saveLog(Context context, boolean silent)
@@ -455,19 +453,26 @@ public class NotificationsService extends Service implements NotificationsProvid
                         // mark as delete if it's part of multiple events notification
                         if (logical && nd.event) {
                             // mark notification as cleared
-                            nd.deleted = true;
+                            if (!nd.deleted)
+                            {
+                                nd.deleted = true;
+                                cleared = true;
+                                mDirty = true;
+
+                                // notify that the notification was cleared
+                                clearedNotifications.add(nd);
+                            }
                         } else if (!nd.deleted) // make sure it hasn't been deleted previously by the user
                         {
                             // immediately remove notification
                             iter.remove();
+                            cleared = true;
+                            mDirty = true;
+
+                            // notify that the notification was cleared
+                            clearedNotifications.add(nd);
                         }
 
-                        mDirty = true;
-
-                        // notify that the notification was cleared
-                        clearedNotifications.add(nd);
-
-                        cleared = true;
                         // do not stop loop - keep looping to clear all of the notifications with the same id
                     }
                 }
@@ -492,9 +497,6 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private void callUpdateViewManager()
     {
-        if (viewManager != null)
-            viewManager.saveNotificationsState();
-
         Intent refreshListIntent = new Intent(context, NotificationsService.class);
         refreshListIntent.setAction("refresh");
         startService(refreshListIntent);
@@ -753,9 +755,6 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public synchronized void clearNotification(int uid)
     {
-        if (viewManager != null)
-            viewManager.saveNotificationsState();
-
         Log.d("NiLS","NotificationsService:clearNotification uid:" + uid);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -831,7 +830,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 listener.onNotificationsListChanged();
 
                 // notify view manager that the data has been changed
-                updateViewManager();
+                //updateViewManager();
             }
         }
         else
@@ -844,7 +843,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     {
         if (viewManager != null) {
             viewManager.notifyDataChanged();
-            viewManager.animateNotificationsChange();
+            //viewManager.animateNotificationsChange();
         }
     }
 
@@ -1054,9 +1053,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                                 checkLockScreenPendingIntent = null;
                             }
                             hide(false);
+                            // send a broadcast the device is unlocked and hide notifications list immediately
+                            sendBroadcast(new Intent(DEVICE_UNLOCKED));
                         }
-                        // send a broadcast the device is unlocked and hide notifications list immediately
-                        sendBroadcast(new Intent(DEVICE_UNLOCKED));
                     }
                     else
                     {
@@ -1252,16 +1251,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
                 else
                 {
-                    // unlock device and open the notification)
-                    Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("action", ni.getAction());
-                    intent.putExtra("package", ni.getPackageName());
-                    intent.putExtra("id", ni.getId());
-                    intent.putExtra("uid", ni.getUid());
-                    intent.putExtra("lockscreen_package", getForegroundApp(getApplicationContext()));
-                    startActivity(intent);
+                    runPendingIntent(ni.action, ni.packageName, ni.uid);
                 }
             }
 
@@ -1287,15 +1277,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 else
                 {
                     // unlock device and open the notification)
-                    Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("action", action);
-                    intent.putExtra("package", ni.getPackageName());
-                    intent.putExtra("id", ni.getId());
-                    intent.putExtra("uid", ni.getUid());
-                    intent.putExtra("lockscreen_package", getForegroundApp(getApplicationContext()));
-                    startActivity(intent);
+                    runPendingIntent(action, ni.getPackageName(), ni.uid);
 
                     hide(false);
                 }
@@ -1317,6 +1299,65 @@ public class NotificationsService extends Service implements NotificationsProvid
         registerReceiver(npreceiver, new IntentFilter(DEVICE_UNLOCKED));
 
         mSysUtils = SysUtils.getInstance(getApplicationContext(), mHandler);
+    }
+
+    private void runPendingIntent(PendingIntent action, String packageName, int uid)
+    {
+        // a workaround for keyboard stuck on Hangouts
+        if (packageName.equals("com.google.android.talk"))
+            try
+            {
+                action.send(0,new PendingIntent.OnFinished()
+                {
+                    @Override
+                    public void onSendFinished(PendingIntent pendingIntent, Intent intent, int resultCode, String resultData, Bundle resultExtras)
+                    {
+                        unlockDevice();
+                    }
+                }, mHandler);
+            } catch (PendingIntent.CanceledException e)
+            {
+                // starting the intent failed, try to launch the app directly
+                Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
+                if (intent != null)
+                {
+                    Intent intents[] = new Intent[2];
+                    intents[0]=intent;
+                    intents[1]=new Intent(context, UnlockDeviceActivity.class);
+                    intents[1].addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intents[1].addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                    startActivities(intents);
+                    unlockDevice();
+                }
+            }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("action", action);
+            intent.putExtra("package", packageName);
+            intent.putExtra("uid", uid);
+            intent.putExtra("lockscreen_package", getForegroundApp(getApplicationContext()));
+            startActivity(intent);
+        }
+    }
+
+    private void unlockDevice()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String lockscreenPackageName = prefs.getString(SettingsManager.LOCKSCREEN_APP, SettingsManager.DEFAULT_LOCKSCREEN_APP);
+
+        if (  !lockscreenPackageName.equals(NotificationsService.GO_LOCKER_PACKAGENAME) &&
+              !lockscreenPackageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&
+              isKeyguardLocked(context) &&
+              prefs.getBoolean(SettingsManager.UNLOCK_ON_OPEN, SettingsManager.DEFAULT_UNLOCK_ON_OPEN))
+        {
+            Intent intent = new Intent(context, UnlockDeviceActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            startActivity(intent);
+        }
     }
 
     private boolean isActivity(PendingIntent action)

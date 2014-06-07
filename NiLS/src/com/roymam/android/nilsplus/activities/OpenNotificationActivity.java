@@ -2,14 +2,12 @@ package com.roymam.android.nilsplus.activities;
 
 import android.R;
 import android.app.Activity;
-import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,7 +21,7 @@ public class OpenNotificationActivity extends Activity
 {
     private BroadcastReceiver mReceiver;
 
-    private void openNotification(PendingIntent action, String packageName, int id, int uid)
+    private void openNotification(PendingIntent action, String packageName, int uid)
     {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         // directly open notification
@@ -73,13 +71,13 @@ public class OpenNotificationActivity extends Activity
 
         if (lockscreenPackageName.equals(NotificationsService.GO_LOCKER_PACKAGENAME) ||
             lockscreenPackageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) ||
-            !isKeyguardLocked() ||
+            !NotificationsService.isKeyguardLocked(this) ||
             !prefs.getBoolean(SettingsManager.UNLOCK_ON_OPEN, SettingsManager.DEFAULT_UNLOCK_ON_OPEN))
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
             // open notification on background
-            openNotification(action, packageName,id, uid);
+            openNotification(action, packageName, uid);
         }
         else
         {
@@ -92,20 +90,11 @@ public class OpenNotificationActivity extends Activity
                 @Override
                 public void onReceive(Context context, Intent intent)
                 {
-                    openNotification(action, packageName,id, uid);
+                    openNotification(action, packageName, uid);
                 }
             };
             registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
         }
-    }
-
-    private boolean isKeyguardLocked()
-    {
-        KeyguardManager kmanager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            return kmanager.isKeyguardLocked();
-        else
-            return kmanager.inKeyguardRestrictedInputMode();
     }
 
     @Override

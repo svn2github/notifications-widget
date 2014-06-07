@@ -138,15 +138,15 @@ public class NPViewManager
 
     }
 
-    public void saveNotificationsState()
+    /*private void saveNotificationsState()
     {
         mNPListView.saveNotificationsState();
     }
 
-    public void animateNotificationsChange()
+    private void animateNotificationsChange()
     {
         mNPListView.animateNotificationsChange();
-    }
+    }*/
 
     // callbacks
     public interface Callbacks
@@ -970,7 +970,9 @@ public class NPViewManager
 
     public void notifyDataChanged()
     {
+        //mNPListView.saveNotificationsState();
         mNPListView.notifyDataChanged();
+        //mNPListView.animateNotificationsChange();
 
         mHandler.postDelayed(new Runnable()
         {

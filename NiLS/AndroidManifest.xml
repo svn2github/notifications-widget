@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="409"
-    android:versionName="1.5.409" >
+    android:versionCode="410"
+    android:versionName="1.5.410" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -61,6 +61,11 @@
         <activity android:name="com.roymam.android.nilsplus.activities.LogViewerActivity"
             android:theme="@android:style/Theme.Holo.Light"
             android:label="@string/view_recent_log"/>
+        <activity android:name=".UnlockDeviceActivity"
+            android:noHistory="true"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Transparent"/>
 
         <!-- Services -->
 

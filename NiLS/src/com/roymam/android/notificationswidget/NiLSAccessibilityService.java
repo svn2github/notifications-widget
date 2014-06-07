@@ -243,6 +243,10 @@ public class NiLSAccessibilityService extends AccessibilityService
 
         if (packageName != null && mBound)
         {
+            // stock lock screen detection
+            if (packageName.equals("android") && NotificationsService.isKeyguardLocked(this))
+                packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
+
             boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
             boolean shouldHide = NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false);
             boolean isPackageInstaller = packageName.equals("com.android.packageinstaller");
