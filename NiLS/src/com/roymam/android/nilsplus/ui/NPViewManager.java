@@ -138,11 +138,12 @@ public class NPViewManager
 
     }
 
-    /*private void saveNotificationsState()
+    public void saveNotificationsState()
     {
         mNPListView.saveNotificationsState();
     }
 
+    /*
     private void animateNotificationsChange()
     {
         mNPListView.animateNotificationsChange();
@@ -349,7 +350,7 @@ public class NPViewManager
             public void notificationCleared(NotificationData ni)
             {
                 if (mCallbacks != null) mCallbacks.onDismissed(ni);
-                notifyDataChanged();
+                //notifyDataChanged();
             }
 
             @Override
@@ -573,7 +574,6 @@ public class NPViewManager
                 public void onDismiss(NotificationData ni)
                 {
                     if (mCallbacks != null) mCallbacks.onDismissed(ni);
-                    notifyDataChanged();
                 }
 
                 @Override
@@ -968,11 +968,21 @@ public class NPViewManager
         }
     }
 
-    public void notifyDataChanged()
+    public void notifyDataChanged(long uid)
     {
-        //mNPListView.saveNotificationsState();
         mNPListView.notifyDataChanged();
-        //mNPListView.animateNotificationsChange();
+
+        // scroll to the new notification position
+        if (uid > -1) {
+            List<NotificationData> data = NotificationsService.getSharedInstance().getNotifications();
+            for (int i = 0; i < data.size(); i++)
+            {
+                if (data.get(i).uid == uid) {
+                    mNPListView.getListView().smoothScrollToPosition(i);
+                    break;
+                }
+            }
+        }
 
         mHandler.postDelayed(new Runnable()
         {

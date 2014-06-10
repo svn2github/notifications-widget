@@ -362,8 +362,9 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
             for (PendingDismissData pendingDismiss : mPendingDismisses)
             {
                 // Reset view presentation
-                pendingDismiss.view.setAlpha(1f);
-                pendingDismiss.view.setTranslationX(0);
+                pendingDismiss.view.animate().alpha(1f).translationX(0).setDuration(mAnimationTime).setListener(null);
+                //pendingDismiss.view.setAlpha(1f);
+                //pendingDismiss.view.setTranslationX(0);
             }
 
             // Send a cancel event

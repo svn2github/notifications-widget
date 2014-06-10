@@ -125,6 +125,7 @@ public class NotificationAdapter extends BaseAdapter
             holder = (ViewHolder) notificationView.getTag();
         }
 
+        notificationView.setTag(R.integer.uid, new Long(item.getUid()));
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         int primaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
@@ -338,6 +339,7 @@ public class NotificationAdapter extends BaseAdapter
 
     static class ViewHolder
     {
+        long uid;
         ImageView ivImage;
         TextView tvTitle;
         TextView tvDescription;

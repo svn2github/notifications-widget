@@ -140,9 +140,6 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (listener != null)
             listener.onServiceStopped();
 
-        // clear notifications and add an error notification
-        notifyUserToEnableTheService();
-
         return super.onUnbind(intent);
     }
 
@@ -178,28 +175,6 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
 
         super.onDestroy();
-    }
-
-    private void notifyUserToEnableTheService()
-    {
-        mNotifications.clear();
-        NotificationData ni = new NotificationData();
-        ni.setTitle(getString(R.string.nils_service_is_not_running));
-        ni.setText(getString(R.string.open_nils_to_enable_it));
-        ni.setAppIcon(((BitmapDrawable)getApplicationContext().getResources().getDrawable(R.drawable.nilsfp_icon_mono)).getBitmap());
-        ni.setIcon(((BitmapDrawable)getApplicationContext().getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
-        ni.setPackageName(getApplicationContext().getPackageName());
-
-        Intent startNiLSIntent = getApplicationContext().getPackageManager().getLaunchIntentForPackage("com.roymam.android.notificationswidget");
-        if (startNiLSIntent != null)
-        {
-            ni.setAction(PendingIntent.getActivity(getApplicationContext(), 0, startNiLSIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        ni.setActions(new NotificationData.Action[0]);
-        ni.setId(0);
-        ni.setReceived(System.currentTimeMillis());
-        mNotifications.add(ni);
-        viewManager.notifyDataChanged();
     }
 
     private static void saveLog(Context context, boolean silent)
@@ -322,7 +297,9 @@ public class NotificationsService extends Service implements NotificationsProvid
 
         if (intent != null && intent.getAction() != null)
             if (intent.getAction().equals("refresh"))
-                updateViewManager();
+            {
+                updateViewManager(intent.getLongExtra("uid", -1));
+            }
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -335,6 +312,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     //** Notifications Add/Remove Handling **/
     private void addNotification(NotificationData nd)
     {
+        if (viewManager != null) viewManager.saveNotificationsState();
         if (nd != null)
         {
             Log.d("NiLS","NotificationsService:addNotification " + nd.packageName + ":" + nd.id);
@@ -402,7 +380,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                 w.unlock();
             }
 
-
             // notify that the notification was added
             if (listener != null && !nd.deleted && !ignoreNotification)
             {
@@ -411,7 +388,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 else
                     listener.onNotificationAdded(nd, true, mCovered);
                 listener.onNotificationsListChanged();
-                callUpdateViewManager();
+                callUpdateViewManager(nd.uid);
             }
         }
     }
@@ -485,6 +462,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             // notify listener for cleared notifications
             if (cleared && listener != null)
             {
+                if (viewManager != null) viewManager.saveNotificationsState();
                 for (NotificationData nd : clearedNotifications)
                 {
                     listener.onNotificationCleared(nd);
@@ -497,8 +475,14 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private void callUpdateViewManager()
     {
+        callUpdateViewManager(-1);
+    }
+
+    private void callUpdateViewManager(int uid)
+    {
         Intent refreshListIntent = new Intent(context, NotificationsService.class);
         refreshListIntent.setAction("refresh");
+        refreshListIntent.putExtra("uid", uid);
         startService(refreshListIntent);
     }
 
@@ -796,6 +780,8 @@ public class NotificationsService extends Service implements NotificationsProvid
 
         if (removed)
         {
+            if (viewManager != null) viewManager.saveNotificationsState();
+
             // search for more notification with the same id - if not found - dismiss the notification from android status bar
             boolean more = false;
             Lock r = lock.readLock();
@@ -839,11 +825,10 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
-    private void updateViewManager()
+    private void updateViewManager(long uid)
     {
         if (viewManager != null) {
-            viewManager.notifyDataChanged();
-            //viewManager.animateNotificationsChange();
+            viewManager.notifyDataChanged(uid);
         }
     }
 

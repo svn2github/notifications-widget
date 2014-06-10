@@ -49,8 +49,6 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
     private Point mMaxPos;
     private Point mMaxSize;
     private ViewTreeObserver.OnPreDrawListener mPreDrawListener = null;
-    private boolean mNotificationsStateSaved = false;
-    private boolean mOnAnimation = false;
 
     public void updateSizeAndPosition(Point pos, Point size)
     {
@@ -117,9 +115,6 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
             InsetDrawable divider = new InsetDrawable(mTheme.divider, leftMargin, 0, rightMargin, 0);
             listView.setDivider(divider);
         }
-
-        // animation handling
-        listView.getViewTreeObserver().addOnPreDrawListener(this);
     }
 
     public int getItemsHeight()
@@ -158,36 +153,28 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
     }
 
     HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
-/*
+
     public void saveNotificationsState()
     {
-        if (!mNotificationsStateSaved && !mOnAnimation) {
-            // save position of notifications before making a change in the data
-            final NotificationAdapter mAdapter = (NotificationAdapter) listView.getAdapter();
+        mItemIdTopMap.clear();
 
-            mItemIdTopMap = new HashMap<Long, Integer>();
-            ;
+        // save position of notifications before making a change in the data
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        Log.d("NiLS", "saveNotificationsState()");
+        for (int i = 0; i < listView.getChildCount(); ++i) {
+            View child = listView.getChildAt(i);
+            int position = firstVisiblePosition + i;
+            Long itemId = (Long) child.getTag(R.integer.uid);
 
-            int firstVisiblePosition = listView.getFirstVisiblePosition();
-            Log.d("NiLS", "saveNotificationsState()");
-            for (int i = 0; i < listView.getChildCount(); ++i) {
-                View child = listView.getChildAt(i);
-                int position = firstVisiblePosition + i;
-                long itemId = mAdapter.getItemId(position);
-                if (itemId != -1) {
-                    Log.d("NiLS", "position:" + position + " id:" + itemId + " top:" + child.getTop());
-                    mItemIdTopMap.put(itemId, child.getTop());
-                }
+            if (itemId != null && !mItemIdTopMap.containsKey(itemId))
+            {
+                Log.d("NiLS", "position:" + position + " id:" + itemId + " top:" + child.getTop());
+                mItemIdTopMap.put(itemId, child.getTop());
             }
-
-            mNotificationsStateSaved = true;
-        }
-        else
-        {
-            // ignore this call because previous animation hasn't ended yet
         }
     }
 
+    /*
     public void animateNotificationsChange() {
         // animating moving of notifications in the list from their previous position to the current position
         final NotificationAdapter mAdapter = (NotificationAdapter) listView.getAdapter();
@@ -268,8 +255,8 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
             };
             observer.addOnPreDrawListener(mPreDrawListener);
         }
-    }
-*/
+    }*/
+
     public void show()
     {
         listView.setAlpha(1);
@@ -288,17 +275,16 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
     @Override
     public boolean onPreDraw()
     {
-        final NotificationAdapter adapter = (NotificationAdapter) listView.getAdapter();
-
         boolean firstAnimation = true;
         int firstVisiblePosition = listView.getFirstVisiblePosition();
         for (int i = 0; i < listView.getChildCount(); ++i) {
             final View child = listView.getChildAt(i);
             int position = firstVisiblePosition + i;
-            final long itemId = adapter.getItemId(position);
+            final Long itemId = (Long) child.getTag(R.integer.uid);
             Integer startTop = mItemIdTopMap.get(itemId);
             int top = child.getTop();
             if (startTop != null) {
+                Log.d("NiLS", "position:" + position + " id:" + itemId + " top:" + startTop + " >> " + top);
                 if (startTop != top) {
                     int delta = startTop - top;
                     child.setTranslationY(delta);
@@ -308,7 +294,6 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 listView.setEnabled(true);
-                                mItemIdTopMap.put(itemId, child.getTop());
                             }
                         });
                         firstAnimation = false;
@@ -318,6 +303,7 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                 // Animate new views along with the others. The catch is that they did not
                 // exist in the start state, so we must calculate their starting position
                 // based on neighboring views.
+                Log.d("NiLS", "position:" + position + " id:" + itemId + " top: unknown");
                 int childHeight = child.getHeight() + listView.getDividerHeight();
                 startTop = top + (i > 0 ? childHeight : -childHeight);
                 int delta = startTop - top;
@@ -328,14 +314,15 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             listView.setEnabled(true);
-                            // store new position
-                            mItemIdTopMap.put(itemId, child.getTop());
                         }
                     });
                     firstAnimation = false;
                 }
             }
         }
+
+        // remove itself from listview listener
+        listView.getViewTreeObserver().removeOnPreDrawListener(this);
         return true;
     }
 
@@ -402,7 +389,6 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
 
         updateSizeAndPosition(pos, size);
         addView(mView, mViewParams);
-
     }
 
     private void prepareListView()
@@ -430,7 +416,7 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                                     data = NotificationsService.getSharedInstance().getNotifications();
 
                                 boolean isSwipeToOpenEnabled = prefs.getBoolean(SettingsManager.SWIPE_TO_OPEN, SettingsManager.DEFAULT_SWIPE_TO_OPEN);
-                                //saveNotificationsState();
+
                                 for (int position : reverseSortedPositions)
                                 {
                                     if (position < data.size())
@@ -441,7 +427,6 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                                             callNotificationOpen(ni);
                                     }
                                 }
-                                //animateNotificationsChange();
                             }
 
                             @Override
@@ -527,7 +512,7 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                     NotificationsService.getSharedInstance().clearAllNotifications();
 
                 // reset list
-                adapter.notifyDataSetChanged();
+                notifyDataChanged();
             }
 
             @Override
@@ -613,7 +598,16 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
 
     public void notifyDataChanged()
     {
+        Log.d("NiLS", "notifyDataSetChanged");
+
+        // notify adapter that the list was changed
         adapter.notifyDataSetChanged();
+
+        registerDataChangedAnimation();
+    }
+
+    private void registerDataChangedAnimation() {
+        listView.getViewTreeObserver().addOnPreDrawListener(this);
     }
 
     public void cleanup()
