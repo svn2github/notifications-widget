@@ -1041,6 +1041,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                             // send a broadcast the device is unlocked and hide notifications list immediately
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
                         }
+                        else
+                            show(true);
                     }
                     else
                     {
