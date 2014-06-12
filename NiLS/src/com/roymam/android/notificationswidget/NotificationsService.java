@@ -609,6 +609,8 @@ public class NotificationsService extends Service implements NotificationsProvid
     public void clearAllNotifications()
     {
         Log.d("NiLS","NotificationsService:clearAllNotifications");
+        if (viewManager != null) viewManager.saveNotificationsState();
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean syncback = prefs.getBoolean(SettingsManager.SYNC_BACK, SettingsManager.DEFAULT_SYNC_BACK);
 
@@ -658,6 +660,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 listener.onNotificationCleared(nd);
             }
             listener.onNotificationsListChanged();
+            callUpdateViewManager();
         }
     }
 
@@ -682,6 +685,8 @@ public class NotificationsService extends Service implements NotificationsProvid
         boolean syncback = prefs.getBoolean(SettingsManager.SYNC_BACK, SettingsManager.DEFAULT_SYNC_BACK);
         boolean changed = false;
         ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
+
+        if (viewManager != null) viewManager.saveNotificationsState();
 
         for(String packageName : packages)
         {
@@ -730,6 +735,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 listener.onNotificationCleared(nd);
             }
             listener.onNotificationsListChanged();
+            callUpdateViewManager();
         }
     }
 
@@ -811,10 +817,10 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 listener.onNotificationCleared(removedNd);
                 listener.onNotificationsListChanged();
-
-                // notify view manager that the data has been changed
-                //updateViewManager();
             }
+
+            // notify view manager that the data has been changed
+            callUpdateViewManager();
         }
         else
         {
@@ -873,7 +879,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     Log.d("NiLS", "permanently removing uid:" + nd.uid);
                     iter.remove();
-                    mDirty = true;
+                    //mDirty = true;
                 }
                 // make sure next time it won't be protected from deleting
                 nd.protect = false;
