@@ -1,14 +1,22 @@
 package com.roymam.android.common;
 
+import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.roymam.android.notificationswidget.NiLSAccessibilityService;
+import com.roymam.android.notificationswidget.NotificationsListener;
 import com.roymam.android.notificationswidget.SettingsManager;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class SysUtils
 {
@@ -31,6 +39,69 @@ public class SysUtils
         if (instance == null)
             instance = new SysUtils(context, handler);
         return instance;
+    }
+
+    public static boolean isServiceRunning(Context context, Class serviceClass)
+    {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (serviceClass.getName().equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isServiceRunning(Context context)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            return isServiceRunning(context, NotificationsListener.class);
+        else
+            return isServiceRunning(context, NiLSAccessibilityService.class);
+    }
+
+    public static String getForegroundApp(Context context)
+    {
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = mActivityManager.getRunningTasks(1);
+        Log.d("NiLS", tasks.get(0).topActivity.getClassName());
+        return tasks.get(0).topActivity.getPackageName();
+    }
+
+    public static String getForegroundActivity(Context context)
+    {
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = mActivityManager.getRunningTasks(1);
+        return tasks.get(0).topActivity.getClassName();
+    }
+
+    public static boolean isAppForground(Context context, String packageName)
+    {
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> l = mActivityManager
+                .getRunningAppProcesses();
+        Iterator<ActivityManager.RunningAppProcessInfo> i = l.iterator();
+        while (i.hasNext())
+        {
+            ActivityManager.RunningAppProcessInfo info = i.next();
+            for (String p : info.pkgList)
+            {
+                if (p.equals(packageName) && info.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isKeyguardLocked(Context context)
+    {
+        KeyguardManager kmanager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            return kmanager.isKeyguardLocked();
+        else
+            return kmanager.inKeyguardRestrictedInputMode();
     }
 
     private boolean shouldChangeDeviceTimeout()
@@ -193,4 +264,6 @@ public class SysUtils
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().remove("device_timeout").commit();
     }
+
+
 }

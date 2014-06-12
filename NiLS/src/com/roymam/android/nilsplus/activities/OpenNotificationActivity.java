@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.roymam.android.common.SysUtils;
 import com.roymam.android.notificationswidget.NotificationsService;
 import com.roymam.android.notificationswidget.SettingsManager;
 
@@ -71,7 +72,7 @@ public class OpenNotificationActivity extends Activity
 
         if (lockscreenPackageName.equals(NotificationsService.GO_LOCKER_PACKAGENAME) ||
             lockscreenPackageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) ||
-            !NotificationsService.isKeyguardLocked(this) ||
+            !SysUtils.isKeyguardLocked(this) ||
             !prefs.getBoolean(SettingsManager.UNLOCK_ON_OPEN, SettingsManager.DEFAULT_UNLOCK_ON_OPEN))
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);

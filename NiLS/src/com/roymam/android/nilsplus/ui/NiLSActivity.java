@@ -49,6 +49,7 @@ import com.amazon.inapp.purchasing.PurchaseUpdatesResponse;
 import com.amazon.inapp.purchasing.PurchasingManager;
 import com.amazon.inapp.purchasing.Receipt;
 import com.roymam.android.common.BackupRestorePreferenceFragment;
+import com.roymam.android.common.SysUtils;
 import com.roymam.android.common.util.IabHelper;
 import com.roymam.android.common.util.IabResult;
 import com.roymam.android.common.util.Inventory;
@@ -56,7 +57,6 @@ import com.roymam.android.common.util.Purchase;
 import com.roymam.android.nilsplus.activities.StartupWizardActivity;
 import com.roymam.android.nilsplus.activities.WhatsNewActivity;
 import com.roymam.android.nilsplus.fragments.AboutPreferencesFragment;
-import com.roymam.android.notificationswidget.NotificationsService;
 import com.roymam.android.notificationswidget.SettingsManager;
 import com.roymam.android.nilsplus.fragments.AppearancePreferencesFragment;
 import com.roymam.android.nilsplus.fragments.MainPrefsFragment;
@@ -404,7 +404,7 @@ public class NiLSActivity extends Activity
     {
         super.onResume();
 
-        boolean isServiceRunning = NotificationsService.isServiceRunning(getApplicationContext());;
+        boolean isServiceRunning = SysUtils.isServiceRunning(getApplicationContext());;
         if (!isServiceRunning)
         {
             Intent intent = new Intent(this, StartupWizardActivity.class);

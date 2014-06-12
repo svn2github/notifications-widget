@@ -501,6 +501,18 @@ public class NotificationParser
             {
                 text = notificationStrings.get(2131099791);
             }
+
+            // Xabber title
+            if (notificationStrings.containsKey(2131558423))
+            {
+                title = notificationStrings.get(2131558423);
+            }
+            // Xabber text
+            if (notificationStrings.containsKey(2131558425))
+            {
+                text = notificationStrings.get(2131558425);
+            }
+
             // get title string if available
             if (notificationStrings.containsKey(notification_title_id))
             {

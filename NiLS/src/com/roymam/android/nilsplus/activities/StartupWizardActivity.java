@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.roymam.android.common.LimitedViewPager;
+import com.roymam.android.common.SysUtils;
 import com.roymam.android.nilsplus.ui.NiLSActivity;
 import com.roymam.android.notificationswidget.*;
 import com.viewpagerindicator.LinePageIndicator;
@@ -91,7 +92,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
         mViewPager = (LimitedViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new WizardPageAdapter(getFragmentManager()));
 
-        if (!NotificationsService.isServiceRunning(getApplicationContext()))
+        if (!SysUtils.isServiceRunning(getApplicationContext()))
             mViewPager.setLimit(1);
 
         LinePageIndicator indicator = (LinePageIndicator) findViewById(R.id.line_page_indicator);
@@ -152,7 +153,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
             mOpenAndroidSettings.setVisibility(View.VISIBLE);
 
             // NiLS Service Status
-            boolean serviceRunning = NotificationsService.isServiceRunning(getApplicationContext());
+            boolean serviceRunning = SysUtils.isServiceRunning(getApplicationContext());
 
             if (serviceRunning) {
                 if (mNext != null) mNext.setEnabled(true);

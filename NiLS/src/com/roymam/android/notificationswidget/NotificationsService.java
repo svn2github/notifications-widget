@@ -1,8 +1,6 @@
 package com.roymam.android.notificationswidget;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
-import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,7 +29,6 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.roymam.android.common.PopupDialog;
@@ -298,7 +295,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (intent != null && intent.getAction() != null)
             if (intent.getAction().equals("refresh"))
             {
-                updateViewManager(intent.getLongExtra("uid", -1));
+                updateViewManager(intent.getIntExtra("uid", -1));
             }
 
         return super.onStartCommand(intent, flags, startId);
@@ -825,7 +822,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
-    private void updateViewManager(long uid)
+    private void updateViewManager(int uid)
     {
         if (viewManager != null) {
             viewManager.notifyDataChanged(uid);
@@ -942,27 +939,6 @@ public class NotificationsService extends Service implements NotificationsProvid
         return mBinder;
     }
 
-    public static boolean isServiceRunning(Context context, Class serviceClass)
-    {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-        {
-            if (serviceClass.getName().equals(service.service.getClassName()))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isServiceRunning(Context context)
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            return isServiceRunning(context, NotificationsListener.class);
-        else
-            return isServiceRunning(context, NiLSAccessibilityService.class);
-    }
-
     private class NPReceiver extends BroadcastReceiver
     {
         private PendingIntent checkLockScreenPendingIntent = null;
@@ -1050,9 +1026,12 @@ public class NotificationsService extends Service implements NotificationsProvid
                         String lastPackage = prefs.getString(NiLSAccessibilityService.LAST_OPENED_WINDOW_PACKAGENAME, SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME);
                         detectLockScreenApp(context, lastPackage);
 
-                        if (shouldHideNotifications(context, lastPackage, false))
+                        if (shouldHideNotifications(context, lastPackage, false)) {
+                            Log.d("NiLS","lock screen app: " + prefs.getString(SettingsManager.LOCKSCREEN_APP, SettingsManager.DEFAULT_LOCKSCREEN_APP));
+                            Log.d("NiLS","last package: " + lastPackage);
                             // if it is not the lock screen app - call "unlock" method
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
+                        }
                         else {
                             // show notifications when the screen is turned on and the lock screen is displayed
                             viewManager.refreshLayout(false);
@@ -1071,7 +1050,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private static void detectLockScreenApp(Context context)
     {
-        String currentApp = getForegroundApp(context);
+        String currentApp = SysUtils.getForegroundApp(context);
         detectLockScreenApp(context, currentApp);
     }
 
@@ -1092,7 +1071,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     popupLockScreenChangedDialog(context, currentApp);
                 }
             } else // when the device is secured - then the stock lock screen is currently used
-                if (isKeyguardLocked(context)) {
+                if (SysUtils.isKeyguardLocked(context)) {
                     if (!lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME)) {
                         // store current app as the lock screen app until next time
                         Log.d("NiLS", "stock lock screen app detected");
@@ -1142,7 +1121,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     public static boolean shouldHideNotifications(Context context, boolean autoDetect)
     {
-        String currentApp = getForegroundApp(context);
+        String currentApp = SysUtils.getForegroundApp(context);
         return shouldHideNotifications(context, currentApp, autoDetect);
     }
 
@@ -1159,8 +1138,9 @@ public class NotificationsService extends Service implements NotificationsProvid
         {
             return true;
         }
-        // never show it on top of the dialer app
-        else if (!NiLSAccessibilityService.isServiceRunning(context) && currentApp.equals("com.android.dialer"))
+
+        // never show it on top of an incoming call
+        if (SysUtils.getForegroundActivity(context).contains("InCallActivity"))
             return true;
 
         if (autoDetect)
@@ -1169,44 +1149,10 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
 
         // check if the device is secured or the current app is the lock screen app
-        if (lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME ) && isKeyguardLocked(context) || lockScreenApp.equals(currentApp))
+        if (lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME ) && SysUtils.isKeyguardLocked(context) || lockScreenApp.equals(currentApp))
             shouldHide = false;
 
         return shouldHide;
-    }
-
-    public static String getForegroundApp(Context context)
-    {
-        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> tasks = mActivityManager.getRunningTasks(1);
-        return tasks.get(0).topActivity.getPackageName();
-    }
-
-    private static boolean isAppForground(Context context, String packageName)
-    {
-        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> l = mActivityManager
-                .getRunningAppProcesses();
-        Iterator<ActivityManager.RunningAppProcessInfo> i = l.iterator();
-        while (i.hasNext())
-        {
-            ActivityManager.RunningAppProcessInfo info = i.next();
-            for (String p : info.pkgList)
-            {
-                if (p.equals(packageName) && info.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isKeyguardLocked(Context context)
-    {
-        KeyguardManager kmanager = (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            return kmanager.isKeyguardLocked();
-        else
-            return kmanager.inKeyguardRestrictedInputMode();
     }
 
     public void NiLSFPCreate()
@@ -1325,7 +1271,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             intent.putExtra("action", action);
             intent.putExtra("package", packageName);
             intent.putExtra("uid", uid);
-            intent.putExtra("lockscreen_package", getForegroundApp(getApplicationContext()));
+            intent.putExtra("lockscreen_package", SysUtils.getForegroundApp(getApplicationContext()));
             startActivity(intent);
         }
     }
@@ -1337,7 +1283,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
         if (  !lockscreenPackageName.equals(NotificationsService.GO_LOCKER_PACKAGENAME) &&
               !lockscreenPackageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) &&
-              isKeyguardLocked(context) &&
+              SysUtils.isKeyguardLocked(context) &&
               prefs.getBoolean(SettingsManager.UNLOCK_ON_OPEN, SettingsManager.DEFAULT_UNLOCK_ON_OPEN))
         {
             Intent intent = new Intent(context, UnlockDeviceActivity.class);

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.roymam.android.common.SysUtils;
+
 public class UnlockDeviceActivity extends Activity
 {
     public void onCreate(Bundle savedInstanceState)
@@ -18,7 +20,7 @@ public class UnlockDeviceActivity extends Activity
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-        if (NotificationsService.isKeyguardLocked(this))
+        if (SysUtils.isKeyguardLocked(this))
         {
             // if keyguard is active, wait until the device will be unlocked, then finish the activity
             registerReceiver(new BroadcastReceiver()

@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -19,6 +18,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import com.roymam.android.common.BitmapUtils;
+import com.roymam.android.common.SysUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -244,7 +244,7 @@ public class NiLSAccessibilityService extends AccessibilityService
         if (packageName != null && mBound)
         {
             // stock lock screen detection
-            if (packageName.equals("android") && NotificationsService.isKeyguardLocked(this))
+            if (packageName.equals("android") && SysUtils.isKeyguardLocked(this))
                 packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
 
             boolean dontHide = prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE);
@@ -381,6 +381,6 @@ public class NiLSAccessibilityService extends AccessibilityService
 
     public static boolean isServiceRunning(Context context)
     {
-        return NotificationsService.isServiceRunning(context, NiLSAccessibilityService.class);
+        return SysUtils.isServiceRunning(context, NiLSAccessibilityService.class);
     }
 }

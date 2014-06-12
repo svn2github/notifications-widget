@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.roymam.android.common.SysUtils;
 import com.roymam.android.nilsplus.CardPreferenceFragment;
 import com.roymam.android.notificationswidget.NiLSAccessibilityService;
-import com.roymam.android.notificationswidget.NotificationsService;
 import com.roymam.android.notificationswidget.R;
 import com.roymam.android.notificationswidget.SettingsManager;
 
@@ -29,7 +29,7 @@ public class MainPrefsFragment extends CardPreferenceFragment
         super.onResume();
 
         // NiLS Service Status
-        boolean serviceRunning = NotificationsService.isServiceRunning(mContext);
+        boolean serviceRunning = SysUtils.isServiceRunning(mContext);
 
         if (serviceRunning)
             mPrefNiLSService.setChecked(true);

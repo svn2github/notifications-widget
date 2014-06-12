@@ -443,9 +443,9 @@ public class NPViewManager
             if (lockScreenApp.equals("auto"))
                 lockScreenApp = prefs.getString("lockscreenapp_auto", "android");
 
-            String currentApp = NotificationsService.getForegroundApp(context);
+            String currentApp = SysUtils.getForegroundApp(context);
 
-            boolean shouldHideNotificaitons = (!NotificationsService.isKeyguardLocked(context) &&
+            boolean shouldHideNotificaitons = (!SysUtils.isKeyguardLocked(context) &&
                 !currentApp.equals(lockScreenApp) ||
                 currentApp.equals(SettingsManager.STOCK_PHONE_PACKAGENAME));
 
@@ -968,7 +968,7 @@ public class NPViewManager
         }
     }
 
-    public void notifyDataChanged(long uid)
+    public void notifyDataChanged(int uid)
     {
         mNPListView.notifyDataChanged();
 
