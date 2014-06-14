@@ -168,94 +168,10 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
 
             if (itemId != null && !mItemIdTopMap.containsKey(itemId))
             {
-                Log.d("NiLS", "position:" + position + " id:" + itemId + " top:" + child.getTop());
                 mItemIdTopMap.put(itemId, child.getTop());
             }
         }
     }
-
-    /*
-    public void animateNotificationsChange() {
-        // animating moving of notifications in the list from their previous position to the current position
-        final NotificationAdapter mAdapter = (NotificationAdapter) listView.getAdapter();
-        final ViewTreeObserver observer = listView.getViewTreeObserver();
-
-        // if a previous call hasn't been ended yet then do not call this again
-        if (mPreDrawListener != null) return; //observer.removeOnPreDrawListener(mPreDrawListener);
-
-        Log.d("NiLS", "animateNotificationsChange");
-
-        // create pre draw listener
-        if (mNotificationsStateSaved)
-        {
-            mPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-                public boolean onPreDraw() {
-                    try {
-                        ViewTreeObserver observer = listView.getViewTreeObserver();
-                        observer.removeOnPreDrawListener(mPreDrawListener);
-                        mPreDrawListener = null;
-                    } catch (Exception exp) {
-                        exp.printStackTrace();
-                    }
-                    ;
-
-                    boolean firstAnimation = true;
-                    int firstVisiblePosition = listView.getFirstVisiblePosition();
-                    for (int i = 0; i < listView.getChildCount(); ++i) {
-                        final View child = listView.getChildAt(i);
-                        int position = firstVisiblePosition + i;
-                        long itemId = mAdapter.getItemId(position);
-                        Integer startTop = mItemIdTopMap.get(itemId);
-                        int top = child.getTop();
-                        if (startTop != null) {
-                            Log.d("NiLS", "position:" + position + " id:" + itemId + " top:" + child.getTop() + " dest:" + startTop);
-                            if (startTop != top) {
-                                int delta = startTop - top;
-                                child.setTranslationY(delta);
-                                child.animate().setDuration(mAnimationTime).translationY(0).setListener(null);
-                                if (firstAnimation) {
-                                    mOnAnimation = true;
-                                    child.animate().setListener(new AnimatorListenerAdapter() {
-                                        @Override
-                                        public void onAnimationEnd(Animator animation) {
-                                            listView.setEnabled(true);
-                                            mOnAnimation = false;
-                                        }
-                                    });
-                                    firstAnimation = false;
-                                }
-                            }
-                        } else {
-                            // Animate new views along with the others. The catch is that they did not
-                            // exist in the start state, so we must calculate their starting position
-                            // based on neighboring views.
-                            Log.d("NiLS", "position:" + position + " id:" + itemId + " top: unknown");
-                            int childHeight = child.getHeight() + listView.getDividerHeight();
-                            startTop = top + (i > 0 ? childHeight : -childHeight);
-                            int delta = startTop - top;
-                            child.setTranslationY(delta);
-                            child.animate().setDuration(mAnimationTime).translationY(0).setListener(null);
-                            if (firstAnimation) {
-                                mOnAnimation = true;
-                                child.animate().setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        listView.setEnabled(true);
-                                        mOnAnimation = false;
-                                    }
-                                });
-                                firstAnimation = false;
-                            }
-                        }
-                    }
-                    mItemIdTopMap.clear();
-                    mNotificationsStateSaved = false;
-                    return true;
-                }
-            };
-            observer.addOnPreDrawListener(mPreDrawListener);
-        }
-    }*/
 
     public void show()
     {
@@ -284,7 +200,6 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
             Integer startTop = mItemIdTopMap.get(itemId);
             int top = child.getTop();
             if (startTop != null) {
-                Log.d("NiLS", "position:" + position + " id:" + itemId + " top:" + startTop + " >> " + top);
                 if (startTop != top) {
                     int delta = startTop - top;
                     child.setTranslationY(delta);
@@ -303,7 +218,6 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                 // Animate new views along with the others. The catch is that they did not
                 // exist in the start state, so we must calculate their starting position
                 // based on neighboring views.
-                Log.d("NiLS", "position:" + position + " id:" + itemId + " top: unknown");
                 int childHeight = child.getHeight() + listView.getDividerHeight();
                 startTop = top + (i > 0 ? childHeight : -childHeight);
                 int delta = startTop - top;

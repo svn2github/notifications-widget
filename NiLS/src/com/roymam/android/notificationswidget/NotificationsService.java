@@ -87,10 +87,8 @@ public class NotificationsService extends Service implements NotificationsProvid
     private ArrayList<NotificationData> mNotifications = new ArrayList<NotificationData>();
     private NotificationParser parser;
     private HashMap<String, PersistentNotification> persistentNotifications = new HashMap<String, PersistentNotification>();
-    private BroadcastReceiver receiver = null;
-    private boolean mDirty = true;
     private ReadWriteLock lock = new ReentrantReadWriteLock();;
-    private ArrayList<NotificationData> mFilteredNotificationsList;
+    private ArrayList<NotificationData> mFilteredNotificationsList = new ArrayList<NotificationData>();
     private final Handler mHandler = new Handler();
 
     // "singleton" like declaration
@@ -164,7 +162,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             mViewManagerCallbacks = null;
         }
 
-        // cleanup broadcast receiever
+        // cleanup broadcast receiver
         if (npreceiver != null)
         {
             unregisterReceiver(npreceiver);
@@ -309,7 +307,12 @@ public class NotificationsService extends Service implements NotificationsProvid
     //** Notifications Add/Remove Handling **/
     private void addNotification(NotificationData nd)
     {
-        if (viewManager != null) viewManager.saveNotificationsState();
+        addNotification(nd, true);
+    }
+
+    private void addNotification(NotificationData nd, boolean refresh)
+    {
+        if (viewManager != null && refresh) viewManager.saveNotificationsState();
         if (nd != null)
         {
             Log.d("NiLS","NotificationsService:addNotification " + nd.packageName + ":" + nd.id);
@@ -369,7 +372,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     // add the new notification
                     mNotifications.add(nd);
-                    mDirty = true;
                 }
             }
             finally
@@ -378,14 +380,17 @@ public class NotificationsService extends Service implements NotificationsProvid
             }
 
             // notify that the notification was added
-            if (listener != null && !nd.deleted && !ignoreNotification)
+            if (!ignoreNotification)
             {
+                if (listener != null)
                 if (updated)
                     listener.onNotificationUpdated(nd, changed, mCovered);
                 else
                     listener.onNotificationAdded(nd, true, mCovered);
                 listener.onNotificationsListChanged();
-                callUpdateViewManager(nd.uid);
+
+                if (refresh)
+                    refreshNotificationsList();
             }
         }
     }
@@ -431,7 +436,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                             {
                                 nd.deleted = true;
                                 cleared = true;
-                                mDirty = true;
 
                                 // notify that the notification was cleared
                                 clearedNotifications.add(nd);
@@ -441,7 +445,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                             // immediately remove notification
                             iter.remove();
                             cleared = true;
-                            mDirty = true;
 
                             // notify that the notification was cleared
                             clearedNotifications.add(nd);
@@ -457,15 +460,19 @@ public class NotificationsService extends Service implements NotificationsProvid
             }
 
             // notify listener for cleared notifications
-            if (cleared && listener != null)
+            if (cleared)
             {
                 if (viewManager != null) viewManager.saveNotificationsState();
-                for (NotificationData nd : clearedNotifications)
+                if (listener != null)
                 {
-                    listener.onNotificationCleared(nd);
+                    for (NotificationData nd : clearedNotifications)
+                    {
+                        listener.onNotificationCleared(nd);
+                    }
+                    listener.onNotificationsListChanged();
                 }
-                listener.onNotificationsListChanged();
-                callUpdateViewManager();
+
+                refreshNotificationsList();
             }
         }
     }
@@ -501,13 +508,17 @@ public class NotificationsService extends Service implements NotificationsProvid
     @Override
     public synchronized List<NotificationData> getNotifications()
     {
-        if (!mDirty)
-            return mFilteredNotificationsList;
+        return mFilteredNotificationsList;
+    }
 
-        mFilteredNotificationsList = new ArrayList<NotificationData>();
+    public void refreshNotificationsList()
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // re-create filtered notifications list
         if (context != null)
         {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            mFilteredNotificationsList = new ArrayList<NotificationData>();
             String sortBy = prefs.getString(SettingsManager.NOTIFICATIONS_ORDER, "time");
             Object[] arr;
 
@@ -532,10 +543,10 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
                 sortNotificationsList(mFilteredNotificationsList, sortBy);
             }
-        }
 
-        mDirty = false;
-        return mFilteredNotificationsList;
+            // notify that the list was changed
+            callUpdateViewManager();
+        }
     }
 
     @Override
@@ -631,9 +642,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                     // if its event - mark it as deleted
                     if (nd.event)
                         nd.deleted = true;
-                    else // otehrwise remove it immediately
+                    else // otherwise remove it immediately
                         i.remove();
-                    mDirty = true;
                 }
             }
         }
@@ -642,26 +652,23 @@ public class NotificationsService extends Service implements NotificationsProvid
             w.unlock();
         }
 
-        // notify listener for cleared notifications
-        if (listener != null)
+        for(NotificationData nd : clearedNotifications)
         {
-            for(NotificationData nd : clearedNotifications)
-            {
-                // notify android to clear it too
-                if (syncback)
-                    try
-                    {
-                        cancelNotification(nd.packageName, nd.tag, nd.id);
-                    }
-                    catch (Exception exp)
-                    {
-                        exp.printStackTrace();
-                    }
-                listener.onNotificationCleared(nd);
-            }
-            listener.onNotificationsListChanged();
-            callUpdateViewManager();
+            // notify android to clear it too
+            if (syncback)
+                try
+                {
+                    cancelNotification(nd.packageName, nd.tag, nd.id);
+                }
+                catch (Exception exp)
+                {
+                    exp.printStackTrace();
+                }
+            if (listener != null) listener.onNotificationCleared(nd);
         }
+        if (listener != null) listener.onNotificationsListChanged();
+
+        refreshNotificationsList();
     }
 
     private void cancelNotification(String packageName, String tag, int id)
@@ -707,7 +714,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                         else
                             i.remove();
 
-                        mDirty = true;
                         changed = true;
                         clearedNotifications.add(nd);
                     }
@@ -719,7 +725,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             }
         }
         // notify listener for cleared notifications
-        if (changed && listener != null)
+        if (changed)
         {
             for(NotificationData nd : clearedNotifications)
             {
@@ -732,10 +738,11 @@ public class NotificationsService extends Service implements NotificationsProvid
                     {
                         exp.printStackTrace();
                     }
-                listener.onNotificationCleared(nd);
+                if (listener != null) listener.onNotificationCleared(nd);
             }
-            listener.onNotificationsListChanged();
-            callUpdateViewManager();
+            if (listener != null) listener.onNotificationsListChanged();
+
+            refreshNotificationsList();
         }
     }
 
@@ -771,7 +778,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                     else
                         iter.remove();
 
-                    mDirty = true;
                     removed = true;
                 }
             }
@@ -819,8 +825,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 listener.onNotificationsListChanged();
             }
 
-            // notify view manager that the data has been changed
-            callUpdateViewManager();
+            refreshNotificationsList();
         }
         else
         {
@@ -840,11 +845,13 @@ public class NotificationsService extends Service implements NotificationsProvid
         try {
             if (!parser.isPersistent(n, packageName)) {
                 List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
+                if (viewManager != null) viewManager.saveNotificationsState();
                 for (NotificationData nd : notifications) {
-                    addNotification(nd);
+                    addNotification(nd, false);
                 }
                 // after adding all of the new notifications delete all of the old ones that marked as deleted
                 purgeDeletedNotifications(packageName, id);
+                refreshNotificationsList();
             } else {
                 PersistentNotification pn = parser.parsePersistentNotification(n, packageName, id);
                 addPersistentNotification(pn);
@@ -990,59 +997,79 @@ public class NotificationsService extends Service implements NotificationsProvid
                         checkLockScreenPendingIntent = null;
                     }
                 }
-                else if (intent.getAction().equals(CHECK_LSAPP) || intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                    boolean autoDetect = false;
+                else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
+                {
                     boolean accessibilityServiceIsActive = NiLSAccessibilityService.isServiceRunning(context);
+                    Log.d("NiLS", "ACTION_SCREEN_ON - auto detecting lock screen app");
 
-                    if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                        Log.d("NiLS", "ACTION_SCREEN_ON - auto detecting lock screen app");
-
-                        // if the accessibility service is not running start monitoring the active app
-                        if (!accessibilityServiceIsActive) {
-                            detectLockScreenApp(context);
-                            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                            checkLockScreenPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(CHECK_LSAPP), PendingIntent.FLAG_UPDATE_CURRENT);
-                            am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500, 500, checkLockScreenPendingIntent);
-                        }
-
-                        // make sure screen will stay on as needed seconds as defined on settings
-                        mSysUtils.turnScreenOn(true);
-                    }
-
-                    // if the accessibility service is not running - try to detect the current app
+                    // if the accessibility service is not running start monitoring the active app
                     if (!accessibilityServiceIsActive)
                     {
-                        if (shouldHideNotifications(autoDetect)) {
-                            if (checkLockScreenPendingIntent != null) {
-                                Log.d("NiLS", "lock screen is no longer active, stop monitoring");
-                                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                                am.cancel(checkLockScreenPendingIntent);
-                                checkLockScreenPendingIntent = null;
-                            }
+                        // detect current lock screen
+                        detectLockScreenApp(context);
+
+                        // show / hide notifications list
+                        if (shouldHideNotifications(false))
+                        {
                             hide(false);
                             // send a broadcast the device is unlocked and hide notifications list immediately
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
                         }
                         else
+                        {
+                            viewManager.refreshLayout(false);
                             show(true);
+
+                            // start polling current app to see if the device is unlocked
+                            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            checkLockScreenPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(CHECK_LSAPP), PendingIntent.FLAG_UPDATE_CURRENT);
+                            am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500, 500, checkLockScreenPendingIntent);
+
+                            // make sure screen will stay on as needed seconds as defined on settings
+                            mSysUtils.turnScreenOn(true);
+                        }
                     }
+                    // if the accessibility service is not running
                     else
                     {
                         // check if the last detected package name is not the lock screen app
                         String lastPackage = prefs.getString(NiLSAccessibilityService.LAST_OPENED_WINDOW_PACKAGENAME, SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME);
                         detectLockScreenApp(context, lastPackage);
 
-                        if (shouldHideNotifications(context, lastPackage, false)) {
-                            Log.d("NiLS","lock screen app: " + prefs.getString(SettingsManager.LOCKSCREEN_APP, SettingsManager.DEFAULT_LOCKSCREEN_APP));
-                            Log.d("NiLS","last package: " + lastPackage);
+                        if (shouldHideNotifications(context, lastPackage, false))
+                        {
                             // if it is not the lock screen app - call "unlock" method
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
                         }
-                        else {
+                        else
+                        {
                             // show notifications when the screen is turned on and the lock screen is displayed
                             viewManager.refreshLayout(false);
                             show(true);
+
+                            // make sure screen will stay on as needed seconds as defined on settings
+                            mSysUtils.turnScreenOn(true);
                         }
+                    }
+                }
+                else if (intent.getAction().equals(CHECK_LSAPP))
+                {
+                    // check if another (non-lock screen) app was launched
+                    if (shouldHideNotifications(false))
+                    {
+                        // hide notifications list
+                        hide(false);
+
+                        // stop checking
+                        if (checkLockScreenPendingIntent != null) {
+                            Log.d("NiLS", "lock screen is no longer active, stop monitoring");
+                            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            am.cancel(checkLockScreenPendingIntent);
+                            checkLockScreenPendingIntent = null;
+                        }
+
+                        // send a broadcast the device is unlocked and hide notifications list immediately
+                        sendBroadcast(new Intent(DEVICE_UNLOCKED));
                     }
                 }
             }
@@ -1089,25 +1116,52 @@ public class NotificationsService extends Service implements NotificationsProvid
     }
 
     private static PopupDialog pd = null;
+    private static PopupDialog pd2 = null;
 
     private static void popupLockScreenChangedDialog(final Context context, final String currentApp)
     {
         if (pd == null) pd = PopupDialog.create(context);
+        if (pd2 != null) pd2.hide();
         pd.setTitle(context.getString(R.string.new_lock_screen_detected, SettingsManager.PrefsGeneralFragment.getAppName(context, currentApp)))
           .setText(context.getString(R.string.new_lock_screen_detected_text, SettingsManager.PrefsGeneralFragment.getCurrentLockScreenAppName(context)))
-          .setPositiveButton(context.getString(R.string.change), new View.OnClickListener() {
+          .setPositiveButton(context.getString(R.string.yes), new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                  prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
+                  if (NotificationsService.getSharedInstance() != null)
+                      NotificationsService.getSharedInstance().show(false);
+                  pd.hide();
+              }
+          })
+                .setNegativeButton(context.getString(R.string.no), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                        prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
-                        if (NotificationsService.getSharedInstance() != null)
-                            NotificationsService.getSharedInstance().show(false);
-                        pd.hide();
-                    }
-                })
-                .setNegativeButton(context.getString(R.string.keep), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                        int n = prefs.getInt(SettingsManager.NUMBER_OF_LS_DETECT_REFUSES, 0);
+                        n++;
+                        if (n == 3) {
+                            if (pd2 == null) pd2 = PopupDialog.create(context);
+                            pd2.setTitle(context.getString(R.string.never_suggest_title))
+                                    .setText(context.getString(R.string.never_suggest_lockscreen_apps))
+                                    .setPositiveButton(context.getString(R.string.yes), new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            pd2.hide();
+                                        }
+                                    })
+                                    .setNegativeButton(context.getString(R.string.no), new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                                            prefs.edit().putBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, false).commit();
+                                            pd.hide();
+                                        }
+                                    })
+                                    .show();
+                            n = 0;
+                        }
+                        prefs.edit().putInt(SettingsManager.NUMBER_OF_LS_DETECT_REFUSES, n).commit();
                         pd.hide();
                     }
                 })
@@ -1145,8 +1199,12 @@ public class NotificationsService extends Service implements NotificationsProvid
             return true;
         }
 
-        // never show it on top of an incoming call
-        if (SysUtils.getForegroundActivity(context).contains("InCallActivity"))
+
+        String activity =  SysUtils.getForegroundActivity(context);
+        if (activity.contains("InCallActivity") ||          // never show it on top of an incoming call
+            activity.contains("ScreensaverActivity") ||     // never show it on top of daydream
+            activity.contains("PopupNotificationLocked") || // never show it on top of WhatsApp popup
+            activity.contains("AlarmActivity"))             // never show it on top of AlarmClock
             return true;
 
         if (autoDetect)

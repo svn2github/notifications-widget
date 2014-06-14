@@ -126,9 +126,9 @@
     <string name="current_lock_screen_app">Current lock screen app:%s</string>
     <string name="stock_lock_screen">Android (Stock)</string>
     <string name="new_lock_screen_detected">%s lock screen app detected</string>
-    <string name="new_lock_screen_detected_text">Click \"Change\" to display notifications on top of it.\nClick \"Keep\" to keep current lock screen (%s).</string>
-    <string name="change">Change</string>
-    <string name="keep">Keep</string>
+    <string name="new_lock_screen_detected_text">Would you like to display notifications on top of it instead of your current lock screen (%s)?</string>
+    <string name="never_suggest_title">Keep detecting lock screen app?</string>
+    <string name="never_suggest_lockscreen_apps">Would you like NiLS to automatically detect your current lock screen app next time?\nYou can always change this option on NiLS Global Settings > Advanced</string>
     <string name="experimental">Experimental </string>
     <string name="max_lines">Maximum text lines</string>
     <string name="show_full_notification">Show full notification content</string>

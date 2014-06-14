@@ -239,6 +239,7 @@ public class SettingsManager
     public static final String PRIVACY_SHOW_ALL = "none";
     public static final String DEFAULT_NOTIFICATION_PRIVACY = PRIVACY_SHOW_ALL;
     public static final String IMMEDIATE_PROXIMITY = "immediate_proximity";
+    public static String NUMBER_OF_LS_DETECT_REFUSES = "num_of_refuses";
 
     public static boolean shouldHideNotifications(Context context, String widgetMode)
     {

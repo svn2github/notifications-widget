@@ -285,12 +285,19 @@ public class NiLSAccessibilityService extends AccessibilityService
         }
     }
 
+    private String lastWindowContentPackageName = "";
     private void handleAutoHideWhenWindowContentChanged(AccessibilityEvent accessibilityEvent)
     {
         CharSequence packageName = accessibilityEvent.getPackageName();
 
         if (packageName != null && mBound)
         {
+            if (!packageName.toString().equals(lastWindowContentPackageName))
+            {
+                lastWindowContentPackageName = packageName.toString();
+                Log.d("NiLS","window content has been changed:" + lastWindowContentPackageName);
+            }
+
             //if (packageName.equals("android")) packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
 
             // hide FP when WidgetLocker side menu appears
@@ -312,12 +319,13 @@ public class NiLSAccessibilityService extends AccessibilityService
                 }
             }
             // hide NiLS when status bar is displayed
-            else if (packageName.equals("com.android.systemui"))
+            else if (packageName.equals("com.android.systemui") || packageName.equals("android"))
             {
                 mHiddenBecauseOfSystemUI = true;
                 Log.d("NiLS","window content has been changed:" + packageName.toString());
                 mService.hide(false);
             }
+
             // show NiLS back the lock screen app is displayed back
             else if (mHiddenBecauseOfSystemUI &&
                     !NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
