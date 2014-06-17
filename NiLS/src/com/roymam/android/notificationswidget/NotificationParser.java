@@ -21,6 +21,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.text.style.CharacterStyle;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -323,7 +324,7 @@ public class NotificationParser
             {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(event);
                 // try to split it by text style
-                TextAppearanceSpan[] spans = ssb.getSpans(0, event.length(), TextAppearanceSpan.class);
+                CharacterStyle[] spans = ssb.getSpans(0, event.length(), CharacterStyle.class);
                 if (spans.length == 2)
                 {
                     int s0start = ssb.getSpanStart(spans[0]);
@@ -332,7 +333,6 @@ public class NotificationParser
                     int s1start = ssb.getSpanStart(spans[1]);
                     int s1end = ssb.getSpanEnd(spans[1]);
                     nd.text = event.subSequence(s1start, s1end).toString();
-
                 }
                 else
                 {

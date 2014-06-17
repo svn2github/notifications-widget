@@ -145,4 +145,9 @@ public class PopupDialog {
 
         return this;
     }
+
+    public boolean isVisible()
+    {
+        return mVisible;
+    }
 }

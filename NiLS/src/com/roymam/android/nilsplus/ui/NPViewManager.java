@@ -82,22 +82,12 @@ public class NPViewManager
         @Override
         public void run()
         {
-            /*if (mData.size() == 0)
-            {
-                safeRemoveView(mTouchAreaView);
-                mPrevHeight = 0;
-            }
-            else */
             {
                 // update touch area
-                //int h = mPreviewItem != null?getMaxLines():mData.size();
                 int height = Math.min(getHeight(), mPreviewItem != null? getPreviewHeight():mNPListView.getItemsHeight());
                 if (height != mPrevHeight)
                 {
-                    /*if (mPrevHeight == 0)
-                        safeAddView(mTouchAreaView, getTouchAreaLayoutParams());
-                    else*/
-                    safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+                    safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams(true));
 
                     mPrevHeight = height;
                 }
@@ -163,7 +153,7 @@ public class NPViewManager
         mContext = context;
         mCallbacks = callbacks;
 
-        // create an handler for schduling tasks
+        // create an handler for scheduling tasks
         mHandler = new Handler();
 
         // load system configuration
@@ -511,7 +501,7 @@ public class NPViewManager
         mPreviewView.updateSizeAndPosition(pos, size);
 
         // update touch area
-        safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+        safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams(true));
 
         // enable edit mode if not enabled already
         enableEditMode();
@@ -555,7 +545,7 @@ public class NPViewManager
     {
         try
         {
-            safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+            safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams(true));
         }
         catch (Exception exception)
         {
@@ -718,10 +708,10 @@ public class NPViewManager
 
     private void addAllViews()
     {
-        mWindowManager.addView(mNPListView, getFullScreenLayoutParams());
-        mWindowManager.addView(mPreviewView, getFullScreenLayoutParams());
-        mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams());
-        mWindowManager.addView(mEditModeView, getEditModeLayoutParams());
+        mWindowManager.addView(mNPListView, getFullScreenLayoutParams(true));
+        mWindowManager.addView(mPreviewView, getFullScreenLayoutParams(true));
+        mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams(true));
+        mWindowManager.addView(mEditModeView, getEditModeLayoutParams(true));
         /*
         boolean newViews = true;
         newViews &= safeAddView(mNPListView, getFullScreenLayoutParams());
@@ -758,12 +748,15 @@ public class NPViewManager
         }
     }
 
-    private WindowManager.LayoutParams getEditModeLayoutParams()
+    private WindowManager.LayoutParams getEditModeLayoutParams(boolean keyguard)
     {
+        int type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        if (!keyguard) type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                type,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
 
@@ -886,20 +879,26 @@ public class NPViewManager
         //safeUpdateView(mNPListView, mWidgetDragParams);
     }
 
-    private WindowManager.LayoutParams getFullScreenLayoutParams()
+    private WindowManager.LayoutParams getFullScreenLayoutParams(boolean keyguard)
     {
+        int type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+        if (!keyguard) type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY   ,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                type,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT
         );
         return params;
     }
 
-    private WindowManager.LayoutParams getTouchAreaLayoutParams()
+    private WindowManager.LayoutParams getTouchAreaLayoutParams(boolean keyguard)
     {
+        int type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        if (!keyguard) type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+
         Point displaySize = getDisplaySize();
         Point size = getWidgetSize();
         size.y = Math.min(size.y, mNPListView.getItemsHeight());
@@ -908,7 +907,7 @@ public class NPViewManager
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 size.x,
                 size.y,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                type,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
 
@@ -1058,6 +1057,6 @@ public class NPViewManager
         mPreviewView.updateSizeAndPosition(pos, size);
 
         // update touch area
-        safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams());
+        safeUpdateView(mTouchAreaView, getTouchAreaLayoutParams(true));
     }
 }

@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -31,6 +32,7 @@ public class NiLSAccessibilityService extends AccessibilityService
     private NotificationParser parser;
     private int notificationId = 0;
     private String clearButtonName = "Clear all notifications.";
+    private PowerManager pm;
 
     private NotificationsService mService;
     boolean mBound = false;
@@ -60,10 +62,6 @@ public class NiLSAccessibilityService extends AccessibilityService
     {
         Log.d("NiLS","NiLSAccessibilityService:onServiceConnected");
 
-        // start NotificationsService
-        //Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
-        //getApplicationContext().startService(intent);
-
         // create a notification parser
         parser = new NotificationParser(getApplicationContext());
 
@@ -72,6 +70,8 @@ public class NiLSAccessibilityService extends AccessibilityService
         // Bind to NotificationsService
         Intent intent = new Intent(this, NotificationsService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
     }
 
     @Override
@@ -269,8 +269,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                 mService.show(false);
             }
 
-            // notify if device was unlocked
-            if (mLocked && shouldHide)
+            if (mLocked && shouldHide && pm.isScreenOn())
             {
                 sendBroadcast(new Intent(NotificationsService.DEVICE_UNLOCKED));
             }
@@ -318,13 +317,6 @@ public class NiLSAccessibilityService extends AccessibilityService
                     mService.show(false);
                 }
             }
-            // hide NiLS when status bar is displayed
-            else if (packageName.equals("com.android.systemui") || packageName.equals("android"))
-            {
-                mHiddenBecauseOfSystemUI = true;
-                Log.d("NiLS","window content has been changed:" + packageName.toString());
-                mService.hide(false);
-            }
 
             // show NiLS back the lock screen app is displayed back
             else if (mHiddenBecauseOfSystemUI &&
@@ -333,6 +325,16 @@ public class NiLSAccessibilityService extends AccessibilityService
                 mHiddenBecauseOfSystemUI = false;
                 Log.d("NiLS","window content has been changed:" + packageName.toString());
                 mService.show(false);
+            }
+
+            // hide NiLS when status bar or power menu are displayed
+            else if (packageName.equals("com.android.systemui") || packageName.equals("android"))
+            {
+                Log.d("NiLS", "event:" + accessibilityEvent.toString());
+
+                mHiddenBecauseOfSystemUI = true;
+                Log.d("NiLS","window content has been changed:" + packageName.toString());
+                mService.hide(false);
             }
         }
     }

@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -77,6 +78,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     public static final String CHECK_LSAPP = "com.roymam.android.nils.CHECK_LS";
     public static final String INCOMING_CALL = "com.roymam.android.nils.INCOMING_CALL";
     public static final String DEVICE_UNLOCKED = "com.roymam.android.nils.UNLOCKED";
+    public static final String REFRESH_LIST = "com.roymam.android.nils.REFRESH_LIST";
 
     private NPReceiver npreceiver = null;
     private NPViewManager viewManager = null;
@@ -88,7 +90,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     private NotificationParser parser;
     private HashMap<String, PersistentNotification> persistentNotifications = new HashMap<String, PersistentNotification>();
     private ReadWriteLock lock = new ReentrantReadWriteLock();;
-    private ArrayList<NotificationData> mFilteredNotificationsList = new ArrayList<NotificationData>();
+    private ArrayList<NotificationData> mFilteredNotificationsList;
     private final Handler mHandler = new Handler();
 
     // "singleton" like declaration
@@ -110,6 +112,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         // create a notification parser
         context = getApplicationContext();
         parser = new NotificationParser(getApplicationContext());
+        mFilteredNotificationsList = new ArrayList<NotificationData>();
 
         // set up events listener
         setNotificationEventListener(new NotificationAdapter(context, new Handler()));
@@ -387,10 +390,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                     listener.onNotificationUpdated(nd, changed, mCovered);
                 else
                     listener.onNotificationAdded(nd, true, mCovered);
-                listener.onNotificationsListChanged();
 
                 if (refresh)
-                    refreshNotificationsList();
+                    callRefresh();
             }
         }
     }
@@ -469,17 +471,16 @@ public class NotificationsService extends Service implements NotificationsProvid
                     {
                         listener.onNotificationCleared(nd);
                     }
-                    listener.onNotificationsListChanged();
                 }
 
-                refreshNotificationsList();
+                callRefresh();
             }
         }
     }
 
-    private void callUpdateViewManager()
+    private void callRefresh()
     {
-        callUpdateViewManager(-1);
+        sendBroadcast(new Intent(REFRESH_LIST));
     }
 
     private void callUpdateViewManager(int uid)
@@ -511,7 +512,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         return mFilteredNotificationsList;
     }
 
-    public void refreshNotificationsList()
+    public synchronized void updateNotificationsList()
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -545,7 +546,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             }
 
             // notify that the list was changed
-            callUpdateViewManager();
+            updateViewManager(-1);
         }
     }
 
@@ -666,9 +667,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
             if (listener != null) listener.onNotificationCleared(nd);
         }
-        if (listener != null) listener.onNotificationsListChanged();
 
-        refreshNotificationsList();
+        callRefresh();
     }
 
     private void cancelNotification(String packageName, String tag, int id)
@@ -740,9 +740,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                     }
                 if (listener != null) listener.onNotificationCleared(nd);
             }
-            if (listener != null) listener.onNotificationsListChanged();
 
-            refreshNotificationsList();
+            callRefresh();
         }
     }
 
@@ -822,10 +821,9 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (listener != null)
             {
                 listener.onNotificationCleared(removedNd);
-                listener.onNotificationsListChanged();
             }
 
-            refreshNotificationsList();
+            callRefresh();
         }
         else
         {
@@ -851,7 +849,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
                 // after adding all of the new notifications delete all of the old ones that marked as deleted
                 purgeDeletedNotifications(packageName, id);
-                refreshNotificationsList();
+                callRefresh();
             } else {
                 PersistentNotification pn = parser.parsePersistentNotification(n, packageName, id);
                 addPersistentNotification(pn);
@@ -964,7 +962,12 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                 String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
 
-                if(intent.getAction().equals(Intent.ACTION_USER_PRESENT) && lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME) ||
+                if(intent.getAction().equals(REFRESH_LIST))
+                {
+                    updateNotificationsList();
+                    if (listener != null) listener.onNotificationsListChanged();
+                }
+                else if(intent.getAction().equals(Intent.ACTION_USER_PRESENT) && lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME) ||
                         intent.getAction().equals(WIDGET_LOCKER_UNLOCKED) ||
                         intent.getAction().equals(WIDGET_LOCKER_HIDE) ||
                         intent.getAction().equals(GO_LOCKER_UNLOCKED) ||
@@ -981,8 +984,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                         clearAllNotifications();
                     }
 
-                    // keep the screen the default timeout
-                    mSysUtils.turnScreenOn(true, true);
+                    // keep the screen on for the device default timeout
+                    PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+                    if (pm.isScreenOn()) mSysUtils.turnScreenOn(true, true);
                 }
                 else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
                 {
@@ -1103,6 +1107,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                     popupLockScreenChangedDialog(context, currentApp);
                 }
+                else hidePopups();
             } else // when the device is secured - then the stock lock screen is currently used
                 if (SysUtils.isKeyguardLocked(context)) {
                     if (!lockScreenApp.equals(STOCK_LOCKSCREEN_PACKAGENAME)) {
@@ -1112,11 +1117,20 @@ public class NotificationsService extends Service implements NotificationsProvid
                         popupLockScreenChangedDialog(context, STOCK_LOCKSCREEN_PACKAGENAME);
                     }
                 }
+                else hidePopups();
         }
     }
 
     private static PopupDialog pd = null;
     private static PopupDialog pd2 = null;
+
+    private static void hidePopups()
+    {
+        if (pd != null && pd.isVisible())
+            pd.hide();
+        if (pd2 != null && pd2.isVisible())
+            pd2.hide();
+    }
 
     private static void popupLockScreenChangedDialog(final Context context, final String currentApp)
     {
@@ -1294,6 +1308,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         registerReceiver(npreceiver, new IntentFilter(INCOMING_CALL));
         registerReceiver(npreceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
         registerReceiver(npreceiver, new IntentFilter(DEVICE_UNLOCKED));
+        registerReceiver(npreceiver, new IntentFilter(REFRESH_LIST));
 
         mSysUtils = SysUtils.getInstance(getApplicationContext(), mHandler);
     }

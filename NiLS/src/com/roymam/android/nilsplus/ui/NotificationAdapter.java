@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,23 +68,16 @@ public class NotificationAdapter extends BaseAdapter
     @Override
     public NotificationData getItem(int position)
     {
-        if (NotificationsService.getSharedInstance() != null) {
+        if (NotificationsService.getSharedInstance() != null)
+        {
             List<NotificationData> notifications = NotificationsService.getSharedInstance().getNotifications();
             if (position < notifications.size())
                 return notifications.get(position);
-            else {
-                // the list has probably been changed without notifying TODO: find where
-                notifyDataSetChanged();
-
-                // return the last item
-                if (notifications.size() > 0)
-                    return notifications.get(notifications.size()-1);
-                else
-                    return null;
-            }
-        }
-        else
+            Log.wtf("NiLS", "NotificationAdapter.getItem has been called with invalid position. this should never happen");
             return null;
+        }
+        Log.wtf("NiLS", "NotificationAdapter.getItem has been called when service is not running. this should never happen");
+        return null;
     }
 
     @Override
@@ -125,8 +119,7 @@ public class NotificationAdapter extends BaseAdapter
             holder = (ViewHolder) notificationView.getTag();
         }
 
-        if (item != null)
-            notificationView.setTag(R.integer.uid, new Long(item.getUid()));
+        notificationView.setTag(R.integer.uid, new Long(item.getUid()));
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         int primaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
@@ -314,7 +307,8 @@ public class NotificationAdapter extends BaseAdapter
             convertView = li.inflate(R.layout.notification_row, parent, false);
         }
 
-        applySettingsToView(context, convertView, item, position, mTheme, false);
+        if (item != null)
+            applySettingsToView(context, convertView, item, position, mTheme, false);
 
         // make sure that the view is visible (might have been hidden previously)
         convertView.setAlpha(1);
