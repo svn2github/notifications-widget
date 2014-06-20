@@ -150,7 +150,7 @@ public class SettingsManager
     // Floating Panel
     public static final String FP_ENABLED = "fp_enabled";
     public static final String FP_PACKAGE = "com.roymam.android.nilsplus";
-    public static final boolean DEFAULT_FP_ENABLED = true;
+    public static final boolean DEFAULT_FP_ENABLED = false;
     private static final int FIRST_INSTALLED_VERSION = 273;
 
     // settings strings
@@ -228,7 +228,7 @@ public class SettingsManager
     public static final boolean DEFAULT_FIT_HEIGHT_TO_CONTENT = true;
     public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
     public static final int DEFAULT_MAIN_BG_OPACITY = 100;
-    public static final String BLACKLIST_PACKAGENAMES = "cz.mpelant.deskclock|com.mobitobi.android.gentlealarm|com.android.dialer|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|com.google.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
+    public static final String BLACKLIST_PACKAGENAMES = "com.android.systemui|cz.mpelant.deskclock|com.mobitobi.android.gentlealarm|com.android.dialer|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|com.google.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay";
     public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
 
     // privacy options
@@ -245,7 +245,7 @@ public class SettingsManager
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        boolean fpEnabled = prefs.getBoolean(SettingsManager.FP_ENABLED, false);
+        boolean fpEnabled = prefs.getBoolean(SettingsManager.FP_ENABLED, SettingsManager.DEFAULT_FP_ENABLED);
         boolean overrideHideNotifications = prefs.getAll().containsKey(widgetMode + "." + SettingsManager.HIDE_NOTIFICATIONS);
         boolean hideNotifications = prefs.getBoolean(widgetMode + "." + SettingsManager.HIDE_NOTIFICATIONS, false);
 

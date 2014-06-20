@@ -75,7 +75,8 @@ public class NiLSActivity extends Activity
     private CharSequence mTitle;
     private String[] mTitles;
 
-    private ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle
+            mDrawerToggle;
     private Fragment fragment;
     private ServiceConnection mLicenseServiceConnection = null;
     private boolean mAmazonInAppAvailable = false;
@@ -201,13 +202,39 @@ public class NiLSActivity extends Activity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // show welcome wizard if it's first run
-        boolean showWelcomeWizard = prefs.getBoolean(SettingsManager.SHOW_WELCOME_WIZARD, true);
-        if (showWelcomeWizard)
+        int installedVer = prefs.getInt("installed_version", -1);
+        boolean npSuggested = prefs.getBoolean("np_suggested", false);
+
+        if (installedVer < 400 && installedVer >= 0 && !npSuggested) // if user upgraded from v1.4 or lower
         {
-            showWelcomeTutorial();
-            return;
+            // disable further panel suggestions
+            prefs.edit().putBoolean("np_suggested", true).commit();
+
+            boolean nilsfpInstalled = false;
+            try {
+                getPackageManager().getApplicationInfo("com.roymam.android.nilsplus", 0);
+                nilsfpInstalled = true;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (!nilsfpInstalled && isWidgetPlaced())
+            {
+                // suggest user to enable notifications panel
+                Intent intent = new Intent(this, StartupWizardActivity.class);
+                intent.putExtra(StartupWizardActivity.EXTRA_SUGGEST_NOTIFICATIONS_PANEL, true);
+                startActivity(intent);
+                finish();
+                return;
+            }
+            else
+            {
+                // the widget is not used or fp is installed so show the welcome screen
+                showWelcomeTutorial();
+                return;
+            }
         }
-        else
+        else // any other upgrade
         {
             showWhatsNew();
         }
@@ -294,10 +321,12 @@ public class NiLSActivity extends Activity
 
         if (currentVer > installedVer && installedVer != -1)
             startActivity(new Intent(this, WhatsNewActivity.class));
-        else if (installedVer == -1)
+        else if (installedVer == -1) {
+            // if this the first installation - store version number and show welcome tutorial
             prefs.edit().putInt("installed_version", currentVer).commit();
+            showWelcomeTutorial();
+        }
     }
-
 
     private static final int APPEARANCE_PAGE_INDEX = 2;
     private static final int WIDGET_PAGE_INDEX = 4;
@@ -329,10 +358,7 @@ public class NiLSActivity extends Activity
                 fragment = new ServicePreferencesFragment();
                 break;
             case 4:
-                AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
-                ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
-                int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(WIDGET_PRESENT, false) || widgetIds.length > 0)
+                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(WIDGET_PRESENT, false) || isWidgetPlaced())
                 {
                     fragment = new WidgetSettingsFragment();
                 }
@@ -369,6 +395,14 @@ public class NiLSActivity extends Activity
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
+    private boolean isWidgetPlaced()
+    {
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+        ComponentName widgetComponent = new ComponentName(this, NotificationsWidgetProvider.class);
+        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+        return (widgetIds.length > 0);
+    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState)
@@ -392,10 +426,12 @@ public class NiLSActivity extends Activity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        if (mDrawerLayout != null) {
+            // If the nav drawer is open, hide action items related to the content view
+            boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 
-        menu.findItem(R.id.show_welcome).setVisible(!drawerOpen);
+            menu.findItem(R.id.show_welcome).setVisible(!drawerOpen);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -421,14 +457,16 @@ public class NiLSActivity extends Activity
     {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        if (mDrawerToggle != null)
+            mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        if (mDrawerToggle != null)
+            mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -436,26 +474,25 @@ public class NiLSActivity extends Activity
     {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item))
-        {
-            return true;
-        }
+        if (mDrawerToggle != null) {
+            if (mDrawerToggle.onOptionsItemSelected(item)) {
+                return true;
+            }
 
-        // Handle other action bar items...
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                getFragmentManager().popBackStack();
-                if (getFragmentManager().getBackStackEntryCount() == 1)
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                return true;
-            case R.id.show_welcome:
-                showWelcomeTutorial();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            // Handle other action bar items...
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    // app icon in action bar clicked; go home
+                    getFragmentManager().popBackStack();
+                    if (getFragmentManager().getBackStackEntryCount() == 1)
+                        mDrawerToggle.setDrawerIndicatorEnabled(true);
+                    return true;
+                case R.id.show_welcome:
+                    showWelcomeTutorial();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /** IAP Stuff **/

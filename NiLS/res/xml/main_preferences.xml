@@ -15,7 +15,7 @@
         android:title="@string/notification_panel"
         android:summaryOn="@string/notification_panel_is_active"
         android:summaryOff="@string/notification_panel_is_inactive"
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:layout="@layout/card_switch_layout"
         />
 

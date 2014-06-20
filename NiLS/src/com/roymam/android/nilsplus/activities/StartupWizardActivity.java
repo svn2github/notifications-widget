@@ -26,7 +26,10 @@ import java.util.List;
 
 public class StartupWizardActivity extends Activity implements ViewPager.OnPageChangeListener {
     public static final String EXTRA_FIRST_TIME = "extra_not_first_time";
+    public static final String EXTRA_SUGGEST_NOTIFICATIONS_PANEL = "extra_suggest_np";
+    private static int NILS_IS_ACTIVE_PAGE = 2;
     private static int WELCOME_PAGE_INDEX = 0;
+    private static int ENABLE_NOTIFICATIONS_PANEL_INDEX = -1;
     private static int START_SERVICE_PAGE_INDEX = 1;
     private static int FINISH_PAGE_INDEX = 5;
     private LimitedViewPager mViewPager;
@@ -65,6 +68,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
         super.onCreate(savedInstanceState);
 
         boolean firstTime = getIntent().getBooleanExtra(EXTRA_FIRST_TIME, false);
+        boolean suggestNotificationsPanel = getIntent().getBooleanExtra(EXTRA_SUGGEST_NOTIFICATIONS_PANEL, false);
 
         fragments = new ArrayList<Fragment>();
         if (firstTime)
@@ -75,14 +79,31 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
             fragments.add(new NiLSTutorial2());
             fragments.add(new NiLSTutorial3());
             fragments.add(new NiLSTutorial4());
+            ENABLE_NOTIFICATIONS_PANEL_INDEX = -1;
             WELCOME_PAGE_INDEX = 0;
+            NILS_IS_ACTIVE_PAGE = 2;
             START_SERVICE_PAGE_INDEX = 1;
             FINISH_PAGE_INDEX = 5;
+        }
+        else if (suggestNotificationsPanel)
+        {
+            fragments.add(new EnableNotificationsPanel());
+            fragments.add(new NiLSTutorial1());
+            fragments.add(new NiLSTutorial2());
+            fragments.add(new NiLSTutorial3());
+            fragments.add(new NiLSTutorial4());
+            ENABLE_NOTIFICATIONS_PANEL_INDEX = 0;
+            NILS_IS_ACTIVE_PAGE = 1;
+            WELCOME_PAGE_INDEX = -1;
+            START_SERVICE_PAGE_INDEX = -1;
+            FINISH_PAGE_INDEX = 4;
         }
         else
         {
             // set the activity to display only the "start service" page
             fragments.add(new StartServiceFragment());
+            ENABLE_NOTIFICATIONS_PANEL_INDEX = -1;
+            NILS_IS_ACTIVE_PAGE = -1;
             START_SERVICE_PAGE_INDEX = 0;
             FINISH_PAGE_INDEX = 0;
             WELCOME_PAGE_INDEX = -1;
@@ -142,11 +163,18 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
         mNext.setVisibility(View.VISIBLE);
         mNext.setEnabled(true);
         mSkip.setVisibility(View.VISIBLE);
+        mSkip.setText(R.string.tutorial_skip);
         mNext.setText(R.string.tutorial_next);
+        limitPaging(false);
 
         if (i == WELCOME_PAGE_INDEX) {
             mSkip.setVisibility(View.GONE);
             mNext.setText(R.string.tutorial_1_lets_get_started);
+        }
+        if (i == ENABLE_NOTIFICATIONS_PANEL_INDEX) {
+            mSkip.setText(R.string.enable_notifications_panel_later);
+            mNext.setText(R.string.enable_notifications_panel_now);
+            mViewPager.setLimit(0);
         }
         if (i == START_SERVICE_PAGE_INDEX) {
             mSkip.setVisibility(View.GONE);
@@ -162,6 +190,12 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
                 if (mNext != null) mNext.setEnabled(false);
                 limitPaging(true);
             }
+        }
+        if (i == NILS_IS_ACTIVE_PAGE)
+        {
+            // enable notifications panel when tutorial appears
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            prefs.edit().putBoolean(SettingsManager.FP_ENABLED, true).commit();
         }
         if (i == FINISH_PAGE_INDEX) {
             mSkip.setVisibility(View.GONE);
@@ -266,4 +300,11 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
         }
     }
 
+    public static class EnableNotificationsPanel extends GenericNextSkipTutorial
+    {
+        public EnableNotificationsPanel()
+        {
+            super(R.layout.try_notification_panel);
+        }
+    }
 }

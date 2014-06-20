@@ -604,6 +604,10 @@
     <string name="tutorial_6_title_1">That\'s All</string>
     <string name="tutorial_6_text_1"><![CDATA[Tap "Finish" to complete the tutorial, then tap on NiLS icon to get access to many options and customizations\n\nEnjoy the app!]]></string>
     <string name="tutorial_6_finish">Finish</string>
+    <string name="enable_notifications_panel_text_1">NiLS v1.5 introduces a new and exciting way to get and interact with your notifications.</string>
+    <string name="enable_notifications_panel_text_2">Enable Notifications Panel to see notifications on top of your lock screen without using a widget and enjoy swiping gestures, rich appearance customizations, themes support and many more options.</string>
+    <string name="enable_notifications_panel_now">Enable Now</string>
+    <string name="enable_notifications_panel_later">Try it Later</string>
 
     <!-- Other stuff -->
     <string name="nils_service_is_not_running">NiLS Service is not running</string>

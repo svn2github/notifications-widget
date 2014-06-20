@@ -1,4 +1,4 @@
 <resources>
-    <bool name="amazon">false</bool>
+    <bool name="amazon">true</bool>
     <integer name="uid">0</integer>
 </resources>

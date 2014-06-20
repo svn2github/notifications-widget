@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="v295_title">v1.5</string>
-    <string name="v295">
+    <string name="v400_title">v1.5</string>
+    <string name="v400">
         <![CDATA[
             <b>Huge update! so many improvements:</b><br>
             <br><b>&#8226;	NiLS FP has been integrated into NiLS </b> Reduced memory usage and improved stability. Your settings and license will be automatically imported from NiLS Floating Panel. if it doesn\'t work, please contact support.

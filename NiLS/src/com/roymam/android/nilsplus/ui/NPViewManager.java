@@ -724,7 +724,7 @@ public class NPViewManager
     public void show(boolean immediate)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (prefs.getBoolean(SettingsManager.FP_ENABLED, true))
+        if (prefs.getBoolean(SettingsManager.FP_ENABLED, SettingsManager.DEFAULT_FP_ENABLED))
         {
             Log.d("NiLS", "NPViewManager.show();");
             mNPListView.show();
