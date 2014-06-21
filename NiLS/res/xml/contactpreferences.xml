@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory android:title="@string/rate_the_app" android:summary="@string/rate_the_app_summary">
-        <PreferenceScreen android:title="@string/rate_us_on_google_play" android:icon="@drawable/playstore">
+    <PreferenceCategory android:key="rate_us" android:title="@string/rate_the_app" android:summary="@string/rate_the_app_summary">
+        <PreferenceScreen android:key="rate_on_google" android:title="@string/rate_us_on_google_play" android:icon="@drawable/playstore">
             <intent android:action="android.intent.action.VIEW"
                 android:data="market://details?id=com.roymam.android.notificationswidget"/>
+        </PreferenceScreen>
+        <PreferenceScreen android:key="rate_on_amazon" android:title="@string/rate_us_on_amazon" android:icon="@drawable/amazon">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.amazon.com/gp/mas/dl/android?p=com.roymam.android.notificationswidget"/>
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/contact_us" android:summary="@string/contact_summary">

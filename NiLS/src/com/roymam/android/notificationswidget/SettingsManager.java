@@ -20,6 +20,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
@@ -539,6 +540,16 @@ public class SettingsManager
 
 	        // Load the global_settings from an XML resource
 	        addPreferencesFromResource(R.xml.contactpreferences);
+            PreferenceGroup rateusPref = ((PreferenceGroup) findPreference("rate_us"));
+
+            if (getActivity().getResources().getBoolean(R.bool.amazon))
+            {
+                rateusPref.removePreference(rateusPref.findPreference("rate_on_google"));
+            }
+            else
+            {
+                rateusPref.removePreference(rateusPref.findPreference("rate_on_amazon"));
+            }
 	    }
 	}
 

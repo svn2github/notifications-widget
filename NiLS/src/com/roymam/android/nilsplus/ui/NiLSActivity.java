@@ -80,6 +80,7 @@ public class NiLSActivity extends Activity
     private Fragment fragment;
     private ServiceConnection mLicenseServiceConnection = null;
     private boolean mAmazonInAppAvailable = false;
+    private boolean firstTime = true;
 
     public void replaceFragment(Fragment fragment)
     {
@@ -204,6 +205,9 @@ public class NiLSActivity extends Activity
         // show welcome wizard if it's first run
         int installedVer = prefs.getInt("installed_version", -1);
         boolean npSuggested = prefs.getBoolean("np_suggested", false);
+        Log.d("NiLS", "installedVer:"+installedVer);
+
+        if (installedVer >= 0) firstTime = false;
 
         if (installedVer < 400 && installedVer >= 0 && !npSuggested) // if user upgraded from v1.4 or lower
         {
@@ -236,7 +240,8 @@ public class NiLSActivity extends Activity
         }
         else // any other upgrade
         {
-            showWhatsNew();
+            if (showWhatsNew())
+                return;
         }
 
         setContentView(R.layout.activity_main);
@@ -313,19 +318,22 @@ public class NiLSActivity extends Activity
         }
     }
 
-    private void showWhatsNew()
+    private boolean showWhatsNew()
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int installedVer = prefs.getInt("installed_version", -1);
         int currentVer = getCurrentVersion(this);
 
-        if (currentVer > installedVer && installedVer != -1)
+        if (currentVer > installedVer && installedVer != -1) {
             startActivity(new Intent(this, WhatsNewActivity.class));
+        }
         else if (installedVer == -1) {
             // if this the first installation - store version number and show welcome tutorial
             prefs.edit().putInt("installed_version", currentVer).commit();
             showWelcomeTutorial();
+            return true;
         }
+        return false;
     }
 
     private static final int APPEARANCE_PAGE_INDEX = 2;
@@ -440,14 +448,14 @@ public class NiLSActivity extends Activity
     {
         super.onResume();
 
-        boolean isServiceRunning = SysUtils.isServiceRunning(getApplicationContext());;
-        if (!isServiceRunning)
-        {
-            Intent intent = new Intent(this, StartupWizardActivity.class);
-            startActivity(intent);
-            finish();
+        if (!firstTime) {
+            boolean isServiceRunning = SysUtils.isServiceRunning(getApplicationContext());
+            if (!isServiceRunning) {
+                Intent intent = new Intent(this, StartupWizardActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
-
         if (mAmazonInAppAvailable)
             PurchasingManager.initiateGetUserIdRequest();
     }

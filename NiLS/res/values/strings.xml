@@ -571,6 +571,7 @@
     <string name="rate_the_app">Rate the app</string>
     <string name="rate_the_app_summary">If you like the app, good rating and +1s are always welcome.</string>
     <string name="rate_us_on_google_play">Rate us on Google Play</string>
+    <string name="rate_us_on_amazon">Rate us on Amazon App Store</string>
     <string name="opensource_software_summary">NiLS uses the open source software below.\nMany thanks to those great developers.</string>
     <string name="gpl_license_v2">Licensed under the GNU General Public License, v2</string>
     <string name="apache_license_v2">Licensed under the Apache License, v2.0</string>

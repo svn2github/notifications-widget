@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roymam.android.notificationswidget"
-    android:versionCode="415"
-    android:versionName="1.5.415" >
+    android:versionCode="416"
+    android:versionName="1.5.416" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
-    <!--<uses-permission android:name="com.android.vending.BILLING"/>-->
+    <uses-permission android:name="com.android.vending.BILLING"/>
 
     <!-- FN integration -->
     <uses-permission android:name="robj.floating.notifications.DISMISS"/>
