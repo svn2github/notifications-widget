@@ -62,6 +62,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
     private Switch showClock;
     private Switch showPersistent;
     private Button persistentNotificationsSettingsButton;
+    private CheckBox mShowActionsCheckbox;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -118,7 +119,37 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
 
         // auto switch toggle
         autoSwitch = (CheckBox)clockSettingsView.findViewById(R.id.autoSizeCheckbox);
-        autoSwitch.setOnClickListener(this);
+        autoSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String clockStyle = SettingsManager.CLOCK_AUTO;
+                boolean checked = ((CheckBox)v).isChecked();
+
+                if (!checked)
+                {
+                    int id = clockStyleRG.getCheckedRadioButtonId();
+                    switch(id)
+                    {
+                        case R.id.radioSmallClock:
+                            clockStyle = SettingsManager.CLOCK_SMALL;
+                            break;
+                        case R.id.radioMedium:
+                            clockStyle = SettingsManager.CLOCK_MEDIUM;
+                            break;
+                        case R.id.radioLargeClock:
+                            clockStyle = SettingsManager.CLOCK_LARGE;
+                            break;
+                    }
+                }
+
+                prefs.edit().putString(widgetMode + "." + SettingsManager.CLOCK_STYLE, clockStyle).commit();
+                refreshPreview();
+
+                // refresh widget
+                getActivity().sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
+            }
+        });
 
         // show clear all toggle
         showClearAll = (CheckBox)clockSettingsView.findViewById(R.id.showClearButtonCheckbox);
@@ -859,7 +890,9 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             else
                 maxLinesSpinner.setSelection(9);
 
-            ((CheckBox)notificationsSettingsView.findViewById(R.id.showActionBarCheckbox)).setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_ACTIONBAR, false));
+            mShowActionsCheckbox = ((CheckBox)notificationsSettingsView.findViewById(R.id.showActionBarCheckbox));
+            mShowActionsCheckbox.setChecked(prefs.getBoolean(widgetMode + "." + SettingsManager.SHOW_ACTIONBAR, false));
+            mShowActionsCheckbox.setOnClickListener(this);
 
             boolean hideNotifications = SettingsManager.shouldHideNotifications(getActivity(), widgetMode);
             showNotifications.setChecked(!hideNotifications);
