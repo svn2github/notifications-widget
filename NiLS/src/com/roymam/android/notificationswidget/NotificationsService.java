@@ -676,12 +676,19 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d("NiLS","NotificationsService:cancelNotification " + packageName + ":" + id);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
-            Intent intent = new Intent(context, NotificationsListener.class);
-            intent.setAction(CANCEL_NOTIFICATION);
-            intent.putExtra(EXTRA_PACKAGENAME, packageName);
-            intent.putExtra(EXTRA_TAG, tag);
-            intent.putExtra(EXTRA_ID, id);
-            startService(intent);
+            try
+            {
+                Intent intent = new Intent(context, NotificationsListener.class);
+                intent.setAction(CANCEL_NOTIFICATION);
+                intent.putExtra(EXTRA_PACKAGENAME, packageName);
+                intent.putExtra(EXTRA_TAG, tag);
+                intent.putExtra(EXTRA_ID, id);
+                startService(intent);
+            }
+            catch (Exception exp)
+            {
+                Log.wtf("NiLS", "sdk_int:"+Build.VERSION.SDK_INT+" but NotificationsListener class doesn't exists... weird.");
+            }
         }
     }
 

@@ -328,7 +328,7 @@ public class NiLSAccessibilityService extends AccessibilityService
             }
 
             // hide NiLS when status bar or power menu are displayed
-            else if (packageName.equals("com.android.systemui") || packageName.equals("android"))
+            else if (packageName.equals("com.android.systemui") /*|| packageName.equals("android")*/)
             {
                 Log.d("NiLS", "event:" + accessibilityEvent.toString());
 

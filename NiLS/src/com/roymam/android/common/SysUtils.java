@@ -57,7 +57,13 @@ public class SysUtils
     public static boolean isServiceRunning(Context context)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            return isServiceRunning(context, NotificationsListener.class);
+            try {
+                return isServiceRunning(context, NotificationsListener.class);
+            }catch (Exception exp)
+            {
+                Log.wtf("NiLS", "sdk_int:"+Build.VERSION.SDK_INT+ " but NotificationsListener is not found, trying old service");
+                return isServiceRunning(context, NiLSAccessibilityService.class);
+            }
         else
             return isServiceRunning(context, NiLSAccessibilityService.class);
     }
