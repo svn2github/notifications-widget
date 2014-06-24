@@ -966,6 +966,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             try
             {
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                final PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
 
                 String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
 
@@ -992,7 +993,6 @@ public class NotificationsService extends Service implements NotificationsProvid
                     }
 
                     // keep the screen on for the device default timeout
-                    PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
                     if (pm.isScreenOn()) mSysUtils.turnScreenOn(true, true);
                 }
                 else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
@@ -1037,7 +1037,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                             am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500, 500, checkLockScreenPendingIntent);
 
                             // make sure screen will stay on as needed seconds as defined on settings
-                            mSysUtils.turnScreenOn(true);
+                            if (pm.isScreenOn()) mSysUtils.turnScreenOn(true);
                         }
                     }
                     // if the accessibility service is not running
@@ -1141,6 +1141,8 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private static void popupLockScreenChangedDialog(final Context context, final String currentApp)
     {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
         if (pd == null) pd = PopupDialog.create(context);
         if (pd2 != null) pd2.hide();
         pd.setTitle(context.getString(R.string.new_lock_screen_detected, SettingsManager.PrefsGeneralFragment.getAppName(context, currentApp)))
@@ -1148,33 +1150,35 @@ public class NotificationsService extends Service implements NotificationsProvid
           .setPositiveButton(context.getString(R.string.yes), new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                   prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, currentApp).commit();
                   if (NotificationsService.getSharedInstance() != null)
                       NotificationsService.getSharedInstance().show(false);
                   pd.hide();
+
+                  // if user didn't request specifically to auto detect, stop detecting after the first "Yes" answer
+                  if (!prefs.getAll().containsKey(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP))
+                      prefs.edit().putBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, false).commit();
               }
           })
                 .setNegativeButton(context.getString(R.string.no), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                         int n = prefs.getInt(SettingsManager.NUMBER_OF_LS_DETECT_REFUSES, 0);
                         n++;
-                        if (n == 3) {
+                        if (n == 2) {
                             if (pd2 == null) pd2 = PopupDialog.create(context);
                             pd2.setTitle(context.getString(R.string.never_suggest_title))
                                     .setText(context.getString(R.string.never_suggest_lockscreen_apps))
                                     .setPositiveButton(context.getString(R.string.yes), new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            prefs.edit().putBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, true).commit();
                                             pd2.hide();
                                         }
                                     })
                                     .setNegativeButton(context.getString(R.string.no), new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                                             prefs.edit().putBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, false).commit();
                                             pd.hide();
                                         }
