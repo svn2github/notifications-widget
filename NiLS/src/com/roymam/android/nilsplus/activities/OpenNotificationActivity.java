@@ -66,25 +66,14 @@ public class OpenNotificationActivity extends Activity
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final PendingIntent action = getIntent().getParcelableExtra("action");
         final String packageName = getIntent().getStringExtra("package");
-        final String lockscreenPackageName = getIntent().getStringExtra("lockscreen_package");
-        final int id = getIntent().getIntExtra("id",-1);
         final int uid = getIntent().getIntExtra("uid",-1);
 
-        if (lockscreenPackageName.equals(NotificationsService.GO_LOCKER_PACKAGENAME) ||
-            lockscreenPackageName.equals(NotificationsService.WIDGET_LOCKER_PACKAGENAME) ||
-            !SysUtils.isKeyguardLocked(this) ||
-            !prefs.getBoolean(SettingsManager.UNLOCK_ON_OPEN, SettingsManager.DEFAULT_UNLOCK_ON_OPEN))
-        {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-
-            // open notification on background
-            openNotification(action, packageName, uid);
-        }
-        else
+        if (SysUtils.isKeyguardLocked(this) &&
+            prefs.getBoolean(SettingsManager.UNLOCK_ON_OPEN, SettingsManager.DEFAULT_UNLOCK_ON_OPEN))
         {
             // unlock the device and then open the notification
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
+            Log.d("NiLS", "Requesting device to be unlocked");
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
             mReceiver = new BroadcastReceiver()
             {
@@ -95,6 +84,12 @@ public class OpenNotificationActivity extends Activity
                 }
             };
             registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
+        }
+        else
+        {
+            // open notification on background
+            Log.d("NiLS", "Opening a notification (no need to unlock device)");
+            openNotification(action, packageName, uid);
         }
     }
 

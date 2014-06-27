@@ -108,14 +108,6 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
 
         // clock style radio group
         clockStyleRG = (RadioGroup) clockSettingsView.findViewById(R.id.clockStyleRG);
-        clockStyleRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
-                onClockStyleChanged(checkedId);
-            }
-        });
 
         // auto switch toggle
         autoSwitch = (CheckBox)clockSettingsView.findViewById(R.id.autoSizeCheckbox);
@@ -826,7 +818,7 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
             // clock style
             String defaultClockStyle = widgetMode.equals(SettingsManager.COLLAPSED_WIDGET_MODE)?
                     SettingsManager.CLOCK_AUTO :
-                    prefs.getString(SettingsManager.CLOCK_STYLE, SettingsManager.CLOCK_STYLE);
+                    prefs.getString(SettingsManager.CLOCK_STYLE, SettingsManager.CLOCK_AUTO);
 
             String clockStyle = prefs.getString(widgetMode + "." + SettingsManager.CLOCK_STYLE, defaultClockStyle);
 
@@ -847,12 +839,22 @@ public class WidgetSettingsFragment extends Fragment implements SeekBar.OnSeekBa
                 clockStyleRG.check(R.id.radioLargeClock);
                 clockStyleView.setDisplayedChild(2);
             }
-            else if (clockStyle.equals(SettingsManager.CLOCK_AUTO))
+            else //if (clockStyle.equals(SettingsManager.CLOCK_AUTO))
             {
                 clockStyleRG.check(R.id.radioLargeClock);
                 autoSwitch.setChecked(true);
                 clockStyleView.setDisplayedChild(2);
             }
+
+            // set on change listener so auto switch will be turned off when user change style
+            clockStyleRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+            {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId)
+                {
+                    onClockStyleChanged(checkedId);
+                }
+            });
         }
 
 

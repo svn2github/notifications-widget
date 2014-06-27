@@ -65,7 +65,7 @@ public class SysUtils
                 return isServiceRunning(context, NiLSAccessibilityService.class);
             }
         else
-            return isServiceRunning(context, NiLSAccessibilityService.class);
+           return isServiceRunning(context, NiLSAccessibilityService.class);
     }
 
     public static String getForegroundApp(Context context)

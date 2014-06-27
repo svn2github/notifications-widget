@@ -289,7 +289,7 @@ public class IabHelper {
         mSetupDone = false;
         if (mServiceConn != null) {
             logDebug("Unbinding from service.");
-            if (mContext != null) mContext.unbindService(mServiceConn);
+            if (mContext != null && mService != null) mContext.unbindService(mServiceConn);
         }
         mDisposed = true;
         mContext = null;
@@ -618,6 +618,9 @@ public class IabHelper {
                 }
                 catch (IabException ex) {
                     result = ex.getResult();
+                }
+                catch(IllegalStateException ex){
+                    result = new IabResult(BILLING_RESPONSE_RESULT_ERROR, "Helper is not setup.");
                 }
 
                 flagEndAsync();

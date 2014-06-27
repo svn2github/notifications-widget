@@ -1335,7 +1335,12 @@ public class NotificationsService extends Service implements NotificationsProvid
                     @Override
                     public void onSendFinished(PendingIntent pendingIntent, Intent intent, int resultCode, String resultData, Bundle resultExtras)
                     {
-                        unlockDevice();
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                unlockDevice();
+                            }
+                        }, 500);
                     }
                 }, mHandler);
             } catch (PendingIntent.CanceledException e)
@@ -1356,7 +1361,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         else
         {
             Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("action", action);
             intent.putExtra("package", packageName);
