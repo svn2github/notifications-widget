@@ -1014,20 +1014,16 @@ public class NotificationsService extends Service implements NotificationsProvid
                     Log.d("NiLS", "ACTION_SCREEN_ON - auto detecting lock screen app");
 
                     // if the accessibility service is not running start monitoring the active app
-                    if (!accessibilityServiceIsActive)
-                    {
+                    if (!accessibilityServiceIsActive) {
                         // detect current lock screen
                         detectLockScreenApp(context);
 
                         // show / hide notifications list
-                        if (shouldHideNotifications(false))
-                        {
+                        if (shouldHideNotifications(false)) {
                             hide(false);
                             // send a broadcast the device is unlocked and hide notifications list immediately
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
-                        }
-                        else
-                        {
+                        } else {
                             viewManager.refreshLayout(false);
                             show(true);
 
@@ -1041,19 +1037,15 @@ public class NotificationsService extends Service implements NotificationsProvid
                         }
                     }
                     // if the accessibility service is not running
-                    else
-                    {
+                    else {
                         // check if the last detected package name is not the lock screen app
                         String lastPackage = prefs.getString(NiLSAccessibilityService.LAST_OPENED_WINDOW_PACKAGENAME, SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME);
                         detectLockScreenApp(context, lastPackage);
 
-                        if (shouldHideNotifications(context, lastPackage, false))
-                        {
+                        if (shouldHideNotifications(context, lastPackage, false)) {
                             // if it is not the lock screen app - call "unlock" method
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
-                        }
-                        else
-                        {
+                        } else {
                             // show notifications when the screen is turned on and the lock screen is displayed
                             viewManager.refreshLayout(false);
                             show(true);
@@ -1156,8 +1148,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                   pd.hide();
 
                   // if user didn't request specifically to auto detect, stop detecting after the first "Yes" answer
-                  if (!prefs.getAll().containsKey(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP))
-                      prefs.edit().putBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, false).commit();
+                  if (!prefs.getBoolean("user_defined_auto_detect", false))
+                    prefs.edit().putBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, false).commit();
               }
           })
                 .setNegativeButton(context.getString(R.string.no), new View.OnClickListener() {
@@ -1173,6 +1165,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                                         @Override
                                         public void onClick(View v) {
                                             prefs.edit().putBoolean(SettingsManager.AUTO_DETECT_LOCKSCREEN_APP, true).commit();
+                                            prefs.edit().putBoolean("user_defined_auto_detect", true).commit();
                                             pd2.hide();
                                         }
                                     })
@@ -1229,7 +1222,8 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (activity.contains("InCallActivity") ||          // never show it on top of an incoming call
             activity.contains("ScreensaverActivity") ||     // never show it on top of daydream
             activity.contains("PopupNotificationLocked") || // never show it on top of WhatsApp popup
-            activity.contains("AlarmActivity"))             // never show it on top of AlarmClock
+            activity.contains("AlarmActivity"))           // never show it on top of AlarmClock
+            //activity.contains("HcPopupActivity"))           // never show over Handcent SMS
             return true;
 
         if (autoDetect)
@@ -1369,6 +1363,8 @@ public class NotificationsService extends Service implements NotificationsProvid
             intent.putExtra("lockscreen_package", SysUtils.getForegroundApp(getApplicationContext()));
             startActivity(intent);
         }
+        // hide viewmanager if visible
+        hide(false);
     }
 
     private void unlockDevice()

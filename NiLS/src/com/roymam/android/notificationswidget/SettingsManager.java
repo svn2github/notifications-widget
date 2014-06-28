@@ -2,14 +2,11 @@ package com.roymam.android.notificationswidget;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
@@ -26,12 +23,10 @@ import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.roymam.android.common.IconPackManager;
 import com.roymam.android.common.ListPreferenceChangeListener;
-import com.roymam.android.common.SwitchPrefsHeaderAdapter;
 import com.roymam.android.nilsplus.CardPreferenceFragment;
 
 import java.util.ArrayList;
@@ -229,7 +224,7 @@ public class SettingsManager
     public static final boolean DEFAULT_FIT_HEIGHT_TO_CONTENT = true;
     public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
     public static final int DEFAULT_MAIN_BG_OPACITY = 100;
-    public static final String BLACKLIST_PACKAGENAMES = "com.android.systemui|cz.mpelant.deskclock|com.mobitobi.android.gentlealarm|com.android.dialer|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|com.google.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay|sg.com.mcd.mcdalarm|com.achep.acdisplay|com.sonyericsson.organizer";
+    public static final String BLACKLIST_PACKAGENAMES = "com.android.systemui|cz.mpelant.deskclock|com.mobitobi.android.gentlealarm|com.android.dialer|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|com.google.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay|sg.com.mcd.mcdalarm|com.achep.acdisplay|com.sonyericsson.organizer|com.handcent.nextsms";
     public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
 
     // privacy options
@@ -503,6 +498,15 @@ public class SettingsManager
             String currentLockScreenApp = getCurrentLockScreenAppName(getActivity());
             String currentLockScreenAppString = getResources().getString(R.string.current_lock_screen_app, currentLockScreenApp);
             autoDetectLockScreenAppPref.setSummary(currentLockScreenAppString);
+            autoDetectLockScreenAppPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if ((Boolean)newValue)
+                        // mark that the user requested to auto detect
+                        getPreferenceScreen().getSharedPreferences().edit().putBoolean("user_defined_auto_detect", true).commit();
+                    return true;
+                }
+            });
         }
 
         public static String getAppName(Context context, String packageName)
