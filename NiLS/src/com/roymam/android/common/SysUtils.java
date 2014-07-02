@@ -223,7 +223,14 @@ public class SysUtils
             // set the new (shorter) one
             int newTimeout = Integer.parseInt(timeoutStr) * 1000;
             Log.d("NiLS", "changing device timeout to " + newTimeout);
-            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, newTimeout);
+            try
+            {
+                Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, newTimeout);
+            }
+            catch (Exception exp)
+            {
+                Log.e("NiLS", "cannot change system settings, screen timeout won't be changed");
+            }
         }
     }
 
@@ -249,7 +256,16 @@ public class SysUtils
                 if (shouldChangeDeviceTimeout())
                 {
                     Log.d("NiLS", "restoring device timeout:" + deviceTimeout);
-                    Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, deviceTimeout);
+
+                    try
+                    {
+                        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, deviceTimeout);
+                    }
+                    catch (Exception exp)
+                    {
+                        Log.e("NiLS", "cannot change system settings, screen timeout won't be changed");
+                    }
+
                     resetDeviceTimeout();
                 }
             }

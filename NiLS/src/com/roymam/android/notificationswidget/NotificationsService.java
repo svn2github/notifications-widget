@@ -1282,7 +1282,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     // open it in background
                     try
                     {
-                        // remove the notification and keep device locked
+                        // remove the notification and keeiconp device locked
                         action.send();
                         clearNotification(ni.getUid());
                     } catch (PendingIntent.CanceledException e)
@@ -1320,6 +1320,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     private void runPendingIntent(PendingIntent action, String packageName, int uid)
     {
+        Log.d("NiLS", "runPendingIntent: packageName:"+packageName+" uid:"+uid);
         // a workaround for keyboard stuck on Hangouts
         if (packageName.equals("com.google.android.talk"))
             try
