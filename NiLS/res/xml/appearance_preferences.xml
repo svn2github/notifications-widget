@@ -43,6 +43,12 @@
             android:enabled="false"
             hexValue="true"
             />
+        <CheckBoxPreference
+            android:key="auto_title_color"
+            android:title="Auto Title Color"
+            android:summary="Set title color automatically according to the app icon prominent color"
+            android:defaultValue="false"
+            android:enabled="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/sizes">
         <com.robobunny.SeekBarPreference

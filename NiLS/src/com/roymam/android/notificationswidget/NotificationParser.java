@@ -17,6 +17,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.graphics.Palette;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -113,6 +114,22 @@ public class NotificationParser
 
                 if (res != null && info != null)
                 {
+                    Bitmap packageIcon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
+                    String iconPack = sharedPref.getString(SettingsManager.ICON_PACK, SettingsManager.DEFAULT_ICON_PACK);
+                    if (!iconPack.equals(SettingsManager.DEFAULT_ICON_PACK))
+                    {
+                        // load app icon from icon pack
+                        IconPackManager.IconPack ip = IconPackManager.getInstance(context).getAvailableIconPacks(false).get(iconPack);
+                        if (ip != null)
+                            packageIcon = ip.getIconForPackage(packageName, packageIcon);
+                    }
+
+                    if (packageIcon != null)
+                    {
+                        Palette p = Palette.generate(packageIcon);
+                        Log.d("NiLS", packageName + " vibrantcolor:" + p.getVibrantColor());
+                        nd.appColor = p.getVibrantColor().getRgb();
+                    }
                     nd.appicon = BitmapCache.getInstance(context).getBitmap(packageName, n.icon);
                     if (notificationIcon.equals(SettingsManager.NOTIFICATION_MONO_ICON))
                     {
@@ -120,17 +137,9 @@ public class NotificationParser
                     }
                     else
                     {
-                        nd.icon = BitmapCache.getInstance(context).getBitmap(packageName, info.applicationInfo.icon);
+                        nd.icon = packageIcon;
                     }
 
-                    String iconPack = sharedPref.getString(SettingsManager.ICON_PACK, SettingsManager.DEFAULT_ICON_PACK);
-                    if (!iconPack.equals(SettingsManager.DEFAULT_ICON_PACK))
-                    {
-                        // load app icon from icon pack
-                        IconPackManager.IconPack ip = IconPackManager.getInstance(context).getAvailableIconPacks(false).get(iconPack);
-                        if (ip != null)
-                            nd.icon = ip.getIconForPackage(packageName, nd.icon);
-                    }
                     if (nd.appicon == null)
                     {
                         nd.appicon = nd.icon;
@@ -140,6 +149,8 @@ public class NotificationParser
                 {
                     nd.icon = n.largeIcon;
                 }
+
+                nd.largeIcon = n.largeIcon;
 
                 // if the icon is too large - resize it to smaller size
                 if (nd.icon != null && (nd.icon.getWidth() > maxIconSize || nd.icon.getHeight() > maxIconSize))
@@ -511,6 +522,17 @@ public class NotificationParser
             if (notificationStrings.containsKey(2131558425))
             {
                 text = notificationStrings.get(2131558425);
+            }
+
+            // SuperText title
+            if (notificationStrings.containsKey(2131558405))
+            {
+                title = notificationStrings.get(2131558405);
+            }
+            // SuperText text
+            if (notificationStrings.containsKey(2131558657))
+            {
+                text = notificationStrings.get(2131558657);
             }
 
             // get title string if available

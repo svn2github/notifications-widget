@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <RelativeLayout
+    <FrameLayout
             android:id="@+id/front"
             android:tag="front"
             android:layout_height="wrap_content"
@@ -87,5 +87,5 @@
                         android:maxLines="1" />
                 </LinearLayout>
             </LinearLayout>
-    </RelativeLayout>
+    </FrameLayout>
 </RelativeLayout>

@@ -15,6 +15,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
     private CharSequence[] mThemes;
     private int mLastSelectedTheme = -1;
     private Context context;
+    private ViewGroup mPreviewCard;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -54,24 +56,37 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
 
         View v = inflater.inflate(R.layout.appearance_settings_view, null);
         ViewGroup previewContainer = (ViewGroup) v.findViewById(R.id.preview_container);
-        mPreviewView = inflater.inflate(R.layout.notification_row, previewContainer, false);
-        ViewGroup previewCard = new ScrollView(getActivity());
-        previewCard.setPadding((int) getResources().getDimension(R.dimen.card_padding), (int) getResources().getDimension(R.dimen.card_padding), (int) getResources().getDimension(R.dimen.card_padding), 0);
-        previewCard.setBackgroundResource(R.drawable.card_background);
-        previewCard.addView(mPreviewView);
-        previewContainer.addView(previewCard, ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.preview_height));
+        mPreviewCard = new ScrollView(getActivity());
+        createPreviewView();
+        mPreviewCard.setPadding((int) getResources().getDimension(R.dimen.card_padding), (int) getResources().getDimension(R.dimen.card_padding), (int) getResources().getDimension(R.dimen.card_padding), 0);
+        mPreviewCard.setBackgroundResource(R.drawable.card_background);
+        previewContainer.addView(mPreviewCard, ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.preview_height));
         Drawable gridbg = new AlphaPatternDrawable((int) (5 * getActivity().getResources().getDisplayMetrics().density));
         gridbg.setAlpha(64);
-        previewCard.setBackgroundDrawable(gridbg);
+        mPreviewCard.setBackgroundDrawable(gridbg);
         mPreviewNotificationItem = new NotificationData();
         mPreviewNotificationItem.setIcon(((BitmapDrawable) getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
         mPreviewNotificationItem.setAppIcon(((BitmapDrawable) getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
         mPreviewNotificationItem.setTitle(getResources().getString(R.string.preview_title));
         mPreviewNotificationItem.setText(getResources().getString(R.string.preview_text));
+        Palette p = Palette.generate(((BitmapDrawable) getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
+        mPreviewNotificationItem.appColor = p.getVibrantColor().getRgb();
 
         updatePreview(false, true);
 
        return v;
+    }
+
+    private void createPreviewView()
+    {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (mTheme != null && mTheme.notificationLayout != null)
+            mPreviewView = inflater.inflate(mTheme.notificationLayout, null, false);
+        else
+            mPreviewView = inflater.inflate(R.layout.notification_row, null, false);
+
+        mPreviewCard.removeAllViews();
+        mPreviewCard.addView(mPreviewView);
     }
 
     private void updatePreview(final boolean reloadPrefs, boolean immediate)
@@ -95,6 +110,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
 
     private void updatePreviewNow(boolean reloadPrefs)
     {
+        mPreviewView.setTag(null);
         NotificationAdapter.applySettingsToView(getActivity(), mPreviewView, mPreviewNotificationItem, 0, mTheme, true);
         if (reloadPrefs)
         {
@@ -220,6 +236,9 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         TextView description = (TextView) mPreviewView.findViewById(R.id.notification_text);
+        if (mTheme != null && mTheme.notificationLayout != null)
+            description = (TextView) mPreviewView.findViewById(mTheme.customLayoutIdMap.get("notification_text"));
+
         if (prefs.getBoolean(SettingsManager.FIT_HEIGHT_TO_CONTENT, SettingsManager.DEFAULT_FIT_HEIGHT_TO_CONTENT))
             description.setMaxLines(maxLines);
         else
@@ -317,6 +336,9 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
                 putInt(SettingsManager.TEXT_FONT_SIZE, BitmapUtils.pxToSp((int) mTheme.textFontSize)).
                                          putString(SettingsManager.THEME, newTheme).commit();
 
+        createPreviewView();
+
+        // update preview
         updatePreview(true, true);
         //loadPreferences();
     }

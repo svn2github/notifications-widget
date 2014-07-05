@@ -2,11 +2,14 @@ package com.roymam.android.nilsplus.ui.theme;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 import com.roymam.android.notificationswidget.R;
 import com.roymam.android.notificationswidget.SettingsManager;
+
+import java.util.Map;
 
 public class Theme extends ThemeInfo
 {
@@ -36,8 +39,10 @@ public class Theme extends ThemeInfo
     public Typeface titleTypeface = null;
     public Typeface textTypeface = null;
     public Typeface timeTypeface = null;
+    public Map<String, Integer> customLayoutIdMap = null;
 
     public Resources res;
+    public XmlResourceParser notificationLayout = null;
 
     public Theme(String packageName, String title)
     {
@@ -57,6 +62,8 @@ public class Theme extends ThemeInfo
         t.notificationSpacing = context.getResources().getDimension(R.dimen.notification_default_list_spacing);
         t.titleFontSize = context.getResources().getDimension(R.dimen.notification_default_title_size);
         t.textFontSize = context.getResources().getDimension(R.dimen.notification_default_text_size);
+        t.notificationLayout = null;
+        t.customLayoutIdMap = null;
         return t;
     }
 }

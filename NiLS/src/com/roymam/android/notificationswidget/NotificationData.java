@@ -34,6 +34,8 @@ public class NotificationData implements Parcelable
     public int priority;
     public String tag;
     public boolean event = false;
+    public Bitmap largeIcon = null;
+    public int appColor;
 
     public NotificationData()
     {
@@ -107,6 +109,7 @@ public class NotificationData implements Parcelable
 
         priority = in.readInt();
         tag = in.readString();
+        appColor = in.readInt();
     }
 
     @Override
@@ -186,6 +189,7 @@ public class NotificationData implements Parcelable
 
         dest.writeInt(priority);
         dest.writeString(tag);
+        dest.writeInt(appColor);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

@@ -51,6 +51,14 @@ public class BitmapUtils
         return bmp;
     }
 
+    public static Bitmap drawBitmapOnBitmap(Bitmap front, Bitmap back)
+    {
+        Bitmap result = Bitmap.createBitmap(back);
+        Canvas resultCanvas = new Canvas(result);
+        resultCanvas.drawBitmap(front, 0, 0, null);
+        return result;
+    }
+
     public static Bitmap createCenteredBitmap(Bitmap bitmap, int w, int h)
     {
         Bitmap result = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);

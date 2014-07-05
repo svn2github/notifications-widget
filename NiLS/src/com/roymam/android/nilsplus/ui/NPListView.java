@@ -92,8 +92,10 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
         for(int i=0; i<listView.getChildCount();i++)
         {
             View v = listView.getChildAt(i);
-            View front = v.findViewById(R.id.front);
-            LayoutParams params = (LayoutParams) front.getLayoutParams();
+            int viewId = R.id.front;
+            if (mTheme != null && mTheme.notificationLayout != null) viewId = mTheme.customLayoutIdMap.get("front");
+            View front = v.findViewById(viewId);
+            MarginLayoutParams params = (MarginLayoutParams) front.getLayoutParams();
             params.rightMargin = rightMargin;
             params.leftMargin = leftMargin;
             front.setLayoutParams(params);
@@ -307,6 +309,10 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
 
     private void prepareListView()
     {
+        int iconId = R.id.notification_bg;
+        if (mTheme != null && mTheme.notificationLayout != null)
+            iconId = mTheme.customLayoutIdMap.get("notification_bg");
+
         final SwipeIconTouchListener swipeDismissTouchListener =
                 new SwipeIconTouchListener(
                         listView,
@@ -411,7 +417,7 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                                 if (position < data.size())
                                     callNotificationClicked(data.get(position), position, false);
                             }
-                        }, R.id.notification_bg);
+                        }, iconId);
 
         listView.setOnScrollListener(swipeDismissTouchListener.makeScrollListener());
         listView.setOnTouchListener(new PullToClearTouchListener(mContext, mPullDownView,

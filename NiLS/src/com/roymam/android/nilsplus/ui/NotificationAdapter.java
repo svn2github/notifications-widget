@@ -101,16 +101,36 @@ public class NotificationAdapter extends BaseAdapter
         if (notificationView.getTag() == null)
         {
             holder = new ViewHolder();
-            holder.notificationView = notificationView.findViewById(R.id.front);
-            holder.ivImage = (ImageView) notificationView.findViewById(R.id.notification_image);
-            holder.tvTitle = (TextView) notificationView.findViewById(R.id.notification_title);
-            holder.tvDescription = (TextView) notificationView.findViewById(R.id.notification_text);
-            holder.tvTime = (TextView) notificationView.findViewById(R.id.notification_time);
-            holder.vNotificationBG = notificationView.findViewById(R.id.front);
-            holder.vTextBG = notificationView.findViewById(R.id.notification_text_container);
-            holder.vIconBG = notificationView.findViewById(R.id.notification_bg);
-            holder.vIconBgImage = (ImageView) notificationView.findViewById(R.id.icon_bg);
-            holder.vIconFgImage = (ImageView) notificationView.findViewById(R.id.icon_fg);
+
+            if (theme == null || theme.customLayoutIdMap == null) {
+                holder.notificationView = notificationView.findViewById(R.id.front);
+                holder.ivImage = (ImageView) notificationView.findViewById(R.id.notification_image);
+                holder.tvTitle = (TextView) notificationView.findViewById(R.id.notification_title);
+                holder.tvDescription = (TextView) notificationView.findViewById(R.id.notification_text);
+                holder.tvTime = (TextView) notificationView.findViewById(R.id.notification_time);
+                holder.vNotificationBG = notificationView.findViewById(R.id.front);
+                holder.vTextBG = notificationView.findViewById(R.id.notification_text_container);
+                holder.vIconBG = notificationView.findViewById(R.id.notification_bg);
+                holder.vIconBgImage = (ImageView) notificationView.findViewById(R.id.icon_bg);
+                holder.vIconFgImage = (ImageView) notificationView.findViewById(R.id.icon_fg);
+            }
+            else
+            {
+                holder.notificationView = notificationView.findViewById(theme.customLayoutIdMap.get("front"));
+                holder.ivImage = (ImageView) notificationView.findViewById(theme.customLayoutIdMap.get("notification_image"));
+                holder.tvTitle = (TextView) notificationView.findViewById(theme.customLayoutIdMap.get("notification_title"));
+                holder.tvDescription = (TextView) notificationView.findViewById(theme.customLayoutIdMap.get("notification_text"));
+                holder.tvTime = (TextView) notificationView.findViewById(theme.customLayoutIdMap.get("notification_time"));
+                holder.vNotificationBG = notificationView.findViewById(theme.customLayoutIdMap.get("front"));
+                holder.vTextBG = notificationView.findViewById(theme.customLayoutIdMap.get("notification_text_container"));
+                holder.vIconBG = notificationView.findViewById(theme.customLayoutIdMap.get("notification_bg"));
+                holder.vIconBgImage = (ImageView) notificationView.findViewById(theme.customLayoutIdMap.get("icon_bg"));
+                holder.vIconFgImage = (ImageView) notificationView.findViewById(theme.customLayoutIdMap.get("icon_fg"));
+
+                if (theme.customLayoutIdMap.get("app_icon") != null)
+                    holder.vAppIconImage = (ImageView) notificationView.findViewById(theme.customLayoutIdMap.get("app_icon"));
+
+            }
 
             notificationView.setTag(holder);
         }
@@ -123,14 +143,32 @@ public class NotificationAdapter extends BaseAdapter
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         int primaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
+        if (SettingsManager.getBoolean(context, SettingsManager.AUTO_TITLE_COLOR, false))
+            primaryTextColor = item.appColor;
         int secondaryTextColor = prefs.getInt(SettingsManager.SECONDARY_TEXT_COLOR, SettingsManager.DEFAULT_SECONDARY_TEXT_COLOR);
         int notificationBGColor = prefs.getInt(SettingsManager.MAIN_BG_COLOR, SettingsManager.DEFAULT_MAIN_BG_COLOR);
         int iconBGColor = prefs.getInt(SettingsManager.ICON_BG_COLOR, SettingsManager.DEFAULT_ICON_BG_COLOR);
         int altNotificationBGColor = prefs.getInt(SettingsManager.ALT_MAIN_BG_COLOR, SettingsManager.DEFAULT_ALT_MAIN_BG_COLOR);
         int altIconBGColor = prefs.getInt(SettingsManager.ALT_ICON_BG_COLOR, SettingsManager.DEFAULT_ALT_ICON_BG_COLOR);
 
-        Bitmap icon = NotificationAdapter.createThemedIcon(item.getIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)));
+        Bitmap icon = NotificationAdapter.createThemedIcon(item.getIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)), item.appColor);
         holder.ivImage.setImageDrawable(new BitmapDrawable(icon));
+
+        // for Android L like themes
+        if (holder.vAppIconImage != null)
+        {
+            if (item.largeIcon != null)
+            {
+                Bitmap appIcon = NotificationAdapter.createThemedIcon(item.getAppIcon(), theme, holder.vAppIconImage.getLayoutParams().width, item.appColor);
+                holder.vAppIconImage.setImageDrawable(new BitmapDrawable(appIcon));
+            }
+            else // if there isn't a large icon, then use the app icon as the large icon
+            {
+                icon = NotificationAdapter.createThemedIcon(item.getAppIcon(), theme, holder.vAppIconImage.getLayoutParams().width, item.appColor);
+                holder.vAppIconImage.setImageDrawable(new BitmapDrawable(icon));
+            }
+        }
+
         holder.tvTitle.setText(item.getTitle() != null ? item.getTitle().toString() : null);
         holder.tvTitle.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault_Medium);
         holder.tvTitle.setTextSize(prefs.getInt(SettingsManager.TITLE_FONT_SIZE, SettingsManager.DEFAULT_TITLE_FONT_SIZE));
@@ -241,7 +279,12 @@ public class NotificationAdapter extends BaseAdapter
         }
 
         View front = notificationView.findViewById(R.id.front);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) front.getLayoutParams();
+
+        if (theme != null &&
+            theme.notificationLayout != null) {
+            front = notificationView.findViewById(theme.customLayoutIdMap.get("front"));
+        }
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) front.getLayoutParams();
         params.leftMargin = leftMargin;
         params.rightMargin = rightMargin;
 
@@ -262,7 +305,7 @@ public class NotificationAdapter extends BaseAdapter
             return android.R.style.TextAppearance_DeviceDefault_Large;
     }
 
-    public static Bitmap createThemedIcon(Bitmap icon, Theme theme, int iconSize)
+    public static Bitmap createThemedIcon(Bitmap icon, Theme theme, int iconSize, int prominentColor)
     {
         if (theme != null && theme.iconMask != null)
         {
@@ -284,6 +327,13 @@ public class NotificationAdapter extends BaseAdapter
                 // crop the bitmap using the mask
                 Bitmap maskedBitmap = BitmapUtils.drawBitmapOnMask(iconBitmap, maskBitmap, 0,0);
 
+                // use theme icon background as a background for this
+                if (prominentColor != -1)
+                {
+                    Bitmap iconBgBitmap = BitmapUtils.colorBitmap(maskBitmap, prominentColor);
+                    maskedBitmap = BitmapUtils.drawBitmapOnBitmap(maskedBitmap, iconBgBitmap);
+                }
+
                 // set the new app icon
                 icon = maskedBitmap;
             }
@@ -304,7 +354,11 @@ public class NotificationAdapter extends BaseAdapter
         if (convertView == null)
         {
             LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = li.inflate(R.layout.notification_row, parent, false);
+            ThemeManager.getInstance(context).reloadLayouts(mTheme);
+            if (mTheme != null && mTheme.notificationLayout != null)
+                convertView = li.inflate(mTheme.notificationLayout, parent, false);
+            else
+                convertView = li.inflate(R.layout.notification_row, parent, false);
         }
 
         if (item != null)
@@ -345,5 +399,6 @@ public class NotificationAdapter extends BaseAdapter
         public ImageView vIconFgImage;
         public View vTextBG;
         public TextView tvTime;
+        public ImageView vAppIconImage;
     }
 }

@@ -7,14 +7,18 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 
 import com.roymam.android.notificationswidget.SettingsManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ThemeManager
 {
@@ -145,7 +149,27 @@ public class ThemeManager
         theme.textTypeface = loadThemeTypeface(res, packageName, "text_family_name", "text_style", theme.titleTypeface);
         theme.timeTypeface = loadThemeTypeface(res, packageName, "time_family_name", "time_style", theme.textTypeface);
 
+        theme.notificationLayout = loadThemeLayout(res, packageName, "notification_layout");
+        if (theme.notificationLayout != null)
+            theme.customLayoutIdMap = loadCustomThemeLayoutIds(res, packageName);
+
         return theme;
+    }
+
+    private Map<String, Integer> loadCustomThemeLayoutIds(Resources res, String packageName) {
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        map.put("front", res.getIdentifier("front", "id", packageName));
+        map.put("notification_image", res.getIdentifier("notification_image", "id", packageName));
+        map.put("notification_title", res.getIdentifier("notification_title", "id", packageName));
+        map.put("notification_text", res.getIdentifier("notification_text", "id", packageName));
+        map.put("notification_time", res.getIdentifier("notification_time", "id", packageName));
+        map.put("notification_text_container", res.getIdentifier("notification_text_container", "id", packageName));
+        map.put("notification_bg", res.getIdentifier("notification_bg", "id", packageName));
+        map.put("icon_bg", res.getIdentifier("icon_bg", "id", packageName));
+        map.put("icon_fg", res.getIdentifier("icon_fg", "id", packageName));
+        map.put("app_icon", res.getIdentifier("app_icon", "id", packageName));
+
+        return map;
     }
 
     private Typeface loadThemeTypeface(Resources res, String packageName, String family_name, String style, Typeface defaultTypeface)
@@ -166,6 +190,15 @@ public class ThemeManager
             fstyle = Typeface.NORMAL;
 
         return Typeface.create(fname, fstyle);
+    }
+
+    private XmlResourceParser loadThemeLayout(Resources res, String packageName, String name)
+    {
+        int id = res.getIdentifier(name, "layout", packageName);
+        if (id > 0)
+            return res.getLayout(id);
+        else
+            return null;
     }
 
     private float loadThemeDimen(Resources res, String packageName, String name, float defaultValue)
@@ -227,6 +260,20 @@ public class ThemeManager
             mCurrentTheme.altTextBG = loadThemeDrawable(mCurrentTheme.res, mCurrentTheme.packageName, "alt_text_bg", mCurrentTheme.textBG);
             mCurrentTheme.background = loadThemeDrawable(mCurrentTheme.res, mCurrentTheme.packageName, "background", defaultTheme.background);
             mCurrentTheme.altBackground = loadThemeDrawable(mCurrentTheme.res, mCurrentTheme.packageName, "alt_background", mCurrentTheme.background);
+        }
+    }
+
+    public void reloadLayouts(Theme theme)
+    {
+        try
+        {
+            PackageManager pm = mContext.getPackageManager();
+            Resources res = pm.getResourcesForApplication(theme.packageName);
+            theme.notificationLayout = loadThemeLayout(res, theme.packageName, "notification_layout");
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            theme.notificationLayout = null;
         }
     }
 }
