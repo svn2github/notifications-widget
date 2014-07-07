@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.roymam.android.common.BitmapUtils;
@@ -35,6 +34,7 @@ import java.util.List;
 
 public class NotificationAdapter extends BaseAdapter
 {
+    private static final String TAG = NotificationAdapter.class.getName();
     private Theme mTheme = null;
     private Context context;
 
@@ -73,10 +73,10 @@ public class NotificationAdapter extends BaseAdapter
             List<NotificationData> notifications = NotificationsService.getSharedInstance().getNotifications();
             if (position < notifications.size())
                 return notifications.get(position);
-            Log.wtf("NiLS", "NotificationAdapter.getItem has been called with invalid position. this should never happen");
+            Log.wtf(TAG, "NotificationAdapter.getItem has been called with invalid position. this should never happen");
             return null;
         }
-        Log.wtf("NiLS", "NotificationAdapter.getItem has been called when service is not running. this should never happen");
+        Log.wtf(TAG, "NotificationAdapter.getItem has been called when service is not running. this should never happen");
         return null;
     }
 
@@ -130,6 +130,8 @@ public class NotificationAdapter extends BaseAdapter
                 if (theme.customLayoutIdMap.get("app_icon") != null)
                     holder.vAppIconImage = (ImageView) notificationView.findViewById(theme.customLayoutIdMap.get("app_icon"));
 
+                if (theme.customLayoutIdMap.get("app_icon_bg") != null)
+                    holder.vAppIconBGImage = (ImageView) notificationView.findViewById(theme.customLayoutIdMap.get("app_icon_bg"));
             }
 
             notificationView.setTag(holder);
@@ -151,24 +153,9 @@ public class NotificationAdapter extends BaseAdapter
         int altNotificationBGColor = prefs.getInt(SettingsManager.ALT_MAIN_BG_COLOR, SettingsManager.DEFAULT_ALT_MAIN_BG_COLOR);
         int altIconBGColor = prefs.getInt(SettingsManager.ALT_ICON_BG_COLOR, SettingsManager.DEFAULT_ALT_ICON_BG_COLOR);
 
-        Bitmap icon = NotificationAdapter.createThemedIcon(item.getIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)), item.appColor);
+        Bitmap icon = NotificationAdapter.createThemedIcon(item.getIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)));
+        Log.d(TAG, "icon size:"+icon.getWidth()+","+icon.getHeight());
         holder.ivImage.setImageDrawable(new BitmapDrawable(icon));
-
-        // for Android L like themes
-        if (holder.vAppIconImage != null)
-        {
-            if (item.largeIcon != null)
-            {
-                Bitmap appIcon = NotificationAdapter.createThemedIcon(item.getAppIcon(), theme, holder.vAppIconImage.getLayoutParams().width, item.appColor);
-                holder.vAppIconImage.setImageDrawable(new BitmapDrawable(appIcon));
-            }
-            else // if there isn't a large icon, then use the app icon as the large icon
-            {
-                icon = NotificationAdapter.createThemedIcon(item.getAppIcon(), theme, holder.vAppIconImage.getLayoutParams().width, item.appColor);
-                holder.vAppIconImage.setImageDrawable(new BitmapDrawable(icon));
-            }
-        }
-
         holder.tvTitle.setText(item.getTitle() != null ? item.getTitle().toString() : null);
         holder.tvTitle.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault_Medium);
         holder.tvTitle.setTextSize(prefs.getInt(SettingsManager.TITLE_FONT_SIZE, SettingsManager.DEFAULT_TITLE_FONT_SIZE));
@@ -257,8 +244,58 @@ public class NotificationAdapter extends BaseAdapter
             Drawable iconBgImage = even?theme.altIconBg:theme.iconBg;
             if (iconBgImage != null)
                 iconBgImage.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
+
+            if (theme.prominentIconBg)
+            {
+                if (iconBgImage instanceof BitmapDrawable)
+                {
+                    iconBgImage = new BitmapDrawable(BitmapUtils.colorBitmap(((BitmapDrawable)iconBgImage).getBitmap(), item.appColor));
+                }
+                else
+                {
+                    Log.w(TAG, "invalid theme. prominent icon background works only with BitmapDrawable");
+                }
+            }
             holder.vIconBgImage.setImageDrawable(iconBgImage);
             holder.vIconFgImage.setImageDrawable(theme.iconFg);
+
+            // for Android L like themes
+            if (holder.vAppIconImage != null)
+            {
+                Bitmap appIcon = item.getAppIcon();
+                // show app icon only if the primary icon is a large icon
+                if (item.largeIcon != null)
+                {
+                    holder.vAppIconImage.setImageDrawable(new BitmapDrawable(appIcon));
+                    if (holder.vAppIconBGImage != null && theme.appIconBg != null)
+                    {
+                        Drawable appIconBgDrawable = theme.appIconBg;
+
+                        if (theme.prominentAppIconBg)
+                        {
+                            if (theme.appIconBg instanceof BitmapDrawable)
+                            {
+                                appIconBgDrawable = new BitmapDrawable(BitmapUtils.colorBitmap(((BitmapDrawable)theme.appIconBg).getBitmap(), item.appColor));
+                            }
+                            else
+                            {
+                                Log.w(TAG, "invalid theme. prominent app icon background works only with BitmapDrawable");
+                            }
+                        }
+                        holder.vAppIconBGImage.setImageDrawable(appIconBgDrawable);
+                    }
+                }
+                else
+                {
+                    if (holder.vAppIconBGImage != null) holder.vAppIconBGImage.setImageDrawable(null);
+                    holder.vAppIconImage.setImageDrawable(null);
+
+                    // for Android L notifications - set main icon as the app icon (the small monochrome one) instead of the colored one)
+                    // TODO: make it optional in the theme booleans
+                    holder.ivImage.setImageDrawable(new BitmapDrawable(NotificationAdapter.createThemedIcon(item.getAppIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)))));
+                }
+            }
+
         }
 
         ViewGroup.LayoutParams vparams = holder.vIconBG.getLayoutParams();
@@ -305,7 +342,7 @@ public class NotificationAdapter extends BaseAdapter
             return android.R.style.TextAppearance_DeviceDefault_Large;
     }
 
-    public static Bitmap createThemedIcon(Bitmap icon, Theme theme, int iconSize, int prominentColor)
+    public static Bitmap createThemedIcon(Bitmap icon, Theme theme, int iconSize)
     {
         if (theme != null && theme.iconMask != null)
         {
@@ -327,15 +364,12 @@ public class NotificationAdapter extends BaseAdapter
                 // crop the bitmap using the mask
                 Bitmap maskedBitmap = BitmapUtils.drawBitmapOnMask(iconBitmap, maskBitmap, 0,0);
 
-                // use theme icon background as a background for this
-                if (prominentColor != -1)
-                {
-                    Bitmap iconBgBitmap = BitmapUtils.colorBitmap(maskBitmap, prominentColor);
-                    maskedBitmap = BitmapUtils.drawBitmapOnBitmap(maskedBitmap, iconBgBitmap);
-                }
-
                 // set the new app icon
                 icon = maskedBitmap;
+            }
+            else
+            {
+                Log.w(TAG, "invalid theme - icon mask must be BitmapDrawable");
             }
         }
         else
@@ -400,5 +434,6 @@ public class NotificationAdapter extends BaseAdapter
         public View vTextBG;
         public TextView tvTime;
         public ImageView vAppIconImage;
+        public ImageView vAppIconBGImage;
     }
 }

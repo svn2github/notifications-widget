@@ -192,8 +192,8 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (!silent)
             {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_nils_icon_mono)).getBitmap())
+                        .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_launcher)).getBitmap())
+                        .setSmallIcon(R.drawable.ic_nils_icon_mono)
                         .setContentTitle("Something went wrong...")
                         .setContentText("log file was written to " + filename);
 

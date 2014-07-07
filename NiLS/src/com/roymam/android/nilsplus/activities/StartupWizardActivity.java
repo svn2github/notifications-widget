@@ -237,9 +237,9 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
 
     public static class GenericNextSkipTutorial extends Fragment
     {
-        private final int mLayout;
+        private int mLayout;
 
-        public GenericNextSkipTutorial(int layout)
+        protected void setLayout(int layout)
         {
             mLayout = layout;
         }
@@ -256,7 +256,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
     {
         public WelcomeFragment()
         {
-            super(R.layout.welcome_tutorial_1);
+            setLayout(R.layout.welcome_tutorial_1);
         }
     }
 
@@ -264,7 +264,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
     {
         public StartServiceFragment()
         {
-            super(R.layout.welcome_tutorial_2);
+            setLayout(R.layout.welcome_tutorial_2);
         }
     }
 
@@ -272,7 +272,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
     {
         public NiLSTutorial1()
         {
-            super(R.layout.welcome_tutorial_3);
+            setLayout(R.layout.welcome_tutorial_3);
         }
     }
 
@@ -280,7 +280,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
     {
         public NiLSTutorial2()
         {
-            super(R.layout.welcome_tutorial_4);
+            setLayout(R.layout.welcome_tutorial_4);
         }
     }
 
@@ -288,7 +288,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
     {
         public NiLSTutorial3()
         {
-            super(R.layout.welcome_tutorial_5);
+            setLayout(R.layout.welcome_tutorial_5);
         }
     }
 
@@ -296,7 +296,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
     {
         public NiLSTutorial4()
         {
-            super(R.layout.welcome_tutorial_6);
+            setLayout(R.layout.welcome_tutorial_6);
         }
     }
 
@@ -304,7 +304,7 @@ public class StartupWizardActivity extends Activity implements ViewPager.OnPageC
     {
         public EnableNotificationsPanel()
         {
-            super(R.layout.try_notification_panel);
+            setLayout(R.layout.try_notification_panel);
         }
     }
 }

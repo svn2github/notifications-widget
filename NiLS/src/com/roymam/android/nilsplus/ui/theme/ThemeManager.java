@@ -108,6 +108,7 @@ public class ThemeManager
 
         // load icon bg
         theme.iconBg = loadThemeDrawable(res, packageName, "icon_bg", theme.iconBg);
+        theme.appIconBg = loadThemeDrawable(res, packageName, "app_icon_bg", theme.iconBg);
         theme.altIconBg = loadThemeDrawable(res, packageName, "alt_icon_bg", theme.altIconBg);
         if (theme.altIconBg  == null) theme.altIconBg = theme.iconBg;
 
@@ -149,11 +150,23 @@ public class ThemeManager
         theme.textTypeface = loadThemeTypeface(res, packageName, "text_family_name", "text_style", theme.titleTypeface);
         theme.timeTypeface = loadThemeTypeface(res, packageName, "time_family_name", "time_style", theme.textTypeface);
 
+        // load booleans
+        theme.prominentIconBg = loadBoolean(res, packageName, "prominentIconBg", theme.prominentIconBg);
+        theme.prominentAppIconBg = loadBoolean(res, packageName, "prominentIconBg", theme.prominentAppIconBg);
         theme.notificationLayout = loadThemeLayout(res, packageName, "notification_layout");
         if (theme.notificationLayout != null)
             theme.customLayoutIdMap = loadCustomThemeLayoutIds(res, packageName);
 
         return theme;
+    }
+
+    private boolean loadBoolean(Resources res, String packageName, String name, boolean defaultValue)
+    {
+        int id = res.getIdentifier(name, "bool", packageName);
+        if (id > 0)
+            return res.getBoolean(id);
+        else
+            return defaultValue;
     }
 
     private Map<String, Integer> loadCustomThemeLayoutIds(Resources res, String packageName) {
@@ -168,6 +181,7 @@ public class ThemeManager
         map.put("icon_bg", res.getIdentifier("icon_bg", "id", packageName));
         map.put("icon_fg", res.getIdentifier("icon_fg", "id", packageName));
         map.put("app_icon", res.getIdentifier("app_icon", "id", packageName));
+        map.put("app_icon_bg", res.getIdentifier("app_icon_bg", "id", packageName));
 
         return map;
     }

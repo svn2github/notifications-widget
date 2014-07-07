@@ -128,7 +128,10 @@ public class NotificationParser
                     {
                         Palette p = Palette.generate(packageIcon);
                         Log.d("NiLS", packageName + " vibrantcolor:" + p.getVibrantColor());
-                        nd.appColor = p.getVibrantColor().getRgb();
+                        if (p.getVibrantColor() != null)
+                            nd.appColor = p.getVibrantColor().getRgb();
+                        else
+                            nd.appColor = 0;
                     }
                     nd.appicon = BitmapCache.getInstance(context).getBitmap(packageName, n.icon);
                     if (notificationIcon.equals(SettingsManager.NOTIFICATION_MONO_ICON))
@@ -318,6 +321,7 @@ public class NotificationParser
             NotificationData nd = new NotificationData();
             nd.icon = baseNotification.icon;
             nd.appicon = baseNotification.appicon;
+            nd.appColor = baseNotification.appColor;
             nd.id = baseNotification.id;
             nd.packageName = baseNotification.packageName;
             nd.pinned = baseNotification.pinned;

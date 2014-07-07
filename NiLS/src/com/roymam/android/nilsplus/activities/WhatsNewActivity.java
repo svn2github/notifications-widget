@@ -149,7 +149,7 @@ public class WhatsNewActivity extends Activity implements ViewPager.OnPageChange
     {
         public WhatsNewFragment()
         {
-            super(R.layout.whats_new_layout);
+            setLayout(R.layout.whats_new_layout);
         }
 
         @Override

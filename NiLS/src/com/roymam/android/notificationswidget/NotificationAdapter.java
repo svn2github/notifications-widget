@@ -298,9 +298,10 @@ public class NotificationAdapter implements NotificationEventListener
                             mDeviceCovered = newCoverStatus;
                             if (!mDeviceCovered)
                             {
-                                // turn on screen in 300ms (give it a chance to cancel)
-                                Log.d("NiLS", "Turning screen on within 300ms");
-                                mHandler.postDelayed(turnOnScreen, 300);
+                                long timeout = prefs.getLong("proximity_timeout", 500);
+                                // turn on screen in 500ms (give it a chance to cancel)
+                                Log.d("NiLS", "Turning screen on within "+timeout+"ms");
+                                mHandler.postDelayed(turnOnScreen, timeout);
                             }
                             else
                             {

@@ -69,6 +69,7 @@ public class AppearancePreferencesFragment extends NiLSPreferenceFragment implem
         mPreviewNotificationItem.setAppIcon(((BitmapDrawable) getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
         mPreviewNotificationItem.setTitle(getResources().getString(R.string.preview_title));
         mPreviewNotificationItem.setText(getResources().getString(R.string.preview_text));
+        mPreviewNotificationItem.largeIcon = mPreviewNotificationItem.getIcon();
         Palette p = Palette.generate(((BitmapDrawable) getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
         mPreviewNotificationItem.appColor = p.getVibrantColor().getRgb();
 

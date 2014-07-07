@@ -332,7 +332,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         mPreviewTitle.setTextSize(prefs.getInt(SettingsManager.TITLE_FONT_SIZE, SettingsManager.DEFAULT_TITLE_FONT_SIZE));
         mPreviewText.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
         mPreviewTime.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
-        Bitmap icon = NotificationAdapter.createThemedIcon(ni.getIcon(), theme, (int) context.getResources().getDimension(R.dimen.notification_icon_size_large), ni.appColor);
+        Bitmap icon = NotificationAdapter.createThemedIcon(ni.getIcon(), theme, (int) context.getResources().getDimension(R.dimen.notification_icon_size_large));
         mPreviewIcon.setImageDrawable(new BitmapDrawable(getResources(), icon));
 
         if (theme.iconBg != null)
@@ -347,6 +347,8 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
         // set colors
         mPreviewTitle.setTextColor(mPrimaryTextColor);
+        if (ni.appColor != 0 && prefs.getBoolean(SettingsManager.AUTO_TITLE_COLOR, false))
+            mPreviewTitle.setTextColor(ni.appColor);
         mPreviewText.setTextColor(secondaryTextColor);
         mPreviewTime.setTextColor(secondaryTextColor);
         mPreviewBackground.setBackgroundColor(mNotificationBGColor);
