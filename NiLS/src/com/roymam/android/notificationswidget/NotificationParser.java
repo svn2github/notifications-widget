@@ -47,6 +47,8 @@ import java.util.regex.Pattern;
 
 public class NotificationParser
 {
+    private final String TAG = NotificationParser.class.getSimpleName();
+
     private final Context context;
     public int notification_image_id = 0;
     public int notification_title_id = 0;
@@ -68,6 +70,7 @@ public class NotificationParser
     public int inbox_notification_event_8_id = 0;
     public int inbox_notification_event_9_id = 0;
     public int inbox_notification_event_10_id = 0;
+    public int bigpictue_notification_id = 0;
     private int mInboxLayoutId = 0;
     private int mBigTextLayoutId = 0;
 
@@ -127,7 +130,7 @@ public class NotificationParser
                     if (packageIcon != null)
                     {
                         Palette p = Palette.generate(packageIcon);
-                        Log.d("NiLS", packageName + " vibrantcolor:" + p.getVibrantColor());
+                        Log.d(TAG, packageName + " vibrantcolor:" + p.getVibrantColor());
                         if (p.getVibrantColor() != null)
                             nd.appColor = p.getVibrantColor().getRgb();
                         else
@@ -204,7 +207,7 @@ public class NotificationParser
 
                     if (nd.title == null && nd.text == null)
                     {
-                        Log.d("NiLS", "missing text from:" + packageName);
+                        Log.d(TAG, "missing text from:" + packageName);
                         printStringsFromNotification();
                     }
 
@@ -232,7 +235,7 @@ public class NotificationParser
                         if (nd.text == null)
                         {
                             // if both text and title are null - that's non informative notification - ignore it
-                            Log.d("NiLS", "ignoring notification with empty title & text from :" + packageName);
+                            Log.d(TAG, "ignoring notification with empty title & text from :" + packageName);
                             printStringsFromNotification();
                             return new ArrayList<NotificationData>();
                         }
@@ -240,7 +243,7 @@ public class NotificationParser
                     else if (nd.text == null)
                     {
                         // if both text and title are null - that's non informative notification - ignore it
-                        Log.d("NiLS", "a notification with no text from:" + packageName);
+                        Log.d(TAG, "a notification with no text from:" + packageName);
                         printStringsFromNotification();
                     }
 
@@ -288,7 +291,7 @@ public class NotificationParser
             for(int i : notificationStrings.keySet())
             {
                 CharSequence text = notificationStrings.get(i);
-                Log.d("NiLS", "id:"+i+" string:"+text);
+                Log.d(TAG, "id:"+i+" string:"+text);
             }
         }
     }
@@ -321,6 +324,7 @@ public class NotificationParser
             NotificationData nd = new NotificationData();
             nd.icon = baseNotification.icon;
             nd.appicon = baseNotification.appicon;
+            nd.largeIcon = baseNotification.largeIcon;
             nd.appColor = baseNotification.appColor;
             nd.id = baseNotification.id;
             nd.packageName = baseNotification.packageName;
@@ -471,6 +475,8 @@ public class NotificationParser
         {
             view = getBigContentView(n);
             extractTextFromView(view, nd);
+
+            nd.bitmaps = getBitmapsFromRemoteViews(view);
         }
     }
 
@@ -751,6 +757,73 @@ public class NotificationParser
         }
 
         return notificationText;
+    }
+
+    // use reflection to extract string from remoteviews object
+    private ArrayList<Bitmap> getBitmapsFromRemoteViews(RemoteViews view)
+    {
+        ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+
+        try
+        {
+            ArrayList<Parcelable> actions = null;
+            Field fs = view.getClass().getDeclaredField("mActions");
+            if (fs != null)
+            {
+                fs.setAccessible(true);
+                actions = (ArrayList<Parcelable>) fs.get(view);
+            }
+
+            Object bitmapCache = null;
+            fs = view.getClass().getDeclaredField("mBitmapCache");
+            if (fs != null)
+            {
+                fs.setAccessible(true);
+                bitmapCache = fs.get(view);
+                fs = bitmapCache.getClass().getDeclaredField("mBitmaps");
+                if (fs != null)
+                {
+                    fs.setAccessible(true);
+                    bitmaps = (ArrayList<Bitmap>) fs.get(bitmapCache);
+                    Log.d(TAG,bitmaps.size()+" bitmaps found.");
+                }
+            }
+
+            // Find the setText() and setTime() reflection actions
+            for (Parcelable p : actions)
+            {
+                Parcel parcel = Parcel.obtain();
+                p.writeToParcel(parcel, 0);
+                parcel.setDataPosition(0);
+
+                // The tag tells which type of action it is (2 is ReflectionAction, from the source)
+                int tag = parcel.readInt();
+                if (tag != 12) continue;
+
+                // View ID
+                int viewId = parcel.readInt();
+
+                String methodName = parcel.readString();
+                if (methodName == null) continue;
+
+                    // Save strings
+                else
+                {
+                    Log.d(TAG, "methodName:"+methodName);
+
+                    // bitmap id
+                    Log.d(TAG, "id:"+parcel.readInt());
+                }
+
+                parcel.recycle();
+            }
+        }
+        catch(Exception exp)
+        {
+            exp.printStackTrace();
+        }
+
+        return bitmaps;
     }
 
     private void detectNotificationIds()

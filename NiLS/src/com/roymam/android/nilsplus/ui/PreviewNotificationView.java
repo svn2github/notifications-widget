@@ -21,6 +21,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.roymam.android.common.BitmapUtils;
@@ -50,6 +51,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     private final View mNotificationContent;
     private final int mMinFlingVelocity;
     private final int mMaxFlingVelocity;
+    private final ImageView mPreviewBigPicture;
     private Context context;
     private int mTouchSlop;
     private int mViewWidth;
@@ -157,6 +159,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         mPreviewIconImageFG = (ImageView) mPreviewNotificationView.findViewById(R.id.icon_fg);
         mPreviewTime = (TextView) mPreviewNotificationView.findViewById(R.id.notification_time);
         mScrollView = mPreviewNotificationView.findViewById(R.id.notification_text_scrollview);
+        mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(R.id.notification_big_picture);
 
         // set listeners
         mScrollView.setOnTouchListener(this);
@@ -360,6 +363,24 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             theme.previewBG.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
             mPreviewBackground.setBackgroundDrawable(theme.previewBG);
         }
+
+        Bitmap largestBitmap = null;
+        for(Bitmap bitmap : ni.bitmaps)
+        {
+            if (largestBitmap == null)
+                largestBitmap = bitmap;
+            else
+                if (largestBitmap.getHeight()*largestBitmap.getWidth() <
+                    bitmap.getHeight()*bitmap.getWidth())
+                    largestBitmap = bitmap;
+        }
+
+        if (largestBitmap != null &&
+                (largestBitmap.getWidth() > context.getResources().getDimension(R.dimen.big_picture_min_size) ||
+                 largestBitmap.getHeight() > context.getResources().getDimension(R.dimen.big_picture_min_size)))
+            mPreviewBigPicture.setImageBitmap(largestBitmap);
+        else
+            mPreviewBigPicture.setImageBitmap(null);
 
         // apply font style and size if available
         if (theme.timeFontSize != -1) mPreviewTime.setTextSize(theme.timeFontSize);

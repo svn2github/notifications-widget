@@ -12,6 +12,8 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class NotificationData implements Parcelable
 {
     public static int nextUID = 0;
@@ -36,6 +38,7 @@ public class NotificationData implements Parcelable
     public boolean event = false;
     public Bitmap largeIcon = null;
     public int appColor;
+    public ArrayList<Bitmap> bitmaps;
 
     public NotificationData()
     {

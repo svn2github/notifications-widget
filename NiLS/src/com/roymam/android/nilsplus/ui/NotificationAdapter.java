@@ -34,7 +34,7 @@ import java.util.List;
 
 public class NotificationAdapter extends BaseAdapter
 {
-    private static final String TAG = NotificationAdapter.class.getName();
+    private static final String TAG = NotificationAdapter.class.getSimpleName();
     private Theme mTheme = null;
     private Context context;
 
