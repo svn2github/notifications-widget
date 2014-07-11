@@ -1321,7 +1321,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     private void runPendingIntent(PendingIntent action, String packageName, int uid)
     {
         Log.d("NiLS", "runPendingIntent: packageName:"+packageName+" uid:"+uid);
-        // a workaround for keyboard stuck on Hangouts
+        /*// a workaround for keyboard stuck on Hangouts
         if (packageName.equals("com.google.android.talk"))
             try
             {
@@ -1354,7 +1354,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
             }
         else
-        {
+        {*/
             Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1363,7 +1363,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             intent.putExtra("uid", uid);
             intent.putExtra("lockscreen_package", SysUtils.getForegroundApp(getApplicationContext()));
             startActivity(intent);
-        }
+        //}
         // hide viewmanager if visible
         hide(false);
     }

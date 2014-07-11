@@ -20,6 +20,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ import java.util.Set;
 
 public class SettingsManager
 {
+    private static final String TAG = SettingsManager.class.getSimpleName();
+
     // main settings
     public static final String NILS_SERVICE = "nils_service";
     public static final String AUTO_HIDE_SERVICE = "auto_hide_service";
@@ -145,13 +148,10 @@ public class SettingsManager
 
     // Floating Panel
     public static final String FP_ENABLED = "fp_enabled";
-    public static final String FP_PACKAGE = "com.roymam.android.nilsplus";
     public static final boolean DEFAULT_FP_ENABLED = false;
-    private static final int FIRST_INSTALLED_VERSION = 273;
 
     // settings strings
     public static final String LOCKSCREEN_APP = "lockscreenapp";
-    public static final String LOCKSCREEN_APP_AUTO = "lockscreenapp_auto";
     public static final String PRIMARY_TEXT_COLOR = "primary_text_color";
     public static final String SECONDARY_TEXT_COLOR = "secondary_text_color";
     public static final String MAIN_BG_COLOR = "main_bg_color";
@@ -210,10 +210,8 @@ public class SettingsManager
     public static final int DEFAULT_PREVIEW_HEIGHT = DEFAULT_HEIGHT;
     public static final boolean DEFAULT_HALO_MODE = false;
     public static final boolean DEFAULT_HIDE_ON_CLICK = false;
-    public static final String DEFAULT_LOCKSCREEN_APP_AUTO = "android";
-    public static final String AUTO_LOCKSCREEN_APP = "auto";
-    public static final String DEFAULT_LOCKSCREEN_APP = AUTO_LOCKSCREEN_APP;
     public static final String STOCK_LOCKSCREEN_PACKAGENAME = "com.android.keyguard";
+    public static final String DEFAULT_LOCKSCREEN_APP = STOCK_LOCKSCREEN_PACKAGENAME;
     public static final String STOCK_PHONE_PACKAGENAME = "com.android.phone";
     public static final int DEFAULT_PREVIEW_ICON_SIZE = 64;
     public static final int DEFAULT_TITLE_FONT_SIZE = 18;
@@ -512,6 +510,7 @@ public class SettingsManager
 
         public static String getAppName(Context context, String packageName)
         {
+            Log.d(TAG, "getAppName(" + packageName + ")");
             String appName = context.getString(R.string.stock_lock_screen);
 
             if (!packageName.equals(STOCK_LOCKSCREEN_PACKAGENAME))

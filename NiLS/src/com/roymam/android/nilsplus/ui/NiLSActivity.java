@@ -757,6 +757,16 @@ public class NiLSActivity extends Activity
                         prefs.edit().putString(key, (String) x).commit();
                 }
                 prefs.edit().putBoolean("prefs_imported", true).commit();
+
+                // handling old lock screen detection values
+                if (prefs.getString(SettingsManager.LOCKSCREEN_APP, SettingsManager.DEFAULT_LOCKSCREEN_APP).equals("auto")) {
+                    prefs.edit().putString(SettingsManager.LOCKSCREEN_APP,
+                            prefs.getString("lockscreenapp_auto", SettingsManager.DEFAULT_LOCKSCREEN_APP)).commit();
+                }
+                if (prefs.getString(SettingsManager.LOCKSCREEN_APP, SettingsManager.DEFAULT_LOCKSCREEN_APP).equals("android")) {
+                    prefs.edit().putString(SettingsManager.LOCKSCREEN_APP, SettingsManager.DEFAULT_LOCKSCREEN_APP).commit();
+                }
+
                 Toast.makeText(getApplicationContext(), "Preferences and license information has been imported successfully from NiLS Floating Panel", Toast.LENGTH_LONG).show();
             }
             catch (PackageManager.NameNotFoundException e)

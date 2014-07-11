@@ -428,11 +428,7 @@ public class NPViewManager
         if (prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE))
         {
             // separated mode for notifications list on home screen
-            String lockScreenApp = prefs.getString("lockscreenapp", "auto");
-
-            // if need to auto detect, get the last auto detected app
-            if (lockScreenApp.equals("auto"))
-                lockScreenApp = prefs.getString("lockscreenapp_auto", "android");
+            String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, SettingsManager.DEFAULT_LOCKSCREEN_APP);
 
             String currentApp = SysUtils.getForegroundApp(context);
 

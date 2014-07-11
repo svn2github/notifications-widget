@@ -47,7 +47,15 @@
             android:title="@string/order_notifications_by"
             android:key="order_notifications_by"
             android:defaultValue="time"/>
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/lock_screen">
+        <CheckBoxPreference
+            android:key="auto_detect_lock_screen_app"
+            android:title="@string/auto_detect_lock_screen"
+            android:summary="@string/current_lock_screen_app"
+            android:defaultValue="false"
+            />
     </PreferenceCategory>
 
     <PreferenceCategory android:key="sync" android:title="@string/sync">
@@ -69,14 +77,5 @@
             android:enabled="true"
             android:defaultValue="true"
             android:summary="@string/collectonunlock_summary"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory android:key="lockscreenapp" android:title="@string/lock_screen">
-        <CheckBoxPreference
-            android:key="auto_detect_lock_screen_app"
-            android:title="@string/auto_detect_lock_screen"
-            android:summary="@string/current_lock_screen_app"
-            android:defaultValue="fasle"
-            />
     </PreferenceCategory>
 </PreferenceScreen>
