@@ -71,12 +71,12 @@
             android:summary="@string/collectonunlock_summary"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:key="advanced" android:title="@string/advanced">
+    <PreferenceCategory android:key="lockscreenapp" android:title="@string/lock_screen">
         <CheckBoxPreference
             android:key="auto_detect_lock_screen_app"
             android:title="@string/auto_detect_lock_screen"
             android:summary="@string/current_lock_screen_app"
-            android:defaultValue="true"
+            android:defaultValue="fasle"
             />
     </PreferenceCategory>
 </PreferenceScreen>

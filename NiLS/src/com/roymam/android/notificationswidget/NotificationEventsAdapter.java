@@ -20,8 +20,9 @@ import com.roymam.android.common.SysUtils;
 
 import java.util.List;
 
-public class NotificationAdapter implements NotificationEventListener
+public class NotificationEventsAdapter implements NotificationEventListener
 {
+    private static final String TAG = NotificationEventsAdapter.class.getSimpleName();
     private final SysUtils mSysUtils;
     private Context context = null;
     private boolean newNotificationsAvailable = false;
@@ -36,7 +37,7 @@ public class NotificationAdapter implements NotificationEventListener
     private PowerManager.WakeLock mWakeLock = null;
     private int mDeviceTimeout;
 
-    public NotificationAdapter(Context context, Handler handler)
+    public NotificationEventsAdapter(Context context, Handler handler)
     {
         this.context = context;
         this.mHandler = handler;
@@ -61,8 +62,10 @@ public class NotificationAdapter implements NotificationEventListener
         // set covered status (if we got it)
         mDeviceCovered = deviceCovered;
 
-        if (wakeupMode.equals(SettingsManager.WAKEUP_ALWAYS))
+        if (wakeupMode.equals(SettingsManager.WAKEUP_ALWAYS)) {
+            Log.d(TAG, "wakeup mode is ALWAYS, turning screen on");
             turnScreenOn();
+        }
         else if (!wakeupMode.equals(SettingsManager.WAKEUP_NEVER))
         {
             registerProximitySensor(packageName);
@@ -79,9 +82,12 @@ public class NotificationAdapter implements NotificationEventListener
                     }
                 }, 5000);
 
-                // turn screen on immediatly if the device is known to be not covered
+                // turn screen on immediately if the device is known to be not covered
                 if (deviceCovered != null && !deviceCovered)
+                {
+                    Log.d(TAG, "device is not covered (parameter), turning screen on");
                     turnScreenOn();
+                }
             }
         }
     }
@@ -98,7 +104,7 @@ public class NotificationAdapter implements NotificationEventListener
 
     private void notifyNotificationAdd(NotificationData nd)
     {
-        Log.d("NiLS", "notification add uid:" + nd.uid);
+        Log.d(TAG, "notification add uid:" + nd.uid);
 
         // add the package to the app specific settings page
         AppSettingsActivity.addAppToAppSpecificSettings(nd.packageName, context);
@@ -106,12 +112,12 @@ public class NotificationAdapter implements NotificationEventListener
 
     private void notifyNotificationUpdated(NotificationData nd)
     {
-        Log.d("Nils", "notification update #" + nd.uid);
+        Log.d(TAG, "notification update #" + nd.uid);
     }
 
     private void notifyNotificationRemove(NotificationData nd)
     {
-        Log.d("Nils", "NotificationAdapter:notifyNotificationRemove uid:" + nd.uid);
+        Log.d(TAG, "NotificationAdapter:notifyNotificationRemove uid:" + nd.uid);
 
         // notify FloatingNotifications for clearing this notification
         Intent intent = new Intent();
@@ -258,7 +264,7 @@ public class NotificationAdapter implements NotificationEventListener
     public void registerProximitySensor(final String packageName)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Log.d("NiLS", "registerProximitySensor");
+        Log.d(TAG, "registerProximitySensor");
         String wakeupMode = SettingsManager.getWakeupMode(context, packageName);
 
         if (wakeupMode.equals(SettingsManager.WAKEUP_NOT_COVERED) || wakeupMode.equals(SettingsManager.WAKEUP_UNCOVERED))
@@ -288,7 +294,7 @@ public class NotificationAdapter implements NotificationEventListener
                     public void onSensorChanged(SensorEvent event)
                     {
                         boolean newCoverStatus = (event.values[0] < event.sensor.getMaximumRange());
-                        Log.d("NiLS", "proximity:"+event.values[0]+" device covered:"+newCoverStatus+" time:"+ SystemClock.uptimeMillis());
+                        Log.d(TAG, "proximity:"+event.values[0]+" device covered:"+newCoverStatus+" time:"+ SystemClock.uptimeMillis());
 
                         // if transition happened
                         if (mDeviceCovered == null || newCoverStatus != mDeviceCovered)
@@ -300,13 +306,13 @@ public class NotificationAdapter implements NotificationEventListener
                             {
                                 long timeout = prefs.getLong("proximity_timeout", 500);
                                 // turn on screen in 500ms (give it a chance to cancel)
-                                Log.d("NiLS", "Turning screen on within "+timeout+"ms");
+                                Log.d(TAG, "Turning screen on within "+timeout+"ms");
                                 mHandler.postDelayed(turnOnScreen, timeout);
                             }
                             else
                             {
                                 // cancel turning on screen
-                                Log.d("NiLS", "Canceling turning screen on");
+                                Log.d(TAG, "Canceling turning screen on");
                                 mHandler.removeCallbacks(turnOnScreen);
                             }
                         }
@@ -325,7 +331,7 @@ public class NotificationAdapter implements NotificationEventListener
 
     public void stopProximityMontior(String reason)
     {
-        Log.d("NiLS", "unregisterProximitySensor (reason: "+reason+")");
+        Log.d(TAG, "unregisterProximitySensor (reason: "+reason+")");
         SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
         sensorManager.unregisterListener(sensorListener);
         mDeviceCovered = null;

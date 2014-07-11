@@ -335,6 +335,7 @@ public class NotificationParser
             nd.action = baseNotification.action;
             nd.content = baseNotification.content;
             nd.title = strings.get(notification_title_id);
+            nd.bitmaps = baseNotification.bitmaps;
             nd.event = true;
             nd.text = event;
 
@@ -469,6 +470,8 @@ public class NotificationParser
 
         // first get information from the original content view
         extractTextFromView(view, nd);
+
+        nd.bitmaps = new ArrayList<Bitmap>();
 
         // then try get information from the expanded view
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)

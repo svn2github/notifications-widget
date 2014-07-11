@@ -115,7 +115,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         mFilteredNotificationsList = new ArrayList<NotificationData>();
 
         // set up events listener
-        setNotificationEventListener(new NotificationAdapter(context, new Handler()));
+        setNotificationEventListener(new NotificationEventsAdapter(context, new Handler()));
 
         // set up proximity sensor
         testProximity();
@@ -238,7 +238,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     stopProximityMonitoring();
                 }
                 else {
-                    Log.d("NiLS", "no response after 100ms");
+                    Log.d("NiLS", "no response after 500ms");
                     prefs.edit().putBoolean(SettingsManager.IMMEDIATE_PROXIMITY, false).commit();
                 }
 
@@ -247,7 +247,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 if (wakeupMode.equals(SettingsManager.WAKEUP_ALWAYS) || wakeupMode.equals(SettingsManager.WAKEUP_NEVER))
                     stopProximityMonitoring();
             }
-        },100);
+        },500);
     }
 
     SensorManager sensorManager;
@@ -291,7 +291,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     {
         if (context == null) context = getApplicationContext();
         if (parser == null) parser = new NotificationParser(getApplicationContext());
-        if (listener == null) setNotificationEventListener(new NotificationAdapter(context, mHandler));
+        if (listener == null) setNotificationEventListener(new NotificationEventsAdapter(context, mHandler));
 
         if (intent != null && intent.getAction() != null)
             if (intent.getAction().equals("refresh"))
@@ -357,7 +357,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                         updated = true;
                         changed = !oldnd.isEqual(nd);
 
-                        // if it is exact the same notificaiton - keep old received time
+                        // if it is exact the same notification - keep old received time
                         if (!changed) nd.received = oldnd.received;
 
                         break;

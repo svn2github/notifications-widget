@@ -122,8 +122,9 @@
         <item>priority</item>
     </string-array>
 
+    <string name="lock_screen">Lock Screen</string>
     <string name="auto_detect_lock_screen">Auto detect lock screen app</string>
-    <string name="current_lock_screen_app">Current lock screen app:%s</string>
+    <string name="current_lock_screen_app">Current lock screen app:%s\nEnable auto detection if you are using a different lock screen app</string>
     <string name="stock_lock_screen">Android (Stock)</string>
     <string name="new_lock_screen_detected">%s lock screen app detected</string>
     <string name="new_lock_screen_detected_text">Would you like to display notifications on top of it instead of your current lock screen (%s)?</string>

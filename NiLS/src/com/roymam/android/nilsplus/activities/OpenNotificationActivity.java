@@ -2,6 +2,7 @@ package com.roymam.android.nilsplus.activities;
 
 import android.R;
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -73,7 +74,8 @@ public class OpenNotificationActivity extends Activity
         {
             // unlock the device and then open the notification
             Log.d("NiLS", "Requesting device to be unlocked");
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
             mReceiver = new BroadcastReceiver()
             {
@@ -83,6 +85,7 @@ public class OpenNotificationActivity extends Activity
                     openNotification(action, packageName, uid);
                 }
             };
+
             registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
         }
         else

@@ -365,15 +365,16 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         }
 
         Bitmap largestBitmap = null;
-        for(Bitmap bitmap : ni.bitmaps)
-        {
-            if (largestBitmap == null)
-                largestBitmap = bitmap;
-            else
-                if (largestBitmap.getHeight()*largestBitmap.getWidth() <
-                    bitmap.getHeight()*bitmap.getWidth())
+        if (ni.bitmaps != null)
+            for(Bitmap bitmap : ni.bitmaps)
+            {
+                if (largestBitmap == null)
                     largestBitmap = bitmap;
-        }
+                else
+                    if (largestBitmap.getHeight()*largestBitmap.getWidth() <
+                        bitmap.getHeight()*bitmap.getWidth())
+                        largestBitmap = bitmap;
+            }
 
         if (largestBitmap != null &&
                 (largestBitmap.getWidth() > context.getResources().getDimension(R.dimen.big_picture_min_size) ||

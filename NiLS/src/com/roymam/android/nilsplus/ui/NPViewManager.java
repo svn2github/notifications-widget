@@ -36,6 +36,7 @@ import java.util.List;
 public class NPViewManager
 {
     private static final int EDIT_MODE_PADDING = 32;
+    private static final String TAG = NPViewManager.class.getSimpleName();
     private final int mAnimationDuration;
     private ListView mListView;
     private final Handler mHandler;
@@ -460,8 +461,10 @@ public class NPViewManager
 
     public void keepScreenOn()
     {
+        final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        Log.d(TAG, "keepScreeOn, isScreenOn:"+pm.isScreenOn());
         SysUtils sysUtils = SysUtils.getInstance(mContext,mHandler);
-        sysUtils.turnScreenOn(true);
+        if (pm.isScreenOn()) sysUtils.turnScreenOn(true, true);
     }
 
     private int calcYoffset(int y, int height)
@@ -648,11 +651,11 @@ public class NPViewManager
 
     public void hide(boolean force)
     {
-        Log.d("NiLS", "NPViewManager.hide();");
+        Log.d(TAG, "NPViewManager.hide();");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (!prefs.getBoolean(SettingsManager.DONT_HIDE, SettingsManager.DEFAULT_DONT_HIDE) || force)
         {
-            //Log.d("NiLS", "Hiding NiLS");
+            //Log.d(TAG, "Hiding NiLS");
             // hide preview if visibile
             if (mPreviewItem != null)
             {
@@ -726,7 +729,7 @@ public class NPViewManager
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (prefs.getBoolean(SettingsManager.FP_ENABLED, SettingsManager.DEFAULT_FP_ENABLED))
         {
-            Log.d("NiLS", "NPViewManager.show();");
+            Log.d(TAG, "NPViewManager.show();");
             mNPListView.show();
             hideNotificationPreview();
             mPreviewView.hideImmediate();
