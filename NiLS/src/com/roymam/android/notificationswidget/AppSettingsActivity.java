@@ -13,6 +13,8 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
 	public static final String IGNORE_APP = "ignoreapp";
     public static final String USE_EXPANDED_TEXT = "useexpandedtext";
     public static final String APP_PRIORITY = "apppriority";
+    public static final String RETRANSMIT = "retransmit";
+    public static final boolean DEFAULT_RETRANSMIT = false;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -27,6 +29,7 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
                     .remove(packageName + "." + SettingsManager.NOTIFICATION_MODE)
                     .remove(packageName + "." + SettingsManager.NOTIFICATION_ICON)
                     .remove(packageName + "." + SettingsManager.NOTIFICATION_PRIVACY)
+                    .remove(packageName + "." + RETRANSMIT)
                     .remove(packageName + "." + IGNORE_APP)
                     .commit();
 
@@ -125,5 +128,4 @@ public class AppSettingsActivity extends SpecificSettingsPreferencesActivity imp
 			sharedPreferences.edit().putString("specificapps", specificApps).commit();
 		}
 	}
-	
 }

@@ -154,7 +154,9 @@ public class ThemeManager
         theme.prominentIconBg = loadBoolean(res, packageName, "prominentIconBg", theme.prominentIconBg);
         theme.prominentAppIconBg = loadBoolean(res, packageName, "prominentIconBg", theme.prominentAppIconBg);
         theme.notificationLayout = loadThemeLayout(res, packageName, "notification_layout");
-        if (theme.notificationLayout != null)
+        theme.previewLayout = loadThemeLayout(res, packageName, "notification_preview");
+
+        if (theme.notificationLayout != null || theme.previewLayout != null)
             theme.customLayoutIdMap = loadCustomThemeLayoutIds(res, packageName);
 
         return theme;
@@ -182,6 +184,13 @@ public class ThemeManager
         map.put("icon_fg", res.getIdentifier("icon_fg", "id", packageName));
         map.put("app_icon", res.getIdentifier("app_icon", "id", packageName));
         map.put("app_icon_bg", res.getIdentifier("app_icon_bg", "id", packageName));
+
+        map.put("full_notification", res.getIdentifier("full_notification", "id", packageName));
+        map.put("notification_body", res.getIdentifier("notification_body", "id", packageName));
+        map.put("notification_preview", res.getIdentifier("notification_preview", "id", packageName));
+        map.put("notification_image", res.getIdentifier("notification_image", "id", packageName));
+        map.put("notification_text_scrollview", res.getIdentifier("notification_text_scrollview", "id", packageName));
+        map.put("notification_big_picture", res.getIdentifier("notification_big_picture", "id", packageName));
 
         return map;
     }
@@ -284,10 +293,12 @@ public class ThemeManager
             PackageManager pm = mContext.getPackageManager();
             Resources res = pm.getResourcesForApplication(theme.packageName);
             theme.notificationLayout = loadThemeLayout(res, theme.packageName, "notification_layout");
+            theme.previewLayout = loadThemeLayout(res, theme.packageName, "notification_preview");
         }
         catch (PackageManager.NameNotFoundException e)
         {
             theme.notificationLayout = null;
+            theme.previewLayout = null;
         }
     }
 }

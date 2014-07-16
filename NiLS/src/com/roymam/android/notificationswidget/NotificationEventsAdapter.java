@@ -1,6 +1,8 @@
 package com.roymam.android.notificationswidget;
 
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,9 +16,12 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.roymam.android.common.SysUtils;
+import com.roymam.android.nilsplus.services.PopupNotificationService;
+import com.roymam.android.nilsplus.ui.PopupNotification;
 
 import java.util.List;
 
@@ -108,6 +113,34 @@ public class NotificationEventsAdapter implements NotificationEventListener
 
         // add the package to the app specific settings page
         AppSettingsActivity.addAppToAppSpecificSettings(nd.packageName, context);
+
+        // show a popup message
+        if (SettingsManager.getBoolean(context, SettingsManager.POPUP_ENABLED, SettingsManager.DEFAULT_POPUP_ENABLED)) {
+            Intent popupNotificationIntent = new Intent(context, PopupNotificationService.class);
+            popupNotificationIntent.setAction(PopupNotificationService.POPUP_NOTIFICATION);
+            popupNotificationIntent.putExtra(PopupNotificationService.EXTRA_NOTIFICATION, nd);
+            context.startService(popupNotificationIntent);
+        }
+
+        // re-transmit notification (if needed)
+        if (SettingsManager.getBoolean(context, nd.packageName, AppSettingsActivity.RETRANSMIT, AppSettingsActivity.DEFAULT_RETRANSMIT))
+        {
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.nilsfp_icon_mono)
+                    .setLargeIcon(nd.largeIcon)
+                    .setContentTitle(nd.title)
+                    .setContentText(nd.text)
+                    .setContentIntent(nd.action);
+
+            NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
+            bigtextstyle.setBigContentTitle(nd.title);
+            bigtextstyle.bigText(nd.text);
+            mBuilder.setStyle(bigtextstyle);
+
+            Notification n = mBuilder.build();
+            nm.notify(nd.uid, n);
+        }
     }
 
     private void notifyNotificationUpdated(NotificationData nd)

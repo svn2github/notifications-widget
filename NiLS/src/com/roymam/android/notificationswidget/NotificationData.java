@@ -30,7 +30,7 @@ public class NotificationData implements Parcelable
     int 	count;
     boolean pinned = false;
     boolean selected = false;
-    boolean deleted = false;
+    private boolean deleted = false;
     boolean protect = false;
     public Action[] actions = new Action[0];
     public int priority;
@@ -92,6 +92,8 @@ public class NotificationData implements Parcelable
             icon = Bitmap.CREATOR.createFromParcel(in);
         if (in.readInt() != 0)
             appicon = Bitmap.CREATOR.createFromParcel(in);
+        if (in.readInt() != 0)
+            largeIcon = Bitmap.CREATOR.createFromParcel(in);
 
         received = in.readLong();
         packageName = in.readString();
@@ -158,6 +160,12 @@ public class NotificationData implements Parcelable
         {
             dest.writeInt(1);
             appicon.writeToParcel(dest, flags);
+        }
+        else dest.writeInt(0);
+        if (largeIcon != null)
+        {
+            dest.writeInt(1);
+            largeIcon.writeToParcel(dest, flags);
         }
         else dest.writeInt(0);
 
@@ -229,27 +237,20 @@ public class NotificationData implements Parcelable
 
     public void cleanup()
     {
-        /*
-        if (appicon != null)
-        {
-            appicon.recycle();
-            appicon = null;
-        }
+    }
 
-        if (icon != null)
-        {
-            icon.recycle();
-            icon = null;
-        }
+    public void delete()
+    {
+        // mark the notification as deleted
+        deleted = true;
 
-        if (actions != null)
-        {
-            for(Action action : actions)
-            {
-                action.drawable.recycle();
-                action.drawable = null;
-            }
-        }*/
+        // free up some big memory consumers
+        largeIcon = null;
+        icon = null;
+        appicon = null;
+        bitmaps = null;
+        action = null;
+        actions = null;
     }
 
     public static class Action implements Parcelable

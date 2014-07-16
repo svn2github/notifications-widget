@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.roymam.android.notificationswidget.SettingsManager;
 
 public class OpenNotificationActivity extends Activity
 {
+    private final String UNLOCK_HACK_DEVICES = "ls980,l01f,m7wls,m7cdug,m7vzw,m7spr,m7,g3,g2";
     private BroadcastReceiver mReceiver;
 
     private void openNotification(PendingIntent action, String packageName, int uid)
@@ -75,7 +77,9 @@ public class OpenNotificationActivity extends Activity
             // unlock the device and then open the notification
             Log.d("NiLS", "Requesting device to be unlocked");
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+
+            if (UNLOCK_HACK_DEVICES.contains(Build.DEVICE))
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
             mReceiver = new BroadcastReceiver()
             {

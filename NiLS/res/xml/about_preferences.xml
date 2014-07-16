@@ -31,7 +31,7 @@
     <PreferenceCategory android:title="@string/debugging">
         <Preference android:title="@string/view_recent_log">
             <intent android:targetClass="com.roymam.android.nilsplus.activities.LogViewerActivity"
-                    android:targetPackage="com.roymam.android.notificationswidget"/>
+                    android:targetPackage="@string/packageName"/>
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

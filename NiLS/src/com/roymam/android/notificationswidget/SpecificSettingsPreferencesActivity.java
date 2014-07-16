@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -65,6 +66,14 @@ public class SpecificSettingsPreferencesActivity extends PreferenceActivity
 
                     listPref.setKey(key);
                     listPref.setValue(currValue);
+                }
+                else if (pref instanceof CheckBoxPreference)
+                {
+                    CheckBoxPreference checkPref = (CheckBoxPreference) pref;
+                    boolean globalValue = checkPref.isChecked();
+                    boolean currValue = sharedPrefs.getBoolean(key, globalValue);
+                    checkPref.setKey(key);
+                    checkPref.setChecked(currValue);
                 }
             }
         }

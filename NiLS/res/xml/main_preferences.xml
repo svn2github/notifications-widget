@@ -20,6 +20,15 @@
         />
 
     <CheckBoxPreference
+        android:key="popup_enabled"
+        android:title="@string/notification_popup"
+        android:summaryOn="@string/notification_popup_is_active"
+        android:summaryOff="@string/notification_popup_is_inactive"
+        android:defaultValue="false"
+        android:layout="@layout/card_switch_layout"
+        />
+
+    <CheckBoxPreference
         android:key="auto_hide_service"
         android:title="@string/auto_hide_service"
         android:summaryOff="@string/auto_hide_is_inactive"

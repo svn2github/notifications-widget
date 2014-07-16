@@ -6,9 +6,9 @@
     <string name="service_is_active">NiLS Service is running.\nAll upcoming notifications will be captured and displayed on NiLS</string>
     <string name="enable_service_tip">Find \"NiLS Service\" in the list and enable it, then press the \"Back\" button to go back to NiLS</string>
 
-    <string name="notification_panel">Notification Panel</string>
-    <string name="notification_panel_is_active">Notification panel is active.\nNotification list will be displayed when the lock screen appears</string>
-    <string name="notification_panel_is_inactive">Notification panel is not active</string>
+    <string name="notification_panel">Notifications Panel</string>
+    <string name="notification_panel_is_active">Notifications panel is active.\nNotifications list will be displayed when the lock screen appears</string>
+    <string name="notification_panel_is_inactive">Notifications panel is not active</string>
 
     <string name="auto_hide_service">Auto Hide Service</string>
     <string name="auto_hide_is_inactive">When enabled, Auto Hide Service will automatically hide Notifications Panel when you pull down Android Notifications Bar</string>
@@ -614,4 +614,8 @@
     <!-- Other stuff -->
     <string name="nils_service_is_not_running">NiLS Service is not running</string>
     <string name="open_nils_to_enable_it">Open NiLS app to enable it</string>
+    <string name="notification_popup">Notification Popup</string>
+    <string name="notification_popup_is_active">(BETA) Notification popup is active. a top banner will be displayed when a new notification arrives.</string>
+    <string name="notification_popup_is_inactive">Notification popup is inactive. enable it to get a top banner whenever a new notification arrives.</string>
+    <string name="packageName">com.roymam.android.notificationswidget</string>
 </resources>

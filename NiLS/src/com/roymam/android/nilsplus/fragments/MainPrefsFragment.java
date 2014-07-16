@@ -46,7 +46,7 @@ public class MainPrefsFragment extends CardPreferenceFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mTopviewContainer.addView(inflater.inflate(R.layout.view_nils_logo, null));
+        //mTopviewContainer.addView(inflater.inflate(R.layout.view_nils_logo, null));
         return v;
     }
 

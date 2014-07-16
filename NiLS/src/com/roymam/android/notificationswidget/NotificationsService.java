@@ -347,7 +347,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                             (((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && notificationMode.equals(SettingsManager.MODE_GROUPED)) ||
                                     oldnd.isSimilar(nd, true))) {
                         nd.uid = oldnd.uid;
-                        nd.deleted = oldnd.deleted;
+                        if (oldnd.isDeleted()) nd.delete();
 
                         // protect it from being cleared on next purge command
                         nd.protect = true;
@@ -434,15 +434,15 @@ public class NotificationsService extends Service implements NotificationsProvid
                         // mark as delete if it's part of multiple events notification
                         if (logical && nd.event) {
                             // mark notification as cleared
-                            if (!nd.deleted)
+                            if (!nd.isDeleted())
                             {
-                                nd.deleted = true;
+                                nd.delete();
                                 cleared = true;
 
                                 // notify that the notification was cleared
                                 clearedNotifications.add(nd);
                             }
-                        } else if (!nd.deleted) // make sure it hasn't been deleted previously by the user
+                        } else if (!nd.isDeleted()) // make sure it hasn't been deleted previously by the user
                         {
                             // immediately remove notification
                             iter.remove();
@@ -539,7 +539,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 for (Object obj : arr)
                 {
                     NotificationData nd = (NotificationData) obj;
-                    if (!nd.deleted)
+                    if (!nd.isDeleted())
                         mFilteredNotificationsList.add(nd);
                 }
                 sortNotificationsList(mFilteredNotificationsList, sortBy);
@@ -642,7 +642,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                     // if its event - mark it as deleted
                     if (nd.event)
-                        nd.deleted = true;
+                        nd.delete();
                     else // otherwise remove it immediately
                         i.remove();
                 }
@@ -717,7 +717,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     {
                         // mark notification as deleted
                         if (nd.event)
-                            nd.deleted = true;
+                            nd.delete();
                         else
                             i.remove();
 
@@ -780,7 +780,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                     // mark notification as deleted
                     if (nd.event)
-                        nd.deleted = true;
+                        nd.delete();
                     else
                         iter.remove();
 
@@ -805,7 +805,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 for (NotificationData nd : mNotifications)
                 {
-                    if (nd.id == removedNd.id && !nd.deleted &&
+                    if (nd.id == removedNd.id && !nd.isDeleted() &&
                             nd.packageName.equals(removedNd.packageName))
                         more = true;
                 }
@@ -851,6 +851,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (!parser.isPersistent(n, packageName)) {
                 List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
                 if (viewManager != null) viewManager.saveNotificationsState();
+                unprotectNotifications(packageName);
                 for (NotificationData nd : notifications) {
                     addNotification(nd, false);
                 }
@@ -872,6 +873,23 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
+    private void unprotectNotifications(String packageName)
+    {
+        Lock w = lock.writeLock();
+        w.lock();
+        try
+        {
+            for (NotificationData nd : mNotifications)
+            {
+                if (nd.packageName.equals(packageName))
+                    nd.protect = false;
+            }
+        }
+        finally {
+            w.unlock();
+        }
+    }
+
     private void purgeDeletedNotifications(String packageName, int id)
     {
         Log.d("NiLS","purging deleted mNotifications "+ packageName + ":" + id);
@@ -885,16 +903,13 @@ public class NotificationsService extends Service implements NotificationsProvid
             {
                 NotificationData nd = iter.next();
                 if (nd.packageName.equals(packageName) &&
-                        nd.deleted &&
+                        nd.isDeleted() &&
                         !nd.protect &&
                         (nd.id == id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2))
                 {
                     Log.d("NiLS", "permanently removing uid:" + nd.uid);
                     iter.remove();
-                    //mDirty = true;
                 }
-                // make sure next time it won't be protected from deleting
-                nd.protect = false;
             }
         }
         finally
@@ -907,7 +922,7 @@ public class NotificationsService extends Service implements NotificationsProvid
     {
         try
         {
-            removeNotification(packageName, id, false);
+            removeNotification(packageName, id, true);
 
             // remove also persistent notification
             if (n != null && parser.isPersistent(n, packageName)) {

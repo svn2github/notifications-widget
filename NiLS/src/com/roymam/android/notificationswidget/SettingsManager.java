@@ -146,13 +146,14 @@ public class SettingsManager
     private static final String SYNC_NOTIFICATIONS_SMART = "smart";
     private static final String USE_MONO_ICON = "use_mono_icon";
 
-    // Floating Panel
     public static final String FP_ENABLED = "fp_enabled";
+    public static final String POPUP_ENABLED ="popup_enabled";
     public static final boolean DEFAULT_FP_ENABLED = false;
 
     // settings strings
     public static final String LOCKSCREEN_APP = "lockscreenapp";
     public static final String PRIMARY_TEXT_COLOR = "primary_text_color";
+    public static final String AUTO_TITLE_COLOR = "auto_title_color";
     public static final String SECONDARY_TEXT_COLOR = "secondary_text_color";
     public static final String MAIN_BG_COLOR = "main_bg_color";
     public static final String ICON_BG_COLOR = "icon_bg_color";
@@ -233,7 +234,7 @@ public class SettingsManager
     public static final String PRIVACY_SHOW_ALL = "none";
     public static final String DEFAULT_NOTIFICATION_PRIVACY = PRIVACY_SHOW_ALL;
     public static final String IMMEDIATE_PROXIMITY = "immediate_proximity";
-    public static final String AUTO_TITLE_COLOR = "auto_title_color";
+    public static final boolean DEFAULT_POPUP_ENABLED = false;
     public static String NUMBER_OF_LS_DETECT_REFUSES = "num_of_refuses";
 
     public static boolean shouldHideNotifications(Context context, String widgetMode)
@@ -911,6 +912,12 @@ public class SettingsManager
         }
 
         return intent;
+    }
+
+    public static boolean getBoolean(Context context, String packageName, String keyName, boolean defaultValue)
+    {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(packageName + "." + keyName, getBoolean(context, keyName, defaultValue));
     }
 
     public static boolean getBoolean(Context context, String keyName, boolean defaultValue)

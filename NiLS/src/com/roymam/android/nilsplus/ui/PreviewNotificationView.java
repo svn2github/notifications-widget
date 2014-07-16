@@ -11,8 +11,10 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -35,23 +37,27 @@ import static java.lang.Math.abs;
 
 public class PreviewNotificationView extends RelativeLayout implements View.OnTouchListener
 {
+    private static final String TAG = PreviewNotificationView.class.getSimpleName();
     private final View mPreviewNotificationView;
     private final View mPreviewBackground;
-    private final TextView mPreviewTitle;
-    private final TextView mPreviewText;
-    private final ImageView mPreviewIcon;
-    private final TextView mPreviewTime;
+    private ImageView mAppIconBGImage;
+    private TextView mPreviewTitle;
+    private TextView mPreviewText;
+    private ImageView mPreviewIcon;
+    private TextView mPreviewTime;
     private final int mAnimationDuration;
-    private final View mPreviewBody;
+    private View mPreviewBody;
     private final DotsSwipeView mDotsView;
-    private final View mPreviewIconBG;
-    private final View mScrollView;
-    private final ImageView mPreviewIconImageBG;
-    private final ImageView mPreviewIconImageFG;
-    private final View mNotificationContent;
+    private View mPreviewIconBG;
+    private View mScrollView;
+    private ImageView mPreviewIconImageBG;
+    private ImageView mPreviewIconImageFG;
+    private View mNotificationContent;
     private final int mMinFlingVelocity;
     private final int mMaxFlingVelocity;
-    private final ImageView mPreviewBigPicture;
+    private ImageView mPreviewBigPicture;
+    private final Theme mTheme;
+    private ImageView mAppIconImage;
     private Context context;
     private int mTouchSlop;
     private int mViewWidth;
@@ -133,10 +139,14 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     {
         super(context);
         this.context = context;
+        mTheme = ThemeManager.getInstance(context).getCurrentTheme();
 
         // build view from resource
         LayoutInflater inflater = LayoutInflater.from(context);
-        mPreviewNotificationView = inflater.inflate(R.layout.notification_preview, null);
+        if (mTheme != null && mTheme.previewLayout != null)
+            mPreviewNotificationView = inflater.inflate(mTheme.previewLayout, null);
+        else
+            mPreviewNotificationView = inflater.inflate(R.layout.notification_preview, null);
 
         mDotsView = new DotsSwipeView(context, pos, size);
         mDotsView.setAlpha(0);
@@ -144,22 +154,47 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         addView(mDotsView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         addView(mPreviewNotificationView, new LayoutParams(size.x, size.y));
 
-        mPreviewBackground = mPreviewNotificationView.findViewById(R.id.full_notification);
+        if (mTheme != null && mTheme.previewLayout != null)
+            mPreviewBackground = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("full_notification"));
+        else
+            mPreviewBackground = mPreviewNotificationView.findViewById(R.id.full_notification);
+
         updateSizeAndPosition(pos, size);
         hideImmediate();
 
         // get fields
-        mNotificationContent = mPreviewNotificationView.findViewById(R.id.notification_body);
-        mPreviewBody = mPreviewNotificationView.findViewById(R.id.notification_preview);
-        mPreviewTitle = (TextView) mPreviewNotificationView.findViewById(R.id.notification_title);
-        mPreviewText = (TextView) mPreviewNotificationView.findViewById(R.id.notification_text);
-        mPreviewIconBG = mPreviewNotificationView.findViewById(R.id.notification_bg);
-        mPreviewIcon = (ImageView) mPreviewNotificationView.findViewById(R.id.notification_image);
-        mPreviewIconImageBG = (ImageView) mPreviewNotificationView.findViewById(R.id.icon_bg);
-        mPreviewIconImageFG = (ImageView) mPreviewNotificationView.findViewById(R.id.icon_fg);
-        mPreviewTime = (TextView) mPreviewNotificationView.findViewById(R.id.notification_time);
-        mScrollView = mPreviewNotificationView.findViewById(R.id.notification_text_scrollview);
-        mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(R.id.notification_big_picture);
+        if (mTheme != null && mTheme.previewLayout != null) {
+            mNotificationContent = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_body"));
+            mPreviewBody = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_preview"));
+            mPreviewTitle = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_title"));
+            mPreviewText = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_text"));
+            mPreviewIconBG = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_bg"));
+            mPreviewIcon = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_image"));
+            mPreviewIconImageBG = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("icon_bg"));
+            mPreviewIconImageFG = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("icon_fg"));
+            mPreviewTime = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_time"));
+            mScrollView = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_text_scrollview"));
+            mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_big_picture"));        }
+
+            if (mTheme.customLayoutIdMap.get("app_icon") != null)
+                mAppIconImage = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("app_icon"));
+
+            if (mTheme.customLayoutIdMap.get("app_icon_bg") != null)
+                mAppIconBGImage = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("app_icon_bg"));
+
+        else {
+            mNotificationContent = mPreviewNotificationView.findViewById(R.id.notification_body);
+            mPreviewBody = mPreviewNotificationView.findViewById(R.id.notification_preview);
+            mPreviewTitle = (TextView) mPreviewNotificationView.findViewById(R.id.notification_title);
+            mPreviewText = (TextView) mPreviewNotificationView.findViewById(R.id.notification_text);
+            mPreviewIconBG = mPreviewNotificationView.findViewById(R.id.notification_bg);
+            mPreviewIcon = (ImageView) mPreviewNotificationView.findViewById(R.id.notification_image);
+            mPreviewIconImageBG = (ImageView) mPreviewNotificationView.findViewById(R.id.icon_bg);
+            mPreviewIconImageFG = (ImageView) mPreviewNotificationView.findViewById(R.id.icon_fg);
+            mPreviewTime = (TextView) mPreviewNotificationView.findViewById(R.id.notification_time);
+            mScrollView = mPreviewNotificationView.findViewById(R.id.notification_text_scrollview);
+            mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(R.id.notification_big_picture);
+        }
 
         // set listeners
         mScrollView.setOnTouchListener(this);
@@ -315,6 +350,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     public void setContent(NotificationData ni, Callbacks callbacks)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Theme theme = ThemeManager.getInstance(context).getCurrentTheme();
 
         // set appearance settings and theme
         mPrimaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
@@ -324,8 +360,6 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
         this.ni = ni;
         this.mCallbacks = callbacks;
-
-        Theme theme = ThemeManager.getInstance(context).getCurrentTheme();
 
         mPreviewTitle.setText(ni.getTitle()!=null?ni.getTitle().toString():null);
         mPreviewText.setText(ni.getText() != null ? ni.getText().toString() : null);
@@ -340,6 +374,43 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
         if (theme.iconBg != null)
             theme.iconBg.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
+
+        // for Android L like themes
+        if (mAppIconImage != null)
+        {
+            Bitmap appIcon = ni.getAppIcon();
+            // show app icon only if the primary icon is a large icon
+            if (ni.largeIcon != null)
+            {
+                mAppIconImage.setImageDrawable(new BitmapDrawable(appIcon));
+                if (mAppIconBGImage != null && theme.appIconBg != null)
+                {
+                    Drawable appIconBgDrawable = theme.appIconBg;
+
+                    if (theme.prominentAppIconBg)
+                    {
+                        if (theme.appIconBg instanceof BitmapDrawable)
+                        {
+                            appIconBgDrawable = new BitmapDrawable(BitmapUtils.colorBitmap(((BitmapDrawable)theme.appIconBg).getBitmap(), ni.appColor));
+                        }
+                        else
+                        {
+                            Log.w(TAG, "invalid theme. prominent app icon background works only with BitmapDrawable");
+                        }
+                    }
+                    mAppIconBGImage.setImageDrawable(appIconBgDrawable);
+                }
+            }
+            else
+            {
+                if (mAppIconBGImage != null) mAppIconBGImage.setImageDrawable(null);
+                mAppIconImage.setImageDrawable(null);
+
+                // for Android L notifications - set main icon as the app icon (the small monochrome one) instead of the colored one)
+                // TODO: make it optional in the theme booleans
+                mPreviewIcon.setImageDrawable(new BitmapDrawable(NotificationAdapter.createThemedIcon(ni.getAppIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)))));
+            }
+        }
 
         mPreviewIconImageBG.setImageDrawable(theme.iconBg);
         mPreviewIconImageFG.setImageDrawable(theme.iconFg);

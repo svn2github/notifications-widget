@@ -154,7 +154,6 @@ public class NotificationAdapter extends BaseAdapter
         int altIconBGColor = prefs.getInt(SettingsManager.ALT_ICON_BG_COLOR, SettingsManager.DEFAULT_ALT_ICON_BG_COLOR);
 
         Bitmap icon = NotificationAdapter.createThemedIcon(item.getIcon(), theme, BitmapUtils.dpToPx(prefs.getInt(SettingsManager.ICON_SIZE, SettingsManager.DEFAULT_ICON_SIZE)));
-        Log.d(TAG, "icon size:"+icon.getWidth()+","+icon.getHeight());
         holder.ivImage.setImageDrawable(new BitmapDrawable(icon));
         holder.tvTitle.setText(item.getTitle() != null ? item.getTitle().toString() : null);
         holder.tvTitle.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault_Medium);
