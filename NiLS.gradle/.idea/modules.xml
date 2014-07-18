@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/NiLS.iml" filepath="$PROJECT_DIR$/NiLS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/colorPickerPreference/colorPickerPreference.iml" filepath="$PROJECT_DIR$/colorPickerPreference/colorPickerPreference.iml" />
+      <module fileurl="file://$PROJECT_DIR$/imageViewPlus/imageViewPlus.iml" filepath="$PROJECT_DIR$/imageViewPlus/imageViewPlus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notificationsWidget/notificationsWidget.iml" filepath="$PROJECT_DIR$/notificationsWidget/notificationsWidget.iml" />
+    </modules>
+  </component>
+</project>
+

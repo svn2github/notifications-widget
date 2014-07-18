@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.roymam.android.notificationswidget" >
+
+    <uses-sdk tools:node="replace" />
+
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <!-- FN integration -->
+    <uses-permission android:name="robj.floating.notifications.DISMISS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/title"
+        tools:replace="android:icon, android:label" >
+
+        <!-- Activities -->
+        <!-- main app -->
+        <activity
+            android:name="com.roymam.android.nilsplus.ui.NiLSActivity"
+            android:theme="@android:style/Theme.Holo.Light" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/title"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Translucent" >
+        </activity>
+        <activity
+            android:name=".AppSettingsActivity"
+            android:label="@string/app_specific_settings_title"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Holo.Light" >
+        </activity>
+        <activity
+            android:name=".PersistentNotificationSettingsActivity"
+            android:label="@string/persistent_notifications"
+            android:theme="@android:style/Theme.Holo.Light" >
+        </activity>
+        <activity android:name=".StartServiceActivity" />
+        <activity
+            android:name="com.roymam.android.nilsplus.activities.OpenNotificationActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar" />
+        <activity
+            android:name="com.roymam.android.nilsplus.activities.StartupWizardActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+        <activity
+            android:name="com.roymam.android.nilsplus.activities.WhatsNewActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+        <activity
+            android:name="com.roymam.android.nilsplus.activities.LogViewerActivity"
+            android:label="@string/view_recent_log"
+            android:theme="@android:style/Theme.Holo.Light" />
+        <activity
+            android:name=".UnlockDeviceActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@style/Theme.Transparent" />
+
+        <!-- Services -->
+
+
+        <!-- Main Service -->
+        <service android:name=".NotificationsService" />
+        <!-- NiLS Accessibility Service (for Android < 4.3 and for Auto Hide service -->
+        <service
+            android:name=".NiLSAccessibilityService"
+            android:label="@string/notifications_service"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/notifications_service_config" />
+        </service>
+
+        <!-- NiLS Notiications Listener (for Android >= 4.3 -->
+        <service
+            android:name=".NotificationsListener"
+            android:label="@string/notifications_service"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- widget stuff -->
+        <service
+            android:name=".NotificationsRemoteViewsFactoryService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".NotificationsWidgetService" />
+        <service android:name=".ClockService" />
+        <service android:name="com.roymam.android.nilsplus.services.PopupNotificationService"/>
+
+        <!-- Receivers -->
+        <!-- The widget provider -->
+        <receiver android:name=".NotificationsWidgetProvider" >
+            <intent-filter>
+
+                <!-- widget add/remove events -->
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+
+                <!-- WidgetLocker integration -->
+                <action android:name="com.teslacoilsw.widgetlocker.ENABLE" />
+                <action android:name="com.teslacoilsw.widgetlocker.DISABLE" />
+
+                <!-- internal actions -->
+                <action android:name="com.roymam.android.notificationswidget.update_clock" />
+                <action android:name="com.roymam.android.notificationswidget.switchmode" />
+                <action android:name="com.roymam.android.notificationswidget.performaction" />
+            </intent-filter>
+            <!-- This specifies the widget provider info -->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widgetinfo" />
+        </receiver>
+
+        <!-- TODO: merge with NiLS FP events handler -->
+        <receiver android:name=".EventsHandler" >
+            <intent-filter>
+
+                <!-- internal events -->
+                <action android:name="com.roymam.android.nils.service_ready" />
+                <action android:name="com.roymam.android.nils.service_died" />
+
+                <!-- locking/unlocking device -->
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.teslacoilsw.widgetlocker.intent.LOCKED" />
+                <action android:name="com.teslacoilsw.widgetlocker.intent.UNLOCKED" />
+
+                <!-- floating notifications -->
+                <action android:name="robj.floating.notifications.dismissed" />
+
+                <!-- NiLS Floating Panel API -->
+                <action android:name="com.roymam.android.nils.remove_notification" />
+                <action android:name="com.roymam.android.nils.open_notification" />
+                <action android:name="com.roymam.android.nils.resend_all_notifications" />
+                <action android:name="com.roymam.android.nils.ping" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Amazon in-app-billing -->
+        <receiver android:name="com.amazon.inapp.purchasing.ResponseReceiver" >
+            <intent-filter>
+                <action
+                    android:name="com.amazon.inapp.purchasing.NOTIFY"
+                    android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

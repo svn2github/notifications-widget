@@ -1,0 +1,3 @@
+include ':colorPickerPreference'
+include ':imageViewPlus'
+include ':notificationsWidget'

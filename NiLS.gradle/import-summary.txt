@@ -1,0 +1,707 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Manifest Merging:
+-----------------
+Your project uses libraries that provide manifests, and your Eclipse
+project did not explicitly turn on manifest merging. In Android Gradle
+projects, manifests are always merged (meaning that contents from your
+libraries' manifests will be merged into the app manifest. If you had
+manually copied contents from library manifests into your app manifest
+you may need to remove these for the app to build correctly.
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+From ColorPickerPreference:
+* .gitattributes
+* .gitignore
+* CHANGELOG.rst
+* ColorPickerPreference.iml
+* LICENSE
+* README.rst
+* proguard.cfg
+* screen_1.png
+* screen_2.png
+From ImageViewPlus:
+* .gitignore
+* Android-ImageViewPlus.iml
+* ImageViewPlus.iml
+* README.md
+* build.gradle
+* proguard-project.txt
+* settings.gradle
+From NotificationsWidget:
+* .idea\
+* .idea\.name
+* .idea\compiler.xml
+* .idea\copyright\
+* .idea\copyright\profiles_settings.xml
+* .idea\dictionaries\
+* .idea\dictionaries\Lior.xml
+* .idea\encodings.xml
+* .idea\libraries\
+* .idea\libraries\support_libraries.xml
+* .idea\misc.xml
+* .idea\modules.xml
+* .idea\scopes\
+* .idea\scopes\scope_settings.xml
+* .idea\vcs.xml
+* .idea\workspace.xml
+* AmazonSDKTester.apk
+* NiLS.iml
+* builds\
+* builds\NotificationsWidget.apk
+* builds\icon.svg
+* extensions\
+* extensions\ColorPickerPreference\
+* extensions\ColorPickerPreference\.gitattributes
+* extensions\ColorPickerPreference\.gitignore
+* extensions\ColorPickerPreference\AndroidManifest.xml
+* extensions\ColorPickerPreference\CHANGELOG.rst
+* extensions\ColorPickerPreference\ColorPickerPreference.iml
+* extensions\ColorPickerPreference\LICENSE
+* extensions\ColorPickerPreference\README.rst
+* extensions\ColorPickerPreference\gen\
+* extensions\ColorPickerPreference\gen\net\
+* extensions\ColorPickerPreference\gen\net\margaritov\
+* extensions\ColorPickerPreference\gen\net\margaritov\preference\
+* extensions\ColorPickerPreference\gen\net\margaritov\preference\colorpicker\
+* extensions\ColorPickerPreference\gen\net\margaritov\preference\colorpicker\BuildConfig.java
+* extensions\ColorPickerPreference\gen\net\margaritov\preference\colorpicker\Manifest.java
+* extensions\ColorPickerPreference\gen\net\margaritov\preference\colorpicker\R.java
+* extensions\ColorPickerPreference\proguard.cfg
+* extensions\ColorPickerPreference\project.properties
+* extensions\ColorPickerPreference\res\
+* extensions\ColorPickerPreference\res\drawable-hdpi\
+* extensions\ColorPickerPreference\res\drawable-hdpi\icon.png
+* extensions\ColorPickerPreference\res\drawable-ldpi\
+* extensions\ColorPickerPreference\res\drawable-ldpi\icon.png
+* extensions\ColorPickerPreference\res\drawable-mdpi\
+* extensions\ColorPickerPreference\res\drawable-mdpi\icon.png
+* extensions\ColorPickerPreference\res\layout-land\
+* extensions\ColorPickerPreference\res\layout-land\dialog_color_picker.xml
+* extensions\ColorPickerPreference\res\layout\
+* extensions\ColorPickerPreference\res\layout\dialog_color_picker.xml
+* extensions\ColorPickerPreference\res\values\
+* extensions\ColorPickerPreference\res\values\integer.xml
+* extensions\ColorPickerPreference\res\values\strings.xml
+* extensions\ColorPickerPreference\res\xml\
+* extensions\ColorPickerPreference\res\xml\settings.xml
+* extensions\ColorPickerPreference\screen_1.png
+* extensions\ColorPickerPreference\screen_2.png
+* extensions\ColorPickerPreference\src\
+* extensions\ColorPickerPreference\src\net\
+* extensions\ColorPickerPreference\src\net\margaritov\
+* extensions\ColorPickerPreference\src\net\margaritov\preference\
+* extensions\ColorPickerPreference\src\net\margaritov\preference\colorpicker\
+* extensions\ColorPickerPreference\src\net\margaritov\preference\colorpicker\AlphaPatternDrawable.java
+* extensions\ColorPickerPreference\src\net\margaritov\preference\colorpicker\ColorPickerDialog.java
+* extensions\ColorPickerPreference\src\net\margaritov\preference\colorpicker\ColorPickerPanelView.java
+* extensions\ColorPickerPreference\src\net\margaritov\preference\colorpicker\ColorPickerPreference.java
+* extensions\ColorPickerPreference\src\net\margaritov\preference\colorpicker\ColorPickerView.java
+* extensions\ColorPickerPreference\src\net\margaritov\preference\colorpicker\Test.java
+* extensions\ImageViewPlus\
+* extensions\ImageViewPlus\.classpath
+* extensions\ImageViewPlus\.gitignore
+* extensions\ImageViewPlus\.project
+* extensions\ImageViewPlus\Android-ImageViewPlus.iml
+* extensions\ImageViewPlus\AndroidManifest.xml
+* extensions\ImageViewPlus\ImageViewPlus.iml
+* extensions\ImageViewPlus\README.md
+* extensions\ImageViewPlus\build.gradle
+* extensions\ImageViewPlus\gen\
+* extensions\ImageViewPlus\gen\com\
+* extensions\ImageViewPlus\gen\com\meetme\
+* extensions\ImageViewPlus\gen\com\meetme\imageviewplus\
+* extensions\ImageViewPlus\gen\com\meetme\imageviewplus\BuildConfig.java
+* extensions\ImageViewPlus\gen\com\meetme\imageviewplus\Manifest.java
+* extensions\ImageViewPlus\gen\com\meetme\imageviewplus\R.java
+* extensions\ImageViewPlus\proguard-project.txt
+* extensions\ImageViewPlus\project.properties
+* extensions\ImageViewPlus\res\
+* extensions\ImageViewPlus\res\values\
+* extensions\ImageViewPlus\res\values\ivp__attrs.xml
+* extensions\ImageViewPlus\settings.gradle
+* extensions\ImageViewPlus\src\
+* extensions\ImageViewPlus\src\com\
+* extensions\ImageViewPlus\src\com\meetme\
+* extensions\ImageViewPlus\src\com\meetme\android\
+* extensions\ImageViewPlus\src\com\meetme\android\imageviewplus\
+* extensions\ImageViewPlus\src\com\meetme\android\imageviewplus\ImageViewPlus.java
+* extensions\ListViewRemovalAnimation\
+* extensions\ListViewRemovalAnimation\AndroidManifest.xml
+* extensions\ListViewRemovalAnimation\ListViewRemovalAnimation.iml
+* extensions\ListViewRemovalAnimation\gen\
+* extensions\ListViewRemovalAnimation\gen\com\
+* extensions\ListViewRemovalAnimation\gen\com\example\
+* extensions\ListViewRemovalAnimation\gen\com\example\android\
+* extensions\ListViewRemovalAnimation\gen\com\example\android\listviewremovalanimation\
+* extensions\ListViewRemovalAnimation\gen\com\example\android\listviewremovalanimation\BuildConfig.java
+* extensions\ListViewRemovalAnimation\gen\com\example\android\listviewremovalanimation\Manifest.java
+* extensions\ListViewRemovalAnimation\gen\com\example\android\listviewremovalanimation\R.java
+* extensions\ListViewRemovalAnimation\res\
+* extensions\ListViewRemovalAnimation\res\drawable-hdpi\
+* extensions\ListViewRemovalAnimation\res\drawable-hdpi\ic_launcher.png
+* extensions\ListViewRemovalAnimation\res\drawable-mdpi\
+* extensions\ListViewRemovalAnimation\res\drawable-mdpi\ic_launcher.png
+* extensions\ListViewRemovalAnimation\res\drawable-xhdpi\
+* extensions\ListViewRemovalAnimation\res\drawable-xhdpi\ic_launcher.png
+* extensions\ListViewRemovalAnimation\res\drawable-xhdpi\shadowed_background.9.png
+* extensions\ListViewRemovalAnimation\res\drawable-xhdpi\tv_background_with_divider.9.png
+* extensions\ListViewRemovalAnimation\res\layout\
+* extensions\ListViewRemovalAnimation\res\layout\activity_list_view_deletion.xml
+* extensions\ListViewRemovalAnimation\res\layout\opaque_text_view.xml
+* extensions\ListViewRemovalAnimation\res\values-v11\
+* extensions\ListViewRemovalAnimation\res\values-v11\styles.xml
+* extensions\ListViewRemovalAnimation\res\values-v14\
+* extensions\ListViewRemovalAnimation\res\values-v14\styles.xml
+* extensions\ListViewRemovalAnimation\res\values\
+* extensions\ListViewRemovalAnimation\res\values\strings.xml
+* extensions\ListViewRemovalAnimation\res\values\styles.xml
+* extensions\ListViewRemovalAnimation\src\
+* extensions\ListViewRemovalAnimation\src\com\
+* extensions\ListViewRemovalAnimation\src\com\android\
+* extensions\ListViewRemovalAnimation\src\com\android\listviewremovalanimation\
+* extensions\ListViewRemovalAnimation\src\com\android\listviewremovalanimation\BackgroundContainer.java
+* extensions\ListViewRemovalAnimation\src\com\android\listviewremovalanimation\Cheeses.java
+* extensions\ListViewRemovalAnimation\src\com\android\listviewremovalanimation\ListViewRemovalAnimation.java
+* extensions\ListViewRemovalAnimation\src\com\android\listviewremovalanimation\StableArrayAdapter.java
+* extensions\ViewPagerIndicator\
+* extensions\ViewPagerIndicator\AndroidManifest.xml
+* extensions\ViewPagerIndicator\ViewPagerIndicator.iml
+* extensions\ViewPagerIndicator\gen\
+* extensions\ViewPagerIndicator\gen\com\
+* extensions\ViewPagerIndicator\gen\com\viewpagerindicator\
+* extensions\ViewPagerIndicator\gen\com\viewpagerindicator\BuildConfig.java
+* extensions\ViewPagerIndicator\gen\com\viewpagerindicator\Manifest.java
+* extensions\ViewPagerIndicator\gen\com\viewpagerindicator\R.java
+* extensions\ViewPagerIndicator\pom.xml
+* extensions\ViewPagerIndicator\project.properties
+* extensions\ViewPagerIndicator\res\
+* extensions\ViewPagerIndicator\res\color\
+* extensions\ViewPagerIndicator\res\color\vpi__dark_theme.xml
+* extensions\ViewPagerIndicator\res\color\vpi__light_theme.xml
+* extensions\ViewPagerIndicator\res\drawable-hdpi\
+* extensions\ViewPagerIndicator\res\drawable-hdpi\vpi__tab_selected_focused_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-hdpi\vpi__tab_selected_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-hdpi\vpi__tab_selected_pressed_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-hdpi\vpi__tab_unselected_focused_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-hdpi\vpi__tab_unselected_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-hdpi\vpi__tab_unselected_pressed_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-mdpi\
+* extensions\ViewPagerIndicator\res\drawable-mdpi\vpi__tab_selected_focused_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-mdpi\vpi__tab_selected_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-mdpi\vpi__tab_selected_pressed_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-mdpi\vpi__tab_unselected_focused_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-mdpi\vpi__tab_unselected_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-mdpi\vpi__tab_unselected_pressed_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-xhdpi\
+* extensions\ViewPagerIndicator\res\drawable-xhdpi\vpi__tab_selected_focused_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-xhdpi\vpi__tab_selected_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-xhdpi\vpi__tab_selected_pressed_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-xhdpi\vpi__tab_unselected_focused_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-xhdpi\vpi__tab_unselected_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable-xhdpi\vpi__tab_unselected_pressed_holo.9.png
+* extensions\ViewPagerIndicator\res\drawable\
+* extensions\ViewPagerIndicator\res\drawable\vpi__tab_indicator.xml
+* extensions\ViewPagerIndicator\res\values\
+* extensions\ViewPagerIndicator\res\values\vpi__attrs.xml
+* extensions\ViewPagerIndicator\res\values\vpi__colors.xml
+* extensions\ViewPagerIndicator\res\values\vpi__defaults.xml
+* extensions\ViewPagerIndicator\res\values\vpi__styles.xml
+* extensions\ViewPagerIndicator\src\
+* extensions\ViewPagerIndicator\src\com\
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\CirclePageIndicator.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\IconPageIndicator.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\IconPagerAdapter.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\IcsLinearLayout.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\LinePageIndicator.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\PageIndicator.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\TabPageIndicator.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\TitlePageIndicator.java
+* extensions\ViewPagerIndicator\src\com\viewpagerindicator\UnderlinePageIndicator.java
+* ic_launcher-web.png
+* icon.png
+* icon512x512.png
+* menu.xlsx
+* out\
+* out\production\
+* out\production\ColorPickerPreference\
+* out\production\ColorPickerPreference\net\
+* out\production\ColorPickerPreference\net\margaritov\
+* out\production\ColorPickerPreference\net\margaritov\preference\
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\AlphaPatternDrawable.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\BuildConfig.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerDialog$1.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerDialog$OnColorChangedListener.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerDialog.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerPanelView.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerPreference$SavedState$1.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerPreference$SavedState.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerPreference.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerView$OnColorChangedListener.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\ColorPickerView.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R$attr.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R$drawable.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R$id.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R$integer.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R$layout.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R$string.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R$xml.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\R.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\Test$1.class
+* out\production\ColorPickerPreference\net\margaritov\preference\colorpicker\Test.class
+* out\production\ImageViewPlus\
+* out\production\ImageViewPlus\com\
+* out\production\ImageViewPlus\com\meetme\
+* out\production\ImageViewPlus\com\meetme\android\
+* out\production\ImageViewPlus\com\meetme\android\imageviewplus\
+* out\production\ImageViewPlus\com\meetme\android\imageviewplus\ImageViewPlus$DefaultDrawableListener.class
+* out\production\ImageViewPlus\com\meetme\android\imageviewplus\ImageViewPlus$PlusScaleType.class
+* out\production\ImageViewPlus\com\meetme\android\imageviewplus\ImageViewPlus.class
+* out\production\ImageViewPlus\com\meetme\imageviewplus\
+* out\production\ImageViewPlus\com\meetme\imageviewplus\BuildConfig.class
+* out\production\ImageViewPlus\com\meetme\imageviewplus\R$attr.class
+* out\production\ImageViewPlus\com\meetme\imageviewplus\R$id.class
+* out\production\ImageViewPlus\com\meetme\imageviewplus\R$styleable.class
+* out\production\ImageViewPlus\com\meetme\imageviewplus\R.class
+* out\production\NiLS\
+* out\production\NiLS\NiLS.apk
+* out\production\NiLS\NiLS.unaligned.apk
+* out\production\NiLS\com\
+* out\production\NiLS\com\android\
+* out\production\NiLS\com\android\vending\
+* out\production\NiLS\com\android\vending\billing\
+* out\production\NiLS\com\android\vending\billing\IInAppBillingService$Stub$Proxy.class
+* out\production\NiLS\com\android\vending\billing\IInAppBillingService$Stub.class
+* out\production\NiLS\com\android\vending\billing\IInAppBillingService.aidl
+* out\production\NiLS\com\android\vending\billing\IInAppBillingService.class
+* out\production\NiLS\com\google\
+* out\production\NiLS\com\google\android\
+* out\production\NiLS\com\google\android\apps\
+* out\production\NiLS\com\google\android\apps\swipedismiss\
+* out\production\NiLS\com\google\android\apps\swipedismiss\SwipeDismissListViewTouchListener$1.class
+* out\production\NiLS\com\google\android\apps\swipedismiss\SwipeDismissListViewTouchListener$2.class
+* out\production\NiLS\com\google\android\apps\swipedismiss\SwipeDismissListViewTouchListener$DismissCallbacks.class
+* out\production\NiLS\com\google\android\apps\swipedismiss\SwipeDismissListViewTouchListener$PendingDismissData.class
+* out\production\NiLS\com\google\android\apps\swipedismiss\SwipeDismissListViewTouchListener.class
+* out\production\NiLS\com\hlidskialf\
+* out\production\NiLS\com\hlidskialf\android\
+* out\production\NiLS\com\hlidskialf\android\preference\
+* out\production\NiLS\com\hlidskialf\android\preference\SeekBarPreference.class
+* out\production\NiLS\com\meetme\
+* out\production\NiLS\com\meetme\imageviewplus\
+* out\production\NiLS\com\meetme\imageviewplus\BuildConfig.class
+* out\production\NiLS\com\meetme\imageviewplus\R$attr.class
+* out\production\NiLS\com\meetme\imageviewplus\R$id.class
+* out\production\NiLS\com\meetme\imageviewplus\R$styleable.class
+* out\production\NiLS\com\meetme\imageviewplus\R.class
+* out\production\NiLS\com\robobunny\
+* out\production\NiLS\com\robobunny\SeekBarPreference.class
+* out\production\NiLS\com\roymam\
+* out\production\NiLS\com\roymam\android\
+* out\production\NiLS\com\roymam\android\common\
+* out\production\NiLS\com\roymam\android\common\BackupRestorePreferenceFragment$1.class
+* out\production\NiLS\com\roymam\android\common\BackupRestorePreferenceFragment$2.class
+* out\production\NiLS\com\roymam\android\common\BackupRestorePreferenceFragment.class
+* out\production\NiLS\com\roymam\android\common\BitmapCache$1.class
+* out\production\NiLS\com\roymam\android\common\BitmapCache.class
+* out\production\NiLS\com\roymam\android\common\BitmapUtils.class
+* out\production\NiLS\com\roymam\android\common\IconPackManager$IconPack.class
+* out\production\NiLS\com\roymam\android\common\IconPackManager.class
+* out\production\NiLS\com\roymam\android\common\LimitedViewPager.class
+* out\production\NiLS\com\roymam\android\common\ListPreferenceChangeListener.class
+* out\production\NiLS\com\roymam\android\common\PopupDialog$1.class
+* out\production\NiLS\com\roymam\android\common\PopupDialog$2.class
+* out\production\NiLS\com\roymam\android\common\PopupDialog$3.class
+* out\production\NiLS\com\roymam\android\common\PopupDialog.class
+* out\production\NiLS\com\roymam\android\common\SwitchPrefsHeaderAdapter$1.class
+* out\production\NiLS\com\roymam\android\common\SwitchPrefsHeaderAdapter.class
+* out\production\NiLS\com\roymam\android\common\SysUtils$1.class
+* out\production\NiLS\com\roymam\android\common\SysUtils.class
+* out\production\NiLS\com\roymam\android\common\util\
+* out\production\NiLS\com\roymam\android\common\util\Base64.class
+* out\production\NiLS\com\roymam\android\common\util\Base64DecoderException.class
+* out\production\NiLS\com\roymam\android\common\util\IabException.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$1.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$2$1.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$2.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$3$1.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$3$2.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$3.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$OnConsumeFinishedListener.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$OnConsumeMultiFinishedListener.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$OnIabPurchaseFinishedListener.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$OnIabSetupFinishedListener.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper$QueryInventoryFinishedListener.class
+* out\production\NiLS\com\roymam\android\common\util\IabHelper.class
+* out\production\NiLS\com\roymam\android\common\util\IabResult.class
+* out\production\NiLS\com\roymam\android\common\util\Inventory.class
+* out\production\NiLS\com\roymam\android\common\util\Purchase.class
+* out\production\NiLS\com\roymam\android\common\util\Security.class
+* out\production\NiLS\com\roymam\android\common\util\SkuDetails.class
+* out\production\NiLS\com\roymam\android\nilsplus\
+* out\production\NiLS\com\roymam\android\nilsplus\CardPreferenceFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\NPServiceStarter.class
+* out\production\NiLS\com\roymam\android\nilsplus\NotificationData$Action.class
+* out\production\NiLS\com\roymam\android\nilsplus\NotificationData.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\
+* out\production\NiLS\com\roymam\android\nilsplus\activities\LogViewerActivity$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\LogViewerActivity.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\OpenNotificationActivity$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\OpenNotificationActivity.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$EnableNotificationsPanel.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$GenericNextSkipTutorial.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$NiLSTutorial1.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$NiLSTutorial2.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$NiLSTutorial3.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$NiLSTutorial4.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$StartServiceFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$WelcomeFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity$WizardPageAdapter.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\StartupWizardActivity.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\WhatsNewActivity$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\WhatsNewActivity$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\WhatsNewActivity$WhatsNewFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\WhatsNewActivity$WizardPageAdapter.class
+* out\production\NiLS\com\roymam\android\nilsplus\activities\WhatsNewActivity.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\AboutPreferencesFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\AppearancePreferencesFragment$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\AppearancePreferencesFragment$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\AppearancePreferencesFragment$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\AppearancePreferencesFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\MainPrefsFragment$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\MainPrefsFragment$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\MainPrefsFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\NiLSPreferenceFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\ServicePreferencesFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment$4.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment$5.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment$6.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment$7.class
+* out\production\NiLS\com\roymam\android\nilsplus\fragments\WidgetSettingsFragment.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\
+* out\production\NiLS\com\roymam\android\nilsplus\ui\DotsSwipeView.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\EditModeTouchListener$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\EditModeTouchListener$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\EditModeTouchListener$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\EditModeTouchListener$4.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\EditModeTouchListener$Callbacks.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\EditModeTouchListener.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPListView$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPListView$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPListView$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPListView$4.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPListView$Callbacks.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPListView.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$10.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$11.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$12.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$13.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$4.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$5.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$6.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$7.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$8.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$9.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager$Callbacks.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NPViewManager.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$4$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$4.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$5.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$6.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$7.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$8.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$DrawerItemClickListener.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$DrawerListItemAdapater$ViewHolder.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity$DrawerListItemAdapater.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NiLSActivity.java___jb_bak___
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NotificationAdapter$ViewHolder.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\NotificationAdapter.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PreviewNotificationView$1$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PreviewNotificationView$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PreviewNotificationView$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PreviewNotificationView$3.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PreviewNotificationView$4.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PreviewNotificationView$Callbacks.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PreviewNotificationView.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PullToClearTouchListener$1.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PullToClearTouchListener$2.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PullToClearTouchListener$Callbacks.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\PullToClearTouchListener.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\SwipeIconTouchListener$DismissCallbacks.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\SwipeIconTouchListener.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\theme\
+* out\production\NiLS\com\roymam\android\nilsplus\ui\theme\Theme.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\theme\ThemeInfo.class
+* out\production\NiLS\com\roymam\android\nilsplus\ui\theme\ThemeManager.class
+* out\production\NiLS\com\roymam\android\notificationswidget\
+* out\production\NiLS\com\roymam\android\notificationswidget\AboutActivity.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppSettingsActivity.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppearanceActivity$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppearanceActivity$2$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppearanceActivity$2.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppearanceActivity$ClockSectionFragment.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppearanceActivity$NotificationSectionFragment.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppearanceActivity$SectionsPagerAdapter.class
+* out\production\NiLS\com\roymam\android\notificationswidget\AppearanceActivity.class
+* out\production\NiLS\com\roymam\android\notificationswidget\BuildConfig.class
+* out\production\NiLS\com\roymam\android\notificationswidget\ClockService$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\ClockService.class
+* out\production\NiLS\com\roymam\android\notificationswidget\EventsHandler.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NiLSAccessibilityService$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NiLSAccessibilityService.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationActivity.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationAdapter$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationAdapter$2$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationAdapter$2.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationAdapter.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationData$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationData$Action$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationData$Action.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationData.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationEventListener.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationParser.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsListener$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsListener.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsProvider.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsRemoteViewsFactoryService.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$2.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$3.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$4.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$5.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$6$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$6$2.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$6.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$7.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$8.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$9$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$9.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$LocalBinder.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService$NPReceiver.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsService.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsViewFactory.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsWidgetProvider.class
+* out\production\NiLS\com\roymam\android\notificationswidget\NotificationsWidgetService.class
+* out\production\NiLS\com\roymam\android\notificationswidget\PersistentNotification$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\PersistentNotification.class
+* out\production\NiLS\com\roymam\android\notificationswidget\PersistentNotificationSettingsActivity.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$array.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$attr.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$bool.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$color.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$dimen.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$drawable.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$id.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$integer.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$layout.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$menu.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$string.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$style.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$styleable.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R$xml.class
+* out\production\NiLS\com\roymam\android\notificationswidget\R.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$HowToAddWidgetFragment.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsAppSpecificFragment$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsAppSpecificFragment$2.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsAppSpecificFragment$3.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsAppSpecificFragment$4.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsAppSpecificFragment.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsContactFragment.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsGeneralFragment$1$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsGeneralFragment$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsGeneralFragment.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsPersistentNotificationsFragment$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$PrefsPersistentNotificationsFragment.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager$ViewClickable.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager.class
+* out\production\NiLS\com\roymam\android\notificationswidget\SettingsManager.java___jb_bak___
+* out\production\NiLS\com\roymam\android\notificationswidget\SpecificSettingsPreferencesActivity.class
+* out\production\NiLS\com\roymam\android\notificationswidget\StartServiceActivity.class
+* out\production\NiLS\com\roymam\android\notificationswidget\UnlockDeviceActivity$1.class
+* out\production\NiLS\com\roymam\android\notificationswidget\UnlockDeviceActivity.class
+* out\production\NiLS\com\viewpagerindicator\
+* out\production\NiLS\com\viewpagerindicator\BuildConfig.class
+* out\production\NiLS\com\viewpagerindicator\R$attr.class
+* out\production\NiLS\com\viewpagerindicator\R$bool.class
+* out\production\NiLS\com\viewpagerindicator\R$color.class
+* out\production\NiLS\com\viewpagerindicator\R$dimen.class
+* out\production\NiLS\com\viewpagerindicator\R$drawable.class
+* out\production\NiLS\com\viewpagerindicator\R$id.class
+* out\production\NiLS\com\viewpagerindicator\R$integer.class
+* out\production\NiLS\com\viewpagerindicator\R$style.class
+* out\production\NiLS\com\viewpagerindicator\R$styleable.class
+* out\production\NiLS\com\viewpagerindicator\R.class
+* out\production\NiLS\net\
+* out\production\NiLS\net\margaritov\
+* out\production\NiLS\net\margaritov\preference\
+* out\production\NiLS\net\margaritov\preference\colorpicker\
+* out\production\NiLS\net\margaritov\preference\colorpicker\BuildConfig.class
+* out\production\NiLS\net\margaritov\preference\colorpicker\R$drawable.class
+* out\production\NiLS\net\margaritov\preference\colorpicker\R$id.class
+* out\production\NiLS\net\margaritov\preference\colorpicker\R$integer.class
+* out\production\NiLS\net\margaritov\preference\colorpicker\R$layout.class
+* out\production\NiLS\net\margaritov\preference\colorpicker\R$string.class
+* out\production\NiLS\net\margaritov\preference\colorpicker\R$xml.class
+* out\production\NiLS\net\margaritov\preference\colorpicker\R.class
+* out\production\NotificationsWidget\
+* out\production\NotificationsWidget\com\
+* out\production\NotificationsWidget\com\android\
+* out\production\NotificationsWidget\com\android\vending\
+* out\production\NotificationsWidget\com\android\vending\billing\
+* out\production\NotificationsWidget\com\android\vending\billing\IInAppBillingService.aidl
+* out\production\ViewPagerIndicator\
+* out\production\ViewPagerIndicator\com\
+* out\production\ViewPagerIndicator\com\viewpagerindicator\
+* out\production\ViewPagerIndicator\com\viewpagerindicator\BuildConfig.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\CirclePageIndicator$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\CirclePageIndicator$SavedState$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\CirclePageIndicator$SavedState.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\CirclePageIndicator.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\IconPageIndicator$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\IconPageIndicator.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\IconPagerAdapter.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\IcsLinearLayout.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\LinePageIndicator$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\LinePageIndicator$SavedState$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\LinePageIndicator$SavedState.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\LinePageIndicator.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\PageIndicator.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$attr.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$bool.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$color.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$dimen.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$drawable.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$id.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$integer.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$style.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R$styleable.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\R.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TabPageIndicator$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TabPageIndicator$2.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TabPageIndicator$OnTabReselectedListener.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TabPageIndicator$TabView.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TabPageIndicator.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TitlePageIndicator$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TitlePageIndicator$IndicatorStyle.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TitlePageIndicator$LinePosition.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TitlePageIndicator$OnCenterItemClickListener.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TitlePageIndicator$SavedState$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TitlePageIndicator$SavedState.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\TitlePageIndicator.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\UnderlinePageIndicator$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\UnderlinePageIndicator$2.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\UnderlinePageIndicator$SavedState$1.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\UnderlinePageIndicator$SavedState.class
+* out\production\ViewPagerIndicator\com\viewpagerindicator\UnderlinePageIndicator.class
+* promo180x120.png
+* screenshots\
+* screenshots\2014-04-26 12.27.32.png
+* screenshots\2014-04-26 12.27.50.png
+* screenshots\2014-04-26 12.28.38.png
+* screenshots\2014-04-26 12.29.00.png
+* screenshots\2014-04-26 12.29.17.png
+* screenshots\2014-05-24 10.21.00.png
+* screenshots\old\
+* screenshots\old\2013-04-26 16.01.32.png
+* screenshots\old\2013-04-26 22.52.39.png
+* screenshots\old\2013-04-26 23.53.36.png
+* screenshots\old\2013-04-26 23.55.35.png
+* screenshots\old\feature.png
+* screenshots\old\feature.xcf
+* screenshots\old\phone.bigclock.compact.2.png
+* screenshots\old\phone.bigclock.compact.png
+* screenshots\old\promo.svg
+* screenshots\screenshot1.png
+* screenshots\screenshot9.png
+* svg\
+* svg\Nexus5.svg
+* svg\newlogo.svg
+* svg\phone_prototype_top.xcf
+* svg\promo-180x120.svg
+* svg\promo-smaller.png
+* svg\promo.png
+* svg\promo.xcf
+* svg\roymam.svg
+* svg\tutorial_dismiss.xcf
+* svg\tutorial_dismiss_all.xcf
+* svg\tutorial_perform_action.xcf
+* svg\tutorial_resize.xcf
+* svg\tutorial_touch_icon.xcf
+From ViewPagerIndicator:
+* ViewPagerIndicator.iml
+* pom.xml
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:+
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+In ColorPickerPreference:
+* AndroidManifest.xml => colorPickerPreference\src\main\AndroidManifest.xml
+* res\ => colorPickerPreference\src\main\res\
+* src\ => colorPickerPreference\src\main\java\
+In ImageViewPlus:
+* AndroidManifest.xml => imageViewPlus\src\main\AndroidManifest.xml
+* res\ => imageViewPlus\src\main\res\
+* src\ => imageViewPlus\src\main\java\
+In ViewPagerIndicator:
+* AndroidManifest.xml => viewPagerIndicator\src\main\AndroidManifest.xml
+* res\ => viewPagerIndicator\src\main\res\
+* src\ => viewPagerIndicator\src\main\java\
+In NotificationsWidget:
+* AndroidManifest.xml => notificationsWidget\src\main\AndroidManifest.xml
+* assets\ => notificationsWidget\src\main\assets\
+* libs\android-support-v13.jar => notificationsWidget\libs\android-support-v13.jar
+* libs\in-app-purchasing-1.0.3.jar => notificationsWidget\libs\in-app-purchasing-1.0.3.jar
+* res\ => notificationsWidget\src\main\res\
+* src\ => notificationsWidget\src\main\java\
+* src\com\android\vending\billing\IInAppBillingService.aidl => notificationsWidget\src\main\aidl\com\android\vending\billing\IInAppBillingService.aidl
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

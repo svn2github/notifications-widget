@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 21
+    buildToolsVersion '19.1.0'
+    defaultConfig {
+        applicationId 'com.roymam.android.notificationswidget'
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 425
+        versionName '1.5.1.425'
+        resValue "bool", "debug", "false"
+    }
+    buildTypes {
+        debug {
+            resValue "bool", "debug", "true"
+            applicationIdSuffix '.debug'
+            versionNameSuffix '.debug'
+            zipAlign false
+        }
+        release {
+            resValue "bool", "debug", "false"
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            applicationVariants.all { variant ->
+                appendVersionNameVersionCode(variant, defaultConfig)
+            }
+        }
+    }
+
+    dependencies {
+        compile project(':colorPickerPreference')
+        compile project(':imageViewPlus')
+        compile 'com.viewpagerindicator:library:2.4.1@aar'
+        compile "com.android.support:cardview-v7:21.0.0-rc1"
+        compile "com.android.support:recyclerview-v7:21.0.0-rc1"
+        compile "com.android.support:palette-v7:21.0.0-rc1"
+        compile 'com.android.support:support-v13:20.0.0'
+        compile files('libs/in-app-purchasing-1.0.3.jar')
+    }
+}
+
+def appendVersionNameVersionCode(variant, defaultConfig) {
+    //check if staging variant
+    if (variant.zipAlign) {
+        def file = variant.outputFile
+        def fileName = defaultConfig.applicationId + "." + defaultConfig.versionName + ".apk"
+        variant.outputFile = new File(file.parent, fileName)
+    }
+
+    def file = variant.packageApplication.outputFile
+    def fileName = defaultConfig.applicationId + "." + defaultConfig.versionName + ".apk"
+    variant.packageApplication.outputFile = new File(file.parent, fileName)
+}
