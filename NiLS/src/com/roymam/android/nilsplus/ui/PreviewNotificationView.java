@@ -143,8 +143,10 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
         // build view from resource
         LayoutInflater inflater = LayoutInflater.from(context);
-        if (mTheme != null && mTheme.previewLayout != null)
+        if (mTheme != null && mTheme.previewLayout != null) {
+            ThemeManager.getInstance(context).reloadLayouts(mTheme);
             mPreviewNotificationView = inflater.inflate(mTheme.previewLayout, null);
+        }
         else
             mPreviewNotificationView = inflater.inflate(R.layout.notification_preview, null);
 
@@ -176,10 +178,10 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             mScrollView = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_text_scrollview"));
             mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_big_picture"));        }
 
-            if (mTheme.customLayoutIdMap.get("app_icon") != null)
+            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon") != null)
                 mAppIconImage = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("app_icon"));
 
-            if (mTheme.customLayoutIdMap.get("app_icon_bg") != null)
+            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon_bg") != null)
                 mAppIconBGImage = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("app_icon_bg"));
 
         else {
@@ -375,7 +377,6 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         if (theme.iconBg != null)
             theme.iconBg.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
 
-        // for Android L like themes
         if (mAppIconImage != null)
         {
             Bitmap appIcon = ni.getAppIcon();
@@ -412,7 +413,23 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             }
         }
 
-        mPreviewIconImageBG.setImageDrawable(theme.iconBg);
+        Drawable iconBgImage = theme.iconBg;
+        if (iconBgImage != null)
+            iconBgImage.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);
+
+        if (theme.prominentIconBg)
+        {
+            if (iconBgImage instanceof BitmapDrawable)
+            {
+                iconBgImage = new BitmapDrawable(BitmapUtils.colorBitmap(((BitmapDrawable)iconBgImage).getBitmap(), ni.appColor));
+            }
+            else
+            {
+                Log.w(TAG, "invalid theme. prominent icon background works only with BitmapDrawable");
+            }
+        }
+
+        mPreviewIconImageBG.setImageDrawable(iconBgImage);
         mPreviewIconImageFG.setImageDrawable(theme.iconFg);
         if (theme.previewTextBG != null)
             theme.previewTextBG.setAlpha(255 * prefs.getInt(SettingsManager.MAIN_BG_OPACITY, SettingsManager.DEFAULT_MAIN_BG_OPACITY) / 100);

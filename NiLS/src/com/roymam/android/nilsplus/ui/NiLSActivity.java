@@ -540,8 +540,14 @@ public class NiLSActivity extends Activity
     private void initIAP()
     {
         boolean isAmazonBuild = getResources().getBoolean(R.bool.amazon);
+        boolean isDebugBuild = getResources().getBoolean(R.bool.debug);
 
-        if (isAmazonBuild)
+        if (isDebugBuild)
+        {
+            // debug build - there is no need to initilize in-app purchase mechanism
+            return;
+        }
+        else if (isAmazonBuild)
         {
             PurchasingManager.registerObserver(new BasePurchasingObserver(getApplicationContext()) {
                 public String currentUserID;
@@ -778,7 +784,13 @@ public class NiLSActivity extends Activity
 
     public void requestUnlockApp()
     {
-        if (mAmazonInAppAvailable)
+        boolean isDebugBuild = getResources().getBoolean(R.bool.debug);
+
+        if (isDebugBuild)
+        {
+            upgradeNow();
+        }
+        else if (mAmazonInAppAvailable)
         {
             PurchasingManager.initiatePurchaseRequest(SKU_UPGRADE);
         }

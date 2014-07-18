@@ -43,7 +43,7 @@ public class Theme extends ThemeInfo
 
     public Resources res;
     public XmlResourceParser notificationLayout = null;
-    public XmlResourceParser previewLayout;
+    public XmlResourceParser previewLayout = null;
 
     public boolean prominentIconBg = false;
     public boolean prominentAppIconBg = false;
