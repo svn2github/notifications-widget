@@ -415,6 +415,12 @@
     <string name="dont_hide_summary">Keep notifications list visible, even if you unlock the device.</string>
 
     <!-- Appearance Settings -->
+    <string name="colors_and_transparency">Colors &amp; Transparency</string>
+    <string name="background_opacitiy">Background opacity</string>
+    <string name="auto_title_color">Auto Title Color</string>
+    <string name="auto_title_color_summary">Set title color automatically according to the app icon prominent color</string>
+    <string name="layout_and_alignment">Layout &amp; Alignment</string>
+
     <string name="appearance_summary">Change appearance settings</string>
     <string-array name="yalignment_entries">
         <item>Top</item>

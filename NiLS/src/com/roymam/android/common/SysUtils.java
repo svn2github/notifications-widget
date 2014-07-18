@@ -20,6 +20,8 @@ import java.util.List;
 
 public class SysUtils
 {
+    private static final String TAG = SysUtils.class.getSimpleName();
+
     private static SysUtils instance;
     private final Context context;
     private final Handler handler;
@@ -117,13 +119,14 @@ public class SysUtils
         return (!timeoutStr.equals("") && !timeoutStr.equals(SettingsManager.TURNSCREENOFF_DEFAULT));
     }
 
-    public void turnScreenOn(boolean force)
+    public void turnScreenOn(boolean force, String reason)
     {
-        turnScreenOn(force, false);
+        turnScreenOn(force, false, reason);
     }
 
-    public void turnScreenOn(boolean force, boolean defaultTimeout)
+    public void turnScreenOn(boolean force, boolean defaultTimeout, String reason)
     {
+        Log.d(TAG, "turnScreenOn called. reason:"+reason);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 

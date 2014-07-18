@@ -310,7 +310,7 @@ public class NPViewManager
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
                 if (event.getAction() == MotionEvent.ACTION_OUTSIDE && prefs.getBoolean(SettingsManager.HIDE_ON_CLICK, SettingsManager.DEFAULT_HIDE_ON_CLICK)) hide(true);
-                if (event.getAction() == MotionEvent.ACTION_DOWN) keepScreenOn();
+                if (event.getAction() == MotionEvent.ACTION_DOWN) keepScreenOn("user touch");
 
                 if (mPreviewItem != null)
                     mPreviewView.dispatchTouchEvent(event);
@@ -455,12 +455,12 @@ public class NPViewManager
         }
     };
 
-    public void keepScreenOn()
+    public void keepScreenOn(String reason)
     {
         final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         Log.d(TAG, "keepScreeOn, isScreenOn:"+pm.isScreenOn());
         SysUtils sysUtils = SysUtils.getInstance(mContext,mHandler);
-        if (pm.isScreenOn()) sysUtils.turnScreenOn(true, true);
+        if (pm.isScreenOn()) sysUtils.turnScreenOn(true, true, reason);
     }
 
     private int calcYoffset(int y, int height)

@@ -4,7 +4,7 @@
                   xmlns:robobunny="http://robobunny.com">
     <PreferenceCategory
         android:key="colors_category"
-        android:title="Colors &amp; Transparency">
+        android:title="@string/colors_and_transparency">
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             android:title="@string/primary_text_color"
             android:summary="@string/primary_text_color_summary"
@@ -30,7 +30,7 @@
             />
         <com.robobunny.SeekBarPreference
             android:key="main_bg_opacity"
-            android:title="Background opacity"
+            android:title="@string/background_opacitiy"
             robobunny:min="0" android:max="100"
             android:defaultValue="100"/>
 
@@ -45,8 +45,8 @@
             />
         <CheckBoxPreference
             android:key="auto_title_color"
-            android:title="Auto Title Color"
-            android:summary="Set title color automatically according to the app icon prominent color"
+            android:title="@string/auto_title_color"
+            android:summary="@string/auto_title_color_summary"
             android:defaultValue="false"
             android:enabled="false"/>
     </PreferenceCategory>
@@ -88,7 +88,7 @@
             android:defaultValue="48"
             android:enabled="false"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Layout &amp; Alignment">
+    <PreferenceCategory android:title="@string/layout_and_alignment">
         <ListPreference android:title="@string/vertical_alignment"
                         android:key="yalignment"
                         android:entries="@array/yalignment_entries"

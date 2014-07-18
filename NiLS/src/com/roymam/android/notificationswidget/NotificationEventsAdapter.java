@@ -41,6 +41,7 @@ public class NotificationEventsAdapter implements NotificationEventListener
     private Handler mHandler = null;
     private PowerManager.WakeLock mWakeLock = null;
     private int mDeviceTimeout;
+    private boolean mTurnOnCanceled = false;
 
     public NotificationEventsAdapter(Context context, Handler handler)
     {
@@ -68,8 +69,7 @@ public class NotificationEventsAdapter implements NotificationEventListener
         mDeviceCovered = deviceCovered;
 
         if (wakeupMode.equals(SettingsManager.WAKEUP_ALWAYS)) {
-            Log.d(TAG, "wakeup mode is ALWAYS, turning screen on");
-            turnScreenOn();
+            turnScreenOn("wakeup mode is ALWAYS");
         }
         else if (!wakeupMode.equals(SettingsManager.WAKEUP_NEVER))
         {
@@ -90,8 +90,7 @@ public class NotificationEventsAdapter implements NotificationEventListener
                 // turn screen on immediately if the device is known to be not covered
                 if (deviceCovered != null && !deviceCovered)
                 {
-                    Log.d(TAG, "device is not covered (parameter), turning screen on");
-                    turnScreenOn();
+                    turnScreenOn("device is not covered (parameter), turning screen on");
                 }
             }
         }
@@ -120,26 +119,6 @@ public class NotificationEventsAdapter implements NotificationEventListener
             popupNotificationIntent.setAction(PopupNotificationService.POPUP_NOTIFICATION);
             popupNotificationIntent.putExtra(PopupNotificationService.EXTRA_NOTIFICATION, nd);
             context.startService(popupNotificationIntent);
-        }
-
-        // re-transmit notification (if needed)
-        if (SettingsManager.getBoolean(context, nd.packageName, AppSettingsActivity.RETRANSMIT, AppSettingsActivity.DEFAULT_RETRANSMIT))
-        {
-            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.nilsfp_icon_mono)
-                    .setLargeIcon(nd.largeIcon)
-                    .setContentTitle(nd.title)
-                    .setContentText(nd.text)
-                    .setContentIntent(nd.action);
-
-            NotificationCompat.BigTextStyle bigtextstyle = new NotificationCompat.BigTextStyle();
-            bigtextstyle.setBigContentTitle(nd.title);
-            bigtextstyle.bigText(nd.text);
-            mBuilder.setStyle(bigtextstyle);
-
-            Notification n = mBuilder.build();
-            nm.notify(nd.uid, n);
         }
     }
 
@@ -239,9 +218,9 @@ public class NotificationEventsAdapter implements NotificationEventListener
         }
     };
 */
-    private void turnScreenOn()
+    private void turnScreenOn(String reason)
     {
-        mSysUtils.turnScreenOn(false);
+        mSysUtils.turnScreenOn(false, reason);
         newNotificationsAvailable = false;
     }
 
@@ -313,8 +292,11 @@ public class NotificationEventsAdapter implements NotificationEventListener
                         public void run()
                         {
                             // turn on screen and stop monitoring proximity
-                            turnScreenOn();
-                            stopProximityMontior("screen was turned on");
+                            if (!mTurnOnCanceled)
+                            {
+                                turnScreenOn("device was not covered");
+                                stopProximityMontior("screen was turned on");
+                            }
                         }
                     };
 
@@ -341,11 +323,13 @@ public class NotificationEventsAdapter implements NotificationEventListener
                                 // turn on screen in 500ms (give it a chance to cancel)
                                 Log.d(TAG, "Turning screen on within "+timeout+"ms");
                                 mHandler.postDelayed(turnOnScreen, timeout);
+                                mTurnOnCanceled = false;
                             }
                             else
                             {
                                 // cancel turning on screen
                                 Log.d(TAG, "Canceling turning screen on");
+                                mTurnOnCanceled = true;
                                 mHandler.removeCallbacks(turnOnScreen);
                             }
                         }

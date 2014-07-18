@@ -57,6 +57,7 @@ import com.roymam.android.common.util.Purchase;
 import com.roymam.android.nilsplus.activities.StartupWizardActivity;
 import com.roymam.android.nilsplus.activities.WhatsNewActivity;
 import com.roymam.android.nilsplus.fragments.AboutPreferencesFragment;
+import com.roymam.android.notificationswidget.BuildConfig;
 import com.roymam.android.notificationswidget.SettingsManager;
 import com.roymam.android.nilsplus.fragments.AppearancePreferencesFragment;
 import com.roymam.android.nilsplus.fragments.MainPrefsFragment;
@@ -539,8 +540,8 @@ public class NiLSActivity extends Activity
 
     private void initIAP()
     {
-        boolean isAmazonBuild = getResources().getBoolean(R.bool.amazon);
-        boolean isDebugBuild = getResources().getBoolean(R.bool.debug);
+        boolean isAmazonBuild = BuildConfig.FLAVOR.equals("amazon");
+        boolean isDebugBuild = BuildConfig.BUILD_TYPE.equals("debug");
 
         if (isDebugBuild)
         {
@@ -784,7 +785,7 @@ public class NiLSActivity extends Activity
 
     public void requestUnlockApp()
     {
-        boolean isDebugBuild = getResources().getBoolean(R.bool.debug);
+        boolean isDebugBuild = BuildConfig.BUILD_TYPE.equals("debug");
 
         if (isDebugBuild)
         {
