@@ -2,6 +2,7 @@
   <library name="support-v13-21.0.0-rc1">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/notificationsWidget/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.0-rc1/res" />
+      <root url="jar://$PROJECT_DIR$/notificationsWidget/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.0-rc1/libs/internal_impl-21.0.0-rc1.jar!/" />
       <root url="jar://$PROJECT_DIR$/notificationsWidget/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.0-rc1/classes.jar!/" />
     </CLASSES>
     <JAVADOC />

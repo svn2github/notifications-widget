@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.clockwork.stream.LegacyNotificationUtil;
 import com.roymam.android.common.PopupDialog;
 import com.roymam.android.common.SysUtils;
 import com.roymam.android.nilsplus.activities.OpenNotificationActivity;
@@ -391,7 +392,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             }
 
             // notify that the notification was added
-            if (!ignoreNotification)
+            if (!ignoreNotification && !nd.isDeleted())
             {
                 if (listener != null)
                 if (updated)
@@ -480,6 +481,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     for (NotificationData nd : clearedNotifications)
                     {
                         listener.onNotificationCleared(nd);
+                        notifyAndroidWearDismissed(nd);
                     }
                 }
 
@@ -676,6 +678,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                     exp.printStackTrace();
                 }
             if (listener != null) listener.onNotificationCleared(nd);
+            notifyAndroidWearDismissed(nd);
+
         }
 
         callRefresh();
@@ -756,6 +760,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                         exp.printStackTrace();
                     }
                 if (listener != null) listener.onNotificationCleared(nd);
+                notifyAndroidWearDismissed(nd);
             }
 
             callRefresh();
@@ -838,6 +843,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (listener != null)
             {
                 listener.onNotificationCleared(removedNd);
+                notifyAndroidWearDismissed(removedNd);
             }
 
             callRefresh();
@@ -857,8 +863,10 @@ public class NotificationsService extends Service implements NotificationsProvid
 
     public void onNotificationPosted(Notification n, String packageName, int id, String tag)
     {
+        Log.d(TAG, "onNotificationPosted package:"+packageName+" id:"+id+" tag:"+tag);
         try {
             if (!parser.isPersistent(n, packageName)) {
+                WearableExtender wo = LegacyNotificationUtil.getWearableOptions(n);
                 List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
                 if (viewManager != null) viewManager.saveNotificationsState();
                 unprotectNotifications(packageName);
@@ -885,6 +893,16 @@ public class NotificationsService extends Service implements NotificationsProvid
     }
 
     private HashMap<String, Integer> wearNotificationIds = new HashMap<String, Integer>();
+
+    private void notifyAndroidWearDismissed(NotificationData nd) {
+        // re-transmit notification (if needed)
+        if (SettingsManager.getBoolean(context, nd.packageName, AppSettingsActivity.RETRANSMIT, AppSettingsActivity.DEFAULT_RETRANSMIT)) {
+            // Issue the notification
+            NotificationManagerCompat notificationManager =
+                    NotificationManagerCompat.from(this);
+            notificationManager.cancel(nd.uid);
+        }
+    }
 
     private void notifyAndroidWear(NotificationData nd)
     {

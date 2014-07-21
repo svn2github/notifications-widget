@@ -28,10 +28,13 @@
                 android:data="https://github.com/attenzione/android-ColorPickerPreference/"/>
         </Preference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/debugging">
+    <PreferenceCategory android:key="debug" android:title="@string/debugging">
         <Preference android:title="@string/view_recent_log">
             <intent android:targetClass="com.roymam.android.nilsplus.activities.LogViewerActivity"
                     android:targetPackage="@string/packageName"/>
         </Preference>
+        <Preference android:key="send_notification"
+            android:title="@string/send_test_notification"
+            android:summary="@string/send_test_notification_summary"/>
     </PreferenceCategory>
 </PreferenceScreen>

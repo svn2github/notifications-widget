@@ -4,16 +4,18 @@ android {
     buildToolsVersion '19.1.0'
     defaultConfig {
         applicationId 'com.roymam.android.notificationswidget'
+        resValue "string", "packageName", "com.roymam.android.notificationswidget"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 425
-        versionName '1.5.1.425'
+        versionCode 427
+        versionName '1.5.1.427'
     }
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '.debug'
             zipAlign false
+            resValue "string", "packageName", "com.roymam.android.notificationswidget.debug"
         }
         release {
             runProguard false

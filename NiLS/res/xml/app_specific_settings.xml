@@ -30,8 +30,8 @@
             android:defaultValue="notification_icon"/>
 
         <CheckBoxPreference android:key="retransmit"
-            android:title="Post to Android Wear"
-            android:summary="(BETA) Post notifications to Android Wear"
+            android:title="@string/post_to_wear"
+            android:summary="@string/post_to_wear_summary"
             android:defaultValue="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

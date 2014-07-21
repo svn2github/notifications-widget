@@ -29,32 +29,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="7b8b247e-e2a6-4709-a0ef-684f4b2c7707" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/NiLS.gradle.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_0_rc1.xml" />
-      <change type="DELETED" beforePath="D:\Drive\Development\NiLS.gradle\.idea\libraries\support_v13_20_0_0.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPListView.java" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPListView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPViewManager.java" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPViewManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NiLSActivity.java" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NiLSActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationEventsAdapter.java" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationEventsAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/google/android/clockwork" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/google/android/clockwork/stream" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/google/android/clockwork/stream/LegacyNotificationUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AboutPreferencesFragment.java" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AboutPreferencesFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationsService.java" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationsService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/common/SysUtils.java" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/common/SysUtils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/about_preferences.xml" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/about_preferences.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/app_specific_settings.xml" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/app_specific_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/appearance_preferences.xml" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/appearance_preferences.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/build.gradle" afterPath="$PROJECT_DIR$/notificationsWidget/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/cardview_v7_21_0_0_rc1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/cardview_v7_21_0_0_rc1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/colorPickerPreference/colorPickerPreference.iml" afterPath="$PROJECT_DIR$/colorPickerPreference/colorPickerPreference.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imageViewPlus/imageViewPlus.iml" afterPath="$PROJECT_DIR$/imageViewPlus/imageViewPlus.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/in_app_purchasing_1_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/in_app_purchasing_1_0_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/library_2_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/library_2_4_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/notificationsWidget.iml" afterPath="$PROJECT_DIR$/notificationsWidget/notificationsWidget.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/palette_v7_21_0_0_rc1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/palette_v7_21_0_0_rc1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/recyclerview_v7_21_0_0_rc1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/recyclerview_v7_21_0_0_rc1.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_0_rc1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_0_rc1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_0_rc1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_0_rc1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_0_rc1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_0_rc1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notificationsWidget/src/main/res/values/whatsnew.xml" afterPath="$PROJECT_DIR$/notificationsWidget/src/main/res/values/whatsnew.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="NiLS.iws" />
@@ -190,67 +175,85 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="NotificationsService.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="NotificationsService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationsService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3323077" vertical-offset="7083" max-vertical-offset="25857">
-              <caret line="423" column="0" selection-start-line="423" selection-start-column="0" selection-end-line="423" selection-end-column="0" />
+            <state vertical-scroll-proportion="-8.928572" vertical-offset="15526" max-vertical-offset="25857">
+              <caret line="940" column="0" selection-start-line="906" selection-start-column="0" selection-end-line="940" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3834#3852#0" expanded="true" />
-                <element signature="e#3984#4016#0" expanded="true" />
-                <element signature="e#4355#4356#0" expanded="true" />
-                <element signature="e#4386#4387#0" expanded="true" />
-                <element signature="e#8626#9703#0" expanded="true" />
-                <element signature="e#9692#9693#0" expanded="true" />
-                <element signature="e#11948#11949#0" expanded="true" />
-                <element signature="e#11999#12000#0" expanded="true" />
-                <element signature="e#12107#12108#0" expanded="true" />
-                <element signature="e#12148#12149#0" expanded="true" />
-                <element signature="e#16525#16543#0" expanded="true" />
-                <element signature="e#18689#18690#0" expanded="true" />
-                <element signature="e#18744#18745#0" expanded="true" />
-                <element signature="e#19033#19070#0" expanded="true" />
-                <element signature="e#21317#22169#0" expanded="true" />
-                <element signature="e#22146#22147#0" expanded="true" />
-                <element signature="e#22347#22837#0" expanded="true" />
-                <element signature="e#22814#22815#0" expanded="true" />
-                <element signature="e#23012#23502#0" expanded="true" />
-                <element signature="e#23479#23480#0" expanded="true" />
-                <element signature="e#24023#24041#0" expanded="true" />
-                <element signature="e#26454#26472#0" expanded="true" />
-                <element signature="e#32183#32200#0" expanded="true" />
-                <element signature="e#36166#36167#0" expanded="true" />
-                <element signature="e#36197#36198#0" expanded="true" />
-                <element signature="e#45813#45935#0" expanded="true" />
-                <element signature="e#45956#46088#0" expanded="true" />
-                <element signature="e#46119#46150#0" expanded="true" />
-                <element signature="e#46152#46847#0" expanded="true" />
-                <element signature="e#46834#46835#0" expanded="true" />
-                <element signature="e#46884#46914#0" expanded="true" />
-                <element signature="e#46916#48857#0" expanded="true" />
-                <element signature="e#47307#47354#0" expanded="true" />
-                <element signature="e#47401#47458#0" expanded="true" />
-                <element signature="e#47515#47546#0" expanded="true" />
-                <element signature="e#47548#48072#0" expanded="true" />
-                <element signature="e#48033#48034#0" expanded="true" />
-                <element signature="e#48129#48159#0" expanded="true" />
-                <element signature="e#48161#48573#0" expanded="true" />
-                <element signature="e#48534#48535#0" expanded="true" />
-                <element signature="e#48838#48839#0" expanded="true" />
-                <element signature="e#51395#51396#0" expanded="true" />
-                <element signature="e#51457#51458#0" expanded="true" />
+                <element signature="e#3901#3919#0" expanded="true" />
+                <element signature="e#4051#4083#0" expanded="true" />
+                <element signature="e#8693#9770#0" expanded="true" />
+                <element signature="e#9759#9760#0" expanded="true" />
+                <element signature="e#16611#16629#0" expanded="true" />
+                <element signature="e#19175#19212#0" expanded="true" />
+                <element signature="e#21459#22311#0" expanded="true" />
+                <element signature="e#22288#22289#0" expanded="true" />
+                <element signature="e#22489#22979#0" expanded="true" />
+                <element signature="e#22956#22957#0" expanded="true" />
+                <element signature="e#23154#23644#0" expanded="true" />
+                <element signature="e#23621#23622#0" expanded="true" />
+                <element signature="e#24165#24183#0" expanded="true" />
+                <element signature="e#26641#26659#0" expanded="true" />
+                <element signature="e#32644#32661#0" expanded="true" />
+                <element signature="e#46749#46871#0" expanded="true" />
+                <element signature="e#46892#47024#0" expanded="true" />
+                <element signature="e#47055#47086#0" expanded="true" />
+                <element signature="e#47088#47783#0" expanded="true" />
+                <element signature="e#47770#47771#0" expanded="true" />
+                <element signature="e#47820#47850#0" expanded="true" />
+                <element signature="e#47852#49793#0" expanded="true" />
+                <element signature="e#48243#48290#0" expanded="true" />
+                <element signature="e#48337#48394#0" expanded="true" />
+                <element signature="e#48451#48482#0" expanded="true" />
+                <element signature="e#48484#49008#0" expanded="true" />
+                <element signature="e#48969#48970#0" expanded="true" />
+                <element signature="e#49065#49095#0" expanded="true" />
+                <element signature="e#49097#49509#0" expanded="true" />
+                <element signature="e#49470#49471#0" expanded="true" />
+                <element signature="e#49774#49775#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NPListView.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPListView.java">
+      <file leaf-file-name="about_preferences.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/about_preferences.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3863" max-vertical-offset="8653">
-              <caret line="283" column="8" selection-start-line="283" selection-start-column="8" selection-end-line="283" selection-end-column="8" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="765">
+              <caret line="31" column="59" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
+              <folding>
+                <element signature="e#156#171#0" expanded="true" />
+                <element signature="e#249#264#0" expanded="true" />
+                <element signature="e#370#404#0" expanded="true" />
+                <element signature="e#421#458#0" expanded="true" />
+                <element signature="e#557#581#0" expanded="true" />
+                <element signature="e#783#819#0" expanded="true" />
+                <element signature="e#862#889#0" expanded="true" />
+                <element signature="e#1081#1109#0" expanded="true" />
+                <element signature="e#1138#1165#0" expanded="true" />
+                <element signature="e#1364#1396#0" expanded="true" />
+                <element signature="e#1425#1452#0" expanded="true" />
+                <element signature="e#1718#1737#0" expanded="true" />
+                <element signature="e#1773#1798#0" expanded="true" />
+                <element signature="e#2065#2097#0" expanded="true" />
+                <element signature="e#2126#2166#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AboutPreferencesFragment.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AboutPreferencesFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="1.0169972" vertical-offset="627" max-vertical-offset="1173">
+              <caret line="78" column="14" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
+              <folding>
+                <element signature="e#1768#1793#0" expanded="true" />
+                <element signature="e#2013#2242#0" expanded="true" />
+                <element signature="e#2231#2232#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -258,8 +261,8 @@
       <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5100" max-vertical-offset="10744">
-              <caret line="308" column="181" selection-start-line="308" selection-start-column="181" selection-end-line="308" selection-end-column="181" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="10442" max-vertical-offset="10795">
+              <caret line="628" column="112" selection-start-line="628" selection-start-column="112" selection-end-line="628" selection-end-column="112" />
               <folding />
             </state>
           </provider>
@@ -268,18 +271,59 @@
       <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/notificationsWidget/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1003">
-              <caret line="27" column="41" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="1037">
+              <caret line="3" column="30" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NiLSActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NiLSActivity.java">
+      <file leaf-file-name="generated.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/notificationsWidget/build/generated/res/generated/debug/values/generated.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="12854" max-vertical-offset="14756">
-              <caret line="790" column="9" selection-start-line="790" selection-start-column="9" selection-end-line="790" selection-end-column="9" />
+            <state vertical-scroll-proportion="-0.0" vertical-offset="17" max-vertical-offset="272">
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="whatsnew.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/values/whatsnew.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="918">
+              <caret line="8" column="121" selection-start-line="8" selection-start-column="121" selection-end-line="8" selection-end-column="121" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main_preferences.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/main_preferences.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="234" max-vertical-offset="748">
+              <caret line="23" column="44" selection-start-line="23" selection-start-column="44" selection-end-line="23" selection-end-column="44" />
+              <folding>
+                <element signature="e#199#230#0" expanded="false" />
+                <element signature="e#257#284#0" expanded="false" />
+                <element signature="e#312#341#0" expanded="false" />
+                <element signature="e#522#550#0" expanded="false" />
+                <element signature="e#577#615#0" expanded="false" />
+                <element signature="e#643#683#0" expanded="false" />
+                <element signature="e#988#1028#0" expanded="false" />
+                <element signature="e#1216#1243#0" expanded="false" />
+                <element signature="e#1271#1302#0" expanded="false" />
+                <element signature="e#1329#1358#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LegacyNotificationUtil.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/google/android/clockwork/stream/LegacyNotificationUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1003" max-vertical-offset="2686">
+              <caret line="66" column="5" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -290,21 +334,17 @@
       <file leaf-file-name="NotificationAdapter.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NotificationAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.857143" vertical-offset="3700" max-vertical-offset="7395">
-              <caret line="230" column="55" selection-start-line="230" selection-start-column="54" selection-end-line="230" selection-end-column="55" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="786" max-vertical-offset="7548">
+              <caret line="53" column="44" selection-start-line="53" selection-start-column="44" selection-end-line="53" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1639#1640#0" expanded="true" />
+                <element signature="e#1663#1664#0" expanded="true" />
+                <element signature="e#1729#1730#0" expanded="true" />
+                <element signature="e#1766#1767#0" expanded="true" />
+                <element signature="e#19766#19767#0" expanded="true" />
+                <element signature="e#19793#19794#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app_specific_settings.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/app_specific_settings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="293" max-vertical-offset="714">
-              <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -2047,7 +2087,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="7023271512824" />
+        <entry key="$PROJECT_DIR$" value="7023548959143" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -2477,41 +2517,44 @@
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/common/BitmapUtils.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/activities/StartupWizardActivity.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/activities/WhatsNewActivity.java" />
-        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AppearancePreferencesFragment.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/layout/notification_preview.xml" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/values/dimens.xml" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationAdapter.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationEventAdapter.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/global_settings.xml" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/ui/theme/Theme.java" />
-        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NotificationAdapter.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/services/PopupNotificationService.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/main_preferences.xml" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/MainPrefsFragment.java" />
-        <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/about_preferences.xml" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationParser.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/SettingsManager.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/AppSettingsActivity.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/SpecificSettingsPreferencesActivity.java" />
-        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/PopupNotification.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/theme/ThemeManager.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/activities/OpenNotificationActivity.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationData.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/theme/Theme.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/PreviewNotificationView.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/common/SysUtils.java" />
-        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPViewManager.java" />
-        <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationEventsAdapter.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/notificationsWidget.iml" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/appearance_preferences.xml" />
-        <option value="$PROJECT_DIR$/notificationsWidget/build.gradle" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NiLSActivity.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/app_specific_settings.xml" />
-        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationsService.java" />
         <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPListView.java" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AppearancePreferencesFragment.java" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPViewManager.java" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/PopupNotification.java" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NotificationAdapter.java" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/google/android/clockwork/stream/LegacyNotificationUtil.java" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationsService.java" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/values/whatsnew.xml" />
+        <option value="$PROJECT_DIR$/notificationsWidget/build.gradle" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/res/xml/about_preferences.xml" />
+        <option value="$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AboutPreferencesFragment.java" />
       </list>
     </option>
   </component>
@@ -2537,7 +2580,7 @@
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
-      <showMembers />
+      <showMembers ProjectPane="true" />
       <showModules />
       <showLibraryContents />
       <hideEmptyPackages />
@@ -2547,104 +2590,14 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="NiLS.gradle" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support-v13-21.0.0-rc1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NiLS.gradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support-v13-21.0.0-rc1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes.jar" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NiLS.gradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support-v13-21.0.0-rc1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes.jar" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="v13" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NiLS.gradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support-v4-21.0.0-rc1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NiLS.gradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support-v4-21.0.0-rc1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes.jar" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NiLS.gradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -2693,6 +2646,112 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NiLS.gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NiLS.gradle" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="notificationsWidget" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NiLS.gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NiLS.gradle" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="notificationsWidget" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stream" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LegacyNotificationUtil" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ClassTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NiLS.gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NiLS.gradle" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="notificationsWidget" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -2707,6 +2766,12 @@
     <property name="recentsLimit" value="5" />
     <property name="android.project.structure.last.selected" value="notificationsWidget" />
     <property name="android.project.structure.proportion" value="0.15" />
+    <property name="FullScreen" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="DEBUGGABLE_DEVICE" value="samsung-galaxy_nexus-192.168.1.102:5555" />
+    <property name="DEBUGGABLE_PROCESS" value="com.roymam.android.notificationswidget.debug" />
+    <property name="SHOW_ALL_PROCESSES" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -2904,6 +2969,18 @@
           <option name="myCopyRoot" value="D:\Drive\Development\NiLS.gradle\.idea" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\Drive\Development\NiLS.gradle\colorPickerPreference" />
+          <option name="myCopyRoot" value="D:\Drive\Development\NiLS.gradle\colorPickerPreference" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\Drive\Development\NiLS.gradle\imageViewPlus" />
+          <option name="myCopyRoot" value="D:\Drive\Development\NiLS.gradle\imageViewPlus" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\Drive\Development\NiLS.gradle\notificationsWidget" />
+          <option name="myCopyRoot" value="D:\Drive\Development\NiLS.gradle\notificationsWidget" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
           <option name="myVcsRoot" value="D:\Drive\Development\NiLS.gradle" />
           <option name="myCopyRoot" value="D:\Drive\Development\NiLS.gradle\notificationsWidget\src\main\java" />
         </SvnCopyRootSimple>
@@ -2964,7 +3041,11 @@
       <created>1405671369202</created>
       <updated>1405671369202</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="v1.5.1.425:&#10;- improved support for Android wear&#10;- fixed some crashes&#10;- add more debug messages&#10;- add some project files to svn">
+      <created>1405702016822</created>
+      <updated>1405702016822</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2994,30 +3075,30 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32879046" sideWeight="0.5869894" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32778198" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5045386" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39863715" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.4130106" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32879046" sideWeight="0.4130106" order="13" side_tool="true" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.23975721" order="13" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5869894" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.7579425" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.7602428" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24886535" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32980332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24886535" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24886535" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32778198" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.5045386" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -3043,63 +3124,16 @@
     <MESSAGE value="- handling old values from lock screen detection on NiLS FP" />
     <MESSAGE value="v1.5.1.423:&#10;- Fixed unlock issue for LG-G2 &#10;- Fixed some crashes on PopupNotification&#10;- Support theme custom layouts on preview mode too." />
     <MESSAGE value="v1.5.1.425:&#10;- Fixed crashes&#10;- Debug build is now upgradable." />
-    <option name="LAST_COMMIT_MESSAGE" value="v1.5.1.425:&#10;- Fixed crashes&#10;- Debug build is now upgradable." />
+    <MESSAGE value="v1.5.1.425:&#10;- improved support for Android wear&#10;- fixed some crashes&#10;- add more debug messages&#10;- add some project files to svn" />
+    <MESSAGE value="v1.5.1.427:&#10;- Added &quot;What's New&quot; for v1.5.1&#10;- Fixed &quot;Show log&quot; on debug version.&#10;- Added an option to send a test notification." />
+    <option name="LAST_COMMIT_MESSAGE" value="v1.5.1.427:&#10;- Added &quot;What's New&quot; for v1.5.1&#10;- Fixed &quot;Show log&quot; on debug version.&#10;- Added an option to send a test notification." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="6" />
+      <option name="time" value="10" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AppearancePreferencesFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4556" max-vertical-offset="6086">
-          <caret line="323" column="69" selection-start-line="323" selection-start-column="69" selection-end-line="323" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/sdk/sources/android-19/android/os/Parcel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="10183" max-vertical-offset="40562">
-          <caret line="599" column="32" selection-start-line="599" selection-start-column="32" selection-end-line="599" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/sdk/sources/android-19/android/os/Parcelable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1513" max-vertical-offset="2380">
-          <caret line="89" column="32" selection-start-line="89" selection-start-column="32" selection-end-line="89" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-21/android.jar!/android/widget/RemoteViews.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="626" max-vertical-offset="2244">
-          <caret line="45" column="34" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/sdk/sources/android-19/android/widget/RemoteViews.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75399363" vertical-offset="15727" max-vertical-offset="41089">
-          <caret line="1021" column="9" selection-start-line="1021" selection-start-column="9" selection-end-line="1021" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/values-sw600dp/dimens.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="366">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/values/dimens.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="340" max-vertical-offset="765">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-21/android.jar!/android/app/KeyguardManager.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5355191" vertical-offset="382" max-vertical-offset="748">
@@ -3149,13 +3183,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/main_preferences.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="234" max-vertical-offset="748">
-          <caret line="24" column="43" selection-start-line="24" selection-start-column="43" selection-end-line="24" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/services/PopupNotificationService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="595">
@@ -3191,24 +3218,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AboutPreferencesFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="629">
-          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-21/android.jar!/java/util/List.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334" vertical-offset="524" max-vertical-offset="1037">
           <caret line="39" column="6" selection-start-line="39" selection-start-column="6" selection-end-line="39" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/about_preferences.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="293" max-vertical-offset="714">
-          <caret line="34" column="19" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -3257,13 +3270,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/PopupNotification.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2006" max-vertical-offset="2686">
-          <caret line="130" column="5" selection-start-line="130" selection-start-column="5" selection-end-line="130" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2337" max-vertical-offset="7038">
@@ -3278,14 +3284,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/PreviewNotificationView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1736" max-vertical-offset="9673">
-          <caret line="147" column="20" selection-start-line="147" selection-start-column="20" selection-end-line="147" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/common/SysUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2384" max-vertical-offset="4726">
@@ -3293,19 +3291,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPViewManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4184" max-vertical-offset="16286">
-          <caret line="313" column="0" selection-start-line="313" selection-start-column="0" selection-end-line="313" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationParser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="5567" max-vertical-offset="15946">
           <caret line="382" column="0" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3321,7 +3310,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1632">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3329,7 +3317,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.048158642" vertical-offset="0" max-vertical-offset="425">
           <caret line="1" column="197" selection-start-line="1" selection-start-column="197" selection-end-line="1" selection-end-column="197" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3337,7 +3324,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.38526914" vertical-offset="272" max-vertical-offset="1394">
           <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3353,11 +3339,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3251366" vertical-offset="357" max-vertical-offset="1887">
           <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
-          <folding>
-            <element signature="e#259#292#0" expanded="true" />
-            <element signature="e#446#482#0" expanded="true" />
-            <element signature="e#771#809#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3365,7 +3346,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.25914633" vertical-offset="0" max-vertical-offset="9911">
           <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3373,49 +3353,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19263457" vertical-offset="0" max-vertical-offset="5525">
           <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NotificationAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.857143" vertical-offset="3700" max-vertical-offset="7395">
-          <caret line="230" column="55" selection-start-line="230" selection-start-column="54" selection-end-line="230" selection-end-column="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5100" max-vertical-offset="10744">
-          <caret line="308" column="181" selection-start-line="308" selection-start-column="181" selection-end-line="308" selection-end-column="181" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/app_specific_settings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="293" max-vertical-offset="714">
-          <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPListView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3863" max-vertical-offset="8653">
-          <caret line="283" column="8" selection-start-line="283" selection-start-column="8" selection-end-line="283" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notificationsWidget/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1003">
-          <caret line="27" column="41" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3423,6 +3360,136 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="12854" max-vertical-offset="14756">
           <caret line="790" column="9" selection-start-line="790" selection-start-column="9" selection-end-line="790" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/app_specific_settings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="293" max-vertical-offset="714">
+          <caret line="33" column="42" selection-start-line="33" selection-start-column="42" selection-end-line="33" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/PreviewNotificationView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2805" max-vertical-offset="9996">
+          <caret line="202" column="0" selection-start-line="202" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
+          <folding>
+            <element signature="e#11824#12118#0" expanded="true" />
+            <element signature="e#12095#12096#0" expanded="true" />
+            <element signature="e#13743#13941#0" expanded="true" />
+            <element signature="e#13930#13931#0" expanded="true" />
+            <element signature="e#14350#14637#0" expanded="true" />
+            <element signature="e#14622#14623#0" expanded="true" />
+            <element signature="e#17305#17378#0" expanded="true" />
+            <element signature="e#21701#21766#0" expanded="true" />
+            <element signature="e#21815#21880#0" expanded="true" />
+            <element signature="e#26250#26798#0" expanded="true" />
+            <element signature="e#26775#26776#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/layout/notifications_list.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.259259" vertical-offset="783" max-vertical-offset="1122">
+          <caret line="56" column="71" selection-start-line="56" selection-start-column="71" selection-end-line="56" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPListView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="7769" max-vertical-offset="9282">
+          <caret line="473" column="37" selection-start-line="473" selection-start-column="37" selection-end-line="473" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5349#5364#0" expanded="true" />
+            <element signature="e#9283#9284#0" expanded="true" />
+            <element signature="e#9314#9315#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AppearancePreferencesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1175" max-vertical-offset="6273">
+          <caret line="117" column="14" selection-start-line="117" selection-start-column="14" selection-end-line="117" selection-end-column="14" />
+          <folding>
+            <element signature="e#2437#2486#0" expanded="false" />
+            <element signature="e#2494#2543#0" expanded="false" />
+            <element signature="e#2551#2600#0" expanded="false" />
+            <element signature="e#2768#2819#0" expanded="false" />
+            <element signature="e#3379#3427#0" expanded="false" />
+            <element signature="e#3471#3518#0" expanded="false" />
+            <element signature="e#4569#4758#0" expanded="false" />
+            <element signature="e#4743#4744#0" expanded="false" />
+            <element signature="e#9113#9127#0" expanded="false" />
+            <element signature="e#14516#14543#0" expanded="false" />
+            <element signature="e#15643#15671#0" expanded="false" />
+            <element signature="e#15713#15748#0" expanded="false" />
+            <element signature="e#15797#15814#0" expanded="false" />
+            <element signature="e#15816#16095#0" expanded="false" />
+            <element signature="e#16064#16065#0" expanded="false" />
+            <element signature="e#16144#16158#0" expanded="false" />
+            <element signature="e#16160#16400#0" expanded="false" />
+            <element signature="e#16369#16370#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NPViewManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="9826" max-vertical-offset="17578">
+          <caret line="604" column="2" selection-start-line="604" selection-start-column="2" selection-end-line="604" selection-end-column="2" />
+          <folding>
+            <element signature="e#28952#28953#0" expanded="true" />
+            <element signature="e#29012#29013#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/PopupNotification.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="816" max-vertical-offset="2295">
+          <caret line="87" column="0" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/notificationsWidget/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.0-rc1/classes.jar!/android/support/v7/widget/RecyclerView.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.30487806" vertical-offset="14078" max-vertical-offset="16864">
+          <caret line="835" column="0" selection-start-line="835" selection-start-column="0" selection-end-line="835" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/ui/NotificationAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="786" max-vertical-offset="7548">
+          <caret line="53" column="44" selection-start-line="53" selection-start-column="44" selection-end-line="53" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1639#1640#0" expanded="true" />
+            <element signature="e#1663#1664#0" expanded="true" />
+            <element signature="e#1729#1730#0" expanded="true" />
+            <element signature="e#1766#1767#0" expanded="true" />
+            <element signature="e#19766#19767#0" expanded="true" />
+            <element signature="e#19793#19794#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/google/android/clockwork/stream/LegacyNotificationUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1003" max-vertical-offset="2686">
+          <caret line="66" column="5" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -3431,53 +3498,136 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/notificationswidget/NotificationsService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3323077" vertical-offset="7083" max-vertical-offset="25857">
-          <caret line="423" column="0" selection-start-line="423" selection-start-column="0" selection-end-line="423" selection-end-column="0" />
+        <state vertical-scroll-proportion="-8.928572" vertical-offset="15526" max-vertical-offset="25857">
+          <caret line="940" column="0" selection-start-line="906" selection-start-column="0" selection-end-line="940" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3834#3852#0" expanded="true" />
-            <element signature="e#3984#4016#0" expanded="true" />
-            <element signature="e#4355#4356#0" expanded="true" />
-            <element signature="e#4386#4387#0" expanded="true" />
-            <element signature="e#8626#9703#0" expanded="true" />
-            <element signature="e#9692#9693#0" expanded="true" />
-            <element signature="e#11948#11949#0" expanded="true" />
-            <element signature="e#11999#12000#0" expanded="true" />
-            <element signature="e#12107#12108#0" expanded="true" />
-            <element signature="e#12148#12149#0" expanded="true" />
-            <element signature="e#16525#16543#0" expanded="true" />
-            <element signature="e#18689#18690#0" expanded="true" />
-            <element signature="e#18744#18745#0" expanded="true" />
-            <element signature="e#19033#19070#0" expanded="true" />
-            <element signature="e#21317#22169#0" expanded="true" />
-            <element signature="e#22146#22147#0" expanded="true" />
-            <element signature="e#22347#22837#0" expanded="true" />
-            <element signature="e#22814#22815#0" expanded="true" />
-            <element signature="e#23012#23502#0" expanded="true" />
-            <element signature="e#23479#23480#0" expanded="true" />
-            <element signature="e#24023#24041#0" expanded="true" />
-            <element signature="e#26454#26472#0" expanded="true" />
-            <element signature="e#32183#32200#0" expanded="true" />
-            <element signature="e#36166#36167#0" expanded="true" />
-            <element signature="e#36197#36198#0" expanded="true" />
-            <element signature="e#45813#45935#0" expanded="true" />
-            <element signature="e#45956#46088#0" expanded="true" />
-            <element signature="e#46119#46150#0" expanded="true" />
-            <element signature="e#46152#46847#0" expanded="true" />
-            <element signature="e#46834#46835#0" expanded="true" />
-            <element signature="e#46884#46914#0" expanded="true" />
-            <element signature="e#46916#48857#0" expanded="true" />
-            <element signature="e#47307#47354#0" expanded="true" />
-            <element signature="e#47401#47458#0" expanded="true" />
-            <element signature="e#47515#47546#0" expanded="true" />
-            <element signature="e#47548#48072#0" expanded="true" />
-            <element signature="e#48033#48034#0" expanded="true" />
-            <element signature="e#48129#48159#0" expanded="true" />
-            <element signature="e#48161#48573#0" expanded="true" />
-            <element signature="e#48534#48535#0" expanded="true" />
-            <element signature="e#48838#48839#0" expanded="true" />
-            <element signature="e#51395#51396#0" expanded="true" />
-            <element signature="e#51457#51458#0" expanded="true" />
+            <element signature="e#3901#3919#0" expanded="true" />
+            <element signature="e#4051#4083#0" expanded="true" />
+            <element signature="e#8693#9770#0" expanded="true" />
+            <element signature="e#9759#9760#0" expanded="true" />
+            <element signature="e#16611#16629#0" expanded="true" />
+            <element signature="e#19175#19212#0" expanded="true" />
+            <element signature="e#21459#22311#0" expanded="true" />
+            <element signature="e#22288#22289#0" expanded="true" />
+            <element signature="e#22489#22979#0" expanded="true" />
+            <element signature="e#22956#22957#0" expanded="true" />
+            <element signature="e#23154#23644#0" expanded="true" />
+            <element signature="e#23621#23622#0" expanded="true" />
+            <element signature="e#24165#24183#0" expanded="true" />
+            <element signature="e#26641#26659#0" expanded="true" />
+            <element signature="e#32644#32661#0" expanded="true" />
+            <element signature="e#46749#46871#0" expanded="true" />
+            <element signature="e#46892#47024#0" expanded="true" />
+            <element signature="e#47055#47086#0" expanded="true" />
+            <element signature="e#47088#47783#0" expanded="true" />
+            <element signature="e#47770#47771#0" expanded="true" />
+            <element signature="e#47820#47850#0" expanded="true" />
+            <element signature="e#47852#49793#0" expanded="true" />
+            <element signature="e#48243#48290#0" expanded="true" />
+            <element signature="e#48337#48394#0" expanded="true" />
+            <element signature="e#48451#48482#0" expanded="true" />
+            <element signature="e#48484#49008#0" expanded="true" />
+            <element signature="e#48969#48970#0" expanded="true" />
+            <element signature="e#49065#49095#0" expanded="true" />
+            <element signature="e#49097#49509#0" expanded="true" />
+            <element signature="e#49470#49471#0" expanded="true" />
+            <element signature="e#49774#49775#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/notificationsWidget/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0-rc1/classes.jar!/android/support/v4/app/NotificationManagerCompat.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3109756" vertical-offset="2261" max-vertical-offset="2873">
+          <caret line="140" column="13" selection-start-line="140" selection-start-column="13" selection-end-line="140" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/main_preferences.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="234" max-vertical-offset="748">
+          <caret line="23" column="44" selection-start-line="23" selection-start-column="44" selection-end-line="23" selection-end-column="44" />
+          <folding>
+            <element signature="e#199#230#0" expanded="false" />
+            <element signature="e#257#284#0" expanded="false" />
+            <element signature="e#312#341#0" expanded="false" />
+            <element signature="e#522#550#0" expanded="false" />
+            <element signature="e#577#615#0" expanded="false" />
+            <element signature="e#643#683#0" expanded="false" />
+            <element signature="e#988#1028#0" expanded="false" />
+            <element signature="e#1216#1243#0" expanded="false" />
+            <element signature="e#1271#1302#0" expanded="false" />
+            <element signature="e#1329#1358#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/values/whatsnew.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="918">
+          <caret line="8" column="121" selection-start-line="8" selection-start-column="121" selection-end-line="8" selection-end-column="121" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/build/generated/res/generated/debug/values/generated.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0" vertical-offset="17" max-vertical-offset="272">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="1037">
+          <caret line="3" column="30" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="10442" max-vertical-offset="10795">
+          <caret line="628" column="112" selection-start-line="628" selection-start-column="112" selection-end-line="628" selection-end-column="112" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/res/xml/about_preferences.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="765">
+          <caret line="31" column="59" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
+          <folding>
+            <element signature="e#156#171#0" expanded="true" />
+            <element signature="e#249#264#0" expanded="true" />
+            <element signature="e#370#404#0" expanded="true" />
+            <element signature="e#421#458#0" expanded="true" />
+            <element signature="e#557#581#0" expanded="true" />
+            <element signature="e#783#819#0" expanded="true" />
+            <element signature="e#862#889#0" expanded="true" />
+            <element signature="e#1081#1109#0" expanded="true" />
+            <element signature="e#1138#1165#0" expanded="true" />
+            <element signature="e#1364#1396#0" expanded="true" />
+            <element signature="e#1425#1452#0" expanded="true" />
+            <element signature="e#1718#1737#0" expanded="true" />
+            <element signature="e#1773#1798#0" expanded="true" />
+            <element signature="e#2065#2097#0" expanded="true" />
+            <element signature="e#2126#2166#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notificationsWidget/src/main/java/com/roymam/android/nilsplus/fragments/AboutPreferencesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0169972" vertical-offset="627" max-vertical-offset="1173">
+          <caret line="78" column="14" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
+          <folding>
+            <element signature="e#1768#1793#0" expanded="true" />
+            <element signature="e#2013#2242#0" expanded="true" />
+            <element signature="e#2231#2232#0" expanded="true" />
           </folding>
         </state>
       </provider>

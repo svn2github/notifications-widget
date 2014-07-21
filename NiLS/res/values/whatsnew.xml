@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="v427_title">v1.5.1</string>
+    <string name="v427">
+        <![CDATA[
+            <b>&#8226;	Improved themes support</b> - Supports the new Android L Theme and allow 3rd party themes to set a custom layout for the notification.<br>
+            <b>&#8226;	Supports notifications with images.</b><br>
+            <b>&#8226;	New option - Auto title color</b> - set title color on notifications panel automatically using the app icon prominent color.<br>
+            <b>&#8226;	New Feature - Heads Up (BETA)</b> - display a top banner whenever a new notification arrives.<br>
+            <b>&#8226;	Supports Android Wear </b> - a new app specific option to repeat notifications into Android Wear device.<br>
+            <b>&#8226;	Bug fixes </b>
+        ]]>
+    </string>
     <string name="v400_title">v1.5</string>
     <string name="v400">
         <![CDATA[
