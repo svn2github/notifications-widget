@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import com.google.android.clockwork.stream.LegacyNotificationUtil;
 import com.roymam.android.common.BitmapCache;
 import com.roymam.android.common.IconPackManager;
 
@@ -459,6 +460,19 @@ public class NotificationParser
         {
 
         }
+
+        // get additional actions from wear api
+        /*NotificationCompat.WearableExtender wo = LegacyNotificationUtil.getWearableOptions(n);
+        for(NotificationCompat.Action a : wo.getActions())
+        {
+            NotificationData.Action a2 = new NotificationData.Action();
+            a2.icon = a.icon;
+            a2.actionIntent = a.actionIntent;
+            a2.title = a.title;
+            a2.drawable = BitmapCache.getInstance(context).getBitmap(packageName, a.icon);
+            returnActions.add(a2);
+        }*/
+
         NotificationData.Action[] returnArray = new NotificationData.Action[returnActions.size()];
         returnActions.toArray(returnArray);
         return returnArray;

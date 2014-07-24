@@ -627,4 +627,6 @@
     <string name="post_to_wear_summary">(BETA) Post notifications to Android Wear</string>
     <string name="send_test_notification">Send a test notification</string>
     <string name="send_test_notification_summary">Test if NiLS is configured and running correctly by sending a test notification.</string>
+    <string name="unlock_workaround">Device unlock workaround</string>
+    <string name="unlock_workaround_summary">Toggle this option if your device refuses to unlock when opening notifications</string>
 </resources>

@@ -78,7 +78,11 @@ public class OpenNotificationActivity extends Activity
             Log.d("NiLS", "Requesting device to be unlocked");
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-            if (UNLOCK_HACK_DEVICES.contains(Build.DEVICE))
+            // set default unlock workaround for specific devices
+            if (UNLOCK_HACK_DEVICES.contains(Build.DEVICE) && !prefs.getAll().containsKey(SettingsManager.UNLOCK_WORKAROUND))
+                prefs.edit().putBoolean(SettingsManager.UNLOCK_WORKAROUND, true).commit();
+
+            if (prefs.getBoolean(SettingsManager.UNLOCK_WORKAROUND, SettingsManager.DEFAULT_UNLOCK_WORKAROUND))
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
             mReceiver = new BroadcastReceiver()

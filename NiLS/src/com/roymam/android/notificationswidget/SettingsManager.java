@@ -176,6 +176,7 @@ public class SettingsManager
     public static final String PREVIEW_ICON_SIZE = "preview_icon_size";
     public static final String HIDE_ON_CLICK = "hide_on_click";
     public static final String HALO_MODE = "halo_mode";
+    public static final String UNLOCK_WORKAROUND = "unlock_workaround";
     public static final String PREVIEW_HEIGHT = "preview_height";
     public static final String HEIGHT = "height";
     public static final String TITLE_FONT_SIZE = "title_size_sp";
@@ -210,6 +211,7 @@ public class SettingsManager
     public static final int DEFAULT_HEIGHT = DEFAULT_ROW_HEIGHT * DEFAULT_MAX_LINES + (DEFAULT_SPACING)*(DEFAULT_MAX_LINES-1);
     public static final int DEFAULT_PREVIEW_HEIGHT = DEFAULT_HEIGHT;
     public static final boolean DEFAULT_HALO_MODE = false;
+    public static final boolean DEFAULT_UNLOCK_WORKAROUND = false;
     public static final boolean DEFAULT_HIDE_ON_CLICK = false;
     public static final String STOCK_LOCKSCREEN_PACKAGENAME = "com.android.keyguard";
     public static final String DEFAULT_LOCKSCREEN_APP = STOCK_LOCKSCREEN_PACKAGENAME;

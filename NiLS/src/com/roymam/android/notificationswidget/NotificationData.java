@@ -39,6 +39,7 @@ public class NotificationData implements Parcelable
     public Bitmap largeIcon = null;
     public int appColor;
     public ArrayList<Bitmap> bitmaps;
+    public String groupKey = null;
 
     public NotificationData()
     {

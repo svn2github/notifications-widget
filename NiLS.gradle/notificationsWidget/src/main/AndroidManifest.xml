@@ -94,7 +94,7 @@
                 android:resource="@xml/notifications_service_config" />
         </service>
 
-        <!-- NiLS Notiications Listener (for Android >= 4.3 -->
+        <!-- NiLS Notifications Listener (for Android >= 4.3 -->
         <service
             android:name=".NotificationsListener"
             android:label="@string/notifications_service"
@@ -103,6 +103,12 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+        <!-- NiLS Notifications Side Channel -->
+        <!--<service android:name=".NotificationsSideChannelService" >
+            <intent-filter>
+                <action android:name="android.support.BIND_NOTIFICATION_SIDE_CHANNEL" />
+            </intent-filter>
+        </service>-->
 
         <!-- widget stuff -->
         <service
@@ -111,7 +117,7 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service android:name=".NotificationsWidgetService" />
         <service android:name=".ClockService" />
-        <service android:name="com.roymam.android.nilsplus.services.PopupNotificationService"/>
+        <service android:name="com.roymam.android.nilsplus.services.PopupNotificationService" />
 
         <!-- Receivers -->
         <!-- The widget provider -->
@@ -171,7 +177,6 @@
                     android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

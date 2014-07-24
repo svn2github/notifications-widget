@@ -44,6 +44,12 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/advanced">
         <CheckBoxPreference
+            android:title="@string/unlock_workaround"
+            android:summary="@string/unlock_workaround_summary"
+            android:defaultValue="false"
+            android:key="unlock_workaround"
+            android:enabled="true"/>
+        <CheckBoxPreference
             android:title="@string/halo_mode"
             android:summary="@string/halo_mode_summary"
             android:defaultValue="false"

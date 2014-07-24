@@ -866,7 +866,6 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d(TAG, "onNotificationPosted package:"+packageName+" id:"+id+" tag:"+tag);
         try {
             if (!parser.isPersistent(n, packageName)) {
-                WearableExtender wo = LegacyNotificationUtil.getWearableOptions(n);
                 List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
                 if (viewManager != null) viewManager.saveNotificationsState();
                 unprotectNotifications(packageName);
