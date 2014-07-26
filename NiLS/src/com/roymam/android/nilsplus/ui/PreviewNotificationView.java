@@ -21,6 +21,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
@@ -123,7 +124,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         public void onDismiss(NotificationData ni);
         public void onOpen(NotificationData ni);
         public void onClick();
-        public void onAction(NotificationData ni, PendingIntent intent, String actionName);
+        public void onAction(NotificationData ni, int actionPos);
     }
 
     @Override
@@ -268,7 +269,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
                         try
                         {
                             if (mCallbacks != null)
-                                mCallbacks.onAction(ni, ni.getActions()[0].actionIntent, ni.getActions()[0].title.toString());
+                                mCallbacks.onAction(ni, 0);
                             else
                                 ni.getActions()[0].actionIntent.send();
                         } catch (PendingIntent.CanceledException e)
@@ -281,7 +282,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
                         try
                         {
                             if (mCallbacks != null)
-                                mCallbacks.onAction(ni, ni.getActions()[1].actionIntent, ni.getActions()[1].title.toString());
+                                mCallbacks.onAction(ni, 1);
                             else
                                 ni.getActions()[1].actionIntent.send();
 

@@ -1,4 +1,9 @@
 <resources>
     <bool name="amazon">false</bool>
     <integer name="uid">0</integer>
+
+    <string name="about_contactus_email" translatable="false">mailto:support@roymam.com</string>
+    <string name="time_demo_text" translatable="false">9:21</string>
+    <string name="count_demo_text" translatable="false">2</string>
+
 </resources>

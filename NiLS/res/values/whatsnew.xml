@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="v427_title">v1.5.1</string>
-    <string name="v427">
+    <string name="v427_title" translatable="false">v1.5.1</string>
+    <string name="v427" translatable="false">
         <![CDATA[
             <b>&#8226;	Improved themes support</b> - Supports the new Android L Theme and allow 3rd party themes to set a custom layout for the notification.<br>
             <b>&#8226;	Supports notifications with images.</b><br>
@@ -11,8 +11,8 @@
             <b>&#8226;	Bug fixes </b>
         ]]>
     </string>
-    <string name="v400_title">v1.5</string>
-    <string name="v400">
+    <string name="v400_title" translatable="false">v1.5</string>
+    <string name="v400" translatable="false">
         <![CDATA[
             <b>Huge update! so many improvements:</b><br>
             <br><b>&#8226;	NiLS FP has been integrated into NiLS </b> Reduced memory usage and improved stability. Your settings and license will be automatically imported from NiLS Floating Panel. if it doesn\'t work, please contact support.
@@ -24,8 +24,8 @@
             <br><b>&#8226;	Bug fixes</b> - WhatsApp duplicates, CNBC notifications and many more bug fixes.
         ]]>
     </string>
-    <string name="v279_title">v1.4</string>
-    <string name="v279">
+    <string name="v279_title" translatable="false">v1.4</string>
+    <string name="v279" translatable="false">
         <![CDATA[
             <br><b>&#8226; Rearrange settings page.</b> simplified access to many features.
             <br><b>&#8226; Notification mode</b> - you choose between grouped and separated. (replaces \"Multiple Events Handling\" option)
@@ -38,8 +38,8 @@
             <br>All new options affects NiLS Floating Panel too.
         ]]>
     </string>
-    <string name="v275_title">v1.3.2</string>
-    <string name="v275">
+    <string name="v275_title" translatable="false">v1.3.2</string>
+    <string name="v275" translatable="false">
     <![CDATA[
         <br><b>&#8226; Improved stability when other notifications service are running.</b>
         <br><b>&#8226; Added an option to use monochrome icons.</b>

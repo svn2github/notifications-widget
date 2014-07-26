@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
@@ -257,10 +258,13 @@ public class NotificationData implements Parcelable
     public static class Action implements Parcelable
 	{
         public Action() {};
+
         public int icon;
+
         public CharSequence title;
         public PendingIntent actionIntent;
         public Bitmap drawable;
+        public RemoteInput[] remoteInputs = null;
 
         public Action(Parcel in)
         {

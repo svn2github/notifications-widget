@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Main nils page -->
     <string name="notifications_service">NiLS Service</string>
     <string name="service_is_inactive">Enable NiLS service on Android Security Settings to provide notification access so all upcoming notifications will be captured and displayed on NiLS</string>
     <string name="service_is_active">NiLS Service is running.\nAll upcoming notifications will be captured and displayed on NiLS</string>
     <string name="enable_service_tip">Find \"NiLS Service\" in the list and enable it, then press the \"Back\" button to go back to NiLS</string>
-
     <string name="notification_panel">Notifications Panel</string>
     <string name="notification_panel_is_active">Notifications panel is active.\nNotifications list will be displayed when the lock screen appears</string>
     <string name="notification_panel_is_inactive">Notifications panel is not active</string>
-
     <string name="auto_hide_service">Auto Hide Service</string>
     <string name="auto_hide_is_inactive">When enabled, Auto Hide Service will automatically hide Notifications Panel when you pull down Android Notifications Bar</string>
     <string name="auto_hide_is_active">NiLS Auto Hide Service is enabled. Notification Panel will be automatically hidden when you pull down Android Notifications Bar</string>
@@ -37,15 +36,9 @@
         <item>Next time the device is uncovered</item>
         <item>Always</item>
     </string-array>
-    <string-array name="wakeup_mode_values">
-        <item>never</item>
-        <item>when_not_covered</item>
-        <item>when_uncovered</item>
-        <item>always</item>
-    </string-array>
+
     <string name="battery_usage_warning">Battery Usage Warning</string>
     <string name="battery_usage_warning_summary">Using this option requires a constant usage of the proximity sensor.\nThis may drain your battery.\nIf you experiencing an high battery usage please choose other wakeup modes.</string>
-
     <string name="turnscreenoff">Turn off screen</string>
     <string name="turn_off_default">Device default</string>
     <string name="turn_off_10">After 10 seconds</string>
@@ -53,10 +46,8 @@
     <string name="turn_off_30">After 30 seconds</string>
     <string name="turn_off_45">After 45 seconds</string>
     <string name="turn_off_60">After 60 seconds</string>
-
     <string name="yes">Yes</string>
     <string name="no">No</string>
-
     <string name="clearonunlock">Clear when unlocked</string>
     <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
     <string name="clearonlock">Clear when locked</string>
@@ -70,28 +61,6 @@
     <string-array name="notification_modes_entries">
         <item>Grouped (like on Android notifications bar)</item>
         <item>Separated (like on iPhone)</item>
-    </string-array>
-    <string-array name="notification_modes_values" translatable="false">
-        <item>grouped</item>
-        <item>separated</item>
-    </string-array>
-
-    <string-array name="notification_icon_entries">
-        <item>Notification Large Icon</item>
-        <item>Notification Monochrome Icon</item>
-        <item>App Icon (Coloured)</item>
-    </string-array>
-    <string-array name="notification_icon_values" translatable="false">
-        <item>notification_icon</item>
-        <item>mono_icon</item>
-        <item>app_icon</item>
-    </string-array>
-
-    <string-array name="icon_pack_entries">
-        <item>None</item>
-    </string-array>
-    <string-array name="icon_pack_values" translatable="false">
-        <item>none</item>
     </string-array>
 
     <string name="notification_mode">Notification mode</string>
@@ -107,7 +76,6 @@
     <string name="when_cleared">When cleared from notifications bar</string>
     <string name="when_app_is_opened">When notification app is opened</string>
     <string name="when_device_is_unlocked">When device unlocked</string>
-
     <string name="sync_back">Sync back notifications</string>
     <string name="sync_back_summary">When notification is cleared on NiLS dismiss it also on Android Notifications Bar\n(Android 4.3 and above only)</string>
 
@@ -115,11 +83,6 @@
         <item>Newest first</item>
         <item>Oldest first</item>
         <item>Notification Priority</item>
-    </string-array>
-    <string-array name="settings_orderby_values" translatable="false">
-        <item>time</item>
-        <item>timeasc</item>
-        <item>priority</item>
     </string-array>
 
     <string name="lock_screen">Lock Screen</string>
@@ -152,18 +115,6 @@
         <item>9</item>
         <item>Unlimited</item>
     </string-array>
-    <string-array name="max_lines_values" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>999</item>
-    </string-array>
 
     <string name="service_inactive_text">Service is inactive. Tap on the alert icon to go to Android Settings, then enable \"NiLS Service\" from the list.</string>
 
@@ -172,7 +123,6 @@
     <string name="menu_about">About</string>
     <string name="title_activity_main">NiLS</string>
     <string name="tutorial_help_1">NiLS need to get access to your notifications.\nPlease follow instructions below to enable NiLS service on Android settings.</string>
-
     <string name="tutorial_instructions">Instructions:</string>
     <string name="tutorial_step_1">Click the button below to open Android settings</string>
     <string name="tutorial_step_2">Find \"NiLS Service\" in the list and enable it</string>
@@ -184,7 +134,6 @@
     <string name="about_subtitle">NiLS is developed by Roymam</string>
     <string name="about_content">The project is hosted on:\nhttp://code.google.com/p/notifications-widget/\nFeel free to open issues for any bug report or feature request</string>
     <string name="about_contactus_title">Feedback</string>
-    <string name="about_contactus_email">mailto:support@roymam.com</string>
     <string name="about_close">Close</string>
 
     <!-- Contact Us Menu -->
@@ -232,24 +181,10 @@
         <item>High</item>
         <item>Max</item>
     </string-array>
-    <string-array name="settings_app_priority_values" translatable="false">
-        <item>-9</item>
-        <item>-2</item>
-        <item>-1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
     <string-array name="settings_multiple_events_entries">
         <item>Show All</item>
         <item>Show First Event</item>
         <item>Show Last Event</item>
-    </string-array>
-    <string-array name="settings_multiple_events_values" translatable="false">
-        <item>all</item>
-        <item>first</item>
-        <item>last</item>
     </string-array>
 
     <string name="ignore_empty_notifications">Ignore empty notifications</string>
@@ -271,11 +206,6 @@
         <item>Normal</item>
         <item>Maximum</item>
     </string-array>
-    <string-array name="settings_notification_height_values" translatable="false">
-        <item>small</item>
-        <item>normal</item>
-        <item>max</item>
-    </string-array>
 
     <string name="catch_all_notifications">Catch all notifications</string>
     <string name="catch_all_notifications_summary">Catch all notifications from this app and handle them as persistent notifications</string>
@@ -293,16 +223,6 @@
         <item>After 4 Hours</item>
         <item>After 24 Hours</item>
     </string-array>
-    <string-array name="settings_auto_hide_persistent_notifications_values" translatable="false">
-        <item>0</item>
-        <item>5</item>
-        <item>15</item>
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>240</item>
-        <item>1440</item>
-    </string-array>
 
     <string name="how_to_use">How To Use?</string>
     <string name="persistent_notifications_help">How To Use Persistent Notifications?</string>
@@ -314,7 +234,16 @@
     <string name="clear_all_notifications">Clear All Notifications</string>
     <string name="action_bar">Action Bar</string>
     <string name="notification_icon">Notification Icon</string>
+    <string-array name="icon_pack_entries">
+        <item>None</item>
+    </string-array>
+
     <string name="app_icon">App Icon</string>
+    <string-array name="notification_icon_entries">
+        <item>Notification Large Icon</item>
+        <item>Notification Monochrome Icon</item>
+        <item>App Icon (Coloured)</item>
+    </string-array>
 
     <!-- Appearance new activity -->
     <string name="title_section2">Notification</string>
@@ -339,8 +268,6 @@
     <string name="text_demo_text">This is the notification text, it might get long and be truncated.</string>
     <string name="content_demo_text">Notification Content</string>
     <string name="content_expanded_demo_text">Notification Content Line 1\nNotification Content Line 2\nNotification Content Line 3\nNotification Content Line 4\nNotification Content Line 5\nNotification Content Line 6\nNotification Content Line 7\nNotification Content Line 8\n</string>
-    <string name="time_demo_text">9:21</string>
-    <string name="count_demo_text">2</string>
     <string name="small">Small</string>
     <string name="medium">Medium</string>
     <string name="large">Large</string>
@@ -353,7 +280,7 @@
     <string name="bold_hours">Bold Hours</string>
     <string name="bold_minutes">Bold Minutes</string>
     <string name="auto_switch_clock_size">Auto switch clock size</string>
-    <string name="show_clear_all_button">Show &quot;Clear All&quot; Button</string>
+    <string name="show_clear_all_button">Show "Clear All" Button</string>
     <string name="hide_clock">Hide Clock</string>
     <string name="hide_notifications">Hide Notifications</string>
     <string name="show_persistent">Show Persistent Notifications</string>
@@ -408,7 +335,6 @@
     <string name="drawer_close">drawer close</string>
     <string name="sync">Sync</string>
     <string name="integration">Integration</string>
-
     <string name="swipe_to_open">Swipe right to open</string>
     <string name="swipe_to_open_summary">When enabled, swiping notification to the right will open the notification</string>
     <string name="dont_hide">Always visible</string>
@@ -420,17 +346,12 @@
     <string name="auto_title_color">Auto Title Color</string>
     <string name="auto_title_color_summary">Set title color automatically according to the app icon prominent color</string>
     <string name="layout_and_alignment">Layout &amp; Alignment</string>
-
     <string name="appearance_summary">Change appearance settings</string>
+
     <string-array name="yalignment_entries">
         <item>Top</item>
         <item>Center</item>
         <item>Bottom</item>
-    </string-array>
-    <string-array name="yalignment_values">
-        <item>top</item>
-        <item>center</item>
-        <item>bottom</item>
     </string-array>
     <string-array name="height_entries">
         <item>1 Line</item>
@@ -444,45 +365,24 @@
         <item>9 Lines</item>
         <item>Unlimited</item>
     </string-array>
-    <string-array name="height_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>-1</item>
-    </string-array>
     <string-array name="font_size_entries">
         <item>Small</item>
         <item>Medium</item>
         <item>Large</item>
     </string-array>
-    <string-array name="font_size_values" translatable="false">
-        <item>small</item>
-        <item>medium</item>
-        <item>large</item>
-    </string-array>
 
     <!-- About -->
     <string name="about">About</string>
     <string name="timeout">Timeout (seconds)</string>
-    <string name="timeout_summary">Set how long will the screen stay on when interacting with notifications list
-    </string>
+    <string name="timeout_summary">Set how long will the screen stay on when interacting with notifications list</string>
     <string name="click_to_open">Click to open</string>
     <string name="click_to_open_summary">When enabled, clicking on a notification will open it. when
-        disabled, clicking on a notification will show a preview
-    </string>
+        disabled, clicking on a notification will show a preview</string>
     <string name="unlock_on_open">Unlock on open</string>
     <string name="unlock_on_open_summary">Unlocks device when notification is opened. (works only on
-        stock lock screen without security enabled)
-    </string>
+        stock lock screen without security enabled)</string>
     <string name="interaction">Interaction</string>
-    <string name="general_settings_summary">Change interactions and other general preferences
-    </string>
+    <string name="general_settings_summary">Change interactions and other general preferences</string>
     <string name="beta_unlock_all_features">BETA - Unlock All Features</string>
     <string name="beta_unlock_all_features_summary">Temporary unlock all features to allow beta testing</string>
     <string name="unlock_all_features">Unlock All Features</string>
@@ -528,7 +428,8 @@
     <string name="fit_height">Fit height to content</string>
     <string name="fit_height_summary">Fit notification height to the text content</string>
     <string name="opensource_software_used">Open Source Software</string>
-            <string name="unlock_all_features_dialog"><![CDATA[Purchase NiLS Premium to unlock all features including:
+    <string name="unlock_all_features_dialog">
+<![CDATA[Purchase NiLS Premium to unlock all features including:
 \n- 3rd Party Themes
 \n- Background Color and Transparency
 \n- Font & Icon sizes
@@ -536,7 +437,8 @@
 \n- Swipe right to open
 \nand many more...
 \n
-\nClick Purchase to get it now!]]></string>
+\nClick Purchase to get it now!]]>
+    </string>
     <string name="purchase">Purchase</string>
     <string name="later">Maybe Later</string>
     <string name="swipe_down_to_dismiss_all">Swipe down to dismiss all</string>
@@ -548,12 +450,6 @@
         <item>Default Theme</item>
         <item>Get More Themes...</item>
     </string-array>
-
-    <string-array name="themes_values">
-        <item>default</item>
-        <item>more</item>
-    </string-array>
-
 
     <!-- Backup & Restore -->
     <string name="backup_location_title">Backup file location:</string>
@@ -629,4 +525,8 @@
     <string name="send_test_notification_summary">Test if NiLS is configured and running correctly by sending a test notification.</string>
     <string name="unlock_workaround">Device unlock workaround</string>
     <string name="unlock_workaround_summary">Toggle this option if your device refuses to unlock when opening notifications</string>
+    <string name="title_activity_quick_reply">Quick Reply</string>
+    <string name="action_settings">Settings</string>
+    <string name="translations">Translations</string>
+    <string name="translations_summary">NiLS is translated by the users community\nplease contact us if you wish to translate NiLS to your language</string>
 </resources>

@@ -28,16 +28,16 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.NotificationCompat.WearableExtender;
+import android.support.v4.app.RemoteInput;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.clockwork.stream.LegacyNotificationUtil;
 import com.roymam.android.common.PopupDialog;
 import com.roymam.android.common.SysUtils;
 import com.roymam.android.nilsplus.activities.OpenNotificationActivity;
+import com.roymam.android.nilsplus.activities.QuickReplyActivity;
 import com.roymam.android.nilsplus.ui.NPViewManager;
 
 import java.io.IOException;
@@ -1016,9 +1016,38 @@ public class NotificationsService extends Service implements NotificationsProvid
         return listener;
     }
 
+    public NotificationData findNotificationByUid(int uid) {
+        Lock w = lock.readLock();
+        w.lock();
+        boolean found = false;
+        NotificationData foundNd = null;
+        try
+        {
+            Iterator<NotificationData> iter = mNotifications.iterator();
+
+            while (iter.hasNext() && !found)
+            {
+                NotificationData nd = iter.next();
+                if (nd.uid == uid)
+                {
+                    // store id and package name to search for more notifications with the same id
+                    foundNd = nd;
+                    found = true;
+                }
+            }
+        }
+        finally
+        {
+            w.unlock();
+        }
+        return foundNd;
+    }
+
     // binding stuff
     //***************
     private final IBinder mBinder = new LocalBinder();
+
+
     public class LocalBinder extends Binder
     {
         NotificationsService getService()
@@ -1347,35 +1376,44 @@ public class NotificationsService extends Service implements NotificationsProvid
                 }
                 else
                 {
-                    runPendingIntent(ni.action, ni.packageName, ni.uid);
+                    runPendingIntent(ni.action, ni.packageName, ni.uid, null);
                 }
             }
 
             @Override
-            public void onAction(NotificationData ni, PendingIntent action, String actionName)
+            public void onAction(NotificationData ni, int actionPos)
             {
-                // show the name of the action
-                Toast.makeText(getApplicationContext(), actionName,Toast.LENGTH_SHORT).show();
+                NotificationData.Action action = ni.actions[actionPos];
 
-                if (!isActivity(action))
+                if (action.remoteInputs != null)
                 {
-                    // open it in background
-                    try
-                    {
-                        // remove the notification and keeiconp device locked
-                        action.send();
-                        clearNotification(ni.getUid());
-                    } catch (PendingIntent.CanceledException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    // open quick reply activity
+                    Intent intent = new Intent(context, QuickReplyActivity.class);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("uid", ni.uid);
+                    intent.putExtra("actionPos", actionPos);
+                    startActivity(intent);
                 }
-                else
-                {
-                    // unlock device and open the notification)
-                    runPendingIntent(action, ni.getPackageName(), ni.uid);
+                else {
+                    // show the name of the action
+                    Toast.makeText(getApplicationContext(), action.title, Toast.LENGTH_SHORT).show();
 
-                    hide(false);
+                    if (!isActivity(action.actionIntent)) {
+                        // open it in background
+                        try {
+                            // remove the notification and keep device locked
+                            action.actionIntent.send();
+                            clearNotification(ni.getUid());
+                        } catch (PendingIntent.CanceledException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        // unlock device and open the notification)
+                        runPendingIntent(action.actionIntent, ni.getPackageName(), ni.uid, null);
+
+                        hide(false);
+                    }
                 }
             };
         };
@@ -1398,7 +1436,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         mSysUtils = SysUtils.getInstance(getApplicationContext(), mHandler);
     }
 
-    private void runPendingIntent(PendingIntent action, String packageName, int uid)
+    private void runPendingIntent(PendingIntent action, String packageName, int uid, Intent paramIntent)
     {
         Log.d(TAG, "runPendingIntent: packageName:"+packageName+" uid:"+uid);
         /*// a workaround for keyboard stuck on Hangouts
@@ -1442,6 +1480,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             intent.putExtra("package", packageName);
             intent.putExtra("uid", uid);
             intent.putExtra("lockscreen_package", SysUtils.getForegroundApp(getApplicationContext()));
+            intent.putExtra("paramIntent", paramIntent);
             startActivity(intent);
         //}
         // hide viewmanager if visible

@@ -1,9 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="auto_clear_entries">
+    <string-array name="notification_modes_values" translatable="false">
+        <item>grouped</item>
+        <item>separated</item>
+    </string-array>
+    <string-array name="notification_icon_values" translatable="false">
+        <item>notification_icon</item>
+        <item>mono_icon</item>
+        <item>app_icon</item>
+    </string-array>
+    <string-array name="icon_pack_values" translatable="false">
+        <item>none</item>
+    </string-array>
+    <string-array name="settings_orderby_values" translatable="false">
+        <item>time</item>
+        <item>timeasc</item>
+        <item>priority</item>
+    </string-array>
+    <string-array name="wakeup_mode_values" translatable="false">
+        <item>never</item>
+        <item>when_not_covered</item>
+        <item>when_uncovered</item>
+        <item>always</item>
+    </string-array>
+    <string-array name="max_lines_values" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>999</item>
+    </string-array>
+    <string-array name="auto_clear_entries" translatable="false">
         <item>@string/when_cleared</item>
         <item>@string/when_app_is_opened</item>
         <item>@string/when_device_is_unlocked</item>
+    </string-array>
+    <string-array name="settings_multiple_events_values" translatable="false">
+        <item>all</item>
+        <item>first</item>
+        <item>last</item>
     </string-array>
 
     <string-array name="auto_clear_values" translatable="false">
@@ -17,7 +57,47 @@
         <item>when_app_is_opened</item>
     </string-array>
 
-    <string-array name="prefs_array">
+    <string-array name="settings_notification_height_values" translatable="false">
+        <item>small</item>
+        <item>normal</item>
+        <item>max</item>
+    </string-array>
+
+    <string-array name="settings_auto_hide_persistent_notifications_values" translatable="false">
+        <item>0</item>
+        <item>5</item>
+        <item>15</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+        <item>1440</item>
+    </string-array>
+
+    <string-array name="yalignment_values" translatable="false">
+        <item>top</item>
+        <item>center</item>
+        <item>bottom</item>
+    </string-array>
+    <string-array name="height_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="font_size_values" translatable="false">
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
+
+    <string-array name="prefs_array" translatable="false">
         <item>@string/title</item>
         <item>@string/service</item>
         <item>@string/floating_panel</item>
@@ -30,7 +110,7 @@
         <item>@string/unlock_all_features</item>
     </string-array>
 
-    <string-array name="prefs_icons_array">
+    <string-array name="prefs_icons_array" translatable="false">
         <item>@drawable/ic_nils_icon_mono</item>
         <item>@drawable/settings</item>
         <item>@drawable/persistent</item>
@@ -43,20 +123,32 @@
         <item>@drawable/unlock</item>
     </string-array>
 
-    <string-array name="privacy_entries">
+    <string-array name="privacy_entries" translatable="false">
         <item>@string/privacy_none</item>
         <item>@string/privacy_show_title</item>
         <item>@string/privacy_show_ticker</item>
         <item>@string/privacy_show_appname</item>
     </string-array>
+    <string-array name="settings_app_priority_values" translatable="false">
+        <item>-9</item>
+        <item>-2</item>
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="themes_values" translatable="false">
+        <item>default</item>
+        <item>more</item>
+    </string-array>
 
-    <string-array name="privacy_values">
+    <string-array name="privacy_values" translatable="false">
         <item>none</item>
         <item>show_title</item>
         <item>show_ticker</item>
         <item>show_appname</item>
     </string-array>
-    <string-array name="turn_off_values">
+    <string-array name="turn_off_values" translatable="false">
         <item>default</item>
         <item>10</item>
         <item>15</item>
@@ -64,7 +156,7 @@
         <item>45</item>
         <item>60</item>
     </string-array>
-    <string-array name="turn_off_entries">
+    <string-array name="turn_off_entries" translatable="false">
         <item>@string/turn_off_default</item>
         <item>@string/turn_off_10</item>
         <item>@string/turn_off_15</item>
@@ -72,4 +164,6 @@
         <item>@string/turn_off_45</item>
         <item>@string/turn_off_60</item>
     </string-array>
+
+
 </resources>

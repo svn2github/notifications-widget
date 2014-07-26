@@ -17,6 +17,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v7.graphics.Palette;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -462,7 +463,7 @@ public class NotificationParser
         }
 
         // get additional actions from wear api
-        /*NotificationCompat.WearableExtender wo = LegacyNotificationUtil.getWearableOptions(n);
+        NotificationCompat.WearableExtender wo = LegacyNotificationUtil.getWearableOptions(n);
         for(NotificationCompat.Action a : wo.getActions())
         {
             NotificationData.Action a2 = new NotificationData.Action();
@@ -470,8 +471,9 @@ public class NotificationParser
             a2.actionIntent = a.actionIntent;
             a2.title = a.title;
             a2.drawable = BitmapCache.getInstance(context).getBitmap(packageName, a.icon);
+            a2.remoteInputs = a.getRemoteInputs();
             returnActions.add(a2);
-        }*/
+        }
 
         NotificationData.Action[] returnArray = new NotificationData.Action[returnActions.size()];
         returnActions.toArray(returnArray);

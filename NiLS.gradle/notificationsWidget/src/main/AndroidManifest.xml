@@ -74,6 +74,12 @@
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name="com.roymam.android.nilsplus.activities.QuickReplyActivity"
+            android:label="@string/title_activity_quick_reply"
+            android:theme="@style/Theme.QuickReply"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
 
         <!-- Services -->
 
@@ -104,11 +110,11 @@
             </intent-filter>
         </service>
         <!-- NiLS Notifications Side Channel -->
-        <!--<service android:name=".NotificationsSideChannelService" >
+        <service android:name=".NotificationsSideChannelService" >
             <intent-filter>
                 <action android:name="android.support.BIND_NOTIFICATION_SIDE_CHANNEL" />
             </intent-filter>
-        </service>-->
+        </service>
 
         <!-- widget stuff -->
         <service

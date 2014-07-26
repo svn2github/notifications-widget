@@ -25,14 +25,14 @@ public class OpenNotificationActivity extends Activity
     private final String UNLOCK_HACK_DEVICES = "ls980,l01f,m7wls,m7cdug,m7vzw,m7spr,m7,g3,g2";
     private BroadcastReceiver mReceiver;
 
-    private void openNotification(PendingIntent action, String packageName, int uid)
+    private void openNotification(PendingIntent action, String packageName, int uid, Intent paramIntent)
     {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         // directly open notification
         if (action != null)
         try
         {
-            action.send();
+            action.send(this, 0, paramIntent);
         } catch (Exception e)
         {
             // if cannot launch intent, create a new one for the app
@@ -69,6 +69,7 @@ public class OpenNotificationActivity extends Activity
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final PendingIntent action = getIntent().getParcelableExtra("action");
         final String packageName = getIntent().getStringExtra("package");
+        final Intent paramIntent = getIntent().getParcelableExtra("paramIntent");
         final int uid = getIntent().getIntExtra("uid",-1);
 
         if (SysUtils.isKeyguardLocked(this) &&
@@ -90,7 +91,7 @@ public class OpenNotificationActivity extends Activity
                 @Override
                 public void onReceive(Context context, Intent intent)
                 {
-                    openNotification(action, packageName, uid);
+                    openNotification(action, packageName, uid, paramIntent);
                 }
             };
 
@@ -100,7 +101,7 @@ public class OpenNotificationActivity extends Activity
         {
             // open notification on background
             Log.d("NiLS", "Opening a notification (no need to unlock device)");
-            openNotification(action, packageName, uid);
+            openNotification(action, packageName, uid, paramIntent);
         }
     }
 

@@ -225,7 +225,7 @@ public class SettingsManager
     public static final boolean DEFAULT_FIT_HEIGHT_TO_CONTENT = true;
     public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
     public static final int DEFAULT_MAIN_BG_OPACITY = 100;
-    public static final String BLACKLIST_PACKAGENAMES = "com.android.systemui|cz.mpelant.deskclock|com.mobitobi.android.gentlealarm|com.android.dialer|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|com.google.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay|sg.com.mcd.mcdalarm|com.achep.acdisplay|com.sonyericsson.organizer|com.handcent.nextsms|com.supertext.phone|com.p1.chompsms|com.webascender.callerid";
+    public static final String BLACKLIST_PACKAGENAMES = "com.roymam.android.notificationswidget|com.roymam.android.notificationswidget.debug|com.android.systemui|cz.mpelant.deskclock|com.mobitobi.android.gentlealarm|com.android.dialer|com.lge.clock|com.lge.camera|com.lge.email|com.thinkleft.eightyeightsms.mms|com.whatsapp|com.tbig.playerpro|com.android.phone|com.android.deskclock|com.google.android.deskclock|ch.bitspin.timely|com.alarmclock.xtreme.free|com.achep.activedisplay|sg.com.mcd.mcdalarm|com.achep.acdisplay|com.sonyericsson.organizer|com.handcent.nextsms|com.supertext.phone|com.p1.chompsms|com.webascender.callerid";
     public static final String SHOW_WELCOME_WIZARD = "show_welcome_wizard";
 
     // privacy options

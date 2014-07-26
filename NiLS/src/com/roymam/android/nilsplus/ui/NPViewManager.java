@@ -145,7 +145,7 @@ public class NPViewManager
     {
         public void onDismissed(NotificationData ni);
         public void onOpen(NotificationData ni);
-        public void onAction(NotificationData ni, PendingIntent action, String actionName);
+        public void onAction(NotificationData ni, int actionPos);
     }
 
     public NPViewManager(Context context, Callbacks callbacks)
@@ -386,7 +386,7 @@ public class NPViewManager
             @Override
             public void notificationRunAction(NotificationData ni, int i)
             {
-                if (mCallbacks != null) mCallbacks.onAction(ni, ni.getActions()[i].actionIntent, ni.getActions()[i].title.toString());
+                if (mCallbacks != null) mCallbacks.onAction(ni, i);
             }
         });
         mListView = mNPListView.getListView();
@@ -578,9 +578,9 @@ public class NPViewManager
                 }
 
                 @Override
-                public void onAction(NotificationData ni, PendingIntent intent, String actionName)
+                public void onAction(NotificationData ni, int actionPos)
                 {
-                    if (mCallbacks != null) mCallbacks.onAction(ni, intent, actionName);
+                    if (mCallbacks != null) mCallbacks.onAction(ni, actionPos);
                 }
             });
 
