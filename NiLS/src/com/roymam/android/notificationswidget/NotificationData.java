@@ -40,7 +40,8 @@ public class NotificationData implements Parcelable
     public Bitmap largeIcon = null;
     public int appColor;
     public ArrayList<Bitmap> bitmaps;
-    public String groupKey = null;
+    public String group = null;
+    public int groupOrder = -1;
 
     public NotificationData()
     {
@@ -56,6 +57,7 @@ public class NotificationData implements Parcelable
         CharSequence text2 = this.text;
         CharSequence content1 = nd.content;
         CharSequence content2 = this.content;
+
         if (title1 == null) title1 = "";
         if (title2 == null) title2 = "";
         if (text1 == null) text1 = "";
@@ -68,9 +70,9 @@ public class NotificationData implements Parcelable
         boolean contentsdup = content1.toString().trim().startsWith(content2.toString().trim());
         boolean allDup = titlesdup && textdup && (contentsdup || !compareContent);
 
-        if (nd.packageName.equals(this.packageName) && allDup)
+        if (nd.group != null && this.group != null && nd.group.equals(this.group) && nd.groupOrder == this.groupOrder && text1.length() >= text2.length() ||
+            nd.packageName.equals(this.packageName) && allDup)
         {
-            Log.d("NiLS", "All Dup");
             return true;
         }
         else
@@ -117,6 +119,8 @@ public class NotificationData implements Parcelable
         priority = in.readInt();
         tag = in.readString();
         appColor = in.readInt();
+        group = in.readString();
+        groupOrder = in.readInt();
     }
 
     @Override
@@ -203,6 +207,8 @@ public class NotificationData implements Parcelable
         dest.writeInt(priority);
         dest.writeString(tag);
         dest.writeInt(appColor);
+        dest.writeString(group);
+        dest.writeInt(groupOrder);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -232,9 +238,8 @@ public class NotificationData implements Parcelable
         if (text2 == null) text2 = "";
         if (content1 == null) content1 = "";
         if (content2 == null) content2 = "";
-        return title1.equals(title2) &&
-               text1.equals(text2) &&
-               content1.equals(content2);
+
+        return  (title1.equals(title2) && text1.equals(text2) && content1.equals(content2));
     }
 
     public void cleanup()

@@ -7,11 +7,15 @@
                     android:summary=""/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/translations" android:summary="@string/translations_summary">
-        <Preference android:title="Polish"
-            android:summary="Tomo5">
+        <Preference android:title="@string/crowdin"
+                    android:summary="@string/crowdin_summary">
             <intent android:action="android.intent.action.VIEW"
-                android:data="mailto:tomek2183@gmail.com"/>
+                android:data="https://crowdin.net/project/nils"/>
         </Preference>
+        <Preference android:title="Polish"
+            android:summary="TomoS"/>
+        <Preference android:title="Spanish"
+            android:summary="azuelagomez, gruizjoubert, kaihansen2010, rodolforuizsozzo"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/opensource_software_used" android:summary="@string/opensource_software_summary">
         <Preference android:title="NiLS Core - Service &amp; Widget"

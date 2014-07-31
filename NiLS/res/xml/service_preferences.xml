@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Gestures">
+    <PreferenceCategory android:title="@string/gestures">
         <CheckBoxPreference
             android:title="@string/swipe_to_open"
             android:summary="@string/swipe_to_open_summary"
@@ -19,7 +19,7 @@
             android:defaultValue="true"
             android:key="swipe_down_to_dismiss_all"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="More Options">
+    <PreferenceCategory android:title="@string/more_options">
         <CheckBoxPreference
             android:title="@string/hide_on_click"
             android:summary="@string/hide_on_click_summary"
@@ -31,8 +31,8 @@
             android:key="unlock_on_open"
             android:defaultValue="true"/>
         <CheckBoxPreference
-            android:title="Continuous reading mode"
-            android:summary="Show a preview of the next notification when the notification is dismissed in preview mode"
+            android:title="@string/continuous_reading_mode"
+            android:summary="@string/continuous_reading_mode_summary"
             android:key="show_next_preview"
             android:defaultValue="true"/>
         <CheckBoxPreference

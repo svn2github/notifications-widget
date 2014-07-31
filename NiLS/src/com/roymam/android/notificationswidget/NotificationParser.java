@@ -13,6 +13,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -91,6 +92,7 @@ public class NotificationParser
             if (!isPersistent(n, packageName) && !shouldIgnore(n, packageName))
             {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+                NotificationCompat.WearableExtender wo = LegacyNotificationUtil.getWearableOptions(n);
 
                 // build notification data object
                 NotificationData nd = new NotificationData();
@@ -252,6 +254,15 @@ public class NotificationParser
                     nd.id = notificationId;
                     nd.tag = tag;
 
+                    // check if this notifications belong to a group of notifications
+                    Bundle localBundle = NotificationCompat.getExtras(n);
+                    if ((localBundle != null) && (localBundle.getString("android.support.wearable.groupKey") != null))
+                    {
+                        nd.group = localBundle.getString("android.support.wearable.groupKey");
+                        nd.groupOrder = localBundle.getInt("android.support.wearable.groupOrder");
+                    }
+
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     {
                         nd.priority = getPriority(n);
@@ -263,22 +274,25 @@ public class NotificationParser
                     int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));
                     if (apppriority != -9) nd.priority = apppriority;
 
-                    // check if this is a multiple events notificatio
+                    // check if this is a multiple events notification
                     String notificationMode = SettingsManager.getNotificationMode(context, packageName);
 
                     List<NotificationData> notifications = new ArrayList<NotificationData>();
                     notifications.add(nd);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && notificationMode.equals(SettingsManager.MODE_SEPARATED))
+                    if (notificationMode.equals(SettingsManager.MODE_GROUPED))
                     {
-                        RemoteViews bigContentView = n.bigContentView;
-                        if (bigContentView != null &&
-                            (bigContentView.getLayoutId() == mInboxLayoutId || packageName.equals("com.whatsapp")))
-                        {
-                            List<NotificationData> separatedNotifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
-                            // make sure we've at least one notification
-                            if (separatedNotifications.size() > 0) notifications = separatedNotifications;
-                        }
+                        // if the notification is a part of a group - don't show it on grouped mode
+                        if (nd.groupOrder != -1)
+                            return new ArrayList<NotificationData>();;
+                    }
+                    else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                             n.bigContentView != null &&
+                             (n.bigContentView.getLayoutId() == mInboxLayoutId || packageName.equals("com.whatsapp")))
+                    {
+                        List<NotificationData> separatedNotifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
+                        // make sure we've at least one notification
+                        if (separatedNotifications.size() > 0) notifications = separatedNotifications;
                     }
                     return notifications;
                 }
@@ -338,7 +352,10 @@ public class NotificationParser
             nd.content = baseNotification.content;
             nd.title = strings.get(notification_title_id);
             nd.bitmaps = baseNotification.bitmaps;
+            nd.group = baseNotification.group;
+            nd.groupOrder = eventsOrder;
             nd.event = true;
+            nd.protect = true;
             nd.text = event;
 
             // extract title from content for first/last event
@@ -376,7 +393,7 @@ public class NotificationParser
                         try
                         {
                             Date d = sdf.parse(time);
-                            nd.received = d.getTime() + eventsOrder;
+                            nd.received = d.getTime();
                         }
                         catch (ParseException e)
                         {
@@ -388,7 +405,7 @@ public class NotificationParser
 
                     }
 
-                    String[] parts = event.toString().split(":", 2);
+                    String[] parts = event.toString().split(": ", 2);
                     if (parts.length == 2 && parts[1].length()>2) // parts[1].length()>2 special exception for missed calls time 
                     {
                         // a fix for whatsapp group messages

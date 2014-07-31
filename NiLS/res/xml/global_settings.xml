@@ -30,13 +30,13 @@
             android:defaultValue="none"/>
 
         <ListPreference android:key="notification_icon"
-            android:title="Notification icon"
+            android:title="@string/notification_icon"
             android:entries="@array/notification_icon_entries"
             android:entryValues="@array/notification_icon_values"
             android:defaultValue="notification_icon"/>
 
         <ListPreference android:key="icon_pack"
-            android:title="Icon Pack"
+            android:title="@string/icon_pack"
             android:entries="@array/icon_pack_entries"
             android:entryValues="@array/icon_pack_values"
             android:defaultValue="none"/>
@@ -60,7 +60,7 @@
 
     <PreferenceCategory android:key="sync" android:title="@string/sync">
         <MultiSelectListPreference android:key="auto_clear"
-            android:title="Auto clear notifications"
+            android:title="@string/auto_clear_notifications"
             android:entries="@array/auto_clear_entries"
             android:entryValues="@array/auto_clear_values"
             android:defaultValue="@array/auto_clear_default_values"/>

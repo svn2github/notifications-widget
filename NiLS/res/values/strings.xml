@@ -57,6 +57,7 @@
     <string name="order_notifications_by">Sort notifications by</string>
     <string name="clear_all_from_same_app">Clear all from the same app</string>
     <string name="clear_all_from_same_app_summary">When a notification is opened, clear all of the remaining notifications from the same app</string>
+    <string name="icon_pack">Icon Pack</string>
 
     <string-array name="notification_modes_entries">
         <item>Grouped (like on Android notifications bar)</item>
@@ -73,6 +74,7 @@
     <string name="privacy_show_appname">Show app name only</string>
 
     <!-- auto clear values -->
+    <string name="auto_clear_notifications">Auto clear notifications</string>
     <string name="when_cleared">When cleared from notifications bar</string>
     <string name="when_app_is_opened">When notification app is opened</string>
     <string name="when_device_is_unlocked">When device unlocked</string>
@@ -156,7 +158,7 @@
     <string name="pin">Pin</string>
     <string name="unpin">Unpin</string>
 
-    <!-- App specific settings -->
+n    <!-- App specific settings -->
     <string name="app_specific_settings_title">App Specific Settings</string>
     <string name="ignore_notifications">Ignore this app</string>
     <string name="ignore_notifications_summary">ignore all notifications from this app</string>
@@ -373,22 +375,17 @@
 
     <!-- About -->
     <string name="about">About</string>
-    <string name="timeout">Timeout (seconds)</string>
-    <string name="timeout_summary">Set how long will the screen stay on when interacting with notifications list</string>
-    <string name="click_to_open">Click to open</string>
-    <string name="click_to_open_summary">When enabled, clicking on a notification will open it. when
-        disabled, clicking on a notification will show a preview</string>
-    <string name="unlock_on_open">Unlock on open</string>
-    <string name="unlock_on_open_summary">Unlocks device when notification is opened. (works only on
-        stock lock screen without security enabled)</string>
+
+    <!-- Interaction Settings -->
     <string name="interaction">Interaction</string>
-    <string name="general_settings_summary">Change interactions and other general preferences</string>
-    <string name="beta_unlock_all_features">BETA - Unlock All Features</string>
-    <string name="beta_unlock_all_features_summary">Temporary unlock all features to allow beta testing</string>
-    <string name="unlock_all_features">Unlock All Features</string>
-    <string name="unlock_all_features_summary">Purchase NiLS Floating Panel to unlock all features permanently</string>
-    <string name="nils_is_displayed">NiLS Floating Panel is displayed</string>
-    <string name="click_to_hide_it">Click to hide it</string>
+    <string name="gestures">Gestures</string>
+    <string name="click_to_open">Click to open</string>
+    <string name="click_to_open_summary">When enabled, clicking on a notification will open it. when disabled, clicking on a notification will show a preview</string>
+    <string name="unlock_on_open">Unlock on open</string>
+    <string name="unlock_on_open_summary">Unlocks device when notification is opened. (works only on stock lock screen without security enabled)</string>
+    <string name="continuous_reading_mode">Continuous reading mode</string>
+    <string name="continuous_reading_mode_summary">Show a preview of the next notification when the notification is dismissed in preview mode</string>
+    <string name="more_options">More Options</string>
 
     <!-- Backup / Restore Settings -->
     <string name="default_theme">Default</string>
@@ -428,6 +425,7 @@
     <string name="fit_height">Fit height to content</string>
     <string name="fit_height_summary">Fit notification height to the text content</string>
     <string name="opensource_software_used">Open Source Software</string>
+    <string name="unlock_all_features">Unlock all features</string>
     <string name="unlock_all_features_dialog">
 <![CDATA[Purchase NiLS Premium to unlock all features including:
 \n- 3rd Party Themes
@@ -528,5 +526,7 @@
     <string name="title_activity_quick_reply">Quick Reply</string>
     <string name="action_settings">Settings</string>
     <string name="translations">Translations</string>
-    <string name="translations_summary">NiLS is translated by the users community\nplease contact us if you wish to translate NiLS to your language</string>
+    <string name="translations_summary">NiLS is translated by the users community using Crowdin.net</string>
+    <string name="crowdin">Join us on Crowdin</string>
+    <string name="crowdin_summary">Help translating NiLS by joining us on Crowdin</string>
 </resources>

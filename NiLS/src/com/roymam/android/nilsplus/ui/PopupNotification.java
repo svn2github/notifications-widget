@@ -2,7 +2,9 @@ package com.roymam.android.nilsplus.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.os.Handler;
@@ -16,6 +18,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.roymam.android.notificationswidget.NotificationData;
 import com.roymam.android.nilsplus.ui.theme.Theme;
@@ -83,10 +86,32 @@ public class PopupNotification {
         mPopupTimeout = 5000;
     }
 
-    public static PopupNotification create(Context context, NotificationData nd)
+    public static PopupNotification create(final Context context, final NotificationData nd)
     {
-        PopupNotification pn = new PopupNotification(context);
+        final PopupNotification pn = new PopupNotification(context);
         NotificationAdapter.applySettingsToView(context, pn.mView, nd, 0, pn.mTheme, true);
+        pn.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    pn.hide();
+                    nd.getAction().send();
+                } catch (PendingIntent.CanceledException e) {
+                    // opening notification failed, try to open the app
+                    try
+                    {
+                        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(nd.getPackageName());
+                        context.startActivity(launchIntent);
+                    }
+                    catch(Exception e2)
+                    {
+                        // cannot launch intent - do nothing...
+                        e2.printStackTrace();
+                        Toast.makeText(context, "Error - cannot launch app:" + nd.getPackageName(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
         return pn;
     }
 

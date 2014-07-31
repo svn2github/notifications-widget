@@ -377,6 +377,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                             ignoreNotification = true;
                             updated = false;
                         }
+
+                        // protect the old one from being cleared on next purge command
+                        oldnd.protect = true;
                     }
                 }
 
@@ -585,10 +588,15 @@ public class NotificationsService extends Service implements NotificationsProvid
                                 return 1;
                             if (n1.priority > n2.priority)
                                 return -1;
-                            // if we reached here, the priorities are equal - sory by time
+                            // if we reached here, the priorities are equal - sort by time
                             if (n1.received < n2.received)
                                 return 1;
                             if (n1.received > n2.received)
+                                return -1;
+                            // if we reached here, the time is equal - sort by group order
+                            if (n1.groupOrder < n2.groupOrder)
+                                return 1;
+                            if (n1.groupOrder > n2.groupOrder)
                                 return -1;
                             return 0;
                         }
@@ -606,6 +614,11 @@ public class NotificationsService extends Service implements NotificationsProvid
                                 return 1;
                             if (n1.received < n2.received)
                                 return -1;
+                            // if we reached here, the time is equal - sort by group order
+                            if (n1.groupOrder > n2.groupOrder)
+                                return 1;
+                            if (n1.groupOrder < n2.groupOrder)
+                                return -1;
                             return 0;
                         }
                     });
@@ -621,6 +634,11 @@ public class NotificationsService extends Service implements NotificationsProvid
                             if (n1.received < n2.received)
                                 return 1;
                             if (n1.received > n2.received)
+                                return -1;
+                            // if we reached here, the time is equal - sort by group order
+                            if (n1.groupOrder < n2.groupOrder)
+                                return 1;
+                            if (n1.groupOrder > n2.groupOrder)
                                 return -1;
                             return 0;
                         }
