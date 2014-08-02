@@ -288,10 +288,11 @@ public class NotificationParser
                     }
                     else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
                              n.bigContentView != null &&
-                             (n.bigContentView.getLayoutId() == mInboxLayoutId || packageName.equals("com.whatsapp")))
+                            (n.bigContentView.getLayoutId() == mInboxLayoutId || packageName.equals("com.whatsapp")) &&
+                            (privacy.equals(SettingsManager.PRIVACY_SHOW_ALL) || privacy.equals(SettingsManager.PRIVACY_SHOW_TITLE_ONLY)))
                     {
                         List<NotificationData> separatedNotifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
-                        // make sure we've at least one notification
+                        // make sure we've at least one notificatprivacy.equals(SettingsManager.PRIVACY_SHOW_ALL)ion
                         if (separatedNotifications.size() > 0) notifications = separatedNotifications;
                     }
                     return notifications;
@@ -314,6 +315,7 @@ public class NotificationParser
 
     private List<NotificationData> getMultipleNotificationsFromInboxView(RemoteViews bigContentView, NotificationData baseNotification)
     {
+        String privacy = SettingsManager.getPrivacy(context, baseNotification.packageName);
         ArrayList<NotificationData> notifications = new ArrayList<NotificationData>();
         HashMap<Integer, CharSequence> strings = getNotificationStringFromRemoteViews(bigContentView);
 
@@ -418,6 +420,10 @@ public class NotificationParser
                         nd.text = parts[1];
                     }
                 }
+
+                if (privacy.equals(SettingsManager.PRIVACY_SHOW_TITLE_ONLY))
+                    nd.text = "";
+
                 notifications.add(nd);
             }
             eventsOrder++;
