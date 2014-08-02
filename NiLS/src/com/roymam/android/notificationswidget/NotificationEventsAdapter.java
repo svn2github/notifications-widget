@@ -30,21 +30,15 @@ public class NotificationEventsAdapter implements NotificationEventListener
     private static final String TAG = NotificationEventsAdapter.class.getSimpleName();
     private final SysUtils mSysUtils;
     private Context context = null;
-    private boolean newNotificationsAvailable = false;
     private Boolean mDeviceCovered = null;
     private boolean proximityRegistered = false;
 
-    // extensions API
-    public static final String ADD_NOTIFICATION = "com.roymam.android.nils.add_notification";
-    public static final String UPDATE_NOTIFICATION = "com.roymam.android.nils.update_notification";
-    public static final String REMOVE_NOTIFICATION = "com.roymam.android.nils.remove_notification";
     private Handler mHandler = null;
-    private PowerManager.WakeLock mWakeLock = null;
-    private int mDeviceTimeout;
     private boolean mTurnOnCanceled = false;
 
     public NotificationEventsAdapter(Context context, Handler handler)
     {
+        Log.d(TAG, "NotificationEventsAdapter created");
         this.context = context;
         this.mHandler = handler;
         mSysUtils = SysUtils.getInstance(context, handler);
@@ -63,10 +57,13 @@ public class NotificationEventsAdapter implements NotificationEventListener
 
     private void handleWakeupMode(final String packageName, Boolean deviceCovered)
     {
+        Log.d(TAG, "handleWakeupMode package:"+packageName+" deviceCovered:"+deviceCovered);
+
         String wakeupMode = SettingsManager.getWakeupMode(context, packageName);
 
         // set covered status (if we got it)
-        mDeviceCovered = deviceCovered;
+        if (deviceCovered != null)
+            mDeviceCovered = deviceCovered;
 
         if (wakeupMode.equals(SettingsManager.WAKEUP_ALWAYS)) {
             turnScreenOn("wakeup mode is ALWAYS");
@@ -83,9 +80,9 @@ public class NotificationEventsAdapter implements NotificationEventListener
                     @Override
                     public void run()
                     {
-                        stopProximityMontior("5 seconds passed");
+                        stopProximityMontior("10 seconds passed");
                     }
-                }, 5000);
+                }, 10000);
 
                 // turn screen on immediately if the device is known to be not covered
                 if (deviceCovered != null && !deviceCovered)
@@ -202,26 +199,10 @@ public class NotificationEventsAdapter implements NotificationEventListener
         }
         context.sendBroadcast(new Intent(NotificationsWidgetProvider.UPDATE_CLOCK));
     }
-/*
-    private Runnable mReleaseWakelock = new Runnable()
-    {
-        @Override
-        public void run()
-        {
-            if (mWakeLock != null && mWakeLock.isHeld())
-            {
-                mWakeLock.release();
-            }
 
-            // restore previous timeout settings
-            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, mDeviceTimeout);
-        }
-    };
-*/
     private void turnScreenOn(String reason)
     {
         mSysUtils.turnScreenOn(false, reason);
-        newNotificationsAvailable = false;
     }
 
     private boolean isAppOnForeground(String packageName)
@@ -242,58 +223,29 @@ public class NotificationEventsAdapter implements NotificationEventListener
         return false;
     }
 
-    /*
-    private void turnScreenOff()
-    {
-        KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        boolean isLocked = km.inKeyguardRestrictedInputMode();
-
-        if (!isLocked)
-        {
-            // check if another lock screen is currently used
-            String[] lockscreepApps = context.getResources().getStringArray(R.array.lockscreenapps);
-            for (String lockscreen : lockscreepApps)
-            {
-                if (isAppOnForeground(lockscreen))
-                    isLocked = true;
-            }
-        }
-
-        // turn screen of only if the device is still locked
-        if (isLocked)
-        {
-            Intent screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.cillinsoft.scrnoff");
-            if (screenoffApp == null)
-                screenoffApp = context.getPackageManager().getLaunchIntentForPackage("com.katecca.screenofflock");
-
-            if (screenoffApp != null) context.startActivity(screenoffApp);
-        }
-    }*/
-
     // Proximity Sensor Monitoring
     SensorEventListener sensorListener = null;
 
     public void registerProximitySensor(final String packageName)
     {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Log.d(TAG, "registerProximitySensor");
         String wakeupMode = SettingsManager.getWakeupMode(context, packageName);
+
+        Log.d(TAG, "registerProximitySensor called");
 
         if (wakeupMode.equals(SettingsManager.WAKEUP_NOT_COVERED) || wakeupMode.equals(SettingsManager.WAKEUP_UNCOVERED))
         {
             final SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
             final Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-            if (sensorListener == null)
-                sensorListener = new SensorEventListener()
-                {
-                    final Runnable turnOnScreen = new Runnable()
-                    {
+
+            if (sensorListener == null) {
+                Log.d(TAG, "registerProximitySensor: creating sensor listener");
+                sensorListener = new SensorEventListener() {
+                    final Runnable turnOnScreen = new Runnable() {
                         @Override
-                        public void run()
-                        {
+                        public void run() {
                             // turn on screen and stop monitoring proximity
-                            if (!mTurnOnCanceled)
-                            {
+                            if (!mTurnOnCanceled) {
                                 turnScreenOn("device was not covered");
                                 stopProximityMontior("screen was turned on");
                             }
@@ -301,32 +253,26 @@ public class NotificationEventsAdapter implements NotificationEventListener
                     };
 
                     @Override
-                    public void onAccuracyChanged(Sensor sensor, int accuracy)
-                    {
+                    public void onAccuracyChanged(Sensor sensor, int accuracy) {
                     }
 
                     @Override
-                    public void onSensorChanged(SensorEvent event)
-                    {
+                    public void onSensorChanged(SensorEvent event) {
                         boolean newCoverStatus = (event.values[0] < event.sensor.getMaximumRange());
-                        Log.d(TAG, "proximity:"+event.values[0]+" device covered:"+newCoverStatus+" time:"+ SystemClock.uptimeMillis());
+                        Log.d(TAG, "proximity:" + event.values[0] + "mDeviceCovered:" + mDeviceCovered + " new device covered:" + newCoverStatus);
 
                         // if transition happened
-                        if (mDeviceCovered == null || newCoverStatus != mDeviceCovered)
-                        {
+                        if (mDeviceCovered == null || newCoverStatus != mDeviceCovered) {
                             if (mHandler == null) mHandler = new Handler();
 
                             mDeviceCovered = newCoverStatus;
-                            if (!mDeviceCovered)
-                            {
+                            if (!mDeviceCovered) {
                                 long timeout = prefs.getLong("proximity_timeout", 500);
                                 // turn on screen in 500ms (give it a chance to cancel)
-                                Log.d(TAG, "Turning screen on within "+timeout+"ms");
+                                Log.d(TAG, "Turning screen on within " + timeout + "ms");
                                 mHandler.postDelayed(turnOnScreen, timeout);
                                 mTurnOnCanceled = false;
-                            }
-                            else
-                            {
+                            } else {
                                 // cancel turning on screen
                                 Log.d(TAG, "Canceling turning screen on");
                                 mTurnOnCanceled = true;
@@ -335,13 +281,16 @@ public class NotificationEventsAdapter implements NotificationEventListener
                         }
                     }
                 };
+            }
 
             // start with unknown cover status
-            if (!proximityRegistered)
-            {
+            if (!proximityRegistered) {
+                Log.d(TAG, "registerProximitySensor: registering");
                 mDeviceCovered = null;
                 sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
                 proximityRegistered = true;
+            } else {
+                Log.d(TAG, "registerProximitySensor: already registered - do nothing");
             }
         }
     }

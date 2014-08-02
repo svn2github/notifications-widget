@@ -134,7 +134,6 @@ public class NotificationParser
                     if (packageIcon != null)
                     {
                         Palette p = Palette.generate(packageIcon);
-                        Log.d(TAG, packageName + " vibrantcolor:" + p.getVibrantColor());
                         if (p.getVibrantColor() != null)
                             nd.appColor = p.getVibrantColor().getRgb();
                         else
@@ -827,7 +826,6 @@ public class NotificationParser
                 {
                     fs.setAccessible(true);
                     bitmaps = (ArrayList<Bitmap>) fs.get(bitmapCache);
-                    Log.d(TAG,bitmaps.size()+" bitmaps found.");
                 }
             }
 
@@ -847,15 +845,6 @@ public class NotificationParser
 
                 String methodName = parcel.readString();
                 if (methodName == null) continue;
-
-                    // Save strings
-                else
-                {
-                    Log.d(TAG, "methodName:"+methodName);
-
-                    // bitmap id
-                    Log.d(TAG, "id:"+parcel.readInt());
-                }
 
                 parcel.recycle();
             }

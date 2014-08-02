@@ -282,6 +282,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         Log.d(TAG, "Stopping monitoring proximity sensor");
         if (sensorListener != null && sensorManager != null) {
             sensorManager.unregisterListener(sensorListener);
+            mCovered = null;
             sensorListener = null;
         }
     }

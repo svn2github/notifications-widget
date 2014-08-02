@@ -27,7 +27,6 @@ public class SysUtils
     private final Handler handler;
     private static int DEFAULT_DEVICE_TIMEOUT = 10000;
     private PowerManager.WakeLock mWakeLock = null;
-    private Runnable mReleaseWakelock = null;
     private boolean mPendingCallback = false;
 
     public SysUtils(Context context, Handler handler)
@@ -154,37 +153,28 @@ public class SysUtils
         // turn the screen on only if it was off or acquired by previous wakelock
         if (!pm.isScreenOn() || mWakeLock != null && mWakeLock.isHeld() || force)
         {
-            // create the release wake lock runnable
-            if (mReleaseWakelock == null) {
-                mReleaseWakelock = new Runnable() {
-                    @Override
-                    public void run() {
-                        mPendingCallback = false;
-                        if (mWakeLock != null && mWakeLock.isHeld()) {
-                            Log.d("NiLS", "releasing wake lock");
-                            mWakeLock.release();
-                        }
-                    }
-                };
-            }
-
             // create and acquire a new wake lock (if not already held)
             if (mWakeLock == null || !mWakeLock.isHeld())
             {
                 Log.d("NiLS", "wake lock is not held, acquiring new one");
                 // @SuppressWarnings("deprecation")
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "NiLS");
-                mWakeLock.acquire();
+                mWakeLock.acquire(newTimeout);
             }
-
-            // release wake lock on timeout ends
-            if (mReleaseWakelock != null && mPendingCallback)
+            else
             {
-                // release previously callback
-                handler.removeCallbacks(mReleaseWakelock);
+                // if screen is off, release the previous wake lock
+                if (!pm.isScreenOn())
+                {
+                    mWakeLock.release();
+                    mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "NiLS");
+                }
+
+                // acquire new one
+                Log.d("NiLS", "wake lock is already held, extending it");
+                mWakeLock.acquire(newTimeout);
             }
 
-            handler.postDelayed(mReleaseWakelock, newTimeout);
             mPendingCallback = true;
         }
         else
