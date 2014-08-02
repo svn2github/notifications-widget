@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.roymam.android.nilsplus.activities.QuickReplyActivity;
 import com.roymam.android.notificationswidget.NotificationData.Action;
 
 import java.util.List;
@@ -338,7 +339,7 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
                 actionBar.setViewVisibility(R.id.actionClear, View.GONE);
             }
 			if (n.actions != null)
-				populateAppActions(actionBar, n.actions);
+				populateAppActions(actionBar, n.actions, n.getUid());
 			else
 			{
 				actionBar.setViewVisibility(R.id.customAction1, View.GONE);
@@ -347,12 +348,15 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 		}
 	}
 
-	private void populateAppActions(RemoteViews actionBar, Action[] actions) 
+	private void populateAppActions(RemoteViews actionBar, Action[] actions, int uid)
 	{
 			if (actions.length >= 1)
 			{
 				actionBar.setImageViewBitmap(R.id.customAction1Image, actions[0].drawable);
-				actionBar.setOnClickPendingIntent(R.id.customAction1, actions[0].actionIntent);
+                if (actions[0].remoteInputs != null)
+                    actionBar.setOnClickPendingIntent(R.id.customAction1, getQuickReplyPendingIntent(uid, 0));
+                else
+                    actionBar.setOnClickPendingIntent(R.id.customAction1, actions[0].actionIntent);
 				actionBar.setViewVisibility(R.id.customAction1, View.VISIBLE);
 				actionBar.setTextViewText(R.id.customAction1Text, actions[0].title);
 				actionBar.setTextViewText(R.id.actionPinText, "");
@@ -366,7 +370,10 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 			if (actions.length >= 2)
 			{
 				actionBar.setImageViewBitmap(R.id.customAction2Image, actions[1].drawable);
-				actionBar.setOnClickPendingIntent(R.id.customAction2, actions[1].actionIntent);
+                if (actions[1].remoteInputs != null)
+                    actionBar.setOnClickPendingIntent(R.id.customAction1, getQuickReplyPendingIntent(uid, 1));
+                else
+    				actionBar.setOnClickPendingIntent(R.id.customAction2, actions[1].actionIntent);
 				actionBar.setTextViewText(R.id.customAction2Text, actions[1].title);
 				actionBar.setViewVisibility(R.id.customAction2, View.VISIBLE);
 				actionBar.setTextViewText(R.id.actionPinText, "");
@@ -378,7 +385,17 @@ public class NotificationsViewFactory implements RemoteViewsService.RemoteViewsF
 			}
 	}
 
-	@Override
+    private PendingIntent getQuickReplyPendingIntent(int uid, int actionPos) {
+        // open quick reply activity
+        Intent intent = new Intent(ctxt, QuickReplyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("uid", uid);
+        intent.putExtra("actionPos", actionPos);
+        PendingIntent pi = PendingIntent.getActivity(ctxt, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return pi;
+    }
+
+    @Override
 	public RemoteViews getLoadingView() 
 	{
 		return(null);
