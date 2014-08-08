@@ -145,7 +145,7 @@ public class NotificationAdapter extends BaseAdapter
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         int primaryTextColor = prefs.getInt(SettingsManager.PRIMARY_TEXT_COLOR, SettingsManager.DEFAULT_PRIMARY_TEXT_COLOR);
-        if (SettingsManager.getBoolean(context, SettingsManager.AUTO_TITLE_COLOR, false))
+        if (item.appColor != 0 && prefs.getBoolean(SettingsManager.AUTO_TITLE_COLOR, false))
             primaryTextColor = item.appColor;
         int secondaryTextColor = prefs.getInt(SettingsManager.SECONDARY_TEXT_COLOR, SettingsManager.DEFAULT_SECONDARY_TEXT_COLOR);
         int notificationBGColor = prefs.getInt(SettingsManager.MAIN_BG_COLOR, SettingsManager.DEFAULT_MAIN_BG_COLOR);
