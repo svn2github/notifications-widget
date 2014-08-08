@@ -10,6 +10,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.INotificationSideChannel;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompatSideChannelService;
 import android.util.Log;
 
@@ -74,7 +75,7 @@ public class NotificationsSideChannelService extends NotificationCompatSideChann
             Log.e(TAG, "Notifications Service is not bounded. stop and restart NotificationsListener to rebind it");
         else {
             if (!packageName.equals(this.getPackageName())) // won't show NiLS internal side channel notifications
-                mService.onNotificationPosted(notification, packageName, id, tag);
+                mService.onNotificationPosted(notification, packageName, id, tag, true);
         }
     }
 

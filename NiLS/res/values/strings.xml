@@ -50,8 +50,6 @@
     <string name="no">No</string>
     <string name="clearonunlock">Clear when unlocked</string>
     <string name="clearonunlock_summary">Clear all notifications when device is unlocked</string>
-    <string name="clearonlock">Clear when locked</string>
-    <string name="clearonlock_summary">Clear all notifications when device is locked</string>
     <string name="collectonunlock">Collect when unlocked</string>
     <string name="collectonunlock_summary">Keep collecting notifications when device is unlocked</string>
     <string name="order_notifications_by">Sort notifications by</string>
@@ -158,43 +156,11 @@
     <string name="pin">Pin</string>
     <string name="unpin">Unpin</string>
 
-n    <!-- App specific settings -->
+    <!-- App specific settings -->
     <string name="app_specific_settings_title">App Specific Settings</string>
     <string name="ignore_notifications">Ignore this app</string>
-    <string name="ignore_notifications_summary">ignore all notifications from this app</string>
-    <string name="show_only_last_notification">Keep only last notification</string>
-    <string name="show_only_last_notification_summary">Keep only the last notification that was received from this app</string>
-    <string name="always_use_app_icon">Always use app icon</string>
-    <string name="always_use_app_icon_summary">Use app icon instead of notification icon</string>
-    <string name="extract_expanded_text">Use expanded notification</string>
-    <string name="extract_expanded_text_summary">Android 4.1+ only: Use expanded notification if available</string>
-    <string name="show_only_last_event">Show only last event</string>
-    <string name="show_only_last_event_summary">Show only last event when expanded notification has multiple events (e.g multiple emails in one notification)</string>
-    <string name="multiple_events_handling">Multiple events handling</string>
-    <string name="multiple_events_handling_summary">Set how to handle multiple events when the expanded notification has more than one (e.g multiple emails in one notification)</string>
-    <string name="set_app_priority">Set priority</string>
-    <string name="set_app_priority_summary">Set priority of app to use with \"Order by Priority\" option</string>
-
-    <string-array name="settings_app_priority_entries">
-        <item>Default</item>
-        <item>Min</item>
-        <item>Low</item>
-        <item>Normal</item>
-        <item>High</item>
-        <item>Max</item>
-    </string-array>
-    <string-array name="settings_multiple_events_entries">
-        <item>Show All</item>
-        <item>Show First Event</item>
-        <item>Show Last Event</item>
-    </string-array>
-
-    <string name="ignore_empty_notifications">Ignore empty notifications</string>
-    <string name="ignore_empty_notifications_summary">Ignore notifications without any content</string>
     <string name="clear_app_settings">Reset</string>
     <string name="clear_app_summary">Clear app specific settings for this app</string>
-    <string name="app_specific_help">How To Add App Specific Settings?</string>
-    <string name="app_specific_help_details">App specific settings allow you to set some settings specificly for different apps - like hiding notifications from the app, setting priorities, etc...\n\nTo add app specific settings, click on the app icon of the notification when it appears on the widget, an action menu will popup below the notification, then click the \"Settings\" button. (the one with the wrench icon)</string>
 
     <!-- Persistent Notifications -->
     <string name="persistent_notifications">Persistent Notifications</string>
@@ -336,7 +302,7 @@ n    <!-- App specific settings -->
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
     <string name="sync">Sync</string>
-    <string name="integration">Integration</string>
+    <!--<string name="integration">Integration</string>-->
     <string name="swipe_to_open">Swipe right to open</string>
     <string name="swipe_to_open_summary">When enabled, swiping notification to the right will open the notification</string>
     <string name="dont_hide">Always visible</string>

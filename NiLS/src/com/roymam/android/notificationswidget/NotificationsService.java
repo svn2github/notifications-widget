@@ -350,12 +350,11 @@ public class NotificationsService extends Service implements NotificationsProvid
                     NotificationData oldnd = iter.next();
 
                     // remove only if one of the following scenarios:
-                    // 1. Android >=4.3 - notification mode is "grouped" and the notification has the same package and id
-                    // 2. Android <4.3 - notification mode is "grouped" and the notification has the same package
-                    // 3. notification is similar to the old one
+                    // 1. notification mode is "grouped" and the notification has the same package and id
+                    // 2. notification mode is "separated" and the notification is similar to the old one
                     if (oldnd.packageName.equals(nd.packageName) &&
-                            (((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && notificationMode.equals(SettingsManager.MODE_GROUPED)) ||
-                                    oldnd.isSimilar(nd, true))) {
+                        ((oldnd.id == nd.id) && (!nd.event || notificationMode.equals(SettingsManager.MODE_GROUPED))) ||
+                          oldnd.isSimilar(nd, true)) {
                         nd.uid = oldnd.uid;
                         if (oldnd.isDeleted()) nd.delete();
 
@@ -377,6 +376,13 @@ public class NotificationsService extends Service implements NotificationsProvid
                         {
                             ignoreNotification = true;
                             updated = false;
+
+                            // if the sideloaded notification doesn't have an icon - use this notification icon
+                            if (oldnd.sideLoaded && oldnd.largeIcon == null)
+                            {
+                                oldnd.largeIcon = nd.largeIcon;
+                                oldnd.icon = nd.icon;
+                            }
                         }
 
                         // protect the old one from being cleared on next purge command
@@ -880,12 +886,12 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
-    public void onNotificationPosted(Notification n, String packageName, int id, String tag)
+    public void onNotificationPosted(Notification n, String packageName, int id, String tag, boolean sideLoaded)
     {
         Log.d(TAG, "onNotificationPosted package:"+packageName+" id:"+id+" tag:"+tag);
         try {
             if (!parser.isPersistent(n, packageName)) {
-                List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag);
+                List<NotificationData> notifications = parser.parseNotification(n, packageName, id, tag, sideLoaded);
                 if (viewManager != null) viewManager.saveNotificationsState();
                 unprotectNotifications(packageName);
                 for (NotificationData nd : notifications) {

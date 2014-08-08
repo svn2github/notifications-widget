@@ -84,7 +84,7 @@ public class NotificationParser
     }
     
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public List<NotificationData> parseNotification(Notification n, String packageName, int notificationId, String tag)
+    public List<NotificationData> parseNotification(Notification n, String packageName, int notificationId, String tag, boolean sideLoaded)
     {
         if (n != null)
         {
@@ -158,7 +158,6 @@ public class NotificationParser
                 {
                     nd.icon = n.largeIcon;
                 }
-
                 nd.largeIcon = n.largeIcon;
 
                 // if the icon is too large - resize it to smaller size
@@ -171,6 +170,13 @@ public class NotificationParser
                 {
                     nd.appicon = Bitmap.createScaledBitmap(nd.appicon, (int) maxIconSize, (int) maxIconSize, true);
                 }
+
+//                // get wearable background icon if available
+//                if (wo != null && wo.getBackground() != null && notificationIcon.equals(SettingsManager.NOTIFICATION_ICON))
+//                {
+//                    nd.icon = wo.getBackground();
+//                    nd.largeIcon = nd.icon;
+//                }
 
                 // get time of the event
                 if (n.when != 0)
@@ -250,6 +256,8 @@ public class NotificationParser
                         printStringsFromNotification();
                     }
 
+                    if (nd.text != null) removeTimePrefix(nd);
+
                     nd.id = notificationId;
                     nd.tag = tag;
 
@@ -261,7 +269,6 @@ public class NotificationParser
                         nd.groupOrder = localBundle.getInt("android.support.wearable.groupOrder");
                     }
 
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     {
                         nd.priority = getPriority(n);
@@ -272,6 +279,8 @@ public class NotificationParser
                     }
                     int apppriority = Integer.parseInt(sharedPref.getString(nd.packageName+"."+AppSettingsActivity.APP_PRIORITY, "-9"));
                     if (apppriority != -9) nd.priority = apppriority;
+
+                    nd.sideLoaded = sideLoaded;
 
                     // check if this is a multiple events notification
                     String notificationMode = SettingsManager.getNotificationMode(context, packageName);
@@ -291,7 +300,7 @@ public class NotificationParser
                             (privacy.equals(SettingsManager.PRIVACY_SHOW_ALL) || privacy.equals(SettingsManager.PRIVACY_SHOW_TITLE_ONLY)))
                     {
                         List<NotificationData> separatedNotifications = getMultipleNotificationsFromInboxView(n.bigContentView, nd);
-                        // make sure we've at least one notificatprivacy.equals(SettingsManager.PRIVACY_SHOW_ALL)ion
+                        // make sure we've at least one notification
                         if (separatedNotifications.size() > 0) notifications = separatedNotifications;
                     }
                     return notifications;
@@ -354,6 +363,8 @@ public class NotificationParser
             nd.title = strings.get(notification_title_id);
             nd.bitmaps = baseNotification.bitmaps;
             nd.group = baseNotification.group;
+            nd.sideLoaded = baseNotification.sideLoaded;
+            nd.actions = baseNotification.actions;
             nd.groupOrder = eventsOrder;
             nd.event = true;
             nd.protect = true;
@@ -378,33 +389,8 @@ public class NotificationParser
                 {
                     // try to split it by ":" delimiter
                     // first make sure it's not having the time prefix
-                    String timeRegExp = "^(\\d\\d?:\\d\\d? ([AP]M )?)(.*)";
-
-                    Pattern timePat = Pattern.compile(timeRegExp);
-                    Matcher match = timePat.matcher(event);
-
-                    if (match.matches())
-                    {
-                        // if it has it - set it as the event time
-                        String time = match.group(1);
-                        String timeFormat = "HH:mm";
-                        if (!DateFormat.is24HourFormat(context)) timeFormat = "hh:mm a";
-
-                        SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
-                        try
-                        {
-                            Date d = sdf.parse(time);
-                            nd.received = d.getTime();
-                        }
-                        catch (ParseException e)
-                        {
-                            // shouldn't happen - time is in the right format
-                        }
-
-                        event = match.group(3);
-                        nd.text = event;
-
-                    }
+                    event = nd.text;
+                    removeTimePrefix(nd);
 
                     String[] parts = event.toString().split(": ", 2);
                     if (parts.length == 2 && parts[1].length()>2) // parts[1].length()>2 special exception for missed calls time 
@@ -429,6 +415,35 @@ public class NotificationParser
         }
         return notifications;
     }
+
+    private void removeTimePrefix(NotificationData nd) {
+        String timeRegExp = "^(\\d\\d?:\\d\\d? ?([AP]M )?)(.*)";
+
+        Pattern timePat = Pattern.compile(timeRegExp);
+        Matcher match = timePat.matcher(nd.text);
+
+        if (match.matches())
+        {
+            // if it has it - set it as the event time
+            String time = match.group(1);
+            String timeFormat = "HH:mm";
+            if (!DateFormat.is24HourFormat(context)) timeFormat = "hh:mm a";
+
+            SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
+            try
+            {
+                Date d = sdf.parse(time);
+                nd.received = d.getTime();
+            }
+            catch (ParseException e)
+            {
+                // shouldn't happen - time is in the right format
+            }
+
+            nd.text = match.group(3);
+        }
+    }
+
 
     private boolean shouldIgnore(Notification n, String packageName)
     {

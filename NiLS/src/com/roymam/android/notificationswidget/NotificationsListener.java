@@ -8,16 +8,19 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 
 @TargetApi(18)
 public class NotificationsListener extends NotificationListenerService
 {
+    private final String TAG = this.getClass().getSimpleName();
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        Log.d("NiLS","NotificationsListener:onStartCommand");
+        Log.d(TAG,"NotificationsListener:onStartCommand");
         if (intent != null && intent.getAction() != null)
         {
             if (intent.getAction().equals(NotificationsService.CANCEL_NOTIFICATION))
@@ -26,13 +29,13 @@ public class NotificationsListener extends NotificationListenerService
                 String tag = intent.getStringExtra(NotificationsService.EXTRA_TAG);
                 int id = intent.getIntExtra(NotificationsService.EXTRA_ID, -1);
 
-                Log.d("NiLS","cancel notification #" + id);
+                Log.d(TAG,"cancel notification #" + id);
                 try {
                     cancelNotification(packageName, tag, id);
                 }
                 catch(java.lang.SecurityException exp)
                 {
-                    Log.e("NiLS", "security exception - cannot cancel notification.");
+                    Log.e(TAG, "security exception - cannot cancel notification.");
                 }
             }
         }
@@ -42,7 +45,7 @@ public class NotificationsListener extends NotificationListenerService
     @Override
     public void onCreate()
     {
-        Log.d("NiLS","NotificationsListener:onCreate");
+        Log.d(TAG,"NotificationsListener:onCreate");
 
         // start NotificationsService
         //Intent intent = new Intent(getApplicationContext(), NotificationsService.class);
@@ -82,7 +85,7 @@ public class NotificationsListener extends NotificationListenerService
     @Override
     public void onDestroy()
     {
-        Log.d("NiLS", "NotificationsListener:onDestroy");
+        Log.d(TAG, "NotificationsListener:onDestroy");
 
         // Unbind from the service
         if (mBound)
@@ -97,22 +100,25 @@ public class NotificationsListener extends NotificationListenerService
     @Override
     public void onNotificationPosted(StatusBarNotification sbn)
     {
-        Log.d("NiLS","NotificationsListener:onNotificationPosted #" + sbn.getId());
+        Log.d(TAG,"onNotificationPosted package:"+sbn.getPackageName()+" id:" + sbn.getId());
+        String str = NotificationCompat.getExtras(sbn.getNotification()).getString("android.title");
+        Log.d(TAG, "title:"+str);
+
         if (!mBound)
-            Log.e("NiLS", "Notifications Service is not bounded. stop and restart NotificationsListener to rebind it");
+            Log.e(TAG, "Notifications Service is not bounded. stop and restart NotificationsListener to rebind it");
         else
         {
-            mService.onNotificationPosted(sbn.getNotification(), sbn.getPackageName(), sbn.getId(), sbn.getTag());
+            mService.onNotificationPosted(sbn.getNotification(), sbn.getPackageName(), sbn.getId(), sbn.getTag(), false);
         }
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn)
     {
-        Log.d("NiLS","NotificationsListener:onNotificationRemoved #" + sbn.getId());
+        Log.d(TAG,"onNotificationRemoved package:"+sbn.getPackageName()+" id:" + sbn.getId());
 
         if (!mBound)
-            Log.e("NiLS", "Notifications Service is not bounded. stop and restart NotificationsListener to rebind it");
+            Log.e(TAG, "Notifications Service is not bounded. stop and restart NotificationsListener to rebind it");
         else
         {
             mService.onNotificationRemoved(sbn.getNotification(), sbn.getPackageName(), sbn.getId());

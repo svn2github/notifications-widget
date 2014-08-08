@@ -7,8 +7,8 @@ android {
         resValue "string", "packageName", "com.roymam.android.notificationswidget"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 431
-        versionName '1.5.2.431'
+        versionCode 432
+        versionName '1.5.2.432'
     }
     buildTypes {
         debug {

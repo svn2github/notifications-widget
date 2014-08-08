@@ -42,6 +42,7 @@ public class NotificationData implements Parcelable
     public ArrayList<Bitmap> bitmaps;
     public String group = null;
     public int groupOrder = -1;
+    public boolean sideLoaded = false;
 
     public NotificationData()
     {
@@ -51,27 +52,27 @@ public class NotificationData implements Parcelable
 
     public boolean isSimilar(NotificationData nd, boolean compareContent)
     {
-        CharSequence title1 = nd.title;
-        CharSequence title2 = this.title;
-        CharSequence text1 = nd.text;
-        CharSequence text2 = this.text;
-        CharSequence content1 = nd.content;
-        CharSequence content2 = this.content;
+        CharSequence otherTitle = nd.title;
+        CharSequence myTitle = this.title;
+        CharSequence otherText = nd.text;
+        CharSequence myText = this.text;
+        CharSequence otherContent = nd.content;
+        CharSequence myContent = this.content;
 
-        if (title1 == null) title1 = "";
-        if (title2 == null) title2 = "";
-        if (text1 == null) text1 = "";
-        if (text2 == null) text2 = "";
-        if (content1 == null) content1 = "";
-        if (content2 == null) content2 = "";
+        if (otherTitle == null) otherTitle = "";
+        if (myTitle == null) myTitle = "";
+        if (otherText == null) otherText = "";
+        if (myText == null) myText = "";
+        if (otherContent == null) otherContent = "";
+        if (myContent == null) myContent = "";
 
-        boolean titlesdup = title1.toString().trim().equals(title2.toString().trim());
-        boolean textdup = text1.toString().trim().startsWith(text2.toString().trim());
-        boolean contentsdup = content1.toString().trim().startsWith(content2.toString().trim());
+        boolean titlesdup = otherTitle.toString().trim().equals(myTitle.toString().trim());
+        boolean textdup = otherText.toString().trim().startsWith(myText.toString().trim());
+        boolean contentsdup = otherContent.toString().trim().startsWith(myContent.toString().trim());
         boolean allDup = titlesdup && textdup && (contentsdup || !compareContent);
 
-        if (nd.group != null && this.group != null && nd.group.equals(this.group) && nd.groupOrder == this.groupOrder && text1.length() >= text2.length() ||
-            nd.packageName.equals(this.packageName) && allDup)
+        if (nd.group != null && this.group != null && nd.group.equals(this.group) && nd.groupOrder == this.groupOrder && otherText.length() >= myText.length() ||
+            nd.packageName.equals(this.packageName) && allDup && !sideLoaded)
         {
             return true;
         }
@@ -105,13 +106,14 @@ public class NotificationData implements Parcelable
             action = PendingIntent.CREATOR.createFromParcel(in);
         count = in.readInt();
 
-        boolean[] ba = new boolean[5];
+        boolean[] ba = new boolean[6];
         in.readBooleanArray(ba);
         pinned = ba[0];
         selected = ba[1];
         deleted = ba[2];
         protect = ba[3];
         event = ba[4];
+        sideLoaded = ba[5];
 
         if (in.readInt() != 0)
             actions = in.createTypedArray(Action.CREATOR);
@@ -188,12 +190,13 @@ public class NotificationData implements Parcelable
         }
         dest.writeInt(count);
 
-        boolean[] ba = new boolean[5];
+        boolean[] ba = new boolean[6];
         ba[0] = pinned;
         ba[1] = selected;
         ba[2] = deleted;
         ba[3] = protect;
         ba[4] = event;
+        ba[5] = sideLoaded;
         dest.writeBooleanArray(ba);
 
         if (actions != null)
