@@ -16,6 +16,10 @@
             android:summary="TomoS"/>
         <Preference android:title="Spanish"
             android:summary="azuelagomez, gruizjoubert, kaihansen2010, rodolforuizsozzo"/>
+        <Preference android:title="French"
+            android:summary="cavok, SirOch, marwanrichard, kolergy, rodolforuizsozzo"/>
+        <Preference android:title="German"
+            android:summary="Digi2K, schlaker1, NoRiskNoFun, vh99, geoflex, mxii, MirgeBlader"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/opensource_software_used" android:summary="@string/opensource_software_summary">
         <Preference android:title="NiLS Core - Service &amp; Widget"
