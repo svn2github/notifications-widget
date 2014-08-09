@@ -343,9 +343,10 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                                     if (position < data.size())
                                     {
                                         NotificationData ni = data.get(position);
-                                        callNotificationCleared(ni);
                                         if (dismissRight && isSwipeToOpenEnabled)
                                             callNotificationOpen(ni);
+                                        else
+                                            callNotificationCleared(ni);
                                     }
                                 }
                             }

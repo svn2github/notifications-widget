@@ -1464,50 +1464,16 @@ public class NotificationsService extends Service implements NotificationsProvid
     private void runPendingIntent(PendingIntent action, String packageName, int uid, Intent paramIntent)
     {
         Log.d(TAG, "runPendingIntent: packageName:"+packageName+" uid:"+uid);
-        /*// a workaround for keyboard stuck on Hangouts
-        if (packageName.equals("com.google.android.talk"))
-            try
-            {
-                action.send(0,new PendingIntent.OnFinished()
-                {
-                    @Override
-                    public void onSendFinished(PendingIntent pendingIntent, Intent intent, int resultCode, String resultData, Bundle resultExtras)
-                    {
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                unlockDevice();
-                            }
-                        }, 500);
-                    }
-                }, mHandler);
-            } catch (PendingIntent.CanceledException e)
-            {
-                // starting the intent failed, try to launch the app directly
-                Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-                if (intent != null)
-                {
-                    Intent intents[] = new Intent[2];
-                    intents[0]=intent;
-                    intents[1]=new Intent(context, UnlockDeviceActivity.class);
-                    intents[1].addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intents[1].addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                    startActivities(intents);
-                    unlockDevice();
-                }
-            }
-        else
-        {*/
-            Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("action", action);
-            intent.putExtra("package", packageName);
-            intent.putExtra("uid", uid);
-            intent.putExtra("lockscreen_package", SysUtils.getForegroundApp(getApplicationContext()));
-            intent.putExtra("paramIntent", paramIntent);
-            startActivity(intent);
-        //}
+        Intent intent = new Intent(getApplicationContext(), OpenNotificationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("action", action);
+        intent.putExtra("package", packageName);
+        intent.putExtra("uid", uid);
+        intent.putExtra("lockscreen_package", SysUtils.getForegroundApp(getApplicationContext()));
+        intent.putExtra("paramIntent", paramIntent);
+        startActivity(intent);
+
         // hide viewmanager if visible
         hide(false);
     }
