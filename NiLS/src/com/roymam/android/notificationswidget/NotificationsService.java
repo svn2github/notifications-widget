@@ -350,13 +350,18 @@ public class NotificationsService extends Service implements NotificationsProvid
                     NotificationData oldnd = iter.next();
 
                     // remove only if one of the following scenarios:
-                    // 1. notification mode is "grouped" and the notification has the same package and id
+                    // 1. notification mode is "grouped" and the notification has the same package (and same id on 4.3+)
                     // 2. notification mode is "separated" and the notification is similar to the old one
                     if (oldnd.packageName.equals(nd.packageName) &&
-                        ((oldnd.id == nd.id) && (!nd.event || notificationMode.equals(SettingsManager.MODE_GROUPED))) ||
+                        ((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && (!nd.event || notificationMode.equals(SettingsManager.MODE_GROUPED))) ||
                           oldnd.isSimilar(nd, true)) {
                         nd.uid = oldnd.uid;
-                        if (oldnd.isDeleted()) nd.delete();
+
+                        if (oldnd.isDeleted())
+                        {
+                            Log.d(TAG, "notification " + nd.packageName + ":" + nd.id + "#" + nd.uid + " was already dismissed previously, marking this new one as deleted");
+                            nd.delete();
+                        }
 
                         // protect it from being cleared on next purge command
                         nd.protect = true;
