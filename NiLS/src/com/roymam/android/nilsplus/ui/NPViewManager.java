@@ -104,11 +104,6 @@ public class NPViewManager
 
     public void destroy()
     {
-        if (mWakeLock != null && mWakeLock.isHeld())
-        {
-            mWakeLock.release();
-            mWakeLock = null;
-        }
         mNPListView.cleanup();
         mPreviewView.cleanup();
         mEditModeView.setOnTouchListener(null);
@@ -442,18 +437,6 @@ public class NPViewManager
 
         return mode;
     }
-
-    private PowerManager.WakeLock mWakeLock;
-
-    private Runnable mReleaseWakelock = new Runnable()
-    {
-        @Override
-        public void run()
-        {
-            if (mWakeLock != null && mWakeLock.isHeld())
-                mWakeLock.release();
-        }
-    };
 
     public void keepScreenOn(String reason)
     {

@@ -62,7 +62,7 @@ public class SysUtils
                 return isServiceRunning(context, NotificationsListener.class);
             }catch (Exception exp)
             {
-                Log.wtf("NiLS", "sdk_int:"+Build.VERSION.SDK_INT+ " but NotificationsListener is not found, trying old service");
+                Log.wtf(TAG, "sdk_int:"+Build.VERSION.SDK_INT+ " but NotificationsListener is not found, trying old service");
                 return isServiceRunning(context, NiLSAccessibilityService.class);
             }
         else
@@ -73,7 +73,7 @@ public class SysUtils
     {
         ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasks = mActivityManager.getRunningTasks(1);
-        Log.d("NiLS", tasks.get(0).topActivity.getClassName());
+        Log.d(TAG, tasks.get(0).topActivity.getClassName());
         return tasks.get(0).topActivity.getPackageName();
     }
 
@@ -151,27 +151,30 @@ public class SysUtils
         }
 
         // turn the screen on only if it was off or acquired by previous wakelock
-        if (!pm.isScreenOn() || mWakeLock != null && mWakeLock.isHeld() || force)
+        if (    !pm.isScreenOn() ||
+                mWakeLock != null && mWakeLock.isHeld() ||
+                force)
         {
             // create and acquire a new wake lock (if not already held)
             if (mWakeLock == null || !mWakeLock.isHeld())
             {
-                Log.d("NiLS", "wake lock is not held, acquiring new one");
+                Log.d(TAG, "wake lock is not held, acquiring new one");
                 // @SuppressWarnings("deprecation")
-                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "NiLS");
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
                 mWakeLock.acquire(newTimeout);
             }
-            else
+            else // mWakeLock != null && mWakeLock.isHeld()
             {
                 // if screen is off, release the previous wake lock
                 if (!pm.isScreenOn())
                 {
+                    Log.d(TAG, "wakelock is already held and screen is off, releasing and creating a new one");
                     mWakeLock.release();
-                    mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "NiLS");
+                    mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
                 }
 
                 // acquire new one
-                Log.d("NiLS", "wake lock is already held, extending it");
+                Log.d(TAG, "wake lock is already held, extending it");
                 mWakeLock.acquire(newTimeout);
             }
 
@@ -179,7 +182,7 @@ public class SysUtils
         }
         else
         {
-            Log.d("NiLS", "turnScreenOn ignored, isScreenOn:" + pm.isScreenOn() + " mWakelock:"+mWakeLock);
+            Log.d(TAG, "turnScreenOn ignored, isScreenOn:" + pm.isScreenOn() + " mWakelock:"+mWakeLock);
         }
     }
 
@@ -191,12 +194,12 @@ public class SysUtils
         {
             // store the original device timeout
             deviceTimeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, DEFAULT_DEVICE_TIMEOUT);
-            Log.d("NiLS", "storing device timeout:" + deviceTimeout);
+            Log.d(TAG, "storing device timeout:" + deviceTimeout);
             prefs.edit().putInt("device_timeout", deviceTimeout).commit();
         }
         else
         {
-            Log.d("NiLS", "device timeout already stored (" + deviceTimeout + ")");
+            Log.d(TAG, "device timeout already stored (" + deviceTimeout + ")");
         }
     }
 
@@ -215,14 +218,14 @@ public class SysUtils
 
             // set the new (shorter) one
             int newTimeout = Integer.parseInt(timeoutStr) * 1000;
-            Log.d("NiLS", "changing device timeout to " + newTimeout);
+            Log.d(TAG, "changing device timeout to " + newTimeout);
             try
             {
                 Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, newTimeout);
             }
             catch (Exception exp)
             {
-                Log.e("NiLS", "cannot change system settings, screen timeout won't be changed");
+                Log.e(TAG, "cannot change system settings, screen timeout won't be changed");
             }
         }
     }
@@ -248,7 +251,7 @@ public class SysUtils
             {
                 if (shouldChangeDeviceTimeout())
                 {
-                    Log.d("NiLS", "restoring device timeout:" + deviceTimeout);
+                    Log.d(TAG, "restoring device timeout:" + deviceTimeout);
 
                     try
                     {
@@ -256,7 +259,7 @@ public class SysUtils
                     }
                     catch (Exception exp)
                     {
-                        Log.e("NiLS", "cannot change system settings, screen timeout won't be changed");
+                        Log.e(TAG, "cannot change system settings, screen timeout won't be changed");
                     }
 
                     resetDeviceTimeout();
@@ -264,18 +267,18 @@ public class SysUtils
             }
             else
             {
-                Log.d("NiLS", "screen timeout was changed ("+currTimeout+") by another app, NiLS won't restore its own");
+                Log.d(TAG, "screen timeout was changed ("+currTimeout+") by another app, NiLS won't restore its own");
             }
         }
         else
         {
-            Log.d("NiLS", "restore device timeout called but device timeout wasn't stored. ignoring.");
+            Log.d(TAG, "restore device timeout called but device timeout wasn't stored. ignoring.");
         }
     }
 
     private void resetDeviceTimeout()
     {
-        Log.d("NiLS", "reset device timeout");
+        Log.d(TAG, "reset device timeout");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().remove("device_timeout").commit();
     }
