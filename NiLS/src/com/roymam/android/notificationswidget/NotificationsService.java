@@ -43,6 +43,8 @@ import com.roymam.android.nilsplus.ui.NPViewManager;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -1237,9 +1239,11 @@ public class NotificationsService extends Service implements NotificationsProvid
             String lockScreenApp = prefs.getString(SettingsManager.LOCKSCREEN_APP, STOCK_LOCKSCREEN_PACKAGENAME);
             PackageManager pm = context.getPackageManager();
 
+            List<String> blacklistPackageNames = Arrays.asList(SettingsManager.BLACKLIST_PACKAGENAMES);
+
             // check if the current app is a lock screen app
             if (pm.checkPermission(android.Manifest.permission.DISABLE_KEYGUARD, currentApp) == PackageManager.PERMISSION_GRANTED) {
-                if (!lockScreenApp.equals(currentApp) && !SettingsManager.BLACKLIST_PACKAGENAMES.contains(currentApp)) {
+                if (!lockScreenApp.equals(currentApp) && !blacklistPackageNames.contains(currentApp)) {
                     // store current app as the lock screen app until next time
                     Log.d(TAG, "new lock screen app detected: " + currentApp);
 
@@ -1351,7 +1355,8 @@ public class NotificationsService extends Service implements NotificationsProvid
         boolean shouldHide = true;
 
         // if the current app is one of the allowed apps to be on top of the lock screen, hide NiLS
-        if (NiLSAccessibilityService.isServiceRunning(context) && SettingsManager.BLACKLIST_PACKAGENAMES.contains(currentApp))
+        List<String> blacklistPackageNames = Arrays.asList(SettingsManager.BLACKLIST_PACKAGENAMES);
+        if (NiLSAccessibilityService.isServiceRunning(context) && blacklistPackageNames.contains(currentApp))
         {
             return true;
         }
