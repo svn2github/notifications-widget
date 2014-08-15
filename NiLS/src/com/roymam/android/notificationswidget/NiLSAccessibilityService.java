@@ -28,6 +28,7 @@ import java.util.List;
 
 public class NiLSAccessibilityService extends AccessibilityService
 {
+    private final String TAG = this.getClass().getSimpleName();
     public static final String LAST_OPENED_WINDOW_PACKAGENAME = "last_opened_window_packagename";
     private NotificationParser parser;
     private int notificationId = 0;
@@ -60,7 +61,7 @@ public class NiLSAccessibilityService extends AccessibilityService
     @Override
     protected void onServiceConnected()
     {
-        Log.d("NiLS","NiLSAccessibilityService:onServiceConnected");
+        Log.d(TAG,"NiLSAccessibilityService:onServiceConnected");
 
         // create a notification parser
         parser = new NotificationParser(getApplicationContext());
@@ -77,7 +78,7 @@ public class NiLSAccessibilityService extends AccessibilityService
     @Override
     public void onDestroy()
     {
-        Log.d("NiLS","NiLSAccessibilityService:onDestroy");
+        Log.d(TAG,"NiLSAccessibilityService:onDestroy");
 
         // Unbind from the service
         if (mBound)
@@ -125,9 +126,9 @@ public class NiLSAccessibilityService extends AccessibilityService
                         Notification n = (Notification) accessibilityEvent.getParcelableData();
                         String packageName = accessibilityEvent.getPackageName().toString();
                         int id = notificationId++;
-                        Log.d("NiLS","NotificationsListener:onNotificationPosted #" + id);
+                        Log.d(TAG,"NotificationsListener:onNotificationPosted #" + id);
                         if (!mBound)
-                            Log.e("NiLS", "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
+                            Log.e(TAG, "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
                         else
                             mService.onNotificationPosted(n, packageName, id, null, false);
                     }
@@ -136,7 +137,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                 if (accessibilityEvent.getPackageName() != null)
                 {
                     String packageName = accessibilityEvent.getPackageName().toString();
-                    Log.d("NiLS", "window state has been changed:" + packageName);
+                    Log.d(TAG, "window state has been changed:" + packageName);
                     // auto clear notifications when app is opened (Android < 4.3 only)
                     if (!newApi) {
                         if (!packageName.equals("com.android.systemui") &&
@@ -155,7 +156,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                     SettingsManager.shouldClearWhenClearedFromNotificationsBar(getApplicationContext()) &&
                         !newApi)
                 {
-                    //Log.d("NiLS","SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
+                    //Log.d(TAG,"SystemUI content changed. windowid:"+event.getWindowId()+" source:"+event.getSource());
                     AccessibilityNodeInfo node = accessibilityEvent.getSource();
 
                     NotificationsProvider ns = NotificationsService.getSharedInstance();
@@ -199,7 +200,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                             for(NotificationData nd : notificationsToRemove)
                             {
                                 if (!mBound)
-                                    Log.e("NiLS", "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
+                                    Log.e(TAG, "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
                                 else
                                     mService.onNotificationRemoved(null, nd.packageName, nd.id);
                             }
@@ -225,7 +226,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                                 accessibilityEvent.getContentDescription().equals(clearButtonName))
                             {
                                 if (!mBound)
-                                    Log.e("NiLS", "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
+                                    Log.e(TAG, "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
                                 else
                                     mService.clearAllNotifications();
                             }
@@ -239,6 +240,9 @@ public class NiLSAccessibilityService extends AccessibilityService
 
     private void handleAutoHideWhenWindowChanged(String packageName)
     {
+        // systemui is not really a window - ignore it
+        if (packageName.equals("com.android.systemui")) return;
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         if (packageName != null && mBound)
@@ -294,7 +298,7 @@ public class NiLSAccessibilityService extends AccessibilityService
             if (!packageName.toString().equals(lastWindowContentPackageName))
             {
                 lastWindowContentPackageName = packageName.toString();
-                Log.d("NiLS","window content has been changed:" + lastWindowContentPackageName);
+                Log.d(TAG,"window content has been changed:" + lastWindowContentPackageName);
             }
 
             //if (packageName.equals("android")) packageName = SettingsManager.STOCK_LOCKSCREEN_PACKAGENAME;
@@ -308,12 +312,12 @@ public class NiLSAccessibilityService extends AccessibilityService
                 accessibilityEvent.getSource().getBoundsInScreen(rect);
                 if (rect.left >= -BitmapUtils.dpToPx(60))
                 {
-                    Log.d("NiLS","window content has been changed:" + packageName.toString());
+                    Log.d(TAG,"window content has been changed:" + packageName.toString());
                     mService.hide(false);
                 }
                 else
                 {
-                    Log.d("NiLS","window content has been changed:" + packageName.toString());
+                    Log.d(TAG,"window content has been changed:" + packageName.toString());
                     mService.show(false);
                 }
             }
@@ -323,17 +327,15 @@ public class NiLSAccessibilityService extends AccessibilityService
                     !NotificationsService.shouldHideNotifications(getApplicationContext(), packageName.toString(), false))
             {
                 mHiddenBecauseOfSystemUI = false;
-                Log.d("NiLS","window content has been changed:" + packageName.toString());
+                Log.d(TAG,"window content has been changed:" + packageName.toString());
                 mService.show(false);
             }
 
             // hide NiLS when status bar or power menu are displayed
             else if (packageName.equals("com.android.systemui") /*|| packageName.equals("android")*/)
             {
-                Log.d("NiLS", "event:" + accessibilityEvent.toString());
-
                 mHiddenBecauseOfSystemUI = true;
-                Log.d("NiLS","window content has been changed:" + packageName.toString());
+                Log.d(TAG,"window content has been changed:" + packageName.toString());
                 mService.hide(false);
             }
         }
