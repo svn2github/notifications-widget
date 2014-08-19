@@ -607,12 +607,12 @@ public class NotificationsService extends Service implements NotificationsProvid
                                 return 1;
                             if (n1.received > n2.received)
                                 return -1;
+
                             // if we reached here, the time is equal - sort by group order
-                            if (n1.groupOrder < n2.groupOrder)
-                                return 1;
-                            if (n1.groupOrder > n2.groupOrder)
-                                return -1;
-                            return 0;
+                            if (n1.groupOrder != null && n2.groupOrder != null)
+                                return n1.groupOrder.compareTo(n2.groupOrder);
+                            else
+                                return 0;
                         }
                     });
                 }
@@ -629,11 +629,10 @@ public class NotificationsService extends Service implements NotificationsProvid
                             if (n1.received < n2.received)
                                 return -1;
                             // if we reached here, the time is equal - sort by group order
-                            if (n1.groupOrder > n2.groupOrder)
-                                return 1;
-                            if (n1.groupOrder < n2.groupOrder)
-                                return -1;
-                            return 0;
+                            if (n1.groupOrder != null && n2.groupOrder != null)
+                                return n1.groupOrder.compareTo(n2.groupOrder);
+                            else
+                                return 0;
                         }
                     });
                 }
@@ -650,11 +649,10 @@ public class NotificationsService extends Service implements NotificationsProvid
                             if (n1.received > n2.received)
                                 return -1;
                             // if we reached here, the time is equal - sort by group order
-                            if (n1.groupOrder < n2.groupOrder)
-                                return 1;
-                            if (n1.groupOrder > n2.groupOrder)
-                                return -1;
-                            return 0;
+                            if (n1.groupOrder != null && n2.groupOrder != null)
+                                return n1.groupOrder.compareTo(n2.groupOrder);
+                            else
+                                return 0;
                         }
                     });
                 }

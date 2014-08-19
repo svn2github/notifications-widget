@@ -41,7 +41,7 @@ public class NotificationData implements Parcelable
     public int appColor;
     public ArrayList<Bitmap> bitmaps;
     public String group = null;
-    public int groupOrder = -1;
+    public String groupOrder = null;
     public boolean sideLoaded = false;
 
     public NotificationData()
@@ -122,7 +122,7 @@ public class NotificationData implements Parcelable
         tag = in.readString();
         appColor = in.readInt();
         group = in.readString();
-        groupOrder = in.readInt();
+        groupOrder = in.readString();
     }
 
     @Override
@@ -211,7 +211,7 @@ public class NotificationData implements Parcelable
         dest.writeString(tag);
         dest.writeInt(appColor);
         dest.writeString(group);
-        dest.writeInt(groupOrder);
+        dest.writeString(groupOrder);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

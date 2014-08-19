@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.google.android.clockwork.stream.LegacyNotificationUtil;
 import com.roymam.android.common.BitmapCache;
 import com.roymam.android.common.IconPackManager;
+import com.roymam.android.common.SysUtils;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
@@ -262,11 +263,33 @@ public class NotificationParser
                     nd.tag = tag;
 
                     // check if this notifications belong to a group of notifications
-                    Bundle localBundle = NotificationCompat.getExtras(n);
-                    if ((localBundle != null) && (localBundle.getString("android.support.wearable.groupKey") != null))
+                    nd.group = NotificationCompat.getGroup(n);
+                    nd.groupOrder = NotificationCompat.getSortKey(n);
+
+                    if (nd.group != null)
                     {
-                        nd.group = localBundle.getString("android.support.wearable.groupKey");
-                        nd.groupOrder = localBundle.getInt("android.support.wearable.groupOrder");
+                        Log.d(TAG, "notification has a group:" + nd.group + " with group order:" + nd.groupOrder);
+                    }
+                    else
+                    if (nd.group == null)
+                    {
+                        Log.d(TAG, "notification doesn't have a group, trying to get from extras.");
+                        Bundle localBundle = NotificationCompat.getExtras(n);
+                        if (localBundle != null) {
+                            Log.d(TAG, "notification has a bundle");
+                            if (localBundle.getString("android.support.wearable.groupKey") != null) {
+                                nd.group = localBundle.getString("android.support.wearable.groupKey");
+                                int groupOrder = localBundle.getInt("android.support.wearable.groupOrder");
+                                nd.groupOrder = String.format("%010d", groupOrder + 2147483648L);
+                                Log.d(TAG, "notification has a group:" + nd.group + " with group order:" + nd.groupOrder);
+                            }
+                            if (localBundle.getString("com.google.android.wearable.stream.CREATOR_NODE_ID") != null)
+                            {
+                                Log.d(TAG, "notification has a creator node id:" + localBundle.getString("com.google.android.wearable.stream.CREATOR_NODE_ID"));
+                            }
+                        } else {
+                            Log.d(TAG, "notification doesn't have a bundle");
+                        }
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
@@ -288,12 +311,23 @@ public class NotificationParser
                     List<NotificationData> notifications = new ArrayList<NotificationData>();
                     notifications.add(nd);
 
+                    // ignore group individual events if notification mode is set to show grouped only
                     if (notificationMode.equals(SettingsManager.MODE_GROUPED))
                     {
                         // if the notification is a part of a group - don't show it on grouped mode
-                        if (nd.groupOrder != -1)
-                            return new ArrayList<NotificationData>();;
+                        if (nd.groupOrder != null) {
+                            Log.d(TAG, "ignoring notification packageName:"+packageName+ "id:"+nd.id+ "notification mode is grouped and this a single group item");
+                            return new ArrayList<NotificationData>();
+                        }
                     }
+                    // ignore summary group if setting is set to separated
+                    else if (notificationMode.equals(SettingsManager.MODE_SEPARATED) &&
+                            nd.group != null && nd.groupOrder == null)
+                    {
+                        Log.d(TAG, "ignoring notification packageName:"+packageName+ "id:"+nd.id+ "notification mode is separated and this a group summary");
+                        return new ArrayList<NotificationData>();
+                    }
+                    // if no group info found and it still has a bigcontentview try to extract individual events from the summary
                     else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
                              n.bigContentView != null &&
                             (n.bigContentView.getLayoutId() == mInboxLayoutId || packageName.equals("com.whatsapp")) &&
@@ -365,7 +399,7 @@ public class NotificationParser
             nd.group = baseNotification.group;
             nd.sideLoaded = baseNotification.sideLoaded;
             nd.actions = baseNotification.actions;
-            nd.groupOrder = eventsOrder;
+            nd.groupOrder = String.format("%010d", eventsOrder);
             nd.event = true;
             nd.protect = true;
             nd.text = event;
@@ -420,28 +454,42 @@ public class NotificationParser
         String timeRegExp = "^(\\d\\d?:\\d\\d? ?([AP]M )?)(.*)";
 
         Pattern timePat = Pattern.compile(timeRegExp);
-        Matcher match = timePat.matcher(nd.text);
 
+        // search for time label in the title
+        Matcher match = timePat.matcher(nd.title);
         if (match.matches())
         {
             // if it has it - set it as the event time
-            String time = match.group(1);
-            String timeFormat = "HH:mm";
-            if (!DateFormat.is24HourFormat(context)) timeFormat = "hh:mm a";
-
-            SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
-            try
-            {
-                Date d = sdf.parse(time);
-                nd.received = d.getTime();
-            }
-            catch (ParseException e)
-            {
-                // shouldn't happen - time is in the right format
-            }
-
-            nd.text = match.group(3);
+            nd.received = parseTime(match.group(1));
+            nd.title = nd.title.subSequence(match.start(3), match.end(3));
         }
+
+        // search for time prefix in the text
+        match = timePat.matcher(nd.text);
+        if (match.matches())
+        {
+            // if it has it - set it as the event time
+            nd.received = parseTime(match.group(1));
+            nd.text = nd.text.subSequence(match.start(3), match.end(3));
+        }
+    }
+
+    private long parseTime(String time)
+    {
+        String timeFormat = "HH:mm";
+        if (!DateFormat.is24HourFormat(context)) timeFormat = "hh:mm a";
+
+        SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
+        try
+        {
+            Date d = sdf.parse(time);
+            return d.getTime();
+        }
+        catch (ParseException e)
+        {
+            // shouldn't happen - time is in the right format
+        }
+        return 0;
     }
 
 
