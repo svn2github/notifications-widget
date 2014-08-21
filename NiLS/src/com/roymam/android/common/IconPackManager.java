@@ -233,7 +233,7 @@ public class IconPackManager
             // create a mutable mask bitmap with the same mask
             Bitmap scaledBitmap = defaultBitmap;
             if (defaultBitmap != null && (defaultBitmap.getWidth() > w || defaultBitmap.getHeight()> h))
-                Bitmap.createScaledBitmap(defaultBitmap, (int)(w * mFactor), (int)(h * mFactor), false);
+                scaledBitmap = Bitmap.createScaledBitmap(defaultBitmap, (int)(w * mFactor), (int)(h * mFactor), false);
 
             if (mMaskImage != null)
             {
@@ -245,13 +245,15 @@ public class IconPackManager
                 // paint the bitmap with mask into the result
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-                mCanvas.drawBitmap(scaledBitmap, (w - scaledBitmap.getWidth())/2, (h - scaledBitmap.getHeight())/2, null);
+                if (scaledBitmap != null)
+                    mCanvas.drawBitmap(scaledBitmap, (w - scaledBitmap.getWidth())/2, (h - scaledBitmap.getHeight())/2, null);
                 mCanvas.drawBitmap(mutableMask, 0, 0, paint);
                 paint.setXfermode(null);
             }
             else // draw the scaled bitmap without mask
             {
-                mCanvas.drawBitmap(scaledBitmap, (w - scaledBitmap.getWidth())/2, (h - scaledBitmap.getHeight())/2, null);
+                if (scaledBitmap != null)
+                    mCanvas.drawBitmap(scaledBitmap, (w - scaledBitmap.getWidth())/2, (h - scaledBitmap.getHeight())/2, null);
             }
 
             // paint the front
