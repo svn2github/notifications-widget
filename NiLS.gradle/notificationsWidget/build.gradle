@@ -5,10 +5,11 @@ android {
     defaultConfig {
         applicationId 'com.roymam.android.notificationswidget'
         resValue "string", "packageName", "com.roymam.android.notificationswidget"
+        resValue "bool", "amazon", "false"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 434
-        versionName '1.5.2.434'
+        versionCode 435
+        versionName '1.5.2.435'
     }
     buildTypes {
         debug {
@@ -36,19 +37,24 @@ android {
         compile files('libs/in-app-purchasing-1.0.3.jar')
     }
     productFlavors {
-
+        android {
+            resValue "bool", "amazon", "false"
+        }
+        amazon {
+            resValue "bool", "amazon", "true"
+        }
     }
 }
 def appendVersionNameVersionCode(variant, defaultConfig) {
     //check if staging variant
     if (variant.zipAlign) {
         def file = variant.outputFile
-        def fileName = defaultConfig.applicationId + "." + defaultConfig.versionName + ".apk"
+        def fileName = defaultConfig.applicationId + "." + defaultConfig.versionName + "." + variant.name + ".apk"
         variant.outputFile = new File(file.parent, fileName)
     }
 
     def file = variant.packageApplication.outputFile
-    def fileName = defaultConfig.applicationId + "." + defaultConfig.versionName + ".apk"
+    def fileName = defaultConfig.applicationId + "." + defaultConfig.versionName + "." + variant.name + ".apk"
     variant.packageApplication.outputFile = new File(file.parent, fileName)
 }
 
