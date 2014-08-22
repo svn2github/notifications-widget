@@ -315,16 +315,16 @@ public class NotificationParser
                     if (notificationMode.equals(SettingsManager.MODE_GROUPED))
                     {
                         // if the notification is a part of a group - don't show it on grouped mode
-                        if (nd.groupOrder != null) {
-                            Log.d(TAG, "ignoring notification packageName:"+packageName+ "id:"+nd.id+ "notification mode is grouped and this a single group item");
+                        if (nd.groupOrder != null && nd.sideLoaded) {
+                            Log.d(TAG, "ignoring sideloaded notification packageName:"+packageName+ "id:"+nd.id+ " notification mode is grouped and this a single group item");
                             return new ArrayList<NotificationData>();
                         }
                     }
                     // ignore summary group if setting is set to separated
                     else if (notificationMode.equals(SettingsManager.MODE_SEPARATED) &&
-                            nd.group != null && nd.groupOrder == null)
+                            nd.group != null && nd.groupOrder == null && !nd.sideLoaded)
                     {
-                        Log.d(TAG, "ignoring notification packageName:"+packageName+ "id:"+nd.id+ "notification mode is separated and this a group summary");
+                        Log.d(TAG, "ignoring original notification packageName:"+packageName+ "id:"+nd.id+ " notification mode is separated and this a group summary");
                         return new ArrayList<NotificationData>();
                     }
                     // if no group info found and it still has a bigcontentview try to extract individual events from the summary
