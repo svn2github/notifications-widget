@@ -121,7 +121,7 @@ public class NotificationsListener extends NotificationListenerService
             Log.e(TAG, "Notifications Service is not bounded. stop and restart NotificationsListener to rebind it");
         else
         {
-            mService.onNotificationRemoved(sbn.getNotification(), sbn.getPackageName(), sbn.getId());
+            mService.onNotificationRemoved(sbn.getNotification(), sbn.getPackageName(), sbn.getId(), sbn.getTag());
         }
     }
 }

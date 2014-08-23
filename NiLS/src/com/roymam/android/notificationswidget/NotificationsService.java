@@ -20,7 +20,6 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -28,7 +27,6 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.RemoteInput;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +42,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -308,7 +305,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 String packageName = intent.getStringExtra("package");
                 String tag = intent.getStringExtra("tag");
                 int id = intent.getIntExtra("id", -1);
-                removeNotification(packageName, id, true);
+                removeNotification(packageName, id, null, true);
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -355,7 +352,8 @@ public class NotificationsService extends Service implements NotificationsProvid
                     // 1. notification mode is "grouped" and the notification has the same package (and same id on 4.3+)
                     // 2. notification mode is "separated" and the notification is similar to the old one
                     if (oldnd.packageName.equals(nd.packageName) &&
-                        ((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && (/*!nd.event || */notificationMode.equals(SettingsManager.MODE_GROUPED))) ||
+                        (((oldnd.id == nd.id && (oldnd.tag == null && nd.tag == null || oldnd.tag != null && nd.tag != null && oldnd.tag.equals(nd.tag)))
+                         || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && (/*!nd.event || */notificationMode.equals(SettingsManager.MODE_GROUPED))) ||
                           oldnd.isSimilar(nd, true)) {
                         nd.uid = oldnd.uid;
 
@@ -439,7 +437,7 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
-    private void removeNotification(String packageName, int id, boolean logical)
+    private void removeNotification(String packageName, int id, String tag, boolean logical)
     {
         Log.d(TAG,"NotificationsService:removeNotification  " + packageName + ":" + id);
         boolean sync = SettingsManager.shouldClearWhenClearedFromNotificationsBar(getApplicationContext());
@@ -458,7 +456,9 @@ public class NotificationsService extends Service implements NotificationsProvid
                 while (iter.hasNext()) {
                     NotificationData nd = iter.next();
 
-                    if (nd.packageName.equals(packageName) && nd.id == id && !nd.pinned) {
+                    if (nd.packageName.equals(packageName) && nd.id == id &&
+                            (nd.tag == null && tag == null ||
+                             nd.tag != null && tag != null && nd.tag.equals(tag)) && !nd.pinned) {
                         // mark as delete if it's part of multiple events notification
                         if (logical && nd.event) {
                             // mark notification as cleared
@@ -1013,11 +1013,11 @@ public class NotificationsService extends Service implements NotificationsProvid
         }
     }
 
-    public void onNotificationRemoved(Notification n, String packageName, int id)
+    public void onNotificationRemoved(Notification n, String packageName, int id, String tag)
     {
         try
         {
-            removeNotification(packageName, id, true);
+            removeNotification(packageName, id, tag, true);
 
             // remove also persistent notification
             if (n != null && parser.isPersistent(n, packageName)) {

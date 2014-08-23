@@ -1,7 +1,6 @@
 package com.roymam.android.notificationswidget;
 
 import android.app.Notification;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.INotificationSideChannel;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompatSideChannelService;
 import android.util.Log;
 
@@ -85,7 +83,7 @@ public class NotificationsSideChannelService extends NotificationCompatSideChann
         if (!mBound)
             Log.e(TAG, "Notifications Service is not bounded. stop and restart NotificationsListener to rebind it");
         else {
-            mService.onNotificationRemoved(null, packageName, id);
+            mService.onNotificationRemoved(null, packageName, id, null);
         }
     }
 

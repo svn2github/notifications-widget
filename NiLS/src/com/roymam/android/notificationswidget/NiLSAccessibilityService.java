@@ -202,7 +202,7 @@ public class NiLSAccessibilityService extends AccessibilityService
                                 if (!mBound)
                                     Log.e(TAG, "Notifications Service is not bounded. stop and restart NiLS on Accessibility Services to rebind it");
                                 else
-                                    mService.onNotificationRemoved(null, nd.packageName, nd.id);
+                                    mService.onNotificationRemoved(null, nd.packageName, nd.id, null);
                             }
                         }
                     }

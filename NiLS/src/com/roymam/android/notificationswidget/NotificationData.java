@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class NotificationData implements Parcelable
 {
+    private final String TAG = this.getClass().getSimpleName();
+
     public static int nextUID = 0;
     public int uid;
     public int id;
@@ -71,9 +73,10 @@ public class NotificationData implements Parcelable
         boolean contentsdup = otherContent.toString().trim().startsWith(myContent.toString().trim());
         boolean allDup = titlesdup && textdup && (contentsdup || !compareContent);
 
-        if (nd.group != null && this.group != null && nd.group.equals(this.group) && nd.groupOrder == this.groupOrder && otherText.length() >= myText.length() ||
-            nd.packageName.equals(this.packageName) && allDup && !sideLoaded)
+        if (/*nd.group != null && this.group != null && nd.group.equals(this.group) && nd.groupOrder == this.groupOrder && otherText.length() >= myText.length() ||*/
+            nd.packageName.equals(this.packageName) && allDup)
         {
+            Log.d(TAG, "notification is similar to "+ packageName + ":" + id + "T" + tag);
             return true;
         }
         else

@@ -172,12 +172,12 @@ public class NotificationParser
                     nd.appicon = Bitmap.createScaledBitmap(nd.appicon, (int) maxIconSize, (int) maxIconSize, true);
                 }
 
-//                // get wearable background icon if available
-//                if (wo != null && wo.getBackground() != null && notificationIcon.equals(SettingsManager.NOTIFICATION_ICON))
-//                {
-//                    nd.icon = wo.getBackground();
-//                    nd.largeIcon = nd.icon;
-//                }
+                // get wearable background icon if available
+                if (wo != null && wo.getBackground() != null && notificationIcon.equals(SettingsManager.NOTIFICATION_ICON))
+                {
+                    nd.icon = wo.getBackground();
+                    nd.largeIcon = nd.icon;
+                }
 
                 // get time of the event
                 if (n.when != 0)
@@ -322,7 +322,8 @@ public class NotificationParser
                     }
                     // ignore summary group if setting is set to separated
                     else if (notificationMode.equals(SettingsManager.MODE_SEPARATED) &&
-                            nd.group != null && nd.groupOrder == null && !nd.sideLoaded )
+                            nd.group != null && nd.groupOrder == null && !nd.sideLoaded && NotificationCompat.isGroupSummary(n) &&
+                            n.bigContentView != null && n.bigContentView.getLayoutId() == mInboxLayoutId)
                     {
                         Log.d(TAG, "ignoring original notification packageName:"+packageName+ "id:"+nd.id+ " notification mode is separated and this a group summary");
                         return new ArrayList<NotificationData>();
