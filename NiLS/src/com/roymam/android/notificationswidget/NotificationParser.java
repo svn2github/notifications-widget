@@ -322,7 +322,7 @@ public class NotificationParser
                     }
                     // ignore summary group if setting is set to separated
                     else if (notificationMode.equals(SettingsManager.MODE_SEPARATED) &&
-                            nd.group != null && nd.groupOrder == null && !nd.sideLoaded)
+                            nd.group != null && nd.groupOrder == null && !nd.sideLoaded )
                     {
                         Log.d(TAG, "ignoring original notification packageName:"+packageName+ "id:"+nd.id+ " notification mode is separated and this a group summary");
                         return new ArrayList<NotificationData>();

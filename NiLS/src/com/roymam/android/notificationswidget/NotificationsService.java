@@ -355,7 +355,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     // 1. notification mode is "grouped" and the notification has the same package (and same id on 4.3+)
                     // 2. notification mode is "separated" and the notification is similar to the old one
                     if (oldnd.packageName.equals(nd.packageName) &&
-                        ((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && (!nd.event || notificationMode.equals(SettingsManager.MODE_GROUPED))) ||
+                        ((oldnd.id == nd.id || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) && (/*!nd.event || */notificationMode.equals(SettingsManager.MODE_GROUPED))) ||
                           oldnd.isSimilar(nd, true)) {
                         nd.uid = oldnd.uid;
 
