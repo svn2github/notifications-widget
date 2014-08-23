@@ -229,6 +229,8 @@ public class SettingsManager
             {"com.sec.android.app.clock",
                     "com.gadgetjuice.dockclock",
                     "com.android.camera2",
+                    "com.htc.camera",
+                    "com.HTC.camera",
                     "com.jedga.peek",
                     "com.roymam.android.notificationswidget",
                     "com.roymam.android.notificationswidget.debug",
