@@ -584,7 +584,6 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
                             if (mCallbacks != null)
                             {
                                 if (mIsSwipeToOpenEnabled && swipeRight) mCallbacks.onOpen(ni);
-                                mCallbacks.onDismiss(ni);
                             }
                         }
                     });
