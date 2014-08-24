@@ -96,6 +96,8 @@ public class NotificationsService extends Service implements NotificationsProvid
     private ArrayList<NotificationData> mFilteredNotificationsList;
     private final Handler mHandler = new Handler();
 
+    public HashMap<String, NotificationData> groupedNotifications = new HashMap<String, NotificationData>();
+
     // "singleton" like declaration
     private static NotificationsService instance;
 
@@ -357,6 +359,12 @@ public class NotificationsService extends Service implements NotificationsProvid
                           oldnd.isSimilar(nd, true)) {
                         nd.uid = oldnd.uid;
 
+                        // if the notification is sideloaded, use the original id and tag
+                        if (nd.sideLoaded) {
+                            nd.id = oldnd.id;
+                            nd.tag = oldnd.tag;
+                        }
+
                         if (oldnd.isDeleted())
                         {
                             Log.d(TAG, "notification " + nd.packageName + ":" + nd.id + "#" + nd.uid + " was already dismissed previously, marking this new one as deleted");
@@ -383,10 +391,14 @@ public class NotificationsService extends Service implements NotificationsProvid
                             updated = false;
 
                             // if the sideloaded notification doesn't have an icon - use this notification icon
-                            if (oldnd.sideLoaded && oldnd.largeIcon == null)
-                            {
-                                oldnd.largeIcon = nd.largeIcon;
-                                oldnd.icon = nd.icon;
+                            if (oldnd.sideLoaded) {
+                                if (oldnd.largeIcon == null) {
+                                    oldnd.largeIcon = nd.largeIcon;
+                                    oldnd.icon = nd.icon;
+                                }
+                                // copy id and tag if from the original notification
+                                oldnd.id = nd.id;
+                                oldnd.tag = nd.tag;
                             }
                         }
 
@@ -444,6 +456,10 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (sync)
         {
             boolean cleared = false;
+            boolean isGrouped = groupedNotifications.containsKey(packageName) &&
+                                groupedNotifications.get(packageName).id == id &&
+                    (groupedNotifications.get(packageName).tag == null && tag == null ||
+                     groupedNotifications.get(packageName).tag != null && tag != null && groupedNotifications.get(packageName).tag.equals(tag));
 
             ArrayList<NotificationData> clearedNotifications = new ArrayList<NotificationData>();
 
@@ -456,11 +472,12 @@ public class NotificationsService extends Service implements NotificationsProvid
                 while (iter.hasNext()) {
                     NotificationData nd = iter.next();
 
-                    if (nd.packageName.equals(packageName) && nd.id == id &&
-                            (nd.tag == null && tag == null ||
-                             nd.tag != null && tag != null && nd.tag.equals(tag)) && !nd.pinned) {
+                    if (nd.packageName.equals(packageName) &&
+                            (isGrouped ||
+                                (nd.id == id && (nd.tag == null && tag == null ||
+                                                 nd.tag != null && tag != null && nd.tag.equals(tag)))) && !nd.pinned) {
                         // mark as delete if it's part of multiple events notification
-                        if (logical && nd.event) {
+                        if (logical && (nd.event || isGrouped)) {
                             // mark notification as cleared
                             if (!nd.isDeleted())
                             {
@@ -864,6 +881,14 @@ public class NotificationsService extends Service implements NotificationsProvid
                 try
                 {
                     cancelNotification(removedNd.packageName, removedNd.tag, removedNd.id);
+
+                    // cancel also the grouped notifications for this app if it has any
+                    if (groupedNotifications.containsKey(removedNd.packageName))
+                    {
+                        NotificationData groupedNd = groupedNotifications.get(removedNd.packageName);
+                        cancelNotification(groupedNd.packageName, groupedNd.tag, groupedNd.id);
+                        groupedNotifications.remove(removedNd.packageName);
+                    }
                 }
                 catch (Exception exp)
                 {

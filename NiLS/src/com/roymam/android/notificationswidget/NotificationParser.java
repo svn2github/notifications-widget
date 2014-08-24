@@ -276,7 +276,6 @@ public class NotificationParser
                         Log.d(TAG, "notification doesn't have a group, trying to get from extras.");
                         Bundle localBundle = NotificationCompat.getExtras(n);
                         if (localBundle != null) {
-                            Log.d(TAG, "notification has a bundle");
                             if (localBundle.getString("android.support.wearable.groupKey") != null) {
                                 nd.group = localBundle.getString("android.support.wearable.groupKey");
                                 int groupOrder = localBundle.getInt("android.support.wearable.groupOrder");
@@ -287,8 +286,6 @@ public class NotificationParser
                             {
                                 Log.d(TAG, "notification has a creator node id:" + localBundle.getString("com.google.android.wearable.stream.CREATOR_NODE_ID"));
                             }
-                        } else {
-                            Log.d(TAG, "notification doesn't have a bundle");
                         }
                     }
 
@@ -325,6 +322,10 @@ public class NotificationParser
                             nd.group != null && nd.groupOrder == null && !nd.sideLoaded && NotificationCompat.isGroupSummary(n) &&
                             n.bigContentView != null && n.bigContentView.getLayoutId() == mInboxLayoutId)
                     {
+                        // storing the notification so it can be used to dismiss from Android notifications bar
+                        NotificationsService.getSharedInstance().groupedNotifications.put(packageName, nd);
+
+                        // ignoring it so it won't appear on NiLS
                         Log.d(TAG, "ignoring original notification packageName:"+packageName+ "id:"+nd.id+ " notification mode is separated and this a group summary");
                         return new ArrayList<NotificationData>();
                     }
