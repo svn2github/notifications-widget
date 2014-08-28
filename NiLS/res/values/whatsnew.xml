@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="v438_title" translatable="false">v1.5.2</string>
+    <string name="v438" translatable="false">
+        <![CDATA[
+            <b>&#8226;  Improved Gmail support</b> - Gmail notifications will now have full content and action buttons for each email. (Requires Android 4.3 and above)<br>
+            <b>&#8226;	New Feature - Quick Reply</b> - Quickly reply a message without unlocking your phone on Hangouts, WhatsApp, ChompSMS and few other apps. (Requires Android 4.3 and above)<br>
+            <b>&#8226;	Bug fixes: </b> Swipe right to open, privacy on separated notifications, duplicated notifications, proximity sensor issues and many more
+        ]]>
+    </string>
     <string name="v427_title" translatable="false">v1.5.1</string>
     <string name="v427" translatable="false">
         <![CDATA[
