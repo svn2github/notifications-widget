@@ -338,6 +338,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     {
         setVisibility(View.VISIBLE);
 
+        Log.d(TAG, "mLastPosY:" + mLastPosY + " mLastSizeY:" + mLastSizeY);
         mPreviewNotificationView.setTranslationY(startRect.top - mLastPosY - mLastSizeY/2);
         mPreviewNotificationView.setTranslationX(0);
 
@@ -583,7 +584,10 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
                             // dismiss notification
                             if (mCallbacks != null)
                             {
-                                if (mIsSwipeToOpenEnabled && swipeRight) mCallbacks.onOpen(ni);
+                                if (mIsSwipeToOpenEnabled && swipeRight)
+                                    mCallbacks.onOpen(ni);
+                                else
+                                    mCallbacks.onDismiss(ni);
                             }
                         }
                     });
