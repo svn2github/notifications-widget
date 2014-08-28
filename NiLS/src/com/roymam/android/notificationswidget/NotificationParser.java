@@ -173,7 +173,7 @@ public class NotificationParser
                 }
 
                 // get wearable background icon if available
-                if (wo != null && wo.getBackground() != null && notificationIcon.equals(SettingsManager.NOTIFICATION_ICON))
+                if (wo != null && wo.getBackground() != null && nd.largeIcon == null && notificationIcon.equals(SettingsManager.NOTIFICATION_ICON))
                 {
                     nd.icon = wo.getBackground();
                     nd.largeIcon = nd.icon;
