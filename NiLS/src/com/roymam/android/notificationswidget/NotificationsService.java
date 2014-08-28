@@ -700,7 +700,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     clearedNotifications.add(nd);
 
                     // if its event - mark it as deleted
-                    if (nd.event)
+                    if (nd.event || nd.sideLoaded && nd.group != null)
                         nd.delete();
                     else // otherwise remove it immediately
                         i.remove();
@@ -719,6 +719,14 @@ public class NotificationsService extends Service implements NotificationsProvid
                 try
                 {
                     cancelNotification(nd.packageName, nd.tag, nd.id);
+
+                    // cancel also the grouped notifications for this app if it has any
+                    if (groupedNotifications.containsKey(nd.packageName))
+                    {
+                        NotificationData groupedNd = groupedNotifications.get(nd.packageName);
+                        cancelNotification(groupedNd.packageName, groupedNd.tag, groupedNd.id);
+                        groupedNotifications.remove(nd.packageName);
+                    }
                 }
                 catch (Exception exp)
                 {
@@ -777,7 +785,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     if (!nd.pinned && nd.packageName.equals(packageName))
                     {
                         // mark notification as deleted
-                        if (nd.event)
+                        if (nd.event || nd.sideLoaded && nd.group != null)
                             nd.delete();
                         else
                             i.remove();
@@ -841,7 +849,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     removedNd = nd;
 
                     // mark notification as deleted
-                    if (nd.event)
+                    if (nd.event || nd.sideLoaded && nd.group != null)
                         nd.delete();
                     else
                         iter.remove();
@@ -861,15 +869,17 @@ public class NotificationsService extends Service implements NotificationsProvid
 
             // search for more notification with the same id - if not found - dismiss the notification from android status bar
             boolean more = false;
+            boolean hasGroup = groupedNotifications.containsKey(removedNd.packageName);
+
             Lock r = lock.readLock();
             r.lock();
             try
             {
                 for (NotificationData nd : mNotifications)
                 {
-                    if (nd.id == removedNd.id && !nd.isDeleted() &&
-                            nd.packageName.equals(removedNd.packageName))
-                        more = true;
+                    if ((hasGroup || nd.id == removedNd.id) && !nd.isDeleted() &&
+                         nd.packageName.equals(removedNd.packageName))
+                         more = true;
                 }
             }
             finally
