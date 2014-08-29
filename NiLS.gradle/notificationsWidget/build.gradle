@@ -8,8 +8,8 @@ android {
         resValue "bool", "amazon", "false"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 438
-        versionName '1.5.2.438'
+        versionCode 439
+        versionName '1.5.2.439'
     }
     buildTypes {
         debug {
@@ -37,7 +37,7 @@ android {
         compile files('libs/in-app-purchasing-1.0.3.jar')
     }
     productFlavors {
-        android {
+        google {
             resValue "bool", "amazon", "false"
         }
         amazon {
