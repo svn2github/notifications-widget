@@ -245,7 +245,7 @@ public class NotificationData implements Parcelable
         if (content1 == null) content1 = "";
         if (content2 == null) content2 = "";
 
-        return  (title1.equals(title2) && text1.equals(text2) && content1.equals(content2));
+        return  (title1.toString().equals(title2.toString()) && text1.toString().equals(text2.toString()) && content1.toString().equals(content2.toString()));
     }
 
     public void cleanup()
