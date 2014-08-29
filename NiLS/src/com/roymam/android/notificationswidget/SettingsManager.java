@@ -226,7 +226,8 @@ public class SettingsManager
     public static final boolean DEFAULT_SWIPE_DOWN_TO_DISMISS_ALL = true;
     public static final int DEFAULT_MAIN_BG_OPACITY = 100;
     public static final String[] BLACKLIST_PACKAGENAMES =
-            {"com.sec.android.app.clock",
+            {"com.sec.android.app.clockpackage",
+                    "com.sec.android.app.clock",
                     "com.gadgetjuice.dockclock",
                     "com.android.camera2",
                     "com.htc.camera",
