@@ -671,7 +671,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_1_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_1_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     firstEventStr = s;
                     content = s;
@@ -681,7 +681,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_2_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_2_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content, "\n", s);
                     lastEventStr = s;
@@ -691,7 +691,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_3_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_3_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -701,7 +701,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_4_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_4_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -711,7 +711,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_5_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_5_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -721,7 +721,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_6_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_6_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -731,7 +731,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_7_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_7_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -741,7 +741,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_8_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_8_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -751,7 +751,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_9_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_9_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -761,7 +761,7 @@ public class NotificationParser
             if (notificationStrings.containsKey(inbox_notification_event_10_id))
             {
                 CharSequence s = notificationStrings.get(inbox_notification_event_10_id);
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     content = TextUtils.concat(content,"\n",s);
                     lastEventStr = s;
@@ -779,7 +779,7 @@ public class NotificationParser
             {
                 CharSequence s = notificationStrings.get(notification_subtext_id);
 
-                if (!s.equals(""))
+                if (s!= null && !s.equals(""))
                 {
                     if (content == null) content = s;
                     else content = content + "\n" + s;
@@ -800,11 +800,6 @@ public class NotificationParser
             nd.content = content;
         }
     }
-
-    /*
-
-
-     */
 
     // use reflection to extract string from remoteviews object
     private HashMap<Integer, CharSequence> getNotificationStringFromRemoteViews(RemoteViews view)
