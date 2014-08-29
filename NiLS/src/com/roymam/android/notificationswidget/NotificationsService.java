@@ -1399,8 +1399,8 @@ public class NotificationsService extends Service implements NotificationsProvid
         if (activity.contains("InCallActivity") ||          // never show it on top of an incoming call
             activity.contains("ScreensaverActivity") ||     // never show it on top of daydream
             activity.contains("PopupNotificationLocked") || // never show it on top of WhatsApp popup
-            activity.contains("AlarmActivity"))           // never show it on top of AlarmClock
-            //activity.contains("HcPopupActivity"))           // never show over Handcent SMS
+            activity.contains("AlarmActivity")      ||      // never show it on top of AlarmClock
+            activity.contains("com.google.android.velvet.ui.VelvetLockscreenActivity")) // never show it on top of Google Now search
             return true;
 
         if (autoDetect)
