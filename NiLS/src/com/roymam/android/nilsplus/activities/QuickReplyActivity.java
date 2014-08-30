@@ -109,7 +109,7 @@ public class QuickReplyActivity extends Activity {
                 super.onAnimationEnd(animation);
                 View textview = findViewById(R.id.quick_reply_text);
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.toggleSoftInputFromWindow(textview.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                inputMethodManager.showSoftInput(textview, InputMethodManager.SHOW_IMPLICIT);
                 textview.requestFocus();
             }
         });
