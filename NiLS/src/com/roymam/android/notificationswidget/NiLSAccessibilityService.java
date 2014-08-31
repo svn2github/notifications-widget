@@ -241,7 +241,7 @@ public class NiLSAccessibilityService extends AccessibilityService
     private void handleAutoHideWhenWindowChanged(String packageName)
     {
         // systemui is not really a window - ignore it
-        if (packageName.equals("com.android.systemui")) return;
+        if (packageName.equals("com.android.systemui") || packageName.equals(getPackageName()))  return;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -275,6 +275,7 @@ public class NiLSAccessibilityService extends AccessibilityService
 
             if (mLocked && shouldHide && pm.isScreenOn())
             {
+                Log.d(TAG, "device is not not locked - sending UNLOCKED event, package name:"+packageName);
                 sendBroadcast(new Intent(NotificationsService.DEVICE_UNLOCKED));
             }
 

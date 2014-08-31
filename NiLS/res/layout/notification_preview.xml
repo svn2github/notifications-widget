@@ -4,17 +4,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/full_notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#80000000">
-
+        android:background="#80000000"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_weight="1"
             android:id="@+id/notification_preview">
 
             <RelativeLayout
@@ -85,9 +86,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
-                            android:layout_width="fill_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Notification Description"
+                            android:text="Notification Description\nLine 2\nLine 3"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
                             android:textColor="@android:color/darker_gray"
@@ -101,5 +102,38 @@
                 </ScrollView>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/quick_reply_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_weight="0">
+            <TextView
+                android:text="Quick Reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/quick_text_label"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/quick_reply_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@android:style/TextAppearance.Holo.Widget.EditText" />
+                <ImageButton
+                    android:id="@+id/quick_reply_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_send"
+                    android:gravity="center"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

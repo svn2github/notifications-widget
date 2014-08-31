@@ -266,6 +266,18 @@ public class NotificationData implements Parcelable
         actions = null;
     }
 
+    public Action getQuickReplyAction()
+    {
+        if (actions != null)
+            for(int i = 0; i < actions.length; i++)
+            {
+                if (actions[i].remoteInputs != null)
+                    return actions[i];
+            }
+        // no action - return null
+        return null;
+    }
+
     public static class Action implements Parcelable
 	{
         public Action() {};

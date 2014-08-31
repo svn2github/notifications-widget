@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,7 +14,9 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.RemoteInput;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +25,9 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
@@ -39,25 +45,29 @@ import static java.lang.Math.abs;
 public class PreviewNotificationView extends RelativeLayout implements View.OnTouchListener
 {
     private static final String TAG = PreviewNotificationView.class.getSimpleName();
-    private final View mPreviewNotificationView;
-    private final View mPreviewBackground;
+    private ImageButton mQuickReplySendButton;
+    private TextView mQuickReplyLabel;
+    private View mPreviewNotificationView;
+    private View mPreviewBackground;
+    private View mQuickReplyBox;
+    private EditText mQuickReplyText;
     private ImageView mAppIconBGImage;
     private TextView mPreviewTitle;
     private TextView mPreviewText;
     private ImageView mPreviewIcon;
     private TextView mPreviewTime;
-    private final int mAnimationDuration;
+    private int mAnimationDuration;
     private View mPreviewBody;
-    private final DotsSwipeView mDotsView;
+    private DotsSwipeView mDotsView;
     private View mPreviewIconBG;
     private View mScrollView;
     private ImageView mPreviewIconImageBG;
     private ImageView mPreviewIconImageFG;
     private View mNotificationContent;
-    private final int mMinFlingVelocity;
-    private final int mMaxFlingVelocity;
+    private int mMinFlingVelocity;
+    private int mMaxFlingVelocity;
     private ImageView mPreviewBigPicture;
-    private final Theme mTheme;
+    private Theme mTheme;
     private ImageView mAppIconImage;
     private Context context;
     private int mTouchSlop;
@@ -119,6 +129,33 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         mPreviewBackground.setLayoutParams(bgParams);
     }
 
+    public void showQuickReplyBox() {
+        if (mQuickReplyBox != null) {
+            mQuickReplyBox.setVisibility(View.VISIBLE);
+            mQuickReplyBox.setScaleY(0);
+            mQuickReplyBox.animate().scaleY(1).setDuration(mAnimationDuration).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mQuickReplyText.requestFocus();
+                    InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    mgr.showSoftInput(mQuickReplyText, InputMethodManager.SHOW_IMPLICIT);
+                    mgr.restartInput(mQuickReplyText);
+                }
+            });
+            mQuickReplyLabel.setText(ni.getQuickReplyAction().title);
+            mQuickReplyText.setText("");
+        }
+    }
+
+    public void hideQuickReplyBox() {
+        if (mQuickReplyBox != null)
+        {
+            mQuickReplyBox.setVisibility(View.GONE);
+            InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            mgr.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
     public interface Callbacks
     {
         public void onDismiss(NotificationData ni);
@@ -136,7 +173,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         return super.dispatchTouchEvent(ev);
     }
 
-    public PreviewNotificationView(Context context, Point size, Point pos)
+    public PreviewNotificationView(final Context context, Point size, Point pos)
     {
         super(context);
         this.context = context;
@@ -185,6 +222,14 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon_bg") != null)
                 mAppIconBGImage = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("app_icon_bg"));
 
+            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("quick_reply_box") != null)
+            {
+                mQuickReplyBox = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_box"));
+                mQuickReplyText = (EditText) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_text"));
+                mQuickReplyLabel = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_label"));
+                mQuickReplySendButton = (ImageButton) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_send_button"));
+            }
+
         else {
             mNotificationContent = mPreviewNotificationView.findViewById(R.id.notification_body);
             mPreviewBody = mPreviewNotificationView.findViewById(R.id.notification_preview);
@@ -197,7 +242,11 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             mPreviewTime = (TextView) mPreviewNotificationView.findViewById(R.id.notification_time);
             mScrollView = mPreviewNotificationView.findViewById(R.id.notification_text_scrollview);
             mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(R.id.notification_big_picture);
-        }
+            mQuickReplyBox = mPreviewNotificationView.findViewById(R.id.quick_reply_box);
+            mQuickReplyText = (EditText) mPreviewNotificationView.findViewById(R.id.quick_reply_text);
+            mQuickReplyLabel = (TextView) mPreviewNotificationView.findViewById(R.id.quick_text_label);
+            mQuickReplySendButton = (ImageButton) mPreviewNotificationView.findViewById(R.id.quick_reply_button);
+         }
 
         // set listeners
         mScrollView.setOnTouchListener(this);
@@ -304,6 +353,24 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
                 if (mCallbacks != null) mCallbacks.onClick();
             }
         });
+
+        if (mQuickReplySendButton != null)
+            mQuickReplySendButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    Bundle params = new Bundle();
+                    final NotificationData.Action action = ni.getQuickReplyAction();
+                    params.putCharSequence(action.remoteInputs[0].getResultKey(), mQuickReplyText.getText());
+                    RemoteInput.addResultsToIntent(action.remoteInputs, intent, params);
+                    try {
+                        action.actionIntent.send(context, 0, intent);
+                        mCallbacks.onDismiss(ni);
+                    } catch (PendingIntent.CanceledException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     }
 
     public void hideImmediate()
@@ -370,8 +437,14 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         mPreviewTitle.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
         mPreviewText.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
         mPreviewTime.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
+        if (mQuickReplyLabel != null) mQuickReplyLabel.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
+        if (mQuickReplyText != null) mQuickReplyText.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
+
         mPreviewTitle.setTextSize(prefs.getInt(SettingsManager.TITLE_FONT_SIZE, SettingsManager.DEFAULT_TITLE_FONT_SIZE));
         mPreviewText.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
+        if (mQuickReplyLabel != null) mQuickReplyLabel.setTextSize(prefs.getInt(SettingsManager.TITLE_FONT_SIZE, SettingsManager.DEFAULT_TITLE_FONT_SIZE));
+        if (mQuickReplyText != null) mQuickReplyText.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
+
         mPreviewTime.setTextSize(prefs.getInt(SettingsManager.TEXT_FONT_SIZE, SettingsManager.DEFAULT_TEXT_FONT_SIZE));
         Bitmap icon = NotificationAdapter.createThemedIcon(ni.getIcon(), theme, (int) context.getResources().getDimension(R.dimen.notification_icon_size_large));
         mPreviewIcon.setImageDrawable(new BitmapDrawable(getResources(), icon));
@@ -440,9 +513,15 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
         // set colors
         mPreviewTitle.setTextColor(mPrimaryTextColor);
-        if (ni.appColor != 0 && prefs.getBoolean(SettingsManager.AUTO_TITLE_COLOR, false))
+        if (mQuickReplyLabel != null) mQuickReplyLabel.setTextColor(mPrimaryTextColor);
+
+        if (ni.appColor != 0 && prefs.getBoolean(SettingsManager.AUTO_TITLE_COLOR, false)) {
             mPreviewTitle.setTextColor(ni.appColor);
+            if (mQuickReplyLabel != null) mQuickReplyLabel.setTextColor(ni.appColor);
+        }
         mPreviewText.setTextColor(secondaryTextColor);
+        if (mQuickReplyText != null) mQuickReplyText.setTextColor(secondaryTextColor);
+
         mPreviewTime.setTextColor(secondaryTextColor);
         mPreviewBackground.setBackgroundColor(mNotificationBGColor);
         mPreviewIconBG.setBackgroundColor(iconBGColor);

@@ -192,7 +192,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             String filename = context.getExternalFilesDir(null) + "/" + now.format("%Y-%m-%dT%H:%M:%S")+".log";
             Runtime.getRuntime().exec("logcat -d -v time -f " + filename);
 
-            Log.d(TAG, "Log file written to "+context.getExternalFilesDir(null)+"/"+filename);
+            Log.d(TAG, "Log file written to "+ filename);
 
             if (!silent)
             {
@@ -210,7 +210,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 Notification n = mBuilder.build();
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                Uri uri = Uri.parse("file://" + context.getExternalFilesDir(null) + "/" + filename);
+                Uri uri = Uri.parse("file://" + filename);
                 intent.setDataAndType(uri, "text/plain");
 
                 n.contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -1196,6 +1196,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                         if (shouldHideNotifications(false)) {
                             hide(false);
                             // send a broadcast the device is unlocked and hide notifications list immediately
+                            Log.d(TAG, "accessibility service is not active and shouldHideNotifications returned true - sending unlocked event");
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
                         } else {
                             viewManager.refreshLayout(false);
@@ -1218,6 +1219,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
                         if (shouldHideNotifications(context, lastPackage, false)) {
                             // if it is not the lock screen app - call "unlock" method
+                            Log.d(TAG, "accessibility service is active and shouldHideNotifications returned true - sending unlocked event, lastPackage is:"+lastPackage);
                             sendBroadcast(new Intent(DEVICE_UNLOCKED));
                         } else {
                             // show notifications when the screen is turned on and the lock screen is displayed
@@ -1246,6 +1248,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                         }
 
                         // send a broadcast the device is unlocked and hide notifications list immediately
+                        Log.d(TAG, "constant polling - shouldHideNotifications returned true - sending unlocked event");
                         sendBroadcast(new Intent(DEVICE_UNLOCKED));
                     }
                 }

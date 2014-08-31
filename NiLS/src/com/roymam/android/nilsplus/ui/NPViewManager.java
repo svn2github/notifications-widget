@@ -68,10 +68,8 @@ public class NPViewManager
             int height = getPreviewHeight();
             if (height != mPrevHeight)
             {
-                /*if (mPrevHeight == 0)
-                    safeAddView(mTouchAreaView, getLayoutParams(0));
-                else*/
                 safeUpdateView(mTouchAreaView, getLayoutParams(0));
+                showKeyboardOnPreview();
 
                 mPrevHeight = height;
             }
@@ -587,6 +585,8 @@ public class NPViewManager
             rect.left = (int) (rowView.getX() + pos.x);
             rect.right = rect.left + rect.left;
 
+            Log.d(TAG, "animate to preview, start rect:"+rect);
+
             // animate pop in of the preview view
             mPreviewView.show(rect);
 
@@ -651,6 +651,7 @@ public class NPViewManager
                         @Override
                         public void onAnimationEnd(Animator animation)
                         {
+                            hideKeyboardOnPreview();
                             mPreviewItem = null;
                             mPreviewView.hideImmediate();
                         }
@@ -688,10 +689,30 @@ public class NPViewManager
         //safeRemoveView(mEditModeView);
     }
 
+    public void showKeyboardOnPreview()
+    {
+        if (mPreviewItem != null && mPreviewItem.getQuickReplyAction() != null)
+        {
+            mWindowManager.updateViewLayout(mPreviewView, getPreviewWithKeyboardParams());
+            mWindowManager.removeViewImmediate(mTouchAreaView);
+            mPreviewView.showQuickReplyBox();
+        }
+    }
+
+    public void hideKeyboardOnPreview()
+    {
+        if (mPreviewItem != null && mPreviewItem.getQuickReplyAction() != null)
+        {
+            mWindowManager.updateViewLayout(mPreviewView, getPreviewWindowParams());
+            mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams(true));
+            mPreviewView.hideQuickReplyBox();
+        }
+    }
+
     private void addAllViews()
     {
         mWindowManager.addView(mNPListView, getFullScreenLayoutParams(true));
-        mWindowManager.addView(mPreviewView, getFullScreenLayoutParams(true));
+        mWindowManager.addView(mPreviewView, getPreviewWindowParams());
         mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams(true));
         mWindowManager.addView(mEditModeView, getEditModeLayoutParams(true));
         /*
@@ -709,9 +730,16 @@ public class NPViewManager
         if (prefs.getBoolean(SettingsManager.FP_ENABLED, SettingsManager.DEFAULT_FP_ENABLED))
         {
             Log.d(TAG, "NPViewManager.show();");
+
+            // hide preview mode if it was opened
+            if (mPreviewItem != null)
+            {
+                hideKeyboardOnPreview();
+                hideNotificationPreview();
+                mPreviewView.hideImmediate();
+            }
+
             mNPListView.show();
-            hideNotificationPreview();
-            mPreviewView.hideImmediate();
             mTouchAreaView.setVisibility(View.VISIBLE);
 
             // hide edit mode if displayed
@@ -753,6 +781,7 @@ public class NPViewManager
 
         // animate hiding preview view
         mPreviewView.hide(yOffset);
+        hideKeyboardOnPreview();
         mHandler.postDelayed(mUpdateTouchAreaSize, mAnimationDuration*2);
 
         mPreviewItem = null;
@@ -854,11 +883,33 @@ public class NPViewManager
             miny = 0;
             maxy = screenSize.y - maxHeight;
         }
+    }
 
-        //if (mWidgetDragParams.y < miny) mWidgetDragParams.y = miny;
-        //if (mWidgetDragParams.y > maxy) mWidgetDragParams.y = maxy;
+    private WindowManager.LayoutParams getPreviewWindowParams()
+    {
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT
+        );
+        return params;
+    }
 
-        //safeUpdateView(mNPListView, mWidgetDragParams);
+    private WindowManager.LayoutParams getPreviewWithKeyboardParams()
+    {
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                0,
+                PixelFormat.TRANSLUCENT
+        );
+        params.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|
+                                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
+        return params;
     }
 
     private WindowManager.LayoutParams getFullScreenLayoutParams(boolean keyguard)
@@ -870,7 +921,7 @@ public class NPViewManager
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
                 type,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                /*WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE*/0,
                 PixelFormat.TRANSLUCENT
         );
         return params;
@@ -918,7 +969,7 @@ public class NPViewManager
                 size.x + padding * 2,
                 size.y + padding * 2,
                 WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                /*WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | */WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
 
         params.gravity= Gravity.TOP | Gravity.LEFT;
