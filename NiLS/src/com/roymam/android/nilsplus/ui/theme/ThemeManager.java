@@ -192,6 +192,12 @@ public class ThemeManager
         map.put("notification_text_scrollview", res.getIdentifier("notification_text_scrollview", "id", packageName));
         map.put("notification_big_picture", res.getIdentifier("notification_big_picture", "id", packageName));
 
+        map.put("quick_reply_box", res.getIdentifier("quick_reply_box", "id", packageName));
+        map.put("quick_text_label", res.getIdentifier("quick_text_label", "id", packageName));
+        map.put("quick_reply_text", res.getIdentifier("quick_reply_text", "id", packageName));
+        map.put("quick_reply_button", res.getIdentifier("quick_reply_button", "id", packageName));
+
+
         return map;
     }
 
@@ -294,6 +300,7 @@ public class ThemeManager
             Resources res = pm.getResourcesForApplication(theme.packageName);
             theme.notificationLayout = loadThemeLayout(res, theme.packageName, "notification_layout");
             theme.previewLayout = loadThemeLayout(res, theme.packageName, "notification_preview");
+            loadCustomThemeLayoutIds(res, theme.packageName);
         }
         catch (PackageManager.NameNotFoundException e)
         {

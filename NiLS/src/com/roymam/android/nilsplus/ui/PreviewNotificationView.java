@@ -2,18 +2,17 @@ package com.roymam.android.nilsplus.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.RemoteInput;
@@ -23,17 +22,14 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.roymam.android.common.BitmapUtils;
-import com.roymam.android.common.LimitedViewPager;
 import com.roymam.android.nilsplus.ui.theme.Theme;
 import com.roymam.android.nilsplus.ui.theme.ThemeManager;
 import com.roymam.android.notificationswidget.NotificationData;
@@ -78,7 +74,6 @@ public class PreviewNotificationView extends RelativeLayout {
     private int mPrimaryTextColor;
     private int mNotificationBGColor;
     private boolean mIsSwipeToOpenEnabled;
-    private boolean mIconSwiping = false;
     private int mLastPosY = 0;
     private int mLastPosX = 0;
     private int mLastSizeX = 0;
@@ -89,11 +84,6 @@ public class PreviewNotificationView extends RelativeLayout {
     private boolean mHorizontalDrag;
     private boolean mIgnoreTouch;
     private boolean mIsSoftKeyVisible = false;
-
-    public void setIconSwiping(boolean mIconSwiping)
-    {
-        this.mIconSwiping = mIconSwiping;
-    }
 
     public void updateSizeAndPosition(Point pos, Point size)
     {
@@ -212,23 +202,21 @@ public class PreviewNotificationView extends RelativeLayout {
             mPreviewIconImageFG = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("icon_fg"));
             mPreviewTime = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_time"));
             mScrollView = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_text_scrollview"));
-            mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_big_picture"));        }
+            mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_big_picture"));
 
-            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon") != null)
+            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon") != 0)
                 mAppIconImage = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("app_icon"));
 
-            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon_bg") != null)
+            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon_bg") != 0)
                 mAppIconBGImage = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("app_icon_bg"));
 
-            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("quick_reply_box") != null)
-            {
+            if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("quick_reply_box") != 0) {
                 mQuickReplyBox = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_box"));
                 mQuickReplyText = (EditText) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_text"));
                 mQuickReplyLabel = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_label"));
                 mQuickReplySendButton = (ImageButton) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_send_button"));
             }
-
-        else {
+        } else {
             mNotificationContent = mPreviewNotificationView.findViewById(R.id.notification_body);
             mPreviewBody = mPreviewNotificationView.findViewById(R.id.notification_preview);
             mPreviewTitle = (TextView) mPreviewNotificationView.findViewById(R.id.notification_title);
@@ -289,7 +277,6 @@ public class PreviewNotificationView extends RelativeLayout {
                 else if (event.getAction() == MotionEvent.ACTION_UP)
                 {
                     mDown = false;
-                    mIconSwiping = false;
 
                     mDotsView.dispatchTouchEvent(event);
                     mDotsView.animate().alpha(0).setDuration(mAnimationDuration).setListener(new AnimatorListenerAdapter()
@@ -551,6 +538,9 @@ public class PreviewNotificationView extends RelativeLayout {
 
     private boolean isTouchHitView(View v, MotionEvent ev)
     {
+        // if view is not visible - return false
+        if (v == null || v.getVisibility() != View.VISIBLE) return false;
+
         int[] parentCords = new int[2];
         mPreviewBackground.getLocationOnScreen(parentCords);
         int x = (int)ev.getRawX() - parentCords[0];

@@ -358,7 +358,7 @@ public class NPViewManager
                 }
                 else
                 {
-                    showNotificationPreview(ni, position, iconSwiping);
+                    showNotificationPreview(ni, position);
                 }
             }
 
@@ -538,7 +538,7 @@ public class NPViewManager
         }
     }
 
-    private void showNotificationPreview(NotificationData ni, int position, boolean iconSwiping)
+    private void showNotificationPreview(NotificationData ni, int position)
     {
         if (getMaxLines() >= 3)
         {
@@ -548,6 +548,7 @@ public class NPViewManager
                 @Override
                 public void onDismiss(NotificationData ni)
                 {
+                    if (mPreviewItem.getQuickReplyAction() != null) mPreviewView.hideQuickReplyBox();
                     if (mCallbacks != null) mCallbacks.onDismissed(ni);
                 }
 
@@ -597,10 +598,6 @@ public class NPViewManager
 
             // hide touch area
             mTouchAreaView.setVisibility(View.GONE);
-
-            // update touch area size
-            if (iconSwiping)
-                mPreviewView.setIconSwiping(true);
 
             // show quick reply keyboard if needed
             showKeyboardOnPreview();
@@ -1101,9 +1098,9 @@ public class NPViewManager
 
                                     // show next or prev item if there is
                                     if (mPreviewPosition < finalData.size())
-                                        showNotificationPreview(finalData.get(mPreviewPosition), mPreviewPosition, false);
+                                        showNotificationPreview(finalData.get(mPreviewPosition), mPreviewPosition);
                                     else if (mPreviewPosition - 1 >= 0)
-                                        showNotificationPreview(finalData.get(mPreviewPosition - 1), mPreviewPosition - 1, false);
+                                        showNotificationPreview(finalData.get(mPreviewPosition - 1), mPreviewPosition - 1);
                                 }
                             }
                         }, mAnimationDuration);
