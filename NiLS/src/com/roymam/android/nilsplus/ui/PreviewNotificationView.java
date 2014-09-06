@@ -25,25 +25,24 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.roymam.android.common.BitmapUtils;
+import com.roymam.android.common.LimitedViewPager;
+import com.roymam.android.nilsplus.ui.theme.Theme;
+import com.roymam.android.nilsplus.ui.theme.ThemeManager;
 import com.roymam.android.notificationswidget.NotificationData;
 import com.roymam.android.notificationswidget.R;
 import com.roymam.android.notificationswidget.SettingsManager;
-import com.roymam.android.nilsplus.ui.theme.Theme;
-import com.roymam.android.nilsplus.ui.theme.ThemeManager;
 
 import static java.lang.Math.abs;
 
-public class PreviewNotificationView extends RelativeLayout implements View.OnTouchListener
-{
+public class PreviewNotificationView extends RelativeLayout {
     private static final String TAG = PreviewNotificationView.class.getSimpleName();
     private ImageButton mQuickReplySendButton;
     private TextView mQuickReplyLabel;
@@ -72,7 +71,6 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     private Context context;
     private int mTouchSlop;
     private int mViewWidth;
-    private boolean mIsClick;
     private boolean mTouch;
     private NotificationData ni;
     private Callbacks mCallbacks;
@@ -87,6 +85,10 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     private int mLastSizeY = 0;
     private int mIconSize;
     private int mStatusBarHeight;
+    private boolean mVerticalDrag;
+    private boolean mHorizontalDrag;
+    private boolean mIgnoreTouch;
+    private boolean mIsSoftKeyVisible = false;
 
     public void setIconSwiping(boolean mIconSwiping)
     {
@@ -101,14 +103,13 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size.x, size.y);
         params.leftMargin = pos.x;
-        params.topMargin = pos.y;
+        params.topMargin = 0;
 
         mLastPosX = pos.x;
         mLastPosY = pos.y;
         mLastSizeX = size.x;
         mLastSizeY = size.y;
 
-        mPreviewNotificationView.setLayoutParams(params);
 
         mStatusBarHeight = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -118,15 +119,17 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         }
 
         // set vertical alignment of the preview box
-        LayoutParams bgParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //LayoutParams bgParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         String yAlignment = prefs.getString(SettingsManager.VERTICAL_ALIGNMENT, SettingsManager.DEFAULT_VERTICAL_ALIGNMENT);
 
         if (yAlignment.equals("center"))
-            bgParams.addRule(CENTER_VERTICAL);
+            params.addRule(CENTER_VERTICAL);
         else if (yAlignment.equals("bottom"))
-            bgParams.addRule(ALIGN_PARENT_BOTTOM);
+            params.addRule(ALIGN_PARENT_BOTTOM);
 
-        mPreviewBackground.setLayoutParams(bgParams);
+        mPreviewNotificationView.setLayoutParams(params);
+
+        //mPreviewBackground.setLayoutParams(bgParams);
     }
 
     public void showQuickReplyBox() {
@@ -136,10 +139,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             mQuickReplyBox.animate().scaleY(1).setDuration(mAnimationDuration).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mQuickReplyText.requestFocus();
-                    InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    mgr.showSoftInput(mQuickReplyText, InputMethodManager.SHOW_IMPLICIT);
-                    mgr.restartInput(mQuickReplyText);
+                    showSoftKeyboard();
                 }
             });
             mQuickReplyLabel.setText(ni.getQuickReplyAction().title);
@@ -151,8 +151,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         if (mQuickReplyBox != null)
         {
             mQuickReplyBox.setVisibility(View.GONE);
-            InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            mgr.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+            hideSoftKeyboard();
         }
     }
 
@@ -167,16 +166,19 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev)
     {
-        // pass the event to the scrolling text too
-        mScrollView.dispatchTouchEvent(ev);
-
-        return super.dispatchTouchEvent(ev);
+        // handling touching the view without interfering with the standard touch handling by the scrollview, textbox, etc..
+        if (handleTouch(this, ev))
+            return true;
+        else
+            return super.dispatchTouchEvent(ev);
     }
 
-    public PreviewNotificationView(final Context context, Point size, Point pos)
+    public PreviewNotificationView(final Context ctxt, Point size, Point pos, DotsSwipeView dotsView)
     {
-        super(context);
-        this.context = context;
+        super(ctxt);
+        this.context = ctxt;
+        mDotsView = dotsView;
+
         mTheme = ThemeManager.getInstance(context).getCurrentTheme();
 
         // build view from resource
@@ -188,11 +190,7 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         else
             mPreviewNotificationView = inflater.inflate(R.layout.notification_preview, null);
 
-        mDotsView = new DotsSwipeView(context, pos, size);
-        mDotsView.setAlpha(0);
-        mDotsView.setVisibility(View.GONE);
-        addView(mDotsView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        addView(mPreviewNotificationView, new LayoutParams(size.x, size.y));
+        addView(mPreviewNotificationView, new RelativeLayout.LayoutParams(size.x, size.y));
 
         if (mTheme != null && mTheme.previewLayout != null)
             mPreviewBackground = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("full_notification"));
@@ -248,12 +246,6 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             mQuickReplySendButton = (ImageButton) mPreviewNotificationView.findViewById(R.id.quick_reply_button);
          }
 
-        // set listeners
-        mScrollView.setOnTouchListener(this);
-
-        // set touch listener for swiping out
-        setOnTouchListener(this);
-
         ViewConfiguration vc = ViewConfiguration.get(context);
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
         mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
@@ -275,6 +267,8 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
                     // init dots view
                     int loc[] = new int[2];
                     mPreviewBackground.getLocationInWindow(loc);
+                    loc[0]+=mLastPosX;
+                    loc[1]+=mLastPosY;
                     int w = mPreviewBackground.getWidth();
                     int h = mPreviewBackground.getHeight();
                     mDotsView.updateSizeAndPosition(new Point(loc[0],loc[1]), new Point(w,h));
@@ -345,15 +339,6 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
             }
         });
 
-        setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mCallbacks != null) mCallbacks.onClick();
-            }
-        });
-
         if (mQuickReplySendButton != null)
             mQuickReplySendButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -406,11 +391,11 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         setVisibility(View.VISIBLE);
 
         Log.d(TAG, "mLastPosY:" + mLastPosY + " mLastSizeY:" + mLastSizeY);
-        mPreviewNotificationView.setTranslationY(startRect.top - mLastPosY - mLastSizeY/2);
-        mPreviewNotificationView.setTranslationX(0);
-
+        //mPreviewNotificationView.setTranslationY(startRect.top - mLastPosY - mLastSizeY/2);
         int minheight = startRect.bottom - startRect.top;
         int maxheight = mLastSizeY;
+        mPreviewNotificationView.setTranslationY(mPreviewNotificationView.getHeight()/2);
+        mPreviewNotificationView.setTranslationX(0);
         mPreviewNotificationView.setScaleY(minheight/maxheight);
 
         mPreviewNotificationView.setAlpha(1);
@@ -564,37 +549,45 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
     float mTouchStartX;
     float mTouchStartY;
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
+    private boolean isTouchHitView(View v, MotionEvent ev)
     {
-        // if the touch is on the icon - pass the event to it
-        Rect iconHitRect = new Rect();
-        mPreviewIcon.getHitRect(iconHitRect);
-
         int[] parentCords = new int[2];
         mPreviewBackground.getLocationOnScreen(parentCords);
-        int x = (int)event.getRawX() - parentCords[0];
-        int y = (int)event.getRawY() - parentCords[1];
+        int x = (int)ev.getRawX() - parentCords[0];
+        int y = (int)ev.getRawY() - parentCords[1];
 
-        // if the app icon is currently dragging - pass the touch event to it
-        if (iconHitRect.contains(x,y) && event.getAction() == MotionEvent.ACTION_DOWN)
-            mIconSwiping = true;
+        Rect rect = new Rect();
+        v.getHitRect(rect);
 
-        if (mIconSwiping)
-        {
-            mPreviewIcon.dispatchTouchEvent(event);
+        if (rect.contains(x, y)) {
             return true;
         }
+        return false;
+    }
 
+    public boolean handleTouch(View v, MotionEvent event)
+    {
         if (event.getAction() == MotionEvent.ACTION_DOWN)
         {
+            // ignore start dragging quick reply box or the notification icon
+            if (isTouchHitView(mQuickReplyBox, event)) {
+                showSoftKeyboard();
+                mIgnoreTouch = true;
+                return false;
+            }
+            if (isTouchHitView(mPreviewIcon,event)) {
+                mIgnoreTouch = true;
+                return false;
+            }
+            mIgnoreTouch = false;
+
             mTouchStartX = event.getRawX();
             mTouchStartY = event.getRawY();
             mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
             mViewWidth = mPreviewNotificationView.getWidth();
-            mIsClick = true;
             mTouch = true;
+            mHorizontalDrag = false;
+            mVerticalDrag = false;
             mVelocityTracker = VelocityTracker.obtain();
             mVelocityTracker.addMovement(event);
 
@@ -603,37 +596,46 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
         }
         else if (event.getAction() == MotionEvent.ACTION_MOVE)
         {
-            if (mTouch)
+            if (mTouch && !mIgnoreTouch)
             {
                 mVelocityTracker.addMovement(event);
                 float deltaX = event.getRawX() - mTouchStartX;
                 float deltaY = event.getRawY() - mTouchStartY;
-                if (abs(deltaX) > mTouchSlop)
-                {
-                    mIsClick = false;
-                }
 
-                if ((abs(deltaY) > mTouchSlop) && mIsClick)
+                if (abs(deltaX) > mTouchSlop)
+                    mHorizontalDrag = true;
+
+                if (abs(deltaY) > mTouchSlop)
+                    mVerticalDrag = true;
+
+                if (mVerticalDrag && !mHorizontalDrag)
                 {
                     // cancel swipe & click - keep only scroll text
-                    mIsClick = false;
                     mTouch = false;
+
+                    // reset horizontal dragging
                     mPreviewNotificationView.setTranslationX(0);
                     mPreviewNotificationView.setAlpha(1);
+
+                    // pass this event so the scrollview will handle the vertical scrolling
                     return false;
                 }
-                if (!mIsClick)
+                if (mHorizontalDrag)
                 {
+                    // update position and opacity according the swiping gesture
                     mPreviewNotificationView.setTranslationX(deltaX);
                     mPreviewNotificationView.setAlpha((mViewWidth- abs(deltaX))/mViewWidth);
+
+                    // prevent other controls receiving this event
                     return true;
                 }
             }
+            else // unhandled - pass it to the child views
+                return false;
         }
         else if (event.getAction() == MotionEvent.ACTION_UP)
         {
-            if (mTouch)
-            {
+            if (mTouch && !mIgnoreTouch) {
                 mTouch = false;
 
                 mVelocityTracker.addMovement(event);
@@ -642,9 +644,8 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
                 float absVelocityX = Math.abs(velocityX);
                 float absVelocityY = Math.abs(mVelocityTracker.getYVelocity());
                 float deltaX = event.getRawX() - mTouchStartX;
-                if (abs(deltaX) > mViewWidth/2 ||
-                    mMinFlingVelocity <= absVelocityX && absVelocityX <= mMaxFlingVelocity && absVelocityY < absVelocityX)
-                {
+                if (abs(deltaX) > mViewWidth / 2 ||
+                        mMinFlingVelocity <= absVelocityX && absVelocityX <= mMaxFlingVelocity && absVelocityY < absVelocityX) {
                     // animate dismiss
                     int w;
                     final boolean swipeRight = (deltaX > 0);
@@ -655,48 +656,63 @@ public class PreviewNotificationView extends RelativeLayout implements View.OnTo
 
                     // swipe animation
                     mPreviewNotificationView.animate().translationX(w).alpha(0).setDuration(mAnimationDuration)
-                    .setListener(new AnimatorListenerAdapter()
-                    {
-                        @Override
-                        public void onAnimationEnd(Animator animation)
-                        {
-                            // dismiss notification
-                            if (mCallbacks != null)
-                            {
-                                if (mIsSwipeToOpenEnabled && swipeRight)
-                                    mCallbacks.onOpen(ni);
-                                else
-                                    mCallbacks.onDismiss(ni);
-                            }
-                        }
-                    });
-
-                    mIsClick = false;
-                }
-                else
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    // dismiss notification
+                                    if (mCallbacks != null) {
+                                        if (mIsSwipeToOpenEnabled && swipeRight)
+                                            mCallbacks.onOpen(ni);
+                                        else
+                                            mCallbacks.onDismiss(ni);
+                                    }
+                                }
+                            });
+                } else // the swipe wasn't fast enough - restoring the item to the original position
                 {
                     mPreviewNotificationView.animate().translationX(0).alpha(1).setDuration(mAnimationDuration).setListener(null);
                 }
-            }
 
-            if (mIsClick)
-            {
-                callOnClick();
-                return false;
+                // if the user actually didn't drag at all - it is a click
+                if (!mHorizontalDrag && !mVerticalDrag) {
+                    InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    // if soft keyboard is visible - hide it
+                    if (mIsSoftKeyVisible) {
+                        hideSoftKeyboard();
+                    } else if (mCallbacks != null) mCallbacks.onClick();
+
+                    // make sure other views won't get this event
+                    return true;
+                }
             }
             else
-            {
-                return true;
-            }
+                // unhandled - pass it to the child views
+                return false;
         }
+
+        // unhandled - pass it to the child views
         return false;
+    }
+
+    private void showSoftKeyboard() {
+        mQuickReplyText.requestFocus();
+        InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.showSoftInput(mQuickReplyText, InputMethodManager.SHOW_IMPLICIT);
+        mgr.restartInput(mQuickReplyText);
+        mIsSoftKeyVisible = true;
+    }
+
+    private void hideSoftKeyboard() {
+        InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(mQuickReplyText.getWindowToken(), 0);
+        mIsSoftKeyVisible = false;
     }
 
     public void cleanup()
     {
         mScrollView.setOnTouchListener(null);
-        setOnTouchListener(null);
+        mPreviewNotificationView.setOnTouchListener(null);
         mPreviewIcon.setOnTouchListener(null);
-        setOnClickListener(null);
+        mPreviewNotificationView.setOnClickListener(null);
     }
 }

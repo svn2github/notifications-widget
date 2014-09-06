@@ -48,6 +48,7 @@ public class NPViewManager
     private PreviewNotificationView mPreviewView;
     private final View mEditModeView;
     private final View mTouchAreaView;
+    private final DotsSwipeView mDotsView;
 
     private NotificationData mPreviewItem = null;
     private int yOffset = 0;
@@ -69,7 +70,6 @@ public class NPViewManager
             if (height != mPrevHeight)
             {
                 safeUpdateView(mTouchAreaView, getLayoutParams(0));
-                showKeyboardOnPreview();
 
                 mPrevHeight = height;
             }
@@ -161,8 +161,13 @@ public class NPViewManager
         // create list view
         createListView();
 
-        // create the prevmiew view & add the view to the screen
-        mPreviewView = new PreviewNotificationView(mContext, maxSize, maxPos);
+        // create dots view
+        mDotsView = new DotsSwipeView(context, maxPos, maxSize);
+        mDotsView.setAlpha(0);
+        mDotsView.setVisibility(View.GONE);
+
+        // create the preview view & add the view to the screen
+        mPreviewView = new PreviewNotificationView(mContext, maxSize, maxPos, mDotsView);
 
         // create edit mode view
         mEditModeView = View.inflate(mContext, R.layout.editmode, null);
@@ -305,10 +310,10 @@ public class NPViewManager
                 if (event.getAction() == MotionEvent.ACTION_OUTSIDE && prefs.getBoolean(SettingsManager.HIDE_ON_CLICK, SettingsManager.DEFAULT_HIDE_ON_CLICK)) hide(true);
                 if (event.getAction() == MotionEvent.ACTION_DOWN) keepScreenOn("user touch");
 
-                if (mPreviewItem != null)
-                    mPreviewView.dispatchTouchEvent(event);
-                else
+                if (mPreviewItem == null)
                     mListView.dispatchTouchEvent(event);
+                //else
+                    //    mPreviewView.dispatchTouchEvent(event);
                     return false;
             }
         });
@@ -590,11 +595,16 @@ public class NPViewManager
             // animate pop in of the preview view
             mPreviewView.show(rect);
 
+            // hide touch area
+            mTouchAreaView.setVisibility(View.GONE);
+
             // update touch area size
             if (iconSwiping)
                 mPreviewView.setIconSwiping(true);
 
-            mHandler.postDelayed(mUpdateTouchAreaSizeToMaximum, mAnimationDuration*2);
+            // show quick reply keyboard if needed
+            showKeyboardOnPreview();
+            //mHandler.postDelayed(mUpdateTouchAreaSizeToMaximum, mAnimationDuration*2);
         }
     }
 
@@ -654,6 +664,7 @@ public class NPViewManager
                             hideKeyboardOnPreview();
                             mPreviewItem = null;
                             mPreviewView.hideImmediate();
+                            mTouchAreaView.setVisibility(View.VISIBLE);
                         }
                     });
                 }
@@ -684,6 +695,7 @@ public class NPViewManager
         mWindowManager.removeViewImmediate(mPreviewView);
         mWindowManager.removeViewImmediate(mEditModeView);
         mWindowManager.removeViewImmediate(mTouchAreaView);
+        mWindowManager.removeViewImmediate(mDotsView);
         //safeRemoveView(mNPListView);
         //safeRemoveView(mPreviewView);
         //safeRemoveView(mEditModeView);
@@ -694,7 +706,7 @@ public class NPViewManager
         if (mPreviewItem != null && mPreviewItem.getQuickReplyAction() != null)
         {
             mWindowManager.updateViewLayout(mPreviewView, getPreviewWithKeyboardParams());
-            mWindowManager.removeViewImmediate(mTouchAreaView);
+            //mWindowManager.removeViewImmediate(mTouchAreaView);
             mPreviewView.showQuickReplyBox();
         }
     }
@@ -704,7 +716,7 @@ public class NPViewManager
         if (mPreviewItem != null && mPreviewItem.getQuickReplyAction() != null)
         {
             mWindowManager.updateViewLayout(mPreviewView, getPreviewWindowParams());
-            mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams(true));
+            //mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams(true));
             mPreviewView.hideQuickReplyBox();
         }
     }
@@ -715,6 +727,8 @@ public class NPViewManager
         mWindowManager.addView(mPreviewView, getPreviewWindowParams());
         mWindowManager.addView(mTouchAreaView, getTouchAreaLayoutParams(true));
         mWindowManager.addView(mEditModeView, getEditModeLayoutParams(true));
+        mWindowManager.addView(mDotsView, getFullScreenLayoutParams(true));
+
         /*
         boolean newViews = true;
         newViews &= safeAddView(mNPListView, getFullScreenLayoutParams());
@@ -781,10 +795,14 @@ public class NPViewManager
 
         // animate hiding preview view
         mPreviewView.hide(yOffset);
-        hideKeyboardOnPreview();
-        mHandler.postDelayed(mUpdateTouchAreaSize, mAnimationDuration*2);
 
+        // show touch area
+        mTouchAreaView.setVisibility(View.VISIBLE);
+
+        hideKeyboardOnPreview();
         mPreviewItem = null;
+
+        mHandler.postDelayed(mUpdateTouchAreaSize, mAnimationDuration*2);
     }
 
     private int getHeight()
@@ -887,28 +905,49 @@ public class NPViewManager
 
     private WindowManager.LayoutParams getPreviewWindowParams()
     {
+        Point displaySize = getDisplaySize();
+        Point size = getWidgetSize();
+        Point pos = getWidgetPosition(size);
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT,
+                size.y,
                 WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT
         );
+        params.gravity= Gravity.TOP | Gravity.LEFT;
+        params.x = 0;
+        params.y = pos.y;
+        if (params.y < 0) params.y = 0;
+        if (params.y > displaySize.y) params.y = displaySize.y;
+
         return params;
     }
 
     private WindowManager.LayoutParams getPreviewWithKeyboardParams()
     {
+        Point displaySize = getDisplaySize();
+        Point size = getWidgetSize();
+        Point pos = getWidgetPosition(size);
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT,
+                size.y,
                 WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
                 0,
                 PixelFormat.TRANSLUCENT
         );
+
+        params.gravity= Gravity.TOP | Gravity.LEFT;
+        params.x = 0;
+        params.y = pos.y;
+        if (params.y < 0) params.y = 0;
+        if (params.y > displaySize.y) params.y = displaySize.y;
         params.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|
                                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
+
         return params;
     }
 
@@ -1058,13 +1097,13 @@ public class NPViewManager
                             {
                                 if (mVisible)
                                 {
+                                    hideKeyboardOnPreview();
+
                                     // show next or prev item if there is
                                     if (mPreviewPosition < finalData.size())
                                         showNotificationPreview(finalData.get(mPreviewPosition), mPreviewPosition, false);
                                     else if (mPreviewPosition - 1 >= 0)
                                         showNotificationPreview(finalData.get(mPreviewPosition - 1), mPreviewPosition - 1, false);
-                                    else
-                                        hideNotificationPreview();
                                 }
                             }
                         }, mAnimationDuration);

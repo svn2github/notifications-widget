@@ -83,7 +83,14 @@ public class AboutPreferencesFragment extends CardPreferenceFragment
         // build an individual notification
         Notification n1 = new NotificationCompat.Builder(mContext)
                 .setContentTitle("NiLS Test Notification")
-                .setContentText(randWord+":Single notification test line 1\nSingle notification test line 2\nSingle notification test line 3")
+                .setContentText(randWord+":Single notification test line 1\nSingle notification test line 2\nSingle notification test line 3\n" +
+                        "Single notification test line 4\n" +
+                        "Single notification test line 5\n" +
+                        "Single notification test line 6\n" +
+                        "Single notification test line 7\n" +
+                        "Single notification test line 8\n" +
+                        "Single notification test line 9\n" +
+                        "Single notification test line 10")
                 .setLargeIcon(((BitmapDrawable) mContext.getResources().getDrawable(R.drawable.ic_launcher)).getBitmap())
                 .setSmallIcon(R.drawable.nilsfp_icon_mono)
                 .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext, NiLSActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
