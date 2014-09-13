@@ -40,6 +40,7 @@ import static java.lang.Math.abs;
 
 public class PreviewNotificationView extends RelativeLayout {
     private static final String TAG = PreviewNotificationView.class.getSimpleName();
+    private final SharedPreferences prefs;
     private ImageButton mQuickReplySendButton;
     private TextView mQuickReplyLabel;
     private View mPreviewNotificationView;
@@ -123,7 +124,7 @@ public class PreviewNotificationView extends RelativeLayout {
     }
 
     public void showQuickReplyBox() {
-        if (mQuickReplyBox != null) {
+        if (mQuickReplyBox != null && prefs.getBoolean(SettingsManager.SHOW_QUICK_REPLY_ON_PREVIEW, SettingsManager.DEFAULT_SHOW_QUICK_REPLY_ON_PREVIEW)) {
             mQuickReplyBox.setVisibility(View.VISIBLE);
             mQuickReplyBox.setScaleY(0);
             mQuickReplyBox.animate().scaleY(1).setDuration(mAnimationDuration).setListener(new AnimatorListenerAdapter() {
@@ -167,6 +168,8 @@ public class PreviewNotificationView extends RelativeLayout {
     {
         super(ctxt);
         this.context = ctxt;
+        prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
         mDotsView = dotsView;
 
         mTheme = ThemeManager.getInstance(context).getCurrentTheme();
@@ -214,7 +217,7 @@ public class PreviewNotificationView extends RelativeLayout {
                 mQuickReplyBox = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_box"));
                 mQuickReplyText = (EditText) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_text"));
                 mQuickReplyLabel = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_label"));
-                mQuickReplySendButton = (ImageButton) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_send_button"));
+                mQuickReplySendButton = (ImageButton) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("quick_reply_button"));
             }
         } else {
             mNotificationContent = mPreviewNotificationView.findViewById(R.id.notification_body);

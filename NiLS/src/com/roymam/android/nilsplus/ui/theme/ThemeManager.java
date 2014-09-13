@@ -193,7 +193,7 @@ public class ThemeManager
         map.put("notification_big_picture", res.getIdentifier("notification_big_picture", "id", packageName));
 
         map.put("quick_reply_box", res.getIdentifier("quick_reply_box", "id", packageName));
-        map.put("quick_text_label", res.getIdentifier("quick_text_label", "id", packageName));
+        map.put("quick_reply_label", res.getIdentifier("quick_reply_label", "id", packageName));
         map.put("quick_reply_text", res.getIdentifier("quick_reply_text", "id", packageName));
         map.put("quick_reply_button", res.getIdentifier("quick_reply_button", "id", packageName));
 

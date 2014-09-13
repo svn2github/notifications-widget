@@ -14,6 +14,12 @@
             android:key="click_to_open"
             android:defaultValue="false"/>
         <CheckBoxPreference
+            android:title="@string/show_quick_reply_on_preview"
+            android:summary="@string/show_quick_reply_on_preview_summary"
+            android:key="show_quick_reply_on_preview"
+            android:defaultValue="false"
+            android:enabled="false"/>
+        <CheckBoxPreference
             android:title="@string/swipe_down_to_dismiss_all"
             android:summary="@string/swipe_down_to_dismiss_all_summary"
             android:defaultValue="true"

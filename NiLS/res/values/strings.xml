@@ -58,8 +58,8 @@
     <string name="icon_pack">Icon Pack</string>
 
     <string-array name="notification_modes_entries">
-        <item>Grouped (like on Android notifications bar)</item>
-        <item>Separated (like on iPhone)</item>
+        <item>Grouped</item>
+        <item>Separated</item>
     </string-array>
 
     <string name="notification_mode">Notification mode</string>
@@ -347,6 +347,8 @@
     <string name="gestures">Gestures</string>
     <string name="click_to_open">Click to open</string>
     <string name="click_to_open_summary">When enabled, clicking on a notification will open it. when disabled, clicking on a notification will show a preview</string>
+    <string name="show_quick_reply_on_preview">Show "Quick Reply" box on preview mode</string>
+    <string name="show_quick_reply_on_preview_summary">(BETA) Whenever a quick reply is available, show a text box in the notification preview for faster replying</string>
     <string name="unlock_on_open">Unlock on open</string>
     <string name="unlock_on_open_summary">Unlocks device when notification is opened. (works only on stock lock screen without security enabled)</string>
     <string name="continuous_reading_mode">Continuous reading mode</string>
@@ -484,7 +486,7 @@
     <string name="notification_popup_is_active">Heads up is active. a top banner will be displayed when a new notification arrives.</string>
     <string name="notification_popup_is_inactive">Heads up is inactive. enable it to get a top banner whenever a new notification arrives.</string>
     <string name="post_to_wear">Post to Android Wear</string>
-    <string name="post_to_wear_summary">(BETA) Post notifications to Android Wear</string>
+    <string name="post_to_wear_summary">Post notifications to Android Wear</string>
     <string name="send_test_notification">Send a test notification</string>
     <string name="send_test_notification_summary">Test if NiLS is configured and running correctly by sending a test notification.</string>
     <string name="unlock_workaround">Device unlock workaround</string>

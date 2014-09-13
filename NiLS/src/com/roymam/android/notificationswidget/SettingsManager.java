@@ -164,6 +164,7 @@ public class SettingsManager
     public static final String MAX_TEXT_LINES = "max_text_lines";
     public static final String SWIPE_TO_OPEN = "swipe_to_open";
     public static final String CLICK_TO_OPEN = "click_to_open";
+    public static final String SHOW_QUICK_REPLY_ON_PREVIEW = "show_quick_reply_on_preview";
     public static final String UNLOCK_ON_OPEN = "unlock_on_open";
     public static final String DONT_HIDE = "dont_hide";
     public static final String SCREEN_ON_TIMEOUT = "screenon_timeout";
@@ -200,6 +201,7 @@ public class SettingsManager
     public static final boolean DEFAULT_DONT_HIDE = false;
     public static final String DEFAULT_SCREEN_ON_TIMEOUT = "10";
     public static final boolean DEFAULT_CLICK_TO_OPEN = false;
+    public static final boolean DEFAULT_SHOW_QUICK_REPLY_ON_PREVIEW = false;
     public static final boolean DEFAULT_UNLOCK_ON_OPEN = true;
     public static final boolean DEFAULT_ENABLE_RESIZE_MODE = true;
     public static final boolean DEFAULT_UNLOCKED = false;

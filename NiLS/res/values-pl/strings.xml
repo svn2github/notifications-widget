@@ -52,8 +52,8 @@
   <string name="clear_all_from_same_app_summary">Gdy powiadomienie jest otwarte, usuwa wszystkie pozostałe powiadomienia z tej samej aplikacji</string>
   <string name="icon_pack">Paczka ikon</string>
   <string-array name="notification_modes_entries">
-    <item>Zgrupowane (jak na pasku powiadomień Androida)</item>
-    <item>Rozdzielone (jak na iPhone)</item>
+    <item>Zgrupowane</item>
+    <item>Rozdzielone</item>
   </string-array>
   <string name="notification_mode">Tryb powiadomienia</string>
   <string name="privacy">Prywatność</string>
@@ -451,7 +451,7 @@
   <string name="notification_popup_is_active">Heads up jest aktywne. Będzie wyświetlany banner na górze, gdy nadejdzie nowe powiadomienie.</string>
   <string name="notification_popup_is_inactive">Heads up jest nieaktywne. Włącz, aby zobaczyć banner na górze, gdy nadejdzie powiadomienie</string>
   <string name="post_to_wear">Wyślij do Android Wear</string>
-  <string name="post_to_wear_summary">(BETA) Publikuje powiadomienia na Android Wear</string>
+  <string name="post_to_wear_summary">Publikuje powiadomienia na Android Wear</string>
   <string name="send_test_notification">Wyślij testowe powiadomienie</string>
   <string name="send_test_notification_summary">Jest to testowe powiadomienie mające wysyłane w celu sprawdzenie czy NiLS jest skonfigurowany i działa poprawnie.</string>
   <string name="unlock_workaround">Obejście odblokowania urządzenia</string>

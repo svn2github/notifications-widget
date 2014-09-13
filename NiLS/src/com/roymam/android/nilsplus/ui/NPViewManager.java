@@ -571,37 +571,42 @@ public class NPViewManager
                 }
             });
 
-            mPreviewItem = ni;
-            mPreviewPosition = position;
-
             // calc offset (where to start animation)
             //yOffset = calcOffset();
 
-            // animation fade out of list view
-            mListView.animate().alpha(0).setDuration(mAnimationDuration).setListener(null);
-
             View rowView = mListView.getChildAt(position - mListView.getFirstVisiblePosition());
-            Rect rect = new Rect();
+            if (rowView != null) {
+                mPreviewItem = ni;
+                mPreviewPosition = position;
 
-            Point size = getWidgetSize();
-            Point pos = getWidgetPosition(size);
+                // animation fade out of list view
+                mListView.animate().alpha(0).setDuration(mAnimationDuration).setListener(null);
 
-            rect.top = (int) (rowView.getY() + pos.y);
-            rect.bottom = rect.top + rowView.getHeight();
-            rect.left = (int) (rowView.getX() + pos.x);
-            rect.right = rect.left + rect.left;
+                Rect rect = new Rect();
 
-            Log.d(TAG, "animate to preview, start rect:"+rect);
+                Point size = getWidgetSize();
+                Point pos = getWidgetPosition(size);
 
-            // animate pop in of the preview view
-            mPreviewView.show(rect);
+                rect.top = (int) (rowView.getY() + pos.y);
+                rect.bottom = rect.top + rowView.getHeight();
+                rect.left = (int) (rowView.getX() + pos.x);
+                rect.right = rect.left + rect.left;
 
-            // hide touch area
-            mTouchAreaView.setVisibility(View.GONE);
+                Log.d(TAG, "animate to preview, start rect:" + rect);
 
-            // show quick reply keyboard if needed
-            showKeyboardOnPreview();
-            //mHandler.postDelayed(mUpdateTouchAreaSizeToMaximum, mAnimationDuration*2);
+                // animate pop in of the preview view
+                mPreviewView.show(rect);
+
+                // hide touch area
+                mTouchAreaView.setVisibility(View.GONE);
+
+                // show quick reply keyboard if needed
+                showKeyboardOnPreview();
+            }
+            else
+            {
+                Log.w(TAG, "notification wasn't found on listview, probably was dismissed, cannot display a preview");
+            }
         }
     }
 
