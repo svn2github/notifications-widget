@@ -312,7 +312,7 @@ public class NotificationParser
                     if (notificationMode.equals(SettingsManager.MODE_GROUPED))
                     {
                         // if the notification is a part of a group - don't show it on grouped mode
-                        if (nd.groupOrder != null && nd.sideLoaded) {
+                        if (nd.sideLoaded) {
                             Log.d(TAG, "ignoring sideloaded notification packageName:"+packageName+ "id:"+nd.id+ " notification mode is grouped and this a single group item");
                             return new ArrayList<NotificationData>();
                         }
