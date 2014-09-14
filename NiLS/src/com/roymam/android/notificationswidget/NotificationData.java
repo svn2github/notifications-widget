@@ -45,6 +45,7 @@ public class NotificationData implements Parcelable
     public String group = null;
     public String groupOrder = null;
     public boolean sideLoaded = false;
+    public CharSequence additionalText = null;
 
     public NotificationData()
     {
@@ -73,9 +74,9 @@ public class NotificationData implements Parcelable
         boolean contentsdup = otherContent.toString().trim().startsWith(myContent.toString().trim());
         boolean allDup = titlesdup && textdup && (contentsdup || !compareContent);
 
-        if (/*nd.group != null && this.group != null && nd.group.equals(this.group) && nd.groupOrder == this.groupOrder && otherText.length() >= myText.length() ||*/
-            nd.packageName.equals(this.packageName) && allDup)
-        {
+        if (nd.packageName.equals(this.packageName) && allDup &&
+            !(sideLoaded && !nd.sideLoaded) // sideloaded notifications cannot be replaced with non-sideloaded notifications)
+           ) {
             Log.d(TAG, "notification is similar to "+ packageName + ":" + id + "T" + tag);
             return true;
         }
@@ -96,6 +97,8 @@ public class NotificationData implements Parcelable
             title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
         if (in.readInt() != 0)
             content = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
+        if (in.readInt() != 0)
+            additionalText = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
         if (in.readInt() != 0)
             icon = Bitmap.CREATOR.createFromParcel(in);
         if (in.readInt() != 0)
@@ -157,6 +160,13 @@ public class NotificationData implements Parcelable
         {
             dest.writeInt(1);
             TextUtils.writeToParcel(content, dest, flags);
+        }
+        else dest.writeInt(0);
+
+        if (additionalText != null)
+        {
+            dest.writeInt(1);
+            TextUtils.writeToParcel(additionalText, dest, flags);
         }
         else dest.writeInt(0);
 

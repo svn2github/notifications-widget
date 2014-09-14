@@ -221,6 +221,14 @@ public class NotificationParser
                         printStringsFromNotification();
                     }
 
+                    // try to get additional text from wear pages
+                    if (wo.getPages() != null && wo.getPages().size() > 0)
+                    {
+                        // extract the second page details
+                        Notification page = wo.getPages().get(0);
+                        nd.additionalText = NotificationCompat.getExtras(page).getCharSequence("android.text");
+                    }
+
                     // hide text on private mode
                     if (privacy.equals(SettingsManager.PRIVACY_SHOW_TITLE_ONLY))
                         nd.text = "";

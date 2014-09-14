@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.roymam.android.common.BitmapUtils;
@@ -56,7 +57,7 @@ public class PreviewNotificationView extends RelativeLayout {
     private View mPreviewBody;
     private DotsSwipeView mDotsView;
     private View mPreviewIconBG;
-    private View mScrollView;
+    private ScrollView mScrollView;
     private ImageView mPreviewIconImageBG;
     private ImageView mPreviewIconImageFG;
     private View mNotificationContent;
@@ -131,6 +132,11 @@ public class PreviewNotificationView extends RelativeLayout {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     showSoftKeyboard();
+
+                    // scroll the text down again if there is additional text (because the textbox hide part of it)
+                    if (ni.additionalText != null ) {
+                        mScrollView.fullScroll(View.FOCUS_DOWN);
+                    }
                 }
             });
             mQuickReplyLabel.setText(ni.getQuickReplyAction().title);
@@ -204,7 +210,7 @@ public class PreviewNotificationView extends RelativeLayout {
             mPreviewIconImageBG = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("icon_bg"));
             mPreviewIconImageFG = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("icon_fg"));
             mPreviewTime = (TextView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_time"));
-            mScrollView = mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_text_scrollview"));
+            mScrollView = (ScrollView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_text_scrollview"));
             mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(mTheme.customLayoutIdMap.get("notification_big_picture"));
 
             if (mTheme.customLayoutIdMap != null && mTheme.customLayoutIdMap.get("app_icon") != 0)
@@ -229,7 +235,7 @@ public class PreviewNotificationView extends RelativeLayout {
             mPreviewIconImageBG = (ImageView) mPreviewNotificationView.findViewById(R.id.icon_bg);
             mPreviewIconImageFG = (ImageView) mPreviewNotificationView.findViewById(R.id.icon_fg);
             mPreviewTime = (TextView) mPreviewNotificationView.findViewById(R.id.notification_time);
-            mScrollView = mPreviewNotificationView.findViewById(R.id.notification_text_scrollview);
+            mScrollView = (ScrollView) mPreviewNotificationView.findViewById(R.id.notification_text_scrollview);
             mPreviewBigPicture = (ImageView) mPreviewNotificationView.findViewById(R.id.notification_big_picture);
             mQuickReplyBox = mPreviewNotificationView.findViewById(R.id.quick_reply_box);
             mQuickReplyText = (EditText) mPreviewNotificationView.findViewById(R.id.quick_reply_text);
@@ -409,6 +415,14 @@ public class PreviewNotificationView extends RelativeLayout {
 
         mPreviewTitle.setText(ni.getTitle()!=null?ni.getTitle().toString():null);
         mPreviewText.setText(ni.getText() != null ? ni.getText().toString() : null);
+        if (ni.additionalText != null ) {
+            mPreviewText.setText(ni.additionalText);
+            mScrollView.fullScroll(View.FOCUS_DOWN);
+        }
+        else
+        {
+            mScrollView.fullScroll(View.FOCUS_UP);
+        }
         mPreviewTitle.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
         mPreviewText.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
         mPreviewTime.setTextAppearance(context, android.R.style.TextAppearance_DeviceDefault);
