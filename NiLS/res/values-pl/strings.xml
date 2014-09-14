@@ -326,7 +326,11 @@
   <string name="click_to_open_summary">Gdy włączone, kliknięcie na powiadomieniu otworzy je, gdy
         wyłączony, klikając na powiadomieniu pokaże podgląd
     </string>
-  <string name="unlock_on_open">Odblokuj po otwarciu</string>
+
+<string name="show_quick_reply_on_preview">Show "Quick Reply" box on preview mode</string>
+<string name="show_quick_reply_on_preview_summary">(BETA) Whenever a quick reply is available, show a text box in the notification preview for faster replying</string>
+
+    <string name="unlock_on_open">Odblokuj po otwarciu</string>
   <string name="unlock_on_open_summary">Odblokowuje urządzenie, gdy powiadomienie jest otwarte. (działa tylko na
         stockowym ekranie blokady bez włączonego zabezpieczenia)
     </string>
