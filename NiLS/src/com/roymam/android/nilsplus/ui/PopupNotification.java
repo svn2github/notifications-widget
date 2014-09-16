@@ -95,7 +95,11 @@ public class PopupNotification {
             public void onClick(View view) {
                 try {
                     pn.hide();
-                    nd.getAction().send();
+                    if (nd != null && nd.getAction() != null) nd.getAction().send();
+                    else if (nd != null) {
+                        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(nd.getPackageName());
+                        context.startActivity(launchIntent);
+                    }
                 } catch (PendingIntent.CanceledException e) {
                     // opening notification failed, try to open the app
                     try
