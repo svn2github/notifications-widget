@@ -437,6 +437,7 @@ public class NotificationParser
                     removeTimePrefix(nd);
 
                     String[] parts = event.toString().split(": ", 2);
+                    if (parts.length == 1) parts = event.toString().split(":", 2);
                     if (parts.length == 2 && parts[1].length()>2) // parts[1].length()>2 special exception for missed calls time 
                     {
                         // a fix for whatsapp group messages
