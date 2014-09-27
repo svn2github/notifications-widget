@@ -20,11 +20,13 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.graphics.Palette;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.text.style.CharacterStyle;
+import android.text.style.StyleSpan;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -418,15 +420,17 @@ public class NotificationParser
             if (event != null)
             {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(event);
+
                 // try to split it by text style
                 CharacterStyle[] spans = ssb.getSpans(0, event.length(), CharacterStyle.class);
-                if (spans.length == 2)
-                {
+
+                // if there are spans and the first doesn't contain the whole text
+                if (spans.length > 0 && ssb.getSpanEnd(spans[0]) < ssb.length() - 1) {
                     int s0start = ssb.getSpanStart(spans[0]);
                     int s0end = ssb.getSpanEnd(spans[0]);
                     nd.title = event.subSequence(s0start, s0end).toString();
-                    int s1start = ssb.getSpanStart(spans[1]);
-                    int s1end = ssb.getSpanEnd(spans[1]);
+                    int s1start = s0end + 1;
+                    int s1end = ssb.length() - 1;
                     nd.text = event.subSequence(s1start, s1end).toString();
                 }
                 else
