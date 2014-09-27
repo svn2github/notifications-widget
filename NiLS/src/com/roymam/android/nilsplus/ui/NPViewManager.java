@@ -1104,8 +1104,10 @@ public class NPViewManager
                                     // show next or prev item if there is
                                     if (mPreviewPosition < finalData.size())
                                         showNotificationPreview(finalData.get(mPreviewPosition), mPreviewPosition);
-                                    else if (mPreviewPosition - 1 >= 0)
+                                    else if (mPreviewPosition - 1 >= 0 && mPreviewPosition -1 < finalData.size())
                                         showNotificationPreview(finalData.get(mPreviewPosition - 1), mPreviewPosition - 1);
+                                    else if (finalData.size() > 0)
+                                        showNotificationPreview(finalData.get(finalData.size()-1), finalData.size()-1);
                                 }
                             }
                         }, mAnimationDuration);
