@@ -514,7 +514,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     for (NotificationData nd : clearedNotifications)
                     {
-                        listener.onNotificationCleared(nd);
+                        listener.onNotificationCleared(nd, false);
                         notifyAndroidWearDismissed(nd);
                     }
                 }
@@ -732,7 +732,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                 {
                     exp.printStackTrace();
                 }
-            if (listener != null) listener.onNotificationCleared(nd);
+            if (listener != null) listener.onNotificationCleared(nd, false);
             notifyAndroidWearDismissed(nd);
 
         }
@@ -814,7 +814,7 @@ public class NotificationsService extends Service implements NotificationsProvid
                     {
                         exp.printStackTrace();
                     }
-                if (listener != null) listener.onNotificationCleared(nd);
+                if (listener != null) listener.onNotificationCleared(nd, false);
                 notifyAndroidWearDismissed(nd);
             }
 
@@ -890,6 +890,7 @@ public class NotificationsService extends Service implements NotificationsProvid
             if (syncback && !more)
                 try
                 {
+                    Log.d(TAG, "no more notifications with the same id(+"+removedNd.id+"), removing it also from status bar. hasGroup:"+hasGroup);
                     cancelNotification(removedNd.packageName, removedNd.tag, removedNd.id);
 
                     // cancel also the grouped notifications for this app if it has any
@@ -907,7 +908,7 @@ public class NotificationsService extends Service implements NotificationsProvid
 
             if (listener != null)
             {
-                listener.onNotificationCleared(removedNd);
+                listener.onNotificationCleared(removedNd, more);
                 notifyAndroidWearDismissed(removedNd);
             }
 
@@ -1403,7 +1404,8 @@ public class NotificationsService extends Service implements NotificationsProvid
             activity.contains("ScreensaverActivity") ||     // never show it on top of daydream
             activity.contains("PopupNotificationLocked") || // never show it on top of WhatsApp popup
             activity.contains("AlarmActivity")      ||      // never show it on top of AlarmClock
-            activity.contains("com.google.android.velvet.ui.VelvetLockscreenActivity")) // never show it on top of Google Now search
+            activity.contains("com.google.android.velvet.ui.VelvetLockscreenActivity") || // never show it on top of Google Now search
+            activity.contains("com.sec.android.app.camera.Camera")) // never show it on top of the camera app
             return true;
 
         if (autoDetect)

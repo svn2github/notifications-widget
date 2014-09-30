@@ -281,8 +281,10 @@ public class NotificationData implements Parcelable
         if (actions != null)
             for(int i = 0; i < actions.length; i++)
             {
-                if (actions[i].remoteInputs != null)
+                Log.d(TAG, "action:"+actions[i].title+ "remoteInputs:"+actions[i].remoteInputs);
+                if (actions[i].remoteInputs != null) {
                     return actions[i];
+                }
             }
         // no action - return null
         return null;

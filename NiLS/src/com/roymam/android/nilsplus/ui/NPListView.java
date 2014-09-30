@@ -396,16 +396,16 @@ public class NPListView extends RelativeLayout implements ViewTreeObserver.OnPre
                                 mDotsView.animate().alpha(0).setListener(null);
 
                                 View v = listView.getChildAt(position-listView.getFirstVisiblePosition());
-                                v.animate().alpha(1).setListener(null);
+                                // make sure that the notification wasn't disappear since then
+                                if (v != null) {
+                                    v.animate().alpha(1).setListener(null);
 
-                                int selected = mDotsView.getSelected();
-                                if (selected == 0)
-                                {
-                                    callNotificationOpen(data.get(position));
-                                }
-                                else if (selected >= 1)
-                                {
-                                    callNotificationRunAction(data.get(position), selected - 1);
+                                    int selected = mDotsView.getSelected();
+                                    if (selected == 0) {
+                                        callNotificationOpen(data.get(position));
+                                    } else if (selected >= 1) {
+                                        callNotificationRunAction(data.get(position), selected - 1);
+                                    }
                                 }
                             }
 
