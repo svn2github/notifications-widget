@@ -124,24 +124,26 @@ public class NotificationEventsAdapter implements NotificationEventListener
         Log.d(TAG, "notification update #" + nd.uid);
     }
 
-    private void notifyNotificationRemove(NotificationData nd)
+    private void notifyNotificationRemove(NotificationData nd, boolean more)
     {
         Log.d(TAG, "NotificationAdapter:notifyNotificationRemove uid:" + nd.uid);
 
         // notify FloatingNotifications for clearing this notification
-        Intent intent = new Intent();
-        intent.setAction("robj.floating.notifications.dismiss");
-        intent.putExtra("package", nd.packageName);
-        context.sendBroadcast(intent);
+        if (!more) {
+            Intent intent = new Intent();
+            intent.setAction("robj.floating.notifications.dismiss");
+            intent.putExtra("package", nd.packageName);
+            context.sendBroadcast(intent);
+        }
 
         // free memory used by the notification
         nd.cleanup();
     }
 
     @Override
-    public void onNotificationCleared(NotificationData nd)
+    public void onNotificationCleared(NotificationData nd, boolean more)
     {
-        notifyNotificationRemove(nd);
+        notifyNotificationRemove(nd, more);
     }
 
     @Override
